@@ -7,11 +7,8 @@
 use Nette\Diagnostics\Debugger,
 	Nette\Application\Routers\Route;
 
-
 // Load Nette Framework
-$params['libsDir'] = __DIR__ . '/../libs';
 require $params['libsDir'] . '/Nette/loader.php';
-
 
 // Enable Nette Debugger for error visualisation & logging
 Debugger::$logDirectory = __DIR__ . '/../log';
@@ -22,7 +19,6 @@ Debugger::enable();
 // Load configuration from config.neon file
 $configurator = new Nette\Configurator;
 $configurator->container->params += $params;
-$configurator->container->params['tempDir'] = __DIR__ . '/../temp';
 $container = $configurator->loadConfig(__DIR__ . '/config.neon');
 
 
