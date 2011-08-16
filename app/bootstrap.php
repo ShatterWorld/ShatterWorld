@@ -34,3 +34,4 @@ $application = $container->application;
 //$application->catchExceptions = TRUE;
 $application->errorPresenter = 'Error';
 $application->run();
+Debugger::barDump($container->entityManager);
