@@ -10,15 +10,10 @@ class DefaultPresenter extends BasePresenter
 		$form = new Nette\Application\UI\Form;
 		$form->addText('name', 'Jméno:');
 		$form->addPassword('password', 'Heslo:');
-		$form->addSubmit('send', 'Registrovat');
-		$form->setTranslator($translator);
+		$form->addSubmit('send', 'Přihlásit');
+		//$form->setTranslator($translator);
 		
 		return $form;
-	}
-
-	public function hello()
-	{
-		return "hello";
 	}
 
 }
