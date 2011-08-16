@@ -13,7 +13,7 @@ class SignupPresenter extends BasePresenter
 		$form->addPassword('password', 'Heslo:');
 		$form->addPassword('password2', 'Heslo (pro kontrolu):');
 		$form->addText('landName', 'Jméno země:');
-		$form->addSubmit('send', 'Přihlásit');
+		$form->addSubmit('send', 'Registrovat');
 
 		//$form->setTranslator($translator);
 		
