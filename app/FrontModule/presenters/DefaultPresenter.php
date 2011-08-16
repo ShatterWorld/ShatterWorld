@@ -7,10 +7,16 @@ class DefaultPresenter extends BasePresenter
 
 	protected function createComponentLoginForm()
 	{
-
+		$form = new Nette\Application\UI\Form;
+		$form->addText('name', 'Jméno:');
+		$form->addPassword('password', 'Heslo:');
+		$form->addSubmit('send', 'Registrovat');
+		$form->setTranslator($translator);
+		
+		return $form;
 	}
 
-	protected function hello()
+	public function hello()
 	{
 		return "hello";
 	}
