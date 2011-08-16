@@ -15,6 +15,14 @@ common:
 		entityPath:
 			- %appDir%/models/entities
 
+	database:
+		driver: pdo_mysql
+		host: localhost
+		dbname: ShatterWorld
+		user: swuser
+		password: 12345
+		charset: utf8
+
 	services:
 		robotLoader:
 			run: true
