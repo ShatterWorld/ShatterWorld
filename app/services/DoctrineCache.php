@@ -17,7 +17,7 @@ class DoctrineCache extends Doctrine\Common\Cache\AbstractCache {
 	public function __construct (Nette\Caching\IStorage $storage)
 	{
 		$this->storage = new Nette\Caching\Cache($storage, 'Doctrine');
-		$this->ids = $storage->derive('IDs');
+		$this->ids = $this->storage->derive('IDs');
 	}
 	
 	/**
