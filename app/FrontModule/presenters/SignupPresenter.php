@@ -1,7 +1,7 @@
 <?php
 namespace FrontModule;
 use Nette;
-
+use Nette\Application\UI\Form;
 class SignupPresenter extends BasePresenter
 {
 
@@ -15,20 +15,14 @@ class SignupPresenter extends BasePresenter
 			.required label { color: maroon }
 		</style>
 		*/
-		
-		/*ERR
-		how to avoid err "Class 'FrontModule\Form' not found" ?
-		to change Form to Nette\Application\UI\Form ? it works but....
-		
-		
-		*/
+
 		
 		$form = new Nette\Application\UI\Form;
 
 		$form->addText('name', 'Jméno')
 			->setRequired('Zadejte prosím jméno');
 		$form->addText('age', 'Věk')
-			->addRule(Form::INTEGER, 'Věk musí být číslo') /*Class 'FrontModule\Form' not found !!!*/
+			->addRule(Form::INTEGER, 'Věk musí být číslo')
 			->addRule(Form::RANGE, 'Věk musí být od %d do %d let', array(7, 101));
 		$sex = array(
 			'm' => 'muž',
