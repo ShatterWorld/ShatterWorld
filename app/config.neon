@@ -28,9 +28,14 @@ common:
 			run: true
 			option:
 				directory: [%appDir%, %libsDir%]
+		
 		doctrineCache:
 			class: DoctrineCache
 			arguments: [@cacheStorage]
+		
+		authenticator:
+			class: Authenticator
+			arguments: [@entityManager]
 
 production < common:
 
