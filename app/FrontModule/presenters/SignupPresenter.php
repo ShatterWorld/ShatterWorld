@@ -7,15 +7,53 @@ class SignupPresenter extends BasePresenter
 
 	protected function createComponentSignupForm()
 	{
+	
+		/*TODO: add somewhere..?
+		
+		<script src="netteForms.js"></script>
+		<style>
+			.required label { color: maroon }
+		</style>
+		*/
+		
+		/*ERR
+		how to avoid err "Class 'FrontModule\Form' not found" ?
+		to change Form to Nette\Application\UI\Form ? it works but....
+		
+		
+		*/
+		
 		$form = new Nette\Application\UI\Form;
-		$form->addText('name', 'Jméno:');
-		$form->addText('email', 'E-mail:');
-		$form->addPassword('password', 'Heslo:');
-		$form->addPassword('password2', 'Heslo (pro kontrolu):');
-		$form->addText('landName', 'Jméno země:');
+
+		$form->addText('name', 'Jméno')
+			->setRequired('Zadejte prosím jméno');
+		$form->addText('age', 'Věk')
+			->addRule(Form::INTEGER, 'Věk musí být číslo') /*Class 'FrontModule\Form' not found !!!*/
+			->addRule(Form::RANGE, 'Věk musí být od %d do %d let', array(7, 101));
+		$sex = array(
+			'm' => 'muž',
+			'f' => 'žena',
+		);
+		$form->addRadioList('gender', 'Pohlaví:', $sex);
+
+		$form->addText('email', 'E-mail')
+			->setRequired('Zadejte prosím platný e-mail');
+		$form->addPassword('password', 'Heslo')
+			->setRequired('Zadejte prosím heslo')
+    		->addRule(Form::MIN_LENGTH, 'Heslo musí mít alespoň %d znaků', 5);
+		$form->addPassword('passwordVerify', 'Heslo (pro kontrolu)')
+		    ->setRequired('Zadejte prosím heslo ještě jednou pro kontrolu')
+		    ->addRule(Form::EQUAL, 'Hesla se neshodují', $form['password']);		
+		$form->addText('landName', 'Jméno země')
+			->setRequired('Zadejte prosím unikátní jméno země');
+
+		$form->addCheckbox("agree", "Souhlasím s podmínkami")
+			->addRule(Form::EQUAL, 'Je potřeba souhlasit s podmínkami', TRUE);
 		$form->addSubmit('send', 'Registrovat');
 
 		//$form->setTranslator($translator);
+		//$form->setAction('/submit.php');
+		//$form->setMethod('POST');
 		
 		return $form;
 	}
