@@ -24,7 +24,7 @@ class DefaultPresenter extends BasePresenter
 		return $form;
 	}
 
-	protected function submitLoginForm($form)
+	public function submitLoginForm($form)
 	{
 		$data=$form->getValues();	
 

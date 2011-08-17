@@ -71,7 +71,7 @@ class SignupPresenter extends BasePresenter
 		return $form;
 	}
 
-	protected function submitSignupForm($form)
+	public function submitSignupForm($form)
 	{
 		$data=$form->getValues();	
 
