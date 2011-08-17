@@ -5,7 +5,8 @@
  */
 
 use Nette\Diagnostics\Debugger,
-	Nette\Application\Routers\Route;
+	Nette\Application\Routers\Route,
+	Nette\Application\Routers\RouteList;
 
 // Load Nette Framework
 require $params['libsDir'] . '/Nette/loader.php';
@@ -25,8 +26,11 @@ $container = $configurator->loadConfig(__DIR__ . '/config.neon');
 
 // Setup router
 $router = $container->router;
-$router[] = new Route('index.php', 'Front:Default:default', Route::ONE_WAY);
-$router[] = new Route('<presenter>/<action>[/<id>]', 'Front:Default:default');
+$router[] = $gameRouter = new RouteList('Game');
+$gameRouter[] = new Route('game/<presenter>/<action>/[<id>]', 'Dashboard:default');
+$router[] = $frontRouter = new RouteList('Front');
+$frontRouter[] = new Route('index.php', 'Front:Default:default', Route::ONE_WAY);
+$frontRouter[] = new Route('<presenter>/<action>[/<id>]', 'Default:default');
 
 
 // Configure and run the application!
@@ -34,4 +38,3 @@ $application = $container->application;
 //$application->catchExceptions = TRUE;
 $application->errorPresenter = 'Error';
 $application->run();
-Debugger::barDump($container->entityManager);
