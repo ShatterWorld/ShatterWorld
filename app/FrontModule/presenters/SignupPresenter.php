@@ -54,12 +54,12 @@ class SignupPresenter extends BasePresenter
 	public function submitSignupForm ($form)
 	{
 		$data = $form->getValues();
-		$data["role"]="player";
+		$data['role'] = 'player';
 		$this->getService('userService')->create($data);
 
 		$this->flashMessage("Vaše registrace proběhla úspěšně");
 
-		$this->redirect(':Front:Default:');
+		$this->redirect('Homepage:');
 
 	}
 	
