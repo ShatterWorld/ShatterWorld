@@ -2,16 +2,11 @@
 namespace Entities;
 
 /**
+ * An application user entity
  * @Entity
  * @author Jan "Teyras" Buchar
  */
 class User extends BaseEntity {
-	
-	/**
-	 * @Column(type = "string")
-	 * @var string
-	 */
-	private $name;
 	
 	/**
 	 * @Column(type = "string")
@@ -56,25 +51,6 @@ class User extends BaseEntity {
 	public function verifyPassword ($password)
 	{
 		return $this->calculatePasswordHash($this->nickname, $password) === $this->password;
-	}
-	
-	/**
-	 * Name getter
-	 * @return string
-	 */
-	public function getName ()
-	{
-		return $this->name;
-	}
-	
-	/**
-	 * Name setter
-	 * @param string
-	 * @return void
-	 */
-	public function setName ($name)
-	{
-		$this->name = $name;
 	}
 	
 	/**

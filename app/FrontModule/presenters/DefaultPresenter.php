@@ -2,7 +2,7 @@
 namespace FrontModule;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Security\IAuthenticator
+use Nette\Security\IAuthenticator;
 
 class DefaultPresenter extends BasePresenter {
 	protected function createComponentLoginForm ()
@@ -40,6 +40,6 @@ class DefaultPresenter extends BasePresenter {
 			}
 			$this->redirect('this');
 		}
-		$this->redirect(":Game");
+		$this->redirect(":Game:Dashboard:");
 	}
 }

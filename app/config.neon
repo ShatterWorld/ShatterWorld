@@ -12,8 +12,9 @@ common:
 
 	doctrine:
 		proxyDir: %tempDir%/proxies
-		entityPath:
-			- %appDir%/models/entities
+		proxyNamespace: Proxies
+		entityDir: [%appDir%/models/entities]
+		entityNamespace: Entities
 
 	database:
 		driver: pdo_mysql
@@ -35,7 +36,7 @@ common:
 		
 		authenticator:
 			class: Authenticator
-			arguments: [@entityManager]
+			arguments: [@userService]
 
 production < common:
 

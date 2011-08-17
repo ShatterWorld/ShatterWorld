@@ -4,16 +4,16 @@ use Nette\Security\AuthenticationException;
 
 class Authenticator extends Nette\Object implements Nette\Security\IAuthenticator {
 	
-	/** @var Doctrine\ORM\EntityManager */
-	protected $entityManager;
+	/** @var Services\BaseService */
+	protected $userService;
 	
 	/**
 	 * Constructor
-	 * @param Doctrine\ORM\EntityManager
+	 * @param Services\BaseService
 	 */
-	public function __construct ($entityManager)
+	public function __construct ($userService)
 	{
-		$this->entityManager = $entityManager;
+		$this->userService = $userService;
 	}
 	
 	/**
@@ -22,7 +22,7 @@ class Authenticator extends Nette\Object implements Nette\Security\IAuthenticato
 	 */
 	protected function getUserRepository ()
 	{
-		return $this->entityManager->getRepository('Entities\User');
+		return $this->userService->getRepository();
 	}
 	
 	/**
