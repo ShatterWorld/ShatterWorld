@@ -18,10 +18,16 @@ class DefaultPresenter extends BasePresenter
 		$form->addSubmit('send', 'Přihlásit');
 
 		//$form->setTranslator($translator);
-		//$form->setAction('/submit.php');
-		//$form->setMethod('POST');
+		
+		$form->onSuccess[] = callback($this, 'submitLoginForm');
 		
 		return $form;
+	}
+
+	protected function submitLoginForm($form)
+	{
+		$data=$form->getValues();	
+
 	}
 
 }

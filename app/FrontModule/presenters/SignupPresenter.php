@@ -49,9 +49,9 @@ class SignupPresenter extends BasePresenter
 				->setRequired('Zadejte prosím heslo ještě jednou pro kontrolu')
 				->addRule(Form::EQUAL, 'Hesla se neshodují', $form['password']);		
 				
-			$form->addText('landName', 'Jméno země')
+			/*$form->addText('landName', 'Jméno země')
 				->setRequired('Zadejte prosím unikátní jméno země');
-
+*/
 		$form->addGroup("Podmínky");
 
 			$form->addTextArea("conditions", "Podmínky")
@@ -64,11 +64,18 @@ class SignupPresenter extends BasePresenter
 			$form->addSubmit('send', 'Registrovat');
 
 		//$form->setTranslator($translator);
-		//$form->setAction('/submit.php');
-		//$form->setMethod('POST');
+		
+		
+		$form->onSuccess[] = callback($this, 'submitSignupForm');
 		
 		return $form;
 	}
 
+	protected function submitSignupForm($form)
+	{
+		$data=$form->getValues();	
 
+	}
+	
+	
 }
