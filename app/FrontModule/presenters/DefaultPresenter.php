@@ -1,6 +1,7 @@
 <?php
 namespace FrontModule;
 use Nette;
+use Nette\Application\UI\Form;
 
 class DefaultPresenter extends BasePresenter
 {
