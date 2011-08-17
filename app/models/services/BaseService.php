@@ -43,7 +43,7 @@ class BaseService extends Nette\Object {
 	protected function fillData ($object, $values)
 	{
 		foreach ($values as $attribute => $value) {
-			if (method_exists($object, $method = 'set' . lcfirst($attribute))) {
+			if (method_exists($object, $method = 'set' . ucfirst($attribute))) {
 				$object->$method($value);
 			}
 		}
