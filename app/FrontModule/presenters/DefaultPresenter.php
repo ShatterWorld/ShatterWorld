@@ -2,9 +2,9 @@
 namespace FrontModule;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Security\IAuthenticator
 
-class DefaultPresenter extends BasePresenter
-{
+class DefaultPresenter extends BasePresenter {
 	protected function createComponentLoginForm ()
 	{
 		$form = new Form;
@@ -27,26 +27,19 @@ class DefaultPresenter extends BasePresenter
 	public function submitLoginForm ($form)
 	{
 		$data = $form->getValues();
-		try{
+		try {
 			$this->getUser()->login($data["login"], $data["password"]);
-		}catch (Nette\Security\AuthenticationException $e){
-			$code=$e->getCode();
-			if ($code == Nette\Security\IAuthenticator::INVALID_CREDENTIAL){
+		} 
+		catch (Nette\Security\AuthenticationException $e) {
+			if ($e->getCode() === IAuthenticator::INVALID_CREDENTIAL) {
 				$this->flashMessage("Špatné heslo", "error");
-				
-			}else if($code == Nette\Security\IAuthenticator::IDENTITY_NOT_FOUND){
+			} elseif ($e->getCode() === IAuthenticator::IDENTITY_NOT_FOUND) {
 				$this->flashMessage("Špatný login", "error");
-				
-			}else{
-				$this->flashMessage("Nečekávaná chyba", "error");
+			} else {
+				$this->flashMessage("Neočekávaná chyba", "error");
 			}
-
 			$this->redirect('this');
 		}
-		
 		$this->redirect(":Game");
-
-
 	}
-
 }

@@ -29,8 +29,8 @@ abstract class BaseEntity extends Nette\Object {
 	 * Get the visible values of the entity as an associative array
 	 * @return array
 	 */
-	 public function toArray ()
-	 {
+	public function toArray ()
+	{
 		$result = array();
 		foreach (get_class_methods($this) as $method) {
 			if (Nette\Utils\Strings::startsWith($method, 'get')) {
