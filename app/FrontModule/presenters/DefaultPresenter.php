@@ -7,7 +7,7 @@ class DefaultPresenter extends BasePresenter
 
 	protected function createComponentLoginForm()
 	{
-		$form = new Nette\Application\UI\Form;
+		$form = new Form;
 
 		$form->addText('login', 'Login')
 			->setRequired('Zadejte prosím přihlašovací jméno');
@@ -26,7 +26,7 @@ class DefaultPresenter extends BasePresenter
 
 	public function submitLoginForm($form)
 	{
-		$data=$form->getValues();	
+		$data = $form->getValues();	
 
 	}
 

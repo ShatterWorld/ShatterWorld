@@ -17,7 +17,7 @@ class SignupPresenter extends BasePresenter
 		*/
 
 		
-		$form = new Nette\Application\UI\Form;
+		$form = new Form;
 
 		$form->addGroup("Osobní");
 			$form->addText('name', 'Jméno')
