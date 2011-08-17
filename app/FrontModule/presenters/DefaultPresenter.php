@@ -5,7 +5,7 @@ use Nette\Application\UI\Form;
 
 class DefaultPresenter extends BasePresenter
 {
-	protected function createComponentLoginForm()
+	protected function createComponentLoginForm ()
 	{
 		$form = new Form;
 
@@ -24,34 +24,27 @@ class DefaultPresenter extends BasePresenter
 		return $form;
 	}
 
-	public function submitLoginForm($form)
+	public function submitLoginForm ($form)
 	{
 		$data = $form->getValues();
 		try{
 			$this->getUser()->login($data["login"], $data["password"]);
-			$this->redirect(":Game");
-
-		}
-		catch (Nette\Security\AuthenticationException $e){
+		}catch (Nette\Security\AuthenticationException $e){
 			$code=$e->getCode();
-			if ($code == IAuthenticator::INVALID_CREDENTIAL)
-			{
+			if ($code == Nette\Security\IAuthenticator::INVALID_CREDENTIAL){
 				$this->flashMessage("Špatné heslo", "error");
 				
-			}
-			else if($code == IAuthenticator::IDENTITY_NOT_FOUND)
-			{
+			}else if($code == Nette\Security\IAuthenticator::IDENTITY_NOT_FOUND){
 				$this->flashMessage("Špatný login", "error");
 				
-			}
-			else
-			{
+			}else{
 				$this->flashMessage("Nečekávaná chyba", "error");
-				
 			}
 
 			$this->redirect('this');
 		}
+		
+		$this->redirect(":Game");
 
 
 	}

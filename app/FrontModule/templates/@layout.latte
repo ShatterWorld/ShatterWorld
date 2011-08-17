@@ -3,6 +3,15 @@
 	</head>
 
 	<body>
+		{if $flashes}
+			<div>
+				{foreach $flashes as $flash}
+					<div class="flash {$flash->type}">
+						{$flash->message}
+					</div>
+				{/foreach}
+			</div>
+		{/if}
 		<p>
 			<a href="{link Default:}">default(login)</a><br/>
 			<a href="{link Signup:}">signup</a><br/>

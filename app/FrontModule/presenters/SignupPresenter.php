@@ -5,7 +5,7 @@ use Nette\Application\UI\Form;
 class SignupPresenter extends BasePresenter
 {
 
-	protected function createComponentSignupForm()
+	protected function createComponentSignupForm ()
 	{
 	
 		/*TODO: add somewhere..?
@@ -71,9 +71,9 @@ class SignupPresenter extends BasePresenter
 		return $form;
 	}
 
-	public function submitSignupForm($form)
+	public function submitSignupForm ($form)
 	{
-		$data=$form->getValues();	
+		$data = $form->getValues();
 
 	}
 	
