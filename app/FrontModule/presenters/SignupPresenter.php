@@ -19,7 +19,7 @@ class SignupPresenter extends BasePresenter
 		
 		$form = new Form;
 
-		$form->addText('login', 'Login')
+		$form->addText('nickname', 'Login')
 			->setRequired('Zadejte prosím unikátní login');
 
 		$form->addText('email', 'E-mail')
@@ -54,6 +54,12 @@ class SignupPresenter extends BasePresenter
 	public function submitSignupForm ($form)
 	{
 		$data = $form->getValues();
+		$data["role"]="player";
+		$this->getService('userService')->create($data);
+
+		$this->flashMessage("Vaše registrace proběhla úspěšně");
+
+		$this->redirect(':Front:Default:');
 
 	}
 	
