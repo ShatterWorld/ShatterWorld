@@ -32,6 +32,33 @@ class User extends BaseEntity {
 	private $password;
 	
 	/**
+	 * @Column(type = "string")
+	 * @var string
+	 */
+	private $role;
+	
+	/**
+	 * Calculate a salted hash of the password
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	protected function calculatePasswordHash ($nickname, $password)
+	{
+		return sha1($nickname . $password);
+	}
+	
+	/**
+	 * Verify given password against this entity
+	 * @param string
+	 * @return bool
+	 */
+	public function verifyPassword ($password)
+	{
+		return $this->calculatePasswordHash($this->nickname, $password) === $this->password;
+	}
+	
+	/**
 	 * Name getter
 	 * @return string
 	 */
@@ -88,16 +115,6 @@ class User extends BaseEntity {
 		$this->email = $email;
 	}
 	
-	
-	/**
-	 * Password getter
-	 * @return string
-	 */
-	public function getPassword ()
-	{
-		return $this->password;
-	}
-	
 	/**
 	 * Password setter
 	 * @param string
@@ -105,6 +122,25 @@ class User extends BaseEntity {
 	 */
 	public function setPassword ($password)
 	{
-		$this->password = $password;
+		$this->password = $this->calculatePasswordHash($this->nickname, $password);
+	}
+	
+	/**
+	 * Role getter
+	 * @return string
+	 */
+	public function getRole ()
+	{
+		return $this->role;
+	}
+	
+	/**
+	 * Role setter
+	 * @param string
+	 * @return void
+	 */
+	public function setRole ($role)
+	{
+		$this->role = $role;
 	}
 }

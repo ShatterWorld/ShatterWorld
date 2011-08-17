@@ -99,7 +99,7 @@ class DoctrineCache extends Doctrine\Common\Cache\AbstractCache {
 			$deps['expire'] = time() + $lifeTime;
 		}
 		$this->storage->save($id, $data, $deps);
-		$this->addId($id, $lifetime ? $lifetime + time() : 0);
+		$this->addId($id, $lifeTime ? $lifeTime + time() : 0);
 		return TRUE;
 	}
 	
