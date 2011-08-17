@@ -11,12 +11,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 			$this->redirect(':Front:Homepage:');
 		}
 	}
-	
-	public function handleLogout () 
+
+	public function handleLogout ()
 	{
-		$user = $this->getUser();
-		$user->logout();
+		$this->getUser()->logout(TRUE);
 		$this->flashMessage("Odhlášen");
-		$this->redirect(':Front:Homepage:');
+		$this->redirect(':Front:Default:');
 	}
 }
