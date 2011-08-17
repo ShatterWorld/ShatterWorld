@@ -16,6 +16,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	{
 		$this->getUser()->logout(TRUE);
 		$this->flashMessage("Odhlášen");
-		$this->redirect(':Front:Default:');
+		$this->redirect(':Front:Homepage:');
 	}
 }
