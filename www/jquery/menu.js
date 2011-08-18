@@ -1,6 +1,6 @@
 $(document).ready(function(){
   $(".header").click(function(){
-	$(".submenu ul").hide();
-    $(this).parent().children("ul").show();
+	$(".submenu ul").hide("fast");
+    $(this).parent().children("ul").show("fast");
   });
 });
