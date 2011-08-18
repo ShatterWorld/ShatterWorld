@@ -1,52 +1,57 @@
-*{
+* {
 	padding: 0;
 	margin: 0 auto;
 }
 
-.clearer{
-  clear:both;
+.clearer {
+	clear: both;
 }
 
-#frame{
+#frame {
 	width: 900px;
 	background: lightgrey;
 }
 
-.leftFloat{
-	float:left;
+.leftFloat {
+	float: left;
 }
-.rightFloat{
-	float:right;
+.rightFloat {
+	float: right;
 }
 
-#menu{
-	width:200px;
+#menu {
+	width: 200px;
 	background: pink;
 }
 
+<<<<<<< HEAD
 #menu ul{
 	background:red;
 	margin-bottom:5px;
 }
 
 #banner{
+=======
+#banner {
+>>>>>>> 83618246c0e446882ec3c9c6965f70a88abbc822
 	background: url('../images/banner.png');
-	height:193px;
+	height: 193px;
 }
-#banner a{
-	color:white;
-	text-decoration:none;
-	font-weight:bold;
+
+#banner a {
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
 	
 }
 
-#content{
-	margin-left: 205px;
-	background:lightgreen;
+#content {
+	width: 695px;
+	background: lightgreen;
 }
 
-#footer{
-	background:yellow;
+#footer {
+	background: yellow;
 }
 
 
