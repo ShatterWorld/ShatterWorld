@@ -28,6 +28,8 @@ $container = $configurator->loadConfig(__DIR__ . '/config.neon');
 $router = $container->router;
 $router[] = $gameRouter = new RouteList('Game');
 $gameRouter[] = new Route('game/<presenter>/<action>/[<id>]', 'Dashboard:default');
+$router[] = $adminRouter = new RouteList('Admin');
+$adminRouter[] = new Route('admin/<presenter>/<action>[/<id>]', 'Dashboard:default');
 $router[] = $frontRouter = new RouteList('Front');
 $frontRouter[] = new Route('index.php', 'Front:Homepage:default', Route::ONE_WAY);
 $frontRouter[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
