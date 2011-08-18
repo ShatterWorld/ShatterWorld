@@ -40,17 +40,15 @@ class ProfilePresenter extends BasePresenter {
 		$form = new Form();
 		$form->addText('name', 'Jméno:');
 		$form->addSubmit('submit', 'Uložit');
-		$form->onSuccess[] = callback($this, 'submitNewProfileForm');
+		$form->onSuccess[] = callback($this, 'submitEditProfileForm');
 		return $form;
 	}
 	
 	public function submitEditProfileForm (Form $form)
 	{
-	
-		if (!$this->getPlayerProfile()) {
-			$this->flashMessage('Uloženo!');
-		}
-		$this->redirect('Profile:');
+		$this->getProfileService()->update($this->getPlayerProfile(), $form->getValues());
+		$this->flashMessage('Uloženo!');
+		//$this->redirect('Profile:');
 		
 	}
 	
