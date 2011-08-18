@@ -1,7 +1,22 @@
+{**
+ * ShatterWorld game-layout template.
+ *
+ * @copyright Copyright (c) 2010 Petr Bělohlávek
+ * @package ShatterWorld
+ *
+ * @param string $basePath web base path
+ * @param string $robots tell robots how to index the content of a page (optional)
+ * @param array $flashes flash messages
+ * @param array $content content
+ *}
+ 
+ <!DOCTYPE html> 
 <html>
 	<head>
 		<title>{block #title}</title>
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/game.css" />
+		<script type="text/javascript" src="{$basePath}/jquery/jquery_min.js"></script>
+		<script type="text/javascript" src="{$basePath}/jquery/menu.js"></script>
 	</head>
 
 	<body>
@@ -27,7 +42,15 @@
 
 			<div id="menu" class="leftFloat">
 				<div class="submenu">
-					<h3>ahoj</h3>
+					<div class="header" id="submenu1">ahoj1</div>
+					<ul class="tmp">
+						<li>1asdfdf</li>
+						<li>2sdf</li>
+						<li>3sdfsdf</li>
+					</ul>
+				</div>
+				<div class="submenu">
+					<div class="header" id="submenu2">ahoj2</div>
 					<ul>
 						<li>1asdfdf</li>
 						<li>2sdf</li>
@@ -35,15 +58,7 @@
 					</ul>
 				</div>
 				<div class="submenu">
-					<h3>ahoj</h3>
-					<ul>
-						<li>1asdfdf</li>
-						<li>2sdf</li>
-						<li>3sdfsdf</li>
-					</ul>
-				</div>
-				<div class="submenu">
-					<h3>ahoj</h3>
+					<div class="header" id="submenu3">ahoj3</div>
 					<ul>
 						<li>1asdfdf</li>
 						<li>2sdf</li>
@@ -54,7 +69,8 @@
 			</div>
 
 			<div id="content" class="rightFloat">
-			<h3 class="header">ahoj</h3>
+			<div class="header"><a href="">ahoj</a></div>
+
 				{include #content}
 				<br/>-------------<br/>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lorem tellus, porttitor in feugiat nec, bibendum et lectus. Duis ultricies suscipit ligula, ut dignissim sapien commodo tempus. Morbi sagittis, quam id vulputate hendrerit, enim leo blandit justo, sit amet pulvinar enim elit ac sapien. Sed congue aliquam nisl, quis commodo augue condimentum lacinia. Duis quis lorem dui, eget venenatis dolor. Vivamus a tellus ac tortor gravida tempor at et tellus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse nec nisi at tortor tempor feugiat. Fusce ac augue pharetra dui dictum faucibus ac vel massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hac habitasse platea dictumst. Aliquam erat volutpat. Aliquam posuere hendrerit leo et ullamcorper. Integer mi lectus, tempor a eleifend a, semper a neque. Sed nibh orci, molestie quis iaculis ac, tincidunt vitae nunc. In sit amet magna augue, feugiat tempus nibh.
