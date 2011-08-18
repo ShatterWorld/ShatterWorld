@@ -2,59 +2,63 @@
 	padding: 0;
 	margin: 0 auto;
 }
-
 .clearer {
 	clear: both;
 }
+body{
+	background: url('../images/background.jpg') 3c3c3c repeat-y center top;
 
+}
 #frame {
 	width: 900px;
-	background: lightgrey;
+	/* background: lightgrey;*/
 }
-
 .leftFloat {
 	float: left;
 }
 .rightFloat {
 	float: right;
 }
-
 #menu {
 	width: 200px;
-	background: pink;
+	/*background: pink;*/
 }
-
-<<<<<<< HEAD
-#menu ul{
-	background:red;
-	margin-bottom:5px;
+#menu .submenu{					/*.submenu in #menu*/
+	background: lightgrey;
+	margin-bottom:15px;
+	width: 170px;	
 }
-
-#banner{
-=======
+#menu h3, .header{
+	background: url('../images/BlockHeader.png') center center;
+	color:white;
+}
 #banner {
->>>>>>> 83618246c0e446882ec3c9c6965f70a88abbc822
-	background: url('../images/banner.png');
+	background: url('../images/banner.png') no-repeat;
 	height: 193px;
+	margin-bottom:15px;
 }
-
 #banner a {
 	color: white;
 	text-decoration: none;
 	font-weight: bold;
+ 
+}
+#content {
+	width: 680px;
+	background: lightgrey;
+	text-align: justify;
+	padding: 0px 10px 0px 10px;
+}
+#footer {
+	height:37px;
+	background: url('../images/footer.png') no-repeat;
+	margin-top: 15px;
+	color:white;
+	text-align:center;
+	vertical-align:bottom;
 	
 }
-
-#content {
-	width: 695px;
-	background: lightgreen;
+#logout{
+	margin-right:3px;
+	margin-top:1px;
 }
-
-#footer {
-	background: yellow;
-}
-
-
-
-
-
