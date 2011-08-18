@@ -25,11 +25,12 @@
 }
 
 #banner{
-	background:lightblue
+	background: url('../images/banner.png');
+	height:193px;
 }
 
 #content{
-	margin-left: 200px;
+	margin-left: 205px;
 	background:lightgreen;
 }
 
