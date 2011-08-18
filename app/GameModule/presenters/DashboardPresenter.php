@@ -1,10 +1,14 @@
 <?php
 namespace GameModule;
 use Nette;
-//use Nette\Application\UI\Form;
+
 class DashboardPresenter extends BasePresenter
 {
-
-	
-	
+	public function startup ()
+	{
+		parent::startup();
+		if (!$this->getService('clanService')->getRepository()->find($this->getUser()->getId())) {
+			$this->redirect('Clan:new');
+		}
+	}
 }
