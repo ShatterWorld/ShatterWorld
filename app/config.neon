@@ -15,6 +15,7 @@ common:
 		proxyNamespace: Proxies
 		entityDir: [%appDir%/models/entities]
 		entityNamespace: Entities
+		serviceNamespace: Services
 
 	database:
 		driver: pdo_mysql
