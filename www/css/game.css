@@ -6,7 +6,7 @@
 	clear: both;
 }
 body{
-	background: url('../images/background.jpg') 3c3c3c repeat-y center top;
+	background: url('../images/background.jpg') #3c3c3c repeat-y center top;
 
 }
 #frame {
