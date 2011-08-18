@@ -28,10 +28,11 @@
 	background: url('../images/banner.png');
 	height: 193px;
 }
-#banner a{
-	color:white;
-	text-decoration:none;
-	font-weight:bold;
+
+#banner a {
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
 	
 }
 
