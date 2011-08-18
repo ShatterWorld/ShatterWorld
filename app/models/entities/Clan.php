@@ -3,8 +3,8 @@ namespace Entities;
 
 /**
  * A clan entity
- * @author Jan "Teyras" Buchar
  * @Entity
+ * @author Jan "Teyras" Buchar
  */
 class Clan extends BaseEntity {
 	
@@ -53,7 +53,7 @@ class Clan extends BaseEntity {
 	 * @param Entities\User
 	 * @return void
 	 */
-	public function setUser (Entities\User $User)
+	public function setUser (User $user)
 	{
 		$this->user = $user;
 	}
