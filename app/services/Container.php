@@ -14,7 +14,10 @@ class Container extends Nette\DI\Container {
 		$config->setQueryCacheImpl($cache);
 		$config->setProxyNamespace($this->params['doctrine']['proxyNamespace']);
 		$config->setProxyDir($this->params['doctrine']['proxyDir']);
-		$config->setAutoGenerateProxyClasses($this->params['productionMode']);
+		$config->setAutoGenerateProxyClasses(!$this->params['productionMode']);
+		if (!$this->params['productionMode']) {
+			$config->setSQLLogger(\Nella\Doctrine\Panel::register());
+		}
 		$connection = $this->params['database'];
 		return Doctrine\ORM\EntityManager::create($connection, $config);
 	}

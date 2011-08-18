@@ -7,7 +7,7 @@ class ClanPresenter extends BasePresenter {
 	
 	public function renderDefault ()
 	{
-		$this->template->clan = $this->getService('clanService')->getRepository()->find($this->getUser()->getId());
+		$this->template->clan = $this->getClanRepository()->findOneByUser($this->getUser()->getId());
 	}
 	
 	protected function createComponentNewClanForm () 
@@ -23,7 +23,7 @@ class ClanPresenter extends BasePresenter {
 	public function submitNewClanForm (Form $form)
 	{
 		$data = $form->getValues();
-		$data['user'] = $this->getService('userService')->getRepository()->find($this->getUser()->getId());
+		$data['user'] = $this->getUserRepository()->find($this->getUser()->getId());
 		$this->getService('clanService')->create($data);
 		$this->flashMessage(sprintf('Klan %s byl založen.', $data['name']));
 		$this->redirect('Clan:');

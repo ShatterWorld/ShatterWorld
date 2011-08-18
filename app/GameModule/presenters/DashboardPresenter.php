@@ -7,7 +7,7 @@ class DashboardPresenter extends BasePresenter
 	public function startup ()
 	{
 		parent::startup();
-		if (!$this->getService('clanService')->getRepository()->find($this->getUser()->getId())) {
+		if (!$this->getClanRepository()->findOneByUser($this->getUser()->getId())) {
 			$this->redirect('Clan:new');
 		}
 	}
