@@ -12,8 +12,8 @@ class ProfilePresenter extends BasePresenter {
 	
 	public function actionNew ()
 	{
-		if ($this->getPlayerClan()) {
-			$this->redirect('Clan:');
+		if ($this->getPlayerProfile()) {
+			$this->redirect('Profile:');
 		}
 	}
 	
@@ -27,8 +27,8 @@ class ProfilePresenter extends BasePresenter {
 	
 	public function submitNewProfileForm (Form $form)
 	{
-	
 		if (!$this->getPlayerProfile()) {
+			$this->getProfileService()->create(array('user' => $this->getUserRepository()->find($this->getUser()->getId())));
 			$this->flashMessage('Profil byl založen.');
 		}
 		$this->redirect('Profile:');
@@ -57,6 +57,11 @@ class ProfilePresenter extends BasePresenter {
 	protected function getPlayerProfile ()
 	{
 		return $this->getProfileRepository()->findOneByUser($this->getUser()->getId());
+	}
+	
+	protected function getPlayerClan ()
+	{
+		return $this->getClanRepository()->findOneByUser($this->getUser()->getId());
 	}
 	
 }

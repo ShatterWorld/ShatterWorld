@@ -2,14 +2,14 @@
 namespace Entities;
 
 /**
- * A clan entity
+ * A user profile entity
  * @Entity
  * @author Petr Bělohlávek
  */
 class Profile extends BaseEntity {
 	
 	/**
-	 * @Column(type = "string")
+	 * @Column(type = "string", nullable = true)
 	 * @var string
 	 */
 	private $name;
