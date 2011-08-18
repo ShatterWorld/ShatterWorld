@@ -38,4 +38,15 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	{
 		return $this->getClanService()->getRepository();
 	}
+	
+	protected function getProfileService ()
+	{
+		return $this->context->getService('profileService');
+	}
+	
+	protected function getProfileRepository ()
+	{
+		return $this->getProfileService()->getRepository();
+	}
+
 }
