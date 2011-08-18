@@ -1,0 +1,11 @@
+#flashes .flash{
+	background: lightgrey;
+	margin-left: 15px;
+	margin-bottom: 15px;
+	cursor: pointer;
+	padding: 1px 5px 1px 5px;
+}
+
+#flashes .error{
+	background: red;
+}

@@ -37,12 +37,10 @@ body{
 	padding-left:5px;
 	background: url('../images/BlockHeader.png') repeat-x center center;
 	color:white;
+	cursor: pointer;
+
 }
-.header a{
-	color: white;
-	text-decoration: none;
-	font-weight: bold;
-}
+
 #banner {
 	background: url('../images/banner.png') no-repeat;
 	height: 193px;

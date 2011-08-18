@@ -40,6 +40,7 @@ class HomepagePresenter extends BasePresenter {
 			}
 			$this->redirect('this');
 		}
+		$this->flashMessage("Úspěšně přihlášen");
 		$this->redirect(":Game:Dashboard:");
 	}
 }
