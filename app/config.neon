@@ -12,8 +12,8 @@ common:
 
 	game:
 		map:
-			sizeX: 8
-			sizeY: 8
+			sizeX: 16
+			sizeY: 16
 
 	doctrine:
 		proxyDir: %tempDir%/proxies
