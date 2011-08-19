@@ -1,4 +1,5 @@
 <?php
+use Nette\Utils\Strings;
 
 /**
  * Base class for all application presenters.
@@ -8,5 +9,11 @@
  */
 abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
-
+	public function __call ($name, $args)
+	{
+		if (Strings::startsWith($name, 'get')) {
+			
+		}
+		return parent::__call($name, $args);
+	}
 }

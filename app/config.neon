@@ -10,6 +10,11 @@ common:
 		session.save_path: "%tempDir%/sessions"
 		# zlib.output_compression: yes
 
+	game:
+		map:
+			sizeX: 10
+			sizeY: 10
+
 	doctrine:
 		proxyDir: %tempDir%/proxies
 		proxyNamespace: Proxies
