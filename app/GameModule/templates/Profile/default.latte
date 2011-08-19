@@ -5,20 +5,24 @@
 {block #content}
 <table>
 	<tr>
+		<th><img src="{$basePath}/images/avatars/{$profile->id}.png"/></th>
+		<td></td>
+	</tr>
+	<tr>
 		<th>Jméno:</th>
-		<td>{$profile->name}</id>
+		<td>{$profile->name}</td>
 	</tr>
 	<tr>
 		<th>Věk:</th>
-		<td>{$profile->age}</id>
+		<td>{$profile->age}</td>
 	</tr>
 	<tr>
 		<th>Pohlaví:</th>
-		<td>{if $profile->gender=="m"}Muž{elseif $profile->gender=="f"}Žena{/if}</id>
+		<td>{if $profile->gender=="m"}Muž{elseif $profile->gender=="f"}Žena{/if}</td>
 	</tr>
 	<tr>
 		<th>ICQ:</th>
-		<td>{$profile->icq}</id>
+		<td>{$profile->icq}</td>
 	</tr>
 </table>
 {/block}

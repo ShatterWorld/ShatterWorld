@@ -2,6 +2,7 @@
 namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 
 /**
  * A ProfilePresenter
@@ -75,6 +76,11 @@ class ProfilePresenter extends BasePresenter {
 	{
 		$form = new Form();
 		
+		$form->addUpload('avatar', 'Avatar (50kB)')
+			->addCondition(Form::FILLED)
+				->addRule(Form::MAX_FILE_SIZE, 'Maximální velikost souboru nesmí být větší než 50kB', 50*1024)
+				->addRule(Form::IMAGE, 'Avatar musí být JPEG, PNG nebo GIF');
+			
 		$form->addText('name', 'Jméno');
 		
 		$form->addText('age', 'Věk')
@@ -85,7 +91,7 @@ class ProfilePresenter extends BasePresenter {
 			'm' => 'muž',
 			'f' => 'žena',
 		);
-		$form->addRadioList('gender', 'Pohlaví:', $sex);
+		$form->addRadioList('gender', 'Pohlaví', $sex);
 
 		$form->addText('icq', 'ICQ');
 				
@@ -105,7 +111,7 @@ class ProfilePresenter extends BasePresenter {
 			$this->getProfileService()->update($this->getPlayerProfile(), $form->getValues());
 			$this->flashMessage('Uloženo!');
 		}
-		$this->redirect('Profile:');
+		//$this->redirect('Profile:');
 		
 	}
 
