@@ -18,36 +18,6 @@ abstract class BasePresenter extends \BasePresenter
 		$this->flashMessage("Odhlášen");
 		$this->redirect(':Front:Homepage:');
 	}
-	
-	protected function getUserService ()
-	{
-		return $this->context->getService('userService');
-	}
-	
-	protected function getUserRepository ()
-	{
-		return $this->getUserService()->getRepository();
-	}
-	
-	protected function getClanService ()
-	{
-		return $this->context->getService('clanService');
-	}
-	
-	protected function getClanRepository ()
-	{
-		return $this->getClanService()->getRepository();
-	}
-	
-	protected function getProfileService ()
-	{
-		return $this->context->getService('profileService');
-	}
-	
-	protected function getProfileRepository ()
-	{
-		return $this->getProfileService()->getRepository();
-	}
 
 	public function getPlayerProfile ()
 	{
