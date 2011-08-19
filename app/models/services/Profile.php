@@ -1,27 +1,41 @@
 <?php
 namespace Services;
 use Nette;
-use Nette\Diagnostics\Debugger;
+use Nette\Image;
 /**
  * Profile service class
  * @author Petr Bělohlávek
  */
-class Profile extends BaseServise {
+class Profile extends BaseService {
 
+	/**
+	* Updates an object as parent does
+	* In addition, if avatar-image is set, it resizes it (96x96) and saves to www/images/avatars/{profile->id}.png
+	*/
 	public function update ($object, $values, $flush = TRUE)
 	{
-		$values['icq']="123";
-		parent::update($object, $values);
+		parent::update($object, $values, $flush);
 		
-		$avatarPath=$values['avatar'];
+		if ($values['avatar']->getError() == 0){
+			$avatar = $values['avatar'];
+			$avatarPath = $avatar->getTemporaryFile();
 
-		$avatar=Image::fromFile($avatarPath);
-		$avatar->save('{$basePath}/images/avatars/a.jpg');
+			$avatar = Image::fromFile($avatarPath);
+			$avatar->resize(96, 96);
+			$targetPath = $this->context->params['wwwDir'].'/images/avatars/'.$object->id.'.png';
+			$avatar->save($targetPath, 100, Image::PNG);
 
-		$tmp="ahoj";
-		Debugger::barDump($tmp);
+		}
 	}
 	
+	public function delete ($object, $flush = TRUE)
+	{
+
+		unlink($this->context->params['wwwDir'].'/images/avatars/'.$object->id.'.png');
+
+		parent::delete($object, $flush);
+		
+	}
 	
 	
 }
