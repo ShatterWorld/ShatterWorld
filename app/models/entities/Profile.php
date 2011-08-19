@@ -78,7 +78,7 @@ class Profile extends BaseEntity {
 	}
 	
 	/**
-	 * Name getter
+	 * Age getter
 	 * @return int
 	 */
 	public function getAge ()
@@ -87,7 +87,7 @@ class Profile extends BaseEntity {
 	}
 	
 	/**
-	 * Name setter
+	 * Age setter
 	 * @param int
 	 * @return void
 	 */
@@ -97,7 +97,7 @@ class Profile extends BaseEntity {
 	}
 	
 	/**
-	 * Name getter
+	 * Gender getter
 	 * @return string
 	 */
 	public function getGender ()
@@ -106,7 +106,7 @@ class Profile extends BaseEntity {
 	}
 	
 	/**
-	 * Name setter
+	 * Gender setter
 	 * @param string
 	 * @return void
 	 */
@@ -116,7 +116,7 @@ class Profile extends BaseEntity {
 	}
 	
 	/**
-	 * Name getter
+	 * ICQ getter
 	 * @return string
 	 */
 	public function getIcq ()
@@ -125,7 +125,7 @@ class Profile extends BaseEntity {
 	}
 	
 	/**
-	 * Name setter
+	 * ICQ setter
 	 * @param string
 	 * @return void
 	 */
