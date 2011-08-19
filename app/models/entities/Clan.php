@@ -87,6 +87,5 @@ class Clan extends BaseEntity {
 	public function addField (Field $field)
 	{
 		$field->setOwner($this);
-		$this->fields->add($field);
 	}
 }
