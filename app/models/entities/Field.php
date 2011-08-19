@@ -33,7 +33,7 @@ class Field extends BaseEntity {
 	private $type;
 	
 	/**
-	 * @Column(type = "string")
+	 * @Column(type = "string", nullable = TRUE)
 	 * @var string
 	 */
 	private $facility;
@@ -43,6 +43,14 @@ class Field extends BaseEntity {
 	 * @var int
 	 */
 	private $level;
+	
+	/**
+	 * Constructor
+	 */
+	public function __construct ()
+	{
+		$this->level = 0;
+	}
 	
 	/**
 	 * Owner getter
@@ -79,8 +87,11 @@ class Field extends BaseEntity {
 	 * @param int
 	 * @return void
 	 */
-	public function setCoords ($x, $y)
+	public function setCoords ($x, $y = NULL)
 	{
+		if (!is_scalar($x)) {
+			list($x, $y) = $x;
+		}
 		$this->coordX = $x;
 		$this->coordY = $y;
 	}
@@ -121,6 +132,7 @@ class Field extends BaseEntity {
 	public function setFacility ($facility)
 	{
 		$this->facility = $facility;
+		$this->setLevel(1);
 	}
 	
 	/**

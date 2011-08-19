@@ -8,6 +8,9 @@ use Nette;
  */
 class BaseService extends Nette\Object {
 	
+	/** @var Nette\DI\Container */
+	protected $context;
+	
 	/** @var Doctrine\ORM\EntityManager */
 	protected $entityManager;
 	
@@ -19,9 +22,10 @@ class BaseService extends Nette\Object {
 	 * @param Doctrine\ORM\EntityManager
 	 * @param string
 	 */
-	public function __construct ($entityManager, $entityClass)
+	public function __construct ($context, $entityClass)
 	{
-		$this->entityManager = $entityManager;
+		$this->context = $context;
+		$this->entityManager = $context->entityManager;
 		$this->entityClass = $entityClass;
 	}
 	

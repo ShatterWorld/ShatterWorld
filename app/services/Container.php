@@ -35,7 +35,7 @@ class Container extends Nette\DI\Container {
 			if (!class_exists($class = $this->params['doctrine']['serviceNamespace'] . '\\' . $name)) {
 				$class = 'Services\\BaseService';
 			}
-			$this->addService($name, new $class($this->getService('entityManager'), $entityName));
+			$this->addService($name, new $class($this, $entityName));
 		}
 		return $this->getService($name);
 	}
