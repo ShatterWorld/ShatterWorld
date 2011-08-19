@@ -9,12 +9,14 @@ use Nette\Application\UI\Form;
  */
 class ProfilePresenter extends BasePresenter {
 	/**
-	* Renders default values
+	* Redirects if user has no profile, otherwise displays his profile
 	* @return void
 	*/
 	public function renderDefault ()
 	{
-	
+		if (!$this->getPlayerProfile()) {
+			$this->redirect('Profile:new');
+		}	
 		$this->template->profile = $this->getPlayerProfile();
 	}
 	
@@ -99,8 +101,10 @@ class ProfilePresenter extends BasePresenter {
 	*/
 	public function submitEditProfileForm (Form $form)
 	{
-		$this->getProfileService()->update($this->getPlayerProfile(), $form->getValues());
-		$this->flashMessage('Uloženo!');
+		if ($this->getPlayerProfile()) {
+			$this->getProfileService()->update($this->getPlayerProfile(), $form->getValues());
+			$this->flashMessage('Uloženo!');
+		}
 		$this->redirect('Profile:');
 		
 	}
@@ -128,7 +132,7 @@ class ProfilePresenter extends BasePresenter {
 			$this->getProfileService()->delete($this->getPlayerProfile());
 			$this->flashMessage('Profil byl smazán.');
 		}
-		$this->redirect('Dashboard:');
+		$this->redirect('Profile:new');
 		
 	}
 
