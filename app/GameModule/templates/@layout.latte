@@ -9,8 +9,7 @@
  * @param array $flashes flash messages
  * @param array $content content
  *}
- 
- <!DOCTYPE html> 
+<!DOCTYPE html> 
 <html>
 	<head>
 		<title>{block #title}ShatterWorld{/block}</title>
@@ -18,18 +17,19 @@
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/game.css" />
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/flashes.css" />
 
-		<script type="text/javascript" src="{$basePath}/jquery/jquery_min.js"></script>
-		<script type="text/javascript" src="{$basePath}/jquery/menu.js"></script>
-		<script type="text/javascript" src="{$basePath}/jquery/flashes.js"></script>
+		<script type="text/javascript" src="{$basePath}/js/jquery_min.js"></script>
+		<script type="text/javascript" src="{$basePath}/js/menu.js"></script>
+		<script type="text/javascript" src="{$basePath}/js/flashes.js"></script>
 	</head>
 
 	<body>
 	
 		<div id="frame">
+			<div id="userBar">
+				<a href="{link Profile:}" class="caption">{$user->identity->nickname}:</a>
+				<a href="{link logout!}">Odhlásit se</a>
+			</div>
 			<div id="banner">
-				<div id="logout" class="rightFloat">
-					<a href="{link logout!}">Odhlásit se</a>			
-				</div>
 
 			</div>
 			<div class="clearer"><span></span></div>
@@ -44,9 +44,9 @@
 				</div>
 			{/if}
 
-			<div id="menu" class="leftFloat">
+			<div id="menu">
 				<div class="submenu" id="game">
-					<div class="header">Game</div>
+					<h3>Game</h3>
 					<ul class="tmp">
 						<li>1asdfdf</li>
 						<li>2sdf</li>
@@ -54,7 +54,7 @@
 					</ul>
 				</div>
 				<div class="submenu" id="sth">
-					<div class="header">Sth</div>
+					<h3>Sth</h3>
 					<ul>
 						<li>1asdfdf</li>
 						<li>2sdf</li>
@@ -62,7 +62,7 @@
 					</ul>
 				</div>
 				<div class="submenu" id="profile">
-					<div class="header">Profil</div>
+					<h3>Profil</h3>
 					<ul>
 						{if !$presenter->getPlayerProfile()}
 							<li><a href="{link Profile:new}">Nový</a></li>
@@ -76,9 +76,9 @@
 				
 			</div>
 
-			<div id="content" class="rightFloat">
-			<div class="header">{block #header}.{/block}</div>
-
+			<div id="container">
+			<div id="header">{block #header}&nbsp;{/block}</div>
+			<div id="content">
 				{include #content}
 				<br/>-------------<br/>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lorem tellus, porttitor in feugiat nec, bibendum et lectus. Duis ultricies suscipit ligula, ut dignissim sapien commodo tempus. Morbi sagittis, quam id vulputate hendrerit, enim leo blandit justo, sit amet pulvinar enim elit ac sapien. Sed congue aliquam nisl, quis commodo augue condimentum lacinia. Duis quis lorem dui, eget venenatis dolor. Vivamus a tellus ac tortor gravida tempor at et tellus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse nec nisi at tortor tempor feugiat. Fusce ac augue pharetra dui dictum faucibus ac vel massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In hac habitasse platea dictumst. Aliquam erat volutpat. Aliquam posuere hendrerit leo et ullamcorper. Integer mi lectus, tempor a eleifend a, semper a neque. Sed nibh orci, molestie quis iaculis ac, tincidunt vitae nunc. In sit amet magna augue, feugiat tempus nibh.
@@ -86,6 +86,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lorem tellus, portt
 Vestibulum ut ante erat, at porttitor nunc. Phasellus luctus orci laoreet libero gravida lobortis. Nullam sodales ultricies lectus, vel elementum tortor vehicula ut. Proin lacus felis, fringilla a tincidunt eget, elementum a odio. Cras consequat elit elit, non porta est. Integer interdum ipsum at est elementum ac molestie dolor consectetur. Mauris tempor diam quis neque rhoncus gravida. Donec elit est, tincidunt eget rhoncus non, aliquam eget turpis. In consectetur tellus eget mauris lacinia et scelerisque urna blandit. Morbi pulvinar elementum sem sit amet mattis. Morbi dignissim, lacus quis porta facilisis, tortor tellus commodo arcu, vitae commodo odio dolor interdum sem. Pellentesque egestas mauris in eros rhoncus tincidunt.
 
 Praesent a diam quis leo auctor lacinia id sit amet enim. Nunc tristique pellentesque lacus sed euismod. Aliquam cursus pellentesque purus eu volutpat. Etiam id eros lectus, at sollicitudin neque. Sed tempor urna quis tortor varius nec molestie arcu cursus. Vivamus pharetra urna mi, nec aliquet est. Suspendisse enim orci, bibendum ac mollis eu, interdum et velit. Aliquam felis orci, mollis eget sagittis in, adipiscing vel diam. Nunc sit amet tellus quis nisl porta auctor ac eget ipsum. Phasellus nec tortor nec sem sodales adipiscing. Donec turpis mi, hendrerit ut vehicula a, posuere eget elit. Vestibulum a odio purus, et ultrices risus. Curabitur adipiscing augue nec ante tincidunt ullamcorper.				
+			</div>
 			</div>
 			
 			<div class="clearer"><span></span></div>

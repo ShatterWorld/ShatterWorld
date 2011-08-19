@@ -1,73 +1,114 @@
 * {
-	padding: 0;
-	margin: 0 auto;
+	padding: 0px;
+	margin: 0px auto;
+	border: 0px;
 }
+
 .clearer {
 	clear: both;
 }
-body{
-	background: url('../images/background.jpg') #3c3c3c repeat-y center top;
 
+body {
+	background: url('../images/bg.png') #333 repeat-y center;
 }
+
+a {
+	color: #fff;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.caption {
+	font-weight: bold;
+}
+
 #frame {
 	width: 900px;
-	/* background: lightgrey;*/
+	background: #5D6555;
 }
-.leftFloat {
-	float: left;
+
+#userBar, #footer {
+	line-height: 25px;
+	padding: 0px 5px;
+	height: 25px;
+	color: #ccc;
 }
-.rightFloat {
-	float: right;
+
+#userBar {
+	background: url('../images/bar-top.png');
+	text-align: right;
 }
+
+#footer {
+	background: url('../images/bar-bottom.png');
+	margin-top: 15px;
+	text-align: center;
+	border-top: 1px solid #000;
+}
+
 #menu {
 	width: 200px;
-	/*background: pink;*/
+	float: left;
 }
-#menu .submenu{					/*.submenu in #menu*/
-	background: lightgrey;
-	margin-bottom:15px;
-	width: 170px;	
-}
-#menu .submenu ul{
-	margin-left:10px;
-	list-style-type: none;
-	display: none;
-}
-.header{
-	padding-left:5px;
-	background: url('../images/BlockHeader.png') repeat-x center center;
-	color:white;
-	cursor: pointer;
 
+#menu a {
+	color: #000;
+}
+
+#menu .submenu {
+	background: #cdcdcd;
+	margin-bottom: 15px;
+	width: 170px;
+	border: 1px solid #000;
+}
+
+#menu .submenu ul {
+	list-style-type: none;
+	margin-left: 12px;
+}
+
+#menu .submenu h3 {
+	color: white;
+	padding-left: 5px;
+	line-height: 20px;
+	background: url('../images/bar-small-bottom.png') repeat-x center;
+	cursor: pointer;
+}
+
+#header {
+	color: white;
+	padding: 0px 5px;
+	line-height: 20px;
+	background: url('../images/bar-small-bottom.png') repeat-x center;
 }
 
 #banner {
-	background: url('../images/banner.png') no-repeat;
-	height: 193px;
+	background: url('../images/banner.png');
+	border: solid #000;
+	border-width: 1px 0px;
+	height: 120px;
 	margin-bottom:15px;
 }
+
 #banner a {
 	color: white;
 	text-decoration: none;
 	font-weight: bold;
  
 }
-#content {
+
+#container {
 	width: 680px;
-	background: lightgrey;
+	border: 1px solid #000;
+	background: #cdcdcd;
+	float: right;
+	margin-right: 12px;
+}
+
+#content {
 	text-align: justify;
-	padding: 0px 5px 0px 5px;
-}
-#footer {
-	height:37px;
-	background: url('../images/footer.png') no-repeat;
-	margin-top: 15px;
-	color:white;
-	text-align:center;
-	vertical-align:bottom;
-	
-}
-#logout{
-	margin-right:3px;
-	margin-top:1px;
+	padding: 5px 15px;
 }
