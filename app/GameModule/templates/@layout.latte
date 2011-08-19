@@ -29,7 +29,6 @@
 			<div id="banner">
 				<div id="logout" class="rightFloat">
 					<a href="{link logout!}">Odhlásit se</a>			
-					<a href="{link Profile:}">profile</a><br/>
 				</div>
 
 			</div>
@@ -65,9 +64,13 @@
 				<div class="submenu" id="profile">
 					<div class="header">Profil</div>
 					<ul>
-						<li><a href="{link Profile:}">Přehled</a></li>
-						<li><a href="{link Profile:new}">Nový</a></li>
-						<li><a href="{link Profile:edit}">Upravit</a></li>
+						{if !$presenter->getPlayerProfile()}
+							<li><a href="{link Profile:new}">Nový</a></li>
+						{else}
+							<li><a href="{link Profile:}">Přehled</a></li>
+							<li><a href="{link Profile:edit}">Upravit</a></li>
+							<li><a href="{link Profile:delete}">Smazat</a></li>
+						{/if}
 					</ul>
 				</div>
 				
