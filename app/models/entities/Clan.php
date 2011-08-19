@@ -10,7 +10,7 @@ use Doctrine;
 class Clan extends BaseEntity {
 	
 	/**
-	 * @Column(type = "string")
+	 * @Column(type = "string", unique = true)
 	 * @var string
 	 */
 	private $name;
