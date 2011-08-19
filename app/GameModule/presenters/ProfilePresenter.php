@@ -17,7 +17,7 @@ class ProfilePresenter extends BasePresenter {
 		}
 	}
 	
-	public function actionEdit ()
+	public function renderEdit ()
 	{
 		$this['editProfileForm']->setValues($this->getPlayerProfile()->toArray());
 	}
