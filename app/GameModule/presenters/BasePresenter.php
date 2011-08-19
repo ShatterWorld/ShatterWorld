@@ -49,4 +49,10 @@ abstract class BasePresenter extends \BasePresenter
 		return $this->getProfileService()->getRepository();
 	}
 
+	public function getPlayerProfile ()
+	{
+		return $this->getProfileRepository()->findOneByUser($this->getUser()->getId());
+	}
+
+
 }
