@@ -47,8 +47,8 @@ class ProfilePresenter extends BasePresenter {
 		$form->addText('name', 'Jméno');
 		
 		$form->addText('age', 'Věk')
-			->addRule(Form::INTEGER, 'Věk musí být číslo')
-			->addRule(Form::RANGE, 'Věk musí být od 18 do 120', array(18, 120));		
+			->addCondition(Form::FILLED)
+				->addRule(Form::INTEGER, 'Věk musí být číslo');
 		
 		$sex = array(
 			'm' => 'muž',
