@@ -9,7 +9,7 @@ namespace Entities;
 class User extends BaseEntity {
 	
 	/**
-	 * @Column(type = "string")
+	 * @Column(type = "string", unique = true)
 	 * @var string
 	 */
 	private $nickname;
