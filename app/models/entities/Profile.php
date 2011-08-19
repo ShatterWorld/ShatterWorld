@@ -22,7 +22,7 @@ class Profile extends BaseEntity {
 	
 	/**
 	 * @Column(type = "integer", nullable = true)
-	 * @var string
+	 * @var integer
 	 */
 	private $age;
 	
