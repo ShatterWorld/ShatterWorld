@@ -21,7 +21,7 @@ class Profile extends BaseEntity {
 	private $user;
 	
 	/**
-	 * @Column(type = "string", nullable = true)
+	 * @Column(type = "integer", nullable = true)
 	 * @var string
 	 */
 	private $age;
@@ -79,7 +79,7 @@ class Profile extends BaseEntity {
 	
 	/**
 	 * Name getter
-	 * @return integer
+	 * @return int
 	 */
 	public function getAge ()
 	{
@@ -88,7 +88,7 @@ class Profile extends BaseEntity {
 	
 	/**
 	 * Name setter
-	 * @param integer
+	 * @param int
 	 * @return void
 	 */
 	public function setAge ($age)

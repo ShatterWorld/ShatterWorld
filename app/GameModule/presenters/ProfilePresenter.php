@@ -17,6 +17,11 @@ class ProfilePresenter extends BasePresenter {
 		}
 	}
 	
+	public function actionEdit ()
+	{
+		$this['editProfileForm']->setValues($this->getPlayerProfile()->toArray());
+	}
+	
 	protected function createComponentNewProfileForm () 
 	{
 		$form = new Form();
@@ -38,7 +43,6 @@ class ProfilePresenter extends BasePresenter {
 	protected function createComponentEditProfileForm () 
 	{
 		$form = new Form();
-		$form->setValues($this->getPlayerProfile()->toArray());		//!!!
 		
 		$form->addText('name', 'Jméno');
 		
