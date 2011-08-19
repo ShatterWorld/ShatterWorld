@@ -38,7 +38,22 @@ class ProfilePresenter extends BasePresenter {
 	protected function createComponentEditProfileForm () 
 	{
 		$form = new Form();
-		$form->addText('name', 'Jméno:');
+		$form->setValues($this->getPlayerProfile()->toArray());		//!!!
+		
+		$form->addText('name', 'Jméno');
+		
+		$form->addText('age', 'Věk')
+			->addRule(Form::INTEGER, 'Věk musí být číslo')
+			->addRule(Form::RANGE, 'Věk musí být od 18 do 120', array(18, 120));		
+		
+		$sex = array(
+			'm' => 'muž',
+			'f' => 'žena',
+		);
+		$form->addRadioList('gender', 'Pohlaví:', $sex);
+
+		$form->addText('icq', 'ICQ');
+				
 		$form->addSubmit('submit', 'Uložit');
 		$form->onSuccess[] = callback($this, 'submitEditProfileForm');
 		return $form;
@@ -56,10 +71,6 @@ class ProfilePresenter extends BasePresenter {
 	{
 		return $this->getProfileRepository()->findOneByUser($this->getUser()->getId());
 	}
-	
-	protected function getPlayerClan ()
-	{
-		return $this->getClanRepository()->findOneByUser($this->getUser()->getId());
-	}
+
 	
 }

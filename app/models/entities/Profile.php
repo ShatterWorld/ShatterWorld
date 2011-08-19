@@ -21,9 +21,28 @@ class Profile extends BaseEntity {
 	private $user;
 	
 	/**
+	 * @Column(type = "string", nullable = true)
+	 * @var string
+	 */
+	private $age;
+	
+	/**
+	 * @Column(type = "string", nullable = true)
+	 * @var integer
+	 */
+	private $gender;
+	
+	/**
+	 * @Column(type = "string", nullable = true)
+	 * @var string
+	 */
+	private $icq;
+	
+	/**
 	 * Name getter
 	 * @return string
 	 */
+	 
 	public function getName ()
 	{
 		return $this->name;
@@ -57,5 +76,66 @@ class Profile extends BaseEntity {
 	{
 		$this->user = $user;
 	}
+	
+	/**
+	 * Name getter
+	 * @return integer
+	 */
+	public function getAge ()
+	{
+		return $this->age;
+	}
+	
+	/**
+	 * Name setter
+	 * @param integer
+	 * @return void
+	 */
+	public function setAge ($age)
+	{
+		$this->age = $age;
+	}
+	
+	/**
+	 * Name getter
+	 * @return string
+	 */
+	public function getGender ()
+	{
+		return $this->gender;
+	}
+	
+	/**
+	 * Name setter
+	 * @param string
+	 * @return void
+	 */
+	public function setGender ($gender)
+	{
+		$this->gender = $gender;
+	}
+	
+	/**
+	 * Name getter
+	 * @return string
+	 */
+	public function getIcq ()
+	{
+		return $this->icq;
+	}
+	
+	/**
+	 * Name setter
+	 * @param string
+	 * @return void
+	 */
+	public function setIcq ($icq)
+	{
+		$this->icq = $icq;
+	}
+	
+
+
+
 	
 }
