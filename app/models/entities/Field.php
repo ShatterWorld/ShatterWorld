@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * A game plan field entity
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Field")
  * @author Jan "Teyras" Buchar
  */
 class Field extends BaseEntity {

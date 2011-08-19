@@ -1,0 +1,9 @@
+{block #content}
+<div id="map">
+{?$typeMap = array('forest' => 'green', 'mountains' => 'brown', 'desert' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
+{foreach $fields as $field}
+{?list($x, $y) = $field->coords}
+<img src="{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png" style="position:absolute;left:{($x*43)+($y*43)+300}px;top:{($x*-20)+($y*19)+200}px" />
+{/foreach}
+</div>
+{/block}
