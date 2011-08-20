@@ -111,7 +111,7 @@ class ProfilePresenter extends BasePresenter {
 			$this->getProfileService()->update($this->getPlayerProfile(), $form->getValues());
 			$this->flashMessage('Uloženo!');
 		}
-		//$this->redirect('Profile:');
+		$this->redirect('Profile:');
 		
 	}
 
