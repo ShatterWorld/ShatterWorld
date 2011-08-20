@@ -8,6 +8,7 @@
 
 		<div id="map" style="position:relative;background:#000;top:{$sizeY*40/2}px;left:{$sizeX*60/2}">
 			{?$typeMap = array('forest' => 'green', 'mountains' => 'brown', 'desert' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
+			{?$zIndex = $sizeX}
 			{foreach $fields as $field}
 				{?list($x, $y) = $field->coords}
 				<img 
@@ -15,9 +16,10 @@
 					id="field_{$x}_{$y}" 
 					alt="{$x}, {$y}" 
 					src="{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png" 
-					style="position:absolute;left:{($x*43)+($y*43)}px;top:{($x*-20)+($y*19)}px"
+					style="position:absolute;left:{($x*43)+($y*43)}px;top:{($x*-20)+($y*19)}px;z-index:{$zIndex}"
 					data-coords="[{$x}, {$y}]"	
 				/>
+				{if $iterator->getCounter() % $sizeX === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}
 			{/foreach}
 		</div>
 
