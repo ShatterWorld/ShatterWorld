@@ -22,6 +22,16 @@ class Container extends Nette\DI\Container {
 		return Doctrine\ORM\EntityManager::create($connection, $config);
 	}
 	
+	protected function createServiceAuthorizator ()
+	{
+		$acl = new Nette\Security\Permission;
+		$acl->addResource('administration');
+		$acl->addRole('player');
+		$acl->addRole('admin');
+		$acl->allow('admin');
+		return $acl;
+	}
+	
 	public function getModelService ($name)
 	{
 		$namespace = $this->params['doctrine']['entityNamespace'];

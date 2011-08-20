@@ -24,5 +24,10 @@ abstract class BasePresenter extends \BasePresenter
 		return $this->getProfileRepository()->findOneByUser($this->getUser()->getId());
 	}
 
-
+	protected function createComponentMap ()
+	{
+		$map = new Map();
+		$map->setup($this->getFieldRepository, $this->context->params['game']['map']);
+		return $map;
+	}
 }

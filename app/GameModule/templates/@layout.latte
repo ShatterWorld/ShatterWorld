@@ -27,6 +27,7 @@
 		<div id="frame">
 			<div id="userBar">
 				<a href="{link Profile:}" class="caption">{$user->identity->nickname}:</a>
+				{if $user->isAllowed('administration')}<a href="{link :Admin:Dashboard:}">Administrace</a> | {/if}
 				<a href="{link logout!}">Odhlásit se</a>
 			</div>
 			<div id="banner">
