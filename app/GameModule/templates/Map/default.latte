@@ -1,12 +1,16 @@
+{block #map-js}
+	<script type="text/javascript" src="{$basePath}/js/field.js"></script>
+{/block}
+
 {block #content}
-<div id="mapContainer" style="background:black;width:650px;height:{8*40+40}px;overflow:scroll;">
-<div id="map" style="position:relative;background:#000;top:{$sizeY*40/2}px;left:{$sizeX*60/2}">
-{?$typeMap = array('forest' => 'green', 'mountains' => 'brown', 'desert' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
-{foreach $fields as $field}
-{?list($x, $y) = $field->coords}
-<img alt="{$x}, {$y}" src="{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png" style="position:absolute;left:{($x*43)+($y*43)}px;top:{($x*-20)+($y*19)}px" />
-{/foreach}
-</div>
-<div class="clearer"><span></span></div>
-</div>
+	<div id="mapContainer" style="background:black;width:650px;height:{8*40+40}px;overflow:scroll;">
+		<div id="map" style="position:relative;background:#000;top:{$sizeY*40/2}px;left:{$sizeX*60/2}">
+			{?$typeMap = array('forest' => 'green', 'mountains' => 'brown', 'desert' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
+			{foreach $fields as $field}
+				{?list($x, $y) = $field->coords}
+				<img class="field" id="field_{$x}_{$y}"alt="{$x}, {$y}" src="{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png" style="position:absolute;left:{($x*43)+($y*43)}px;top:{($x*-20)+($y*19)}px"/>
+			{/foreach}
+		</div>
+		<div class="clearer"><span></span></div>
+	</div>
 {/block}

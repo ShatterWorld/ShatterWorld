@@ -1,0 +1,17 @@
+{block #content}
+<div id="map">
+{?$typeMap = array('forest' => 'green', 'mountains' => 'brown', 'desert' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
+{foreach $fields as $field}
+{?list($i, $j) = $field->coords}
+{?$width = 60}
+{?$height = 40}
+{?$a = 31.71}
+{?$b = ($width-$a)/2}
+{?$c = $height/2}
+{?$xPos = $i*$width - $i*$b}
+{?$yPos = $j*$height - $c + 200}
+
+<img src="{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png" style="position:absolute;left:{$xPos}px;top:{$yPos}px" />
+{/foreach}
+</div>
+{/block}

@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="{$basePath}/js/jquery_min.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/menu.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/flashes.js"></script>
+		{block #map-js}{/block}
 	</head>
 
 	<body>
@@ -46,21 +47,20 @@
 			{/if}
 
 			<div id="menu">
+				<div class="submenu" id="sth">
+					<h3>Novinky</h3>
+					<ul>
+						<li><a href="{link Dashboard:}">Aktuality</a></li>					
+					</ul>
+				</div>
+				
 				<div class="submenu" id="map">
 					<h3>Mapa</h3>
 					<ul class="tmp">
 						<li><a href="{link Map:}">Zobrazit</a></li>					
-						<li><a href="{link Admin:map:new}">Nová</a></li>					
 					</ul>
 				</div>
-				<div class="submenu" id="sth">
-					<h3>Sth</h3>
-					<ul>
-						<li>1asdfdf</li>
-						<li>2sdf</li>
-						<li>3sdfsdf</li>
-					</ul>
-				</div>
+				
 				<div class="submenu" id="profile">
 					<h3>Profil</h3>
 					<ul>
