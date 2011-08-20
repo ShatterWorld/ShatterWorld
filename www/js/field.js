@@ -9,6 +9,20 @@ $(document).ready(function(){
 	*/
 	var clicks = 0;
 	var prevIdStr = "";
+
+	/**
+	* Fills #info when user gets mouse over a field
+	* Needs to be fixed
+	*/
+	$(".field").mouseenter(function(e){
+		var idStr = $(this).attr('id');
+		var id = idStr.split('_');
+	
+		$("#info #coord").html('Souřadnice ['+coord[0]+';'+id[2]+']');//Rather JSON
+		
+	
+	
+	});	
 	
 	/**
 	* Runs when user click some field and increment clicks by one
