@@ -3,11 +3,18 @@
 {/block}
 
 {block #content}
-		<div id="fieldInfo" style="background: lightblue;  width: 150px; height: 60px;">
-			<div id="coord">Souřadnice</div>
+		<div id="fieldInfo" style="float: left; background: lightblue;  width: 170px; height: 80px;">
+			<div id="coords">Souřadnice</div>
+			<div id="realCoords">Souřadnice</div>
 			<div id="owner">Vlastník</div>
 			<div id="type">Typ</div>
 		</div>
+
+		<div id="fieldActions" style="float: right; background: lightgreen;  width: 170px; height: 80px;">
+		</div>
+
+		<div class="clearer"><span></span></div>
+
 
 	<div id="mapContainer" style="background:black;width:650px;height:{15*40+40}px;overflow:scroll;">
 
@@ -33,7 +40,7 @@
 					"
 					data-coords="[{$x}, {$y}]"	
 					data-type="{$field->type}"	
-					data-realCoords="[{$left}, {$top}]"	
+					data-realcoords="[{$left}, {$top}]"	
 					data-owner="sbd"	
 				/>
 				{if $iterator->getCounter() % $sizeX === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}

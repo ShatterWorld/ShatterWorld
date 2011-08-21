@@ -1,5 +1,5 @@
 /**
-* Marker
+* Deals with field actions
 * @author Petr Bělohlávek
 */
 $(document).ready(function(){
@@ -27,7 +27,8 @@ $(document).ready(function(){
 
 		fetchData(this);
 
-		$("#fieldInfo #coord").html('Souřadnice ['+data['coords'][0]+';'+data['coords'][1]+']');
+		$("#fieldInfo #coords").html('Souřadnice ['+data['coords'][0]+';'+data['coords'][1]+']');
+		$("#fieldInfo #realCoords").html('Souřadnice ['+data['realcoords'][0]+';'+data['realcoords'][1]+']');
 		$("#fieldInfo #owner").html('Vlastník '+data['owner']);
 		$("#fieldInfo #type").html('Typ '+data['type']);
 			
@@ -36,26 +37,34 @@ $(document).ready(function(){
 	
 	/**
 	* Runs when user click some field and increment clicks by one
-	* Bugs:	-doesnt mark the cesond field
+	* Bugs:	-doesnt mark the second field
 	* @return void
 	*/
 	$(".field").click(function(){
 
 		mark(this, data['coords'][0], data['coords'][1]);
 		clicks++;		
+
+		if (clicks < 2)
+		{
+			clearActions();
+			prevField = this;
 		
-		if ((clicks > 2) || (this == prevField))
+		}
+		else if ((clicks > 2) || (this == prevField))
 		{
 			unMarkAll();
+			clearActions();
+			prevField = null;
 		
 		}
 		else if (clicks == 2)
 		{
 			showMenu();
-			unMarkAll();
+//			unMarkAll();
+			prevField = this;
 		}
 		
-		prevField = this;
 				
 	});
 
@@ -108,7 +117,20 @@ $(document).ready(function(){
 	*/
 	function showMenu()
 	{
-		alert("tmp menu");	
+		var x = data['realcoords'][0];
+		var y = data['realcoords'][1];
+//		alert('tmp');
+		
+		/*TODO: action-click clears actions and unmarks fields*/
+		
+		clearActions();
+		addAction('Útok<br/>');
+		addAction('Podpora<br/>');
+		addAction('Poslat suroviny<br/>');
+		
+		//$('#mapContainer').prepend('<div id="#contextMenu" style="background: url(\"../images/hex_marked.png\"); position: absolute; top: +'x'+; left: +'y'+;">bla<br/>bla2</br></div>');
+		
+		//alert('<div id="#contextMenu" style="background: url(\'../images/hex_marked.png\'); position: absolute; top: +'x'+; left: +'y'+; width: 50px; height:50px;">bla<br/>bla2<br/>bla3</div>');	
 	}
 	
 	
@@ -120,6 +142,25 @@ $(document).ready(function(){
 	function fetchData(object)
 	{
 		data = $(object).data();
+	}
+	
+	/**
+	* Clears #fieldActions
+	* @return void
+	*/
+	function clearActions()
+	{
+		$('#fieldActions').html('');
+	}
+	
+	/**
+	* Clears #fieldActions
+	* @param action
+	* @return void
+	*/
+	function addAction(action)
+	{
+		$('#fieldActions').append(action);
 	}
 	
 });
