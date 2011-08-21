@@ -15,7 +15,7 @@ class Clan extends BaseService {
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
 		$centralField = $fieldRepository->findByCoords(4, 3);
-		$fieldService->update($centralField, array('owner' => $clan->id));
+		$fieldService->update($centralField, array('owner' => $clan));
 		$neighbours = $fieldRepository->getFieldNeighbours($centralField);
 
 //		Debugger::barDump($neighbours);
