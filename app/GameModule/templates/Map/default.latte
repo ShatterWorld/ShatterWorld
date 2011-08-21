@@ -41,7 +41,7 @@
 					data-coords="[{$x}, {$y}]"	
 					data-type="{$field->type}"	
 					data-realcoords="[{$left}, {$top}]"	
-					data-owner="{$field->owner}"	
+					data-owner="{if $field->owner == null}'---'{else}{$field->owner->name}{/if}"	
 				/>
 				{if $iterator->getCounter() % $sizeX === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}
 			{/foreach}

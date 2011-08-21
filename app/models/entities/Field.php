@@ -66,10 +66,14 @@ class Field extends BaseEntity {
 	 * @param Entities\Clan
 	 * @return void
 	 */
-	public function setOwner (Clan $clan)
+	public function setOwner (Clan $clan = null)
 	{
 		$this->owner = $clan;
-		$clan->getFields()->add($clan);
+		
+		if($clan)
+		{
+			$clan->getFields()->add($clan);
+		}
 	}
 	
 	/**

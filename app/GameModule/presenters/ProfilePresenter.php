@@ -2,7 +2,6 @@
 namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Diagnostics\Debugger;
 
 /**
  * A ProfilePresenter

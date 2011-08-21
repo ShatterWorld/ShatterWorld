@@ -7,21 +7,89 @@ use Nette\Diagnostics\Debugger;
  */
 class Clan extends BaseService {
 
+	/*
+	* The total number of filed which player is given
+	*/
+	const N = 3; 
+
 	public function create ($values, $flush = TRUE)
 	{
 		$clan = parent::create($values, $flush);
-		Debugger::barDump($clan);
 		
+		$x = 4;
+		$y = 3;
+
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
-		$centralField = $fieldRepository->findByCoords(4, 3);
-		$fieldService->update($centralField, array('owner' => $clan));
-		$neighbours = $fieldRepository->getFieldNeighbours($centralField);
+		
+		$neutralFields[] = $fieldRepository->findByOwner("NULL");
+Debugger::barDump($neutralFields);
+$tmp[]='a';
+$tmp[]='b';
+Debugger::barDump($tmp);
+		
+		
+		$found[] = $fieldRepository->findByCoords($x, $y);
+		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
+
+
+		foreach ($neighbours as $neight) // founds appropriate fields
+		{
+			
+			if (count($found) >= self::N)
+			{
+				break;
+			}
+			
+			$cont = true;
+			
+			
+			foreach ($found as $foundField)	
+			{
+				if($neight->type == $foundField->type)
+				{
+					$cont = false;
+					break;
+				}
+				
+			}
+			
+			if (!$cont){
+				continue;
+			}
+
+			$found[] = $neight;
+			
+								
+		}
+		
+		foreach ($found as $foundField)	// makes player the owner of $found fields
+		{
+			$fieldService->update($foundField, array('owner' => $clan));		
+		}
+
+		
 
 //		Debugger::barDump($neighbours);
 		//return sth; ?
 
 	}
 
+	public function delete ($object, $flush = TRUE)
+	{
+
+		$fields = $object->getFields();
+		
+		foreach ($fields as $field)
+		{
+			$field->setOwner(NULL);
+			$this->entityManager->persist($field);	
+		}
+
+
+		parent::delete($object, $flush);
+
+
+	}
 	
 }

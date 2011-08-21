@@ -24,6 +24,11 @@ abstract class BasePresenter extends \BasePresenter
 		return $this->getProfileRepository()->findOneByUser($this->getUser()->getId());
 	}
 
+	public function getPlayerClan ()
+	{
+		return $this->getClanRepository()->findOneByUser($this->getUser()->getId());
+	}
+
 	protected function createComponentMap ()
 	{
 		$map = new Map();

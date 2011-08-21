@@ -55,7 +55,21 @@
 			{/if}
 
 			<div id="menu">
-				<div class="submenu" id="sth">
+				<div class="submenu" id="clan">
+					<h3>Klan</h3>
+					<ul>
+						{if !$presenter->getPlayerClan()}
+							<li><a href="{link Clan:new}">Nový</a></li>
+						{else}
+							<li><a href="{link Clan:}">Přehled</a></li>
+							<li><a href="{link Clan:delete}">Smazat</a></li>
+						{/if}
+
+
+					</ul>
+				</div>
+
+				<div class="submenu" id="new">
 					<h3>Novinky</h3>
 					<ul>
 						<li><a href="{link Dashboard:}">Aktuality</a></li>					
