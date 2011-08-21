@@ -69,6 +69,6 @@ class Field extends Doctrine\ORM\EntityRepository {
 			$qb->expr()->eq('f.coordY', $y)
 		));
 			
-		return $qb->getQuery()->getResult();			
+		return $qb->getQuery()->getSingleResult();			
 	}
 }
