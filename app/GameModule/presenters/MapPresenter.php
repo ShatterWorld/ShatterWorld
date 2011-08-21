@@ -9,5 +9,6 @@ class MapPresenter extends BasePresenter {
 		$this->template->sizeX = $mapOptions['sizeX'];
 		$this->template->sizeY = $mapOptions['sizeY'];
 		$this->template->fields = $this->getFieldRepository()->getMap();
+				
 	}
 }

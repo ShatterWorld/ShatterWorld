@@ -82,6 +82,24 @@ class Field extends BaseEntity {
 	}
 	
 	/**
+	 * X coordinate getter
+	 * @return integer
+	 */
+	public function getX ()
+	{
+		return $this->coordX;
+	}
+
+	/**
+	 * Y coordinate getter
+	 * @return integer
+	 */
+	public function getY ()
+	{
+		return $this->coordY;
+	}
+	
+	/**
 	 * Coordinates setter
 	 * @param int
 	 * @param int

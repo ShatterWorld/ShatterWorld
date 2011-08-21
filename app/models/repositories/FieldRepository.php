@@ -13,4 +13,65 @@ class Field extends Doctrine\ORM\EntityRepository {
 			->getResult();
 		return $data;
 	}
+	
+	
+	/**
+	* Finds 2-6 neighbours of field
+	* @param field
+	* @return array of field
+	*/
+	public function getFieldNeighbours($field)
+	{
+		$x = $field->getX();
+		$y = $field->getY();
+	
+		$qb = $this->createQueryBuilder('f')
+			->where($qb->expr()->or(
+				$qb->expr()->and(					//north
+					$qb->expr()->eq('coordX', x+1),
+					$qb->expr()->eq('coordY', y-1),
+				),
+				$qb->expr()->and(					//south
+					$qb->expr()->eq('coordX', x-1),
+					$qb->expr()->eq('coordY', y+1),
+				),
+				$qb->expr()->and(					//north-east
+					$qb->expr()->eq('coordX', x+1),
+					$qb->expr()->eq('coordY', y),
+				),
+				$qb->expr()->and(					//south-east
+					$qb->expr()->eq('coordX', x),c
+					$qb->expr()->eq('coordY', y+1),
+				),
+				$qb->expr()->and(					//north-west
+					$qb->expr()->eq('coordX', x),
+					$qb->expr()->eq('coordY', y-1),
+				),
+				$qb->expr()->and(					//south-east
+					$qb->expr()->eq('coordX', x-1),
+					$qb->expr()->eq('coordY', y),
+				)
+							
+			));
+			
+		return $qb->getQuery()->getResult();	
+			
+	}
+	
+	/**
+	* Finds the field by its coordinates
+	* @param integer
+	* @param integer
+	* @return field
+	*/
+	public function findByCoords($x, $y)
+	{
+		$qb = $this->createQueryBuilder('f')
+			->where($qb->expr()->and(
+				$qb->expr()->eq('coordX', x),
+				$qb->expr()->eq('coordY', y),
+			));
+			
+		return $qb->getQuery()->getResult();			
+	}
 }

@@ -57,7 +57,7 @@ class BaseService extends Nette\Object {
 	 * Create a new object
 	 * @param array
 	 * @param bool
-	 * @return void
+	 * @return object
 	 */
 	public function create ($values, $flush = TRUE)
 	{
@@ -67,6 +67,7 @@ class BaseService extends Nette\Object {
 		if ($flush) {
 			$this->entityManager->flush();
 		}
+		return $object;
 	}
 	
 	/**
