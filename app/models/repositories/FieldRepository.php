@@ -27,29 +27,29 @@ class Field extends Doctrine\ORM\EntityRepository {
 	
 		$qb = $this->createQueryBuilder('f');
 		$qb->where($qb->expr()->or(
-			$qb->expr()->and(# north
-				$qb->expr()->eq('coordX', x+1),
-				$qb->expr()->eq('coordY', y-1)
+			$qb->expr()->andX(# north
+				$qb->expr()->eq('f.coordX', $x+1),
+				$qb->expr()->eq('f.coordY', $y-1)
 			),
-			$qb->expr()->and(# south
-				$qb->expr()->eq('coordX', x-1),
-				$qb->expr()->eq('coordY', y+1)
+			$qb->expr()->andX(# south
+				$qb->expr()->eq('f.coordX', $x-1),
+				$qb->expr()->eq('f.coordY', $y+1)
 			),
-			$qb->expr()->and(# north-east
-				$qb->expr()->eq('coordX', x+1),
-				$qb->expr()->eq('coordY', y)
+			$qb->expr()->andX(# north-east
+				$qb->expr()->eq('f.coordX', $x+1),
+				$qb->expr()->eq('f.coordY', $y)
 			),
-			$qb->expr()->and(# south-east
-				$qb->expr()->eq('coordX', x),
-				$qb->expr()->eq('coordY', y+1)
+			$qb->expr()->andX(# south-east
+				$qb->expr()->eq('f.coordX', $x),
+				$qb->expr()->eq('f.coordY', $y+1)
 			),
-			$qb->expr()->and(# north-west
-				$qb->expr()->eq('coordX', x),
-				$qb->expr()->eq('coordY', y-1)
+			$qb->expr()->andX(# north-west
+				$qb->expr()->eq('f.coordX', $x),
+				$qb->expr()->eq('f.coordY', $y-1)
 			),
-			$qb->expr()->and(# south-east
-				$qb->expr()->eq('coordX', x-1),
-				$qb->expr()->eq('coordY', y)
+			$qb->expr()->andX(# south-east
+				$qb->expr()->eq('f.coordX', $x-1),
+				$qb->expr()->eq('f.coordY', $y)
 			)
 		));
 		return $qb->getQuery()->getResult();	
@@ -64,10 +64,10 @@ class Field extends Doctrine\ORM\EntityRepository {
 	public function findByCoords ($x, $y)
 	{
 		$qb = $this->createQueryBuilder('f');
-			$qb->where($qb->expr()->and(
-				$qb->expr()->eq('coordX', x),
-				$qb->expr()->eq('coordY', y)
-			));
+		$qb->where($qb->expr()->andX(
+			$qb->expr()->eq('f.coordX', $x),
+			$qb->expr()->eq('f.coordY', $y)
+		));
 			
 		return $qb->getQuery()->getResult();			
 	}

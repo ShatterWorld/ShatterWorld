@@ -69,7 +69,7 @@ class Clan extends BaseEntity {
 	{
 		$this->user = $user;
 	}
-	
+
 	/**
 	 * Fields getter
 	 * @return Doctrine\Common\Collections\ArrayCollection
