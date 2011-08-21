@@ -1,6 +1,12 @@
 /**
 * Deals with field actions
 * @author Petr Bělohlávek
+*
+*
+*	TODO:	- improve marking
+			- improve actions
+			- create context menu
+*
 */
 $(document).ready(function(){
 
@@ -61,7 +67,6 @@ $(document).ready(function(){
 		else if (clicks == 2)
 		{
 			showMenu();
-//			unMarkAll();
 			prevField = this;
 		}
 		
