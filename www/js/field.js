@@ -133,8 +133,7 @@ $(document).ready(function(){
 		addAction('Podpora<br/>');
 		addAction('Poslat suroviny<br/>');
 		
-		//$('#mapContainer').prepend('<div id="#contextMenu" style="background: url(\"../images/hex_marked.png\"); position: absolute; top: +'x'+; left: +'y'+;">bla<br/>bla2</br></div>');
-		
+		//$('#mapContainer').prepend('<div id="#contextMenu" style="background: url(\'../images/hex_marked.png\'); position: absolute; top: +'x'+; left: +'y'+; width: 50px; height:50px;">bla<br/>bla2<br/>bla3</div>');	
 		//alert('<div id="#contextMenu" style="background: url(\'../images/hex_marked.png\'); position: absolute; top: +'x'+; left: +'y'+; width: 50px; height:50px;">bla<br/>bla2<br/>bla3</div>');	
 	}
 	
