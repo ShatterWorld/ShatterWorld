@@ -26,7 +26,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		$y = $field->getY();
 	
 		$qb = $this->createQueryBuilder('f');
-		$qb->where($qb->expr()->or(
+		$qb->where($qb->expr()->orX(
 			$qb->expr()->andX(# north
 				$qb->expr()->eq('f.coordX', $x+1),
 				$qb->expr()->eq('f.coordY', $y-1)
