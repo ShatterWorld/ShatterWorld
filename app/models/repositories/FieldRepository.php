@@ -17,45 +17,42 @@ class Field extends Doctrine\ORM\EntityRepository {
 	
 	/**
 	* Finds 2-6 neighbours of field
-	* @param field
+	* @param Entities\Field
 	* @return array of field
 	*/
-	public function getFieldNeighbours($field)
+	public function getFieldNeighbours ($field)
 	{
 		$x = $field->getX();
 		$y = $field->getY();
 	
-		$qb = $this->createQueryBuilder('f')
-			->where($qb->expr()->or(
-				$qb->expr()->and(					//north
-					$qb->expr()->eq('coordX', x+1),
-					$qb->expr()->eq('coordY', y-1),
-				),
-				$qb->expr()->and(					//south
-					$qb->expr()->eq('coordX', x-1),
-					$qb->expr()->eq('coordY', y+1),
-				),
-				$qb->expr()->and(					//north-east
-					$qb->expr()->eq('coordX', x+1),
-					$qb->expr()->eq('coordY', y),
-				),
-				$qb->expr()->and(					//south-east
-					$qb->expr()->eq('coordX', x),c
-					$qb->expr()->eq('coordY', y+1),
-				),
-				$qb->expr()->and(					//north-west
-					$qb->expr()->eq('coordX', x),
-					$qb->expr()->eq('coordY', y-1),
-				),
-				$qb->expr()->and(					//south-east
-					$qb->expr()->eq('coordX', x-1),
-					$qb->expr()->eq('coordY', y),
-				)
-							
-			));
-			
+		$qb = $this->createQueryBuilder('f');
+		$qb->where($qb->expr()->or(
+			$qb->expr()->and(# north
+				$qb->expr()->eq('coordX', x+1),
+				$qb->expr()->eq('coordY', y-1)
+			),
+			$qb->expr()->and(# south
+				$qb->expr()->eq('coordX', x-1),
+				$qb->expr()->eq('coordY', y+1)
+			),
+			$qb->expr()->and(# north-east
+				$qb->expr()->eq('coordX', x+1),
+				$qb->expr()->eq('coordY', y)
+			),
+			$qb->expr()->and(# south-east
+				$qb->expr()->eq('coordX', x),
+				$qb->expr()->eq('coordY', y+1)
+			),
+			$qb->expr()->and(# north-west
+				$qb->expr()->eq('coordX', x),
+				$qb->expr()->eq('coordY', y-1)
+			),
+			$qb->expr()->and(# south-east
+				$qb->expr()->eq('coordX', x-1),
+				$qb->expr()->eq('coordY', y)
+			)
+		));
 		return $qb->getQuery()->getResult();	
-			
 	}
 	
 	/**
@@ -64,12 +61,12 @@ class Field extends Doctrine\ORM\EntityRepository {
 	* @param integer
 	* @return field
 	*/
-	public function findByCoords($x, $y)
+	public function findByCoords ($x, $y)
 	{
-		$qb = $this->createQueryBuilder('f')
-			->where($qb->expr()->and(
+		$qb = $this->createQueryBuilder('f');
+			$qb->where($qb->expr()->and(
 				$qb->expr()->eq('coordX', x),
-				$qb->expr()->eq('coordY', y),
+				$qb->expr()->eq('coordY', y)
 			));
 			
 		return $qb->getQuery()->getResult();			
