@@ -8,33 +8,43 @@ $(document).ready(function(){
 	* Number of clicks
 	*/
 	var clicks = 0;
-	var prevIdStr = "";
 
 	/**
-	* Fills #info when user gets mouse over a field
-	* Needs to be fixed
+	* Last clicked field
+	*/
+	var prevField = null;
+
+	/**
+	* Data (indexed by html tags data-STH, e.g. data-coords -> index='coords')
+	*/
+	var data = null;
+	
+	/**
+	* Fills #fieldInfo when user gets mouse over a field
+	* @return void
 	*/
 	$(".field").mouseenter(function(e){
-		var idStr = $(this).attr('id');
-		var id = idStr.split('_');
-	
-		$("#info #coord").html('Souřadnice ['+coord[0]+';'+id[2]+']');//Rather JSON
-		
-	
-	
+
+		fetchData(this);
+
+		$("#fieldInfo #coord").html('Souřadnice ['+data['coords'][0]+';'+data['coords'][1]+']');
+		$("#fieldInfo #owner").html('Vlastník '+data['owner']);
+		$("#fieldInfo #type").html('Typ '+data['type']);
+			
 	});	
+		
 	
 	/**
 	* Runs when user click some field and increment clicks by one
+	* Bugs:	-doesnt mark the cesond field
+	* @return void
 	*/
 	$(".field").click(function(){
-		var idStr = $(this).attr('id');
-		var id = idStr.split('_');
 
+		mark(this, data['coords'][0], data['coords'][1]);
 		clicks++;		
-		mark(this, id[1], id[2]); //doesnt mark the second click.. ?
 		
-		if ((clicks > 2) || (idStr == prevIdStr))
+		if ((clicks > 2) || (this == prevField))
 		{
 			unMarkAll();
 		
@@ -45,12 +55,13 @@ $(document).ready(function(){
 			unMarkAll();
 		}
 		
-		prevIdStr = idStr;
+		prevField = this;
 				
 	});
 
 	/**
 	* Marks the specified field
+	* @return void
 	*/
 	function mark(object, x, y)
 	{
@@ -72,6 +83,7 @@ $(document).ready(function(){
 	
 	/**
 	* Unmarks all fields and sets click to zero
+	* @return void
 	*/
 	function unMarkAll()
 	{
@@ -92,11 +104,22 @@ $(document).ready(function(){
 	
 	/**
 	* Displays context menu
+	* @return void
 	*/
 	function showMenu()
 	{
-		alert("tmp menu");
+		alert("tmp menu");	
+	}
 	
+	
+	/**
+	* Sets global data (JSON) from object named e.g. data-coord
+	* @param object
+	* @return void
+	*/
+	function fetchData(object)
+	{
+		data = $(object).data();
 	}
 	
 });

@@ -3,7 +3,14 @@
 {/block}
 
 {block #content}
-	<div id="mapContainer" style="background:black;width:650px;height:{8*40+40}px;overflow:scroll;">
+		<div id="fieldInfo" style="background: lightblue;  width: 150px; height: 60px;">
+			<div id="coord">Souřadnice</div>
+			<div id="owner">Vlastník</div>
+			<div id="type">Typ</div>
+		</div>
+
+	<div id="mapContainer" style="background:black;width:650px;height:{15*40+40}px;overflow:scroll;">
+
 
 
 		<div id="map" style="position:relative;background:#000;top:{$sizeY*40/2}px;left:{$sizeX*60/2}">
@@ -11,23 +18,28 @@
 			{?$zIndex = $sizeX}
 			{foreach $fields as $field}
 				{?list($x, $y) = $field->coords}
+				{$left = ($x*43)+($y*43)}
+				{$top = ($x*-20)+($y*19)}
 				<img 
 					class="field" 
 					id="field_{$x}_{$y}" 
 					alt="{$x}, {$y}" 
 					src="{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png" 
-					style="position:absolute;left:{($x*43)+($y*43)}px;top:{($x*-20)+($y*19)}px;z-index:{$zIndex}"
+					style="
+						position:absolute;
+						left:{$left}px;
+						top:{$top}px;
+						z-index:{$zIndex}
+					"
 					data-coords="[{$x}, {$y}]"	
+					data-type="{$field->type}"	
+					data-realCoords="[{$left}, {$top}]"	
+					data-owner="sbd"	
 				/>
 				{if $iterator->getCounter() % $sizeX === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}
 			{/foreach}
 		</div>
 
-		<div id="info" style="background: lightblue;  width: 150px; height: 60px;">
-			<div id="coord">Souřadnice</div>
-			<div id="owner">Vlastník</div>
-			<div id="type">Typ</div>
-		</div>
 
 		<div class="clearer"><span></span></div>
 	</div>
