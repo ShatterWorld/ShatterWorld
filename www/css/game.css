@@ -67,7 +67,7 @@ a:hover {
 
 #menu .submenu ul {
 	list-style-type: none;
-	margin-left: 12px;
+	/*margin-left: 12px;*/
 }
 
 #menu .submenu h3 {
@@ -76,6 +76,14 @@ a:hover {
 	line-height: 20px;
 	background: url('../images/bar-small-bottom.png') repeat-x center;
 	cursor: pointer;
+}
+
+#menu .submenu li:hover {
+	background: #A8A8A8;
+}
+
+#menu .submenu li {
+	padding-left: 12px;
 }
 
 #header {
