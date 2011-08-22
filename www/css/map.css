@@ -1,0 +1,61 @@
+#fieldInfo {
+	float: left;
+	background: lightblue;
+	width: 170px;
+	height: 80px;
+}
+
+#fieldActions {
+	float: right;
+	background: lightgreen;
+	width: 170px;
+	height: 80px;
+}
+
+#mapContainer {
+	background:black;
+	width:650px;
+	height:640px;
+	overflow:auto;
+}
+
+.relativePositioner {
+	position: relative;
+}
+
+#fieldDetail {
+	background: lightgrey;
+	border: 2px white solid;
+	width: 350px;
+	height: 380px;
+	position: absolute;
+	left: 150px;
+	top: 70px;
+	z-index: 999999999999999999999999999;
+	display: none;
+}
+
+#fieldDetail #fieldImg{
+	float: left;
+}
+
+#fieldDetail #closeFieldDetail {
+	float: right;
+	padding: 10px 10px 10px 10px;
+	cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
