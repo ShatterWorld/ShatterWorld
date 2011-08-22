@@ -123,23 +123,7 @@ $(document).ready(function(){
 	
 		markedFieldsId.push('field_'+data['coords'][0]+'_'+data['coords'][1]);
 		markedFieldsColors.push(data['color']);
-		$(field).attr('src', data['basepath']+'/images/fields/hex_'+data['color']+'_marked.png');
-			
-		
-		/*
-		var src = $(field).attr("src");
-		$(field).attr("class", "field marked");
-		var newSrc = src.replace('.png', '_marked.png');
-		$(field).attr("src", newSrc);
-*/
-	
-		
-		$(field).css(
-			{
-				"border" : "1px solid red"
-			}
-		);		
-		
+		$(field).attr('src', data['basepath']+'/images/fields/hex_'+data['color']+'_marked.png');		
 	}
 	
 	/**
@@ -148,30 +132,14 @@ $(document).ready(function(){
 	*/
 	function unMarkAll()
 	{
-		/*var src = $(".marked").attr("src");
-		var newSrc = src.replace('_marked.png', '.png');
-		$(".marked").attr("src", newSrc);
-		$(object).attr("class", "field");
-*/		
-
-
-		$(".field").css(
-			{
-				"border" : "none"
-			}
-		);
-
-
-		//alert(data['basepath']+'/images/fields/hex_'+markedFieldsColors.pop()+'.png');
-		//alert('#'+markedFieldsId.pop());
-		
-		for (var i=0; i<markedFieldsId.length; i++){
+		var n = markedFieldsId.length;		
+		for (var i=0; i<n; i++){
 			$('#'+markedFieldsId.pop()).attr('src', data['basepath']+'/images/fields/hex_'+markedFieldsColors.pop()+'.png');
 		}
 
 		clicks = 0;
-		markedFields = new Array()
-		markedFieldsData = new Array()
+		markedFields = new Array();
+		markedFieldsData = new Array();
 	}
 	
 	/**
