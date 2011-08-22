@@ -165,7 +165,7 @@ $(document).ready(function(){
 		//alert(data['basepath']+'/images/fields/hex_'+markedFieldsColors.pop()+'.png');
 		//alert('#'+markedFieldsId.pop());
 		
-		for (var i=0; i<markedFields.length; i++){
+		for (var i=0; i<markedFieldsId.length; i++){
 			$('#'+markedFieldsId.pop()).attr('src', data['basepath']+'/images/fields/hex_'+markedFieldsColors.pop()+'.png');
 		}
 
