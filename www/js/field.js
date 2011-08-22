@@ -29,12 +29,12 @@ $(document).ready(function(){
 	/**
 	* Array of marked fields
 	*/
-	//var markedFields;
+	var markedFields = new Array();
 	
 	/**
 	* Array of marked fields data
 	*/
-	//var markedFieldsData[];
+	var markedFieldsData = new Array();
 	
 	/**
 	* Fills #fieldInfo and #fieldActions when user gets mouse over a field
@@ -120,12 +120,11 @@ $(document).ready(function(){
 	*/
 	function mark(field)
 	{
-	/*
-		var markedFields;
+	
 		markedFields.push("ahoj");
 		markedFieldsData.push(data);
 		$(field).attr('src', data['basepath']+'/images/fields/hex_'+data['color']+'_marked.png');
-	*/		
+			
 		
 		/*
 		var src = $(field).attr("src");
@@ -134,13 +133,13 @@ $(document).ready(function(){
 		$(field).attr("src", newSrc);
 */
 	
-		
+		/*
 		$(field).css(
 			{
 				"border" : "1px solid red"
 			}
 		);		
-		
+		*/
 	}
 	
 	/**
@@ -156,14 +155,18 @@ $(document).ready(function(){
 */		
 		clicks = 0;
 
+/*
 		$(".field").css(
 			{
 				"border" : "none"
 			}
 		);
+*/
+
+		for (i=0; i<)
 		
-		//markedFields = null;
-		//markedFieldsData = null;
+		markedFields = new Array()
+		markedFieldsData = new Array()
 	}
 	
 	/**
