@@ -22,11 +22,13 @@ class Clan extends BaseService {
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
 		
-		$neutralFields[] = $fieldRepository->findByOwner("NULL");
+		//$neutralFields[] = $fieldRepository->findByOwner("NULL"); //nic nenajde
+		//$neutralFields[] = $fieldRepository->findByOwner("null"); //nic nenajde
+		//$neutralFields[] = $fieldRepository->findByOwner(NULL); //err: You need to pass a parameter to 'findByOwner' search►
+		//$neutralFields[] = $fieldRepository->findByOwner(null); //err: You need to pass a parameter to 'findByOwner' search►
+		$neutralFields[] = $fieldRepository->findByOwner(45); //ok
 Debugger::barDump($neutralFields);
-$tmp[]='a';
-$tmp[]='b';
-Debugger::barDump($tmp);
+
 		
 		
 		$found[] = $fieldRepository->findByCoords($x, $y);

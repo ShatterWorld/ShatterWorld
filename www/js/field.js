@@ -10,6 +10,7 @@
 */
 $(document).ready(function(){
 
+
 	/**
 	* Number of clicks
 	*/
@@ -26,7 +27,17 @@ $(document).ready(function(){
 	var data = null;
 	
 	/**
-	* Fills #fieldInfo when user gets mouse over a field
+	* Array of marked fields
+	*/
+	//var markedFields;
+	
+	/**
+	* Array of marked fields data
+	*/
+	//var markedFieldsData[];
+	
+	/**
+	* Fills #fieldInfo and #fieldActions when user gets mouse over a field
 	* @return void
 	*/
 	$(".field").mouseenter(function(e){
@@ -39,8 +50,38 @@ $(document).ready(function(){
 		$("#fieldInfo #type").html('Typ '+data['type']);
 			
 	});	
+
+
+	/**
+	* Shows #fieldDetail filled with details of field and possible actions
+	* @return void
+	*/
+	$(".field").dblclick(function(){
+		$('#fieldDetail').hide();
+		$('#fieldDetail').show('fast');
 		
-	
+		//$('#fieldImg').attr('src', '');
+		$('#fieldImg').attr('src', data['basepath']+'/images/fields/hex_'+data['color']+'.png');
+
+		$('#detailCoords').html('['+data['coords'][0]+';'+data['coords'][1]+']');
+		$('#detailOwner').html(data['owner']);
+		$('#detailType').html(data['type']);
+		$('#detailBuilding').html(/*data['']*/'SthBuilding');
+		$('#detailBuildingLevel').html(/*data['']*/'SthBuildingLvl');
+		
+		
+			
+	});	
+
+	/**
+	* Hides #fieldDetail
+	* @return void
+	*/
+	$('#closeFieldDetail').click(function(){
+		$('#fieldDetail').hide('fast');
+	});		
+
+
 	/**
 	* Runs when user click some field and increment clicks by one
 	* Bugs:	-doesnt mark the second field
@@ -48,8 +89,8 @@ $(document).ready(function(){
 	*/
 	$(".field").click(function(){
 
-		mark(this, data['coords'][0], data['coords'][1]);
 		clicks++;		
+		mark(this);
 
 		if (clicks < 2)
 		{
@@ -77,17 +118,24 @@ $(document).ready(function(){
 	* Marks the specified field
 	* @return void
 	*/
-	function mark(object, x, y)
+	function mark(field)
 	{
 	/*
-		var src = $(object).attr("src");
-		$(object).attr("class", "field marked");
+		var markedFields;
+		markedFields.push("ahoj");
+		markedFieldsData.push(data);
+		$(field).attr('src', data['basepath']+'/images/fields/hex_'+data['color']+'_marked.png');
+	*/		
+		
+		/*
+		var src = $(field).attr("src");
+		$(field).attr("class", "field marked");
 		var newSrc = src.replace('.png', '_marked.png');
-		$(object).attr("src", newSrc);
+		$(field).attr("src", newSrc);
 */
 	
 		
-		$(object).css(
+		$(field).css(
 			{
 				"border" : "1px solid red"
 			}
@@ -113,7 +161,9 @@ $(document).ready(function(){
 				"border" : "none"
 			}
 		);
-
+		
+		//markedFields = null;
+		//markedFieldsData = null;
 	}
 	
 	/**

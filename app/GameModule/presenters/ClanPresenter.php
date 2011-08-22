@@ -61,7 +61,7 @@ class ClanPresenter extends BasePresenter {
 			$this->flashMessage(sprintf('Klan %s byl založen.', $data['name']));
 			
 		}
-		$this->redirect('Clan:');
+		//$this->redirect('Clan:');
 	}
 
 	/**

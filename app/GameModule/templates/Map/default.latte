@@ -16,7 +16,69 @@
 		<div class="clearer"><span></span></div>
 
 
-	<div id="mapContainer" style="background:black;width:650px;height:{15*40+40}px;overflow:scroll;">
+	<div id="mapContainer" style="background:black;width:650px;height:{15*40+40}px;overflow:auto;">
+
+		<div style="position: relative">
+			<div 
+				id="fieldDetail" 
+				style="
+					background: pink;
+					width: 350px;
+					height: 380px;
+					position: absolute;
+					left: 150px;
+					top: 70px;
+					z-index: 999999999999999999999999999;
+					display: none;
+				"
+			>
+				<img id="fieldImg" src="" style="float: left" />
+				<div id="closeFieldDetail" style="float: right; padding: 10px 10px 10px 10px; cursor: pointer">
+					Zavřít
+				</div>
+				<div class="clearer"><span></span></div>
+				
+				<table>
+					<tr>
+						<th>
+							Souřadnice
+						</th>
+						<td id="detailCoords">
+						</td>
+					</tr>
+					<tr>
+						<th>
+							Vlastník
+						</th>
+						<td id="detailOwner">
+						</td>
+					</tr>
+					<tr>
+						<th>
+							Typ
+						</th>
+						<td id="detailType">
+						</td>
+					</tr>
+					<tr>
+						<th>
+							Budova
+						</th>
+						<td id="detailBuilding">
+						</td>
+					</tr>
+					<tr>
+						<th>
+							Úroveň budovy
+						</th>
+						<td id="detailBuildingLevel">
+						</td>
+					</tr>
+				</table>
+				
+			
+			</div>
+		</div>
 
 
 
@@ -39,7 +101,9 @@
 						z-index:{$zIndex}
 					"
 					data-coords="[{$x}, {$y}]"	
-					data-type="{$field->type}"	
+					data-type="{$field->type}"
+					data-basepath="{$basePath}"	
+					data-color="{$typeMap[$field->type]}"	
 					data-realcoords="[{$left}, {$top}]"	
 					data-owner="{if $field->owner == null}'---'{else}{$field->owner->name}{/if}"	
 				/>
