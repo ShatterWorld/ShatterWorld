@@ -29,12 +29,12 @@ $(document).ready(function(){
 	/**
 	* Array of marked fields
 	*/
-	var markedFields = new Array();
+	var markedFieldsId = new Array();
 	
 	/**
 	* Array of marked fields data
 	*/
-	var markedFieldsData = new Array();
+	var markedFieldsColors = new Array();
 	
 	/**
 	* Fills #fieldInfo and #fieldActions when user gets mouse over a field
@@ -121,8 +121,8 @@ $(document).ready(function(){
 	function mark(field)
 	{
 	
-		markedFields.push("ahoj");
-		markedFieldsData.push(data);
+		markedFieldsId.push('field_'+data['coords'][0]+'_'+data['coords'][1]);
+		markedFieldsColors.push(data['color']);
 		$(field).attr('src', data['basepath']+'/images/fields/hex_'+data['color']+'_marked.png');
 			
 		
@@ -133,13 +133,13 @@ $(document).ready(function(){
 		$(field).attr("src", newSrc);
 */
 	
-		/*
+		
 		$(field).css(
 			{
 				"border" : "1px solid red"
 			}
 		);		
-		*/
+		
 	}
 	
 	/**
@@ -153,18 +153,23 @@ $(document).ready(function(){
 		$(".marked").attr("src", newSrc);
 		$(object).attr("class", "field");
 */		
-		clicks = 0;
 
-/*
+
 		$(".field").css(
 			{
 				"border" : "none"
 			}
 		);
-*/
 
-		for (i=0; i<)
+
+		//alert(data['basepath']+'/images/fields/hex_'+markedFieldsColors.pop()+'.png');
+		//alert('#'+markedFieldsId.pop());
 		
+		for (var i=0; i<markedFields.length; i++){
+			$('#'+markedFieldsId.pop()).attr('src', data['basepath']+'/images/fields/hex_'+markedFieldsColors.pop()+'.png');
+		}
+
+		clicks = 0;
 		markedFields = new Array()
 		markedFieldsData = new Array()
 	}
