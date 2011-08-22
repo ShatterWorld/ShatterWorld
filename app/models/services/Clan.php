@@ -16,23 +16,60 @@ class Clan extends BaseService {
 	{
 		$clan = parent::create($values, $flush);
 		
-		$x = 4;
-		$y = 3;
+		$x = 0;
+		$y = 0;
 
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
 		
-		//$neutralFields[] = $fieldRepository->findByOwner("NULL"); //nic nenajde
-		//$neutralFields[] = $fieldRepository->findByOwner("null"); //nic nenajde
-		//$neutralFields[] = $fieldRepository->findByOwner(NULL); //err: You need to pass a parameter to 'findByOwner' search►
-		//$neutralFields[] = $fieldRepository->findByOwner(null); //err: You need to pass a parameter to 'findByOwner' search►
-		$neutralFields[] = $fieldRepository->findByOwner(45); //ok
-Debugger::barDump($neutralFields);
+		$neutralFields[] = $fieldRepository->findNeutralFields();
+		
+		// findIsometricHexagonCentres($neutralFields);
+		
+//Debugger::barDump($neutralFields);
 
+
+
+		$isometricHexagons[] = null;
+		foreach ($neutralFields as $neutralField)
+		{
+		
+		//Debugger::barDump($neutralField);
+			$tmpIsometricHexagon = $fieldRepository->getFieldNeighbours($neutralField); /*foreach generates null*/
+//			Debugger::barDump($tmpIsometricHexagon);
+		
+			$valid = $tmpIsometricHexagon.forAll(function($field){
+			
+			Debugger::barDump($field);
+
+				if ($field == null or $field->owner != null){
+					return false;
+				}
+				else{
+					$neigboursNextLvl = $fieldRepository->getFieldNeighbours($field);
+					
+					$innerValid = $neigboursNextLvl.forAll(function($fieldNextLvl){
+						if ($fieldNextLvl == null or $fieldNextLvl->owner != null){
+							return false;
+						}
+				
+					});
+					return $innerValid;
+				}
+			});
+			
+			if(valid)
+			{
+				$isometricHexagons[] = tmpIsometricHexagon;			
+			}
+		}
+
+//Debugger::barDump($isometricHexagons);		
 		
 		
 		$found[] = $fieldRepository->findByCoords($x, $y);
 		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
+//Debugger::barDump($neighbours);
 
 
 		foreach ($neighbours as $neight) // founds appropriate fields
