@@ -5,18 +5,14 @@
 {/block}
 
 {block #content}
-		<div id="fieldInfo">
-			<div id="coords">Souřadnice</div>
-			<div id="realCoords">Souřadnice</div>
-			<div id="owner">Vlastník</div>
-			<div id="type">Typ</div>
-		</div>
+	<div id="fieldInfo">
+		<div id="coords">Souřadnice</div>
+		<div id="owner">Vlastník</div>
+		<div id="type">Typ</div>
+	</div>
 
-		<div id="fieldActions">
-		</div>
-
-		<div class="clearer"><span></span></div>
-
+	<div id="fieldActions">
+	</div>
 
 	<div id="mapContainer">
 
@@ -52,16 +48,16 @@
 					</tr>
 					<tr>
 						<th>
-							Budova
+							Výhoda
 						</th>
-						<td id="detailBuilding">
+						<td id="detailFacility">
 						</td>
 					</tr>
 					<tr>
 						<th>
-							Úroveň budovy
+							Úroveň
 						</th>
-						<td id="detailBuildingLevel">
+						<td id="detailLevel">
 						</td>
 					</tr>
 				</table>
@@ -95,7 +91,9 @@
 					data-basepath="{$basePath}"	
 					data-color="{$typeMap[$field->type]}"	
 					data-realcoords="[{$left}, {$top}]"	
-					data-owner="{if $field->owner == null}'---'{else}{$field->owner->name}{/if}"	
+					data-level="{$field->level}"	
+					data-facility="{if $field->facility == null}žádná{else}{$field->facility}{/if}"	
+					data-owner="{if $field->owner == null}---{else}{$field->owner->name}{/if}"	
 				/>
 				{if $iterator->getCounter() % $sizeX === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}
 			{/foreach}

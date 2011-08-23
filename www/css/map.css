@@ -1,12 +1,15 @@
 #fieldInfo {
-	float: left;
 	background: lightblue;
 	width: 170px;
 	height: 80px;
+	position: absolute;
+	z-index: 99999999999999999;
+	display: none;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";/*IE*/
+	opacity: 0.9;/*Others*/
 }
 
 #fieldActions {
-	float: right;
 	background: lightgreen;
 	width: 170px;
 	height: 80px;

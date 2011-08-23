@@ -37,19 +37,43 @@ $(document).ready(function(){
 	var markedFieldsColors = new Array();
 	
 	/**
-	* Fills #fieldInfo and #fieldActions when user gets mouse over a field
+	* Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
 	* @return void
 	*/
-	$(".field").mouseenter(function(e){
+	$(".field").mouseenter(function(){
 
 		fetchData(this);
+		$('#fieldInfo').show();
 
 		$("#fieldInfo #coords").html('Souřadnice ['+data['coords'][0]+';'+data['coords'][1]+']');
-		$("#fieldInfo #realCoords").html('Souřadnice ['+data['realcoords'][0]+';'+data['realcoords'][1]+']');
 		$("#fieldInfo #owner").html('Vlastník '+data['owner']);
 		$("#fieldInfo #type").html('Typ '+data['type']);
 			
-	});	
+	});
+	
+	/**
+	* Hides #fieldInfo
+	* @return void
+	*/
+	$(".field").mouseleave(function(){
+		$('#fieldInfo').hide();
+	});
+	
+		
+	/**
+	* Moves with #infoBox
+	* @return void
+	*/
+	//$(".field").mouseover(function(e){
+
+	$(".field").mousemove(function(e) {
+		var msg = e.pageX + ", " + e.pageY;
+		$("#fieldActions").html(msg);
+		$('#fieldInfo').css("left", e.pageX + 20);
+		$('#fieldInfo').css("top", e.pageY + 20);
+	});
+
+	//});	
 
 
 	/**
@@ -66,8 +90,8 @@ $(document).ready(function(){
 		$('#detailCoords').html('['+data['coords'][0]+';'+data['coords'][1]+']');
 		$('#detailOwner').html(data['owner']);
 		$('#detailType').html(data['type']);
-		$('#detailBuilding').html(/*data['']*/'SthBuilding');
-		$('#detailBuildingLevel').html(/*data['']*/'SthBuildingLvl');
+		$('#detailFacility').html(data['facility']);
+		$('#detailLevel').html(data['level']);
 		
 		
 			
