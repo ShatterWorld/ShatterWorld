@@ -2,6 +2,7 @@
 namespace Repositories;
 use Nette;
 use Doctrine;
+use Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Nette\Diagnostics\Debugger;
@@ -24,14 +25,8 @@ class Field extends Doctrine\ORM\EntityRepository {
 	* @param Entities\Field
 	* @return array of field
 	*/
-	public function getFieldNeighbours ($field)
+	public function getFieldNeighbours (Entities\Field $field)
 	{
-	
-		if (!is_object($field))
-		{
-			Debugger::dump($field);
-		}
-		
 		$x = $field->getX();
 		$y = $field->getY();
 	
@@ -166,45 +161,34 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * @param boolean
 	 * @return array of fields
 	 */
-	public function findNeutralHexagons($depth, &$foundCenters = null, &$visitedFields = null, $startField = null, $firstRun = true){
+	public function findNeutralHexagons($depth, &$foundCenters = array(), &$visitedFields = array(), $startField = null, $firstRun = true){
 	
 	//search->inarray
 	
-		if($depth <= 0)
-		{
+		if($depth <= 0) {
 			return $foundCenters;
 		}
 	
-		if ($firstRun)
-		{
-			$visitedFields = array();
-			$foundCenters = array();
-			$neutralFields = $this->findNeutralFields();	
-//			Debugger::barDump($neutralFields);
-			foreach ($neutralFields as $neutralField)
-			{
+		if ($firstRun) {
+			$neutralFields = $this->findNeutralFields();
+			foreach ($neutralFields as $neutralField) {
 				$visitedFields[] = $neutralField;
 				$this->findNeutralHexagons($depth, $foundCenters, $visitedFields, $neutralField, false);
 			}
 			
 		}
-		else
-		{
+		else {
 			$neighbours = $this->getFieldNeighbours($startField); #tuto to zlobí ;)
-			//Debugger::barDump($neighbours);
-			foreach ($neighbours as $neighbour)
-			{
+			foreach ($neighbours as $neighbour) {
 				if ($neighbour->owner != null){
 					return;
 				}
-				if (array_search($neighbour, $visitedFields, true) === false){
+				if (array_search($neighbour, $visitedFields, true) === false) {
 					$visitedFields[] = $neighbour;		
 					
 					$neigboursNextLvl = $this->getFieldNeighbours($neighbour);
-					foreach ($neigboursNextLvl as $neigbourNextLvl)
-					{
-						if ($neigbourNextLvl->owner != null)
-						{
+					foreach ($neigboursNextLvl as $neigbourNextLvl) {
+						if ($neigbourNextLvl->owner != null) {
 							return;
 						}
 							
@@ -219,19 +203,3 @@ class Field extends Doctrine\ORM\EntityRepository {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
