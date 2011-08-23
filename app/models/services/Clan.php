@@ -23,15 +23,20 @@ class Clan extends BaseService {
 		$fieldRepository = $fieldService->getRepository();
 		
 		
-		/*
-		$neutralFields[] = $fieldRepository->findNeutralFields();
+		
+		//$neutralFields = $fieldRepository->findNeutralFields();
+		
+		
+		$neutralHexagons = $fieldRepository->findNeutralHexagons(10);
+		Debugger::barDump($neutralHexagons);
+		
 		
 		// findIsometricHexagonCentres($neutralFields);
 		
 //Debugger::barDump($neutralFields);
 
 
-
+/*
 		$isometricHexagons[] = null;
 		foreach ($neutralFields as $neutralField)
 		{

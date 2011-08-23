@@ -26,6 +26,12 @@ class Field extends Doctrine\ORM\EntityRepository {
 	*/
 	public function getFieldNeighbours ($field)
 	{
+	
+		if (!is_object($field))
+		{
+			Debugger::dump($field);
+		}
+		
 		$x = $field->getX();
 		$y = $field->getY();
 	
@@ -118,7 +124,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * @param array of fields
 	 * @param array of fields
 	 * @param integer
-	 * @return array
+	 * @return void
 	 */
 	protected function findDeepdNeighbours(&$res, $sources, $depth)
 	{
@@ -128,14 +134,14 @@ class Field extends Doctrine\ORM\EntityRepository {
 		}
 		foreach ($sources as $source)
 		{
-			if (array_search($source, $res) === false)	
+			if (array_search($source, $res, true) === false)	
 			{
 				$res[] = $source;
 			}						
 			
 			$neighbours = $this->getFieldNeighbours($source);
 			foreach ($neighbours as $neighbour){
-				if (array_search($neighbour, $res) === false)	
+				if (array_search($neighbour, $res, true) === false)	
 				{
 					$res[] = $neighbour;	
 					$this->findDeepdNeighbours($res, $this->getFieldNeighbours($neighbour), $depth-1);
@@ -145,6 +151,73 @@ class Field extends Doctrine\ORM\EntityRepository {
 	
 	}
 	
+	
+	
+	
+	/**
+	 * Finds centers of seven-fields-sized hexagons which are >= $depth far from the nearest field of any other player
+	 * 
+	 * TODO: fix the "Call to a member function getX() on a non-object" error
+	 *
+	 * @param integer
+	 * @param array of fields
+	 * @param array of fields
+	 * @param field
+	 * @param boolean
+	 * @return array of fields
+	 */
+	public function findNeutralHexagons($depth, &$foundCenters = null, &$visitedFields = null, $startField = null, $firstRun = true){
+	
+	//search->inarray
+	
+		if($depth <= 0)
+		{
+			return $foundCenters;
+		}
+	
+		if ($firstRun)
+		{
+			$visitedFields = array();
+			$foundCenters = array();
+			$neutralFields = $this->findNeutralFields();	
+//			Debugger::barDump($neutralFields);
+			foreach ($neutralFields as $neutralField)
+			{
+				$visitedFields[] = $neutralField;
+				$this->findNeutralHexagons($depth, $foundCenters, $visitedFields, $neutralField, false);
+			}
+			
+		}
+		else
+		{
+			$neighbours = $this->getFieldNeighbours($startField); #tuto to zlobí ;)
+			//Debugger::barDump($neighbours);
+			foreach ($neighbours as $neighbour)
+			{
+				if ($neighbour->owner != null){
+					return;
+				}
+				if (array_search($neighbour, $visitedFields, true) === false){
+					$visitedFields[] = $neighbour;		
+					
+					$neigboursNextLvl = $this->getFieldNeighbours($neighbour);
+					foreach ($neigboursNextLvl as $neigbourNextLvl)
+					{
+						if ($neigbourNextLvl->owner != null)
+						{
+							return;
+						}
+							
+					}
+						$foundCenters[] = $neighbour;
+						$this->findNeutralHexagons($depth-1, $foundCenters, $visitedFields, $this->getFieldNeighbours($neighbour), false);
+					
+					
+				
+				}
+			}
+		}
+	}
 }
 
 
