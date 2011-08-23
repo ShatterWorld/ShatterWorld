@@ -1,11 +1,15 @@
 #fieldInfo {
-	background: lightblue;
+	background: #5D6555;
+	color: white;
+	border: 1px solid white;
+	padding: 3px;
 	width: 170px;
 	height: 80px;
 	position: absolute;
 	z-index: 99999999999999999;
 	display: none;
 	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";/*IE*/
+	-moz-opacity: 0.9; /*Old mozzila*/
 	opacity: 0.9;/*Others*/
 }
 
@@ -27,7 +31,7 @@
 }
 
 #fieldDetail {
-	background: lightgrey;
+	background: #5D6555;
 	border: 2px white solid;
 	width: 350px;
 	height: 380px;
@@ -36,7 +40,10 @@
 	top: 70px;
 	z-index: 999999999999999999999999999;
 	display: none;
+	color: white;
 }
+
+
 
 #fieldDetail #fieldImg{
 	float: left;
@@ -48,7 +55,9 @@
 	cursor: pointer;
 }
 
-
+.field {
+	cursor: pointer;
+}
 
 
 
