@@ -2,6 +2,10 @@
 namespace Repositories;
 use Nette;
 use Doctrine;
+use Doctrine\Common\Collections\ArrayCollection;
+
+use Nette\Diagnostics\Debugger;
+
 
 class Field extends Doctrine\ORM\EntityRepository {
 	public function getMap ()
@@ -22,6 +26,12 @@ class Field extends Doctrine\ORM\EntityRepository {
 	*/
 	public function getFieldNeighbours ($field)
 	{
+	
+		if (!is_object($field))
+		{
+			Debugger::dump($field);
+		}
+		
 		$x = $field->getX();
 		$y = $field->getY();
 	
@@ -55,6 +65,8 @@ class Field extends Doctrine\ORM\EntityRepository {
 		return $qb->getQuery()->getResult();	
 	}
 	
+
+	
 	/**
 	* Finds the field by its coordinates
 	* @param integer
@@ -79,7 +91,147 @@ class Field extends Doctrine\ORM\EntityRepository {
 	public function findNeutralFields ()
 	{
 		$qb = $this->createQueryBuilder('f');
-		$qb->where($qb->expr()->isNull('f.owner'));
+		$qb->where(
+			$qb->expr()->isNull('f.owner')
+		);
 		return $qb->getQuery()->getResult();
 	}
+
+	/**
+	 * Finds fields which are visible for the player
+	 * @param integer
+	 * @param integer
+	 * @return array
+	 */
+	public function getVisibleFields ($userId, $depth)
+	{
+	
+		$qb = $this->createQueryBuilder('f');
+		$qb->where(
+			$qb->expr()->eq('f.owner', $userId)
+		);
+		$ownerFields = $qb->getQuery()->getResult();
+		
+		$visibleFields = array();
+		$this->findDeepdNeighbours($visibleFields, $ownerFields, $depth);
+		
+		return $visibleFields;
+	}
+	
+
+	/**
+	 * Finds fields which are >= $depth-th neighbour of given fields and saves them to given array
+	 * @param array of fields
+	 * @param array of fields
+	 * @param integer
+	 * @return void
+	 */
+	protected function findDeepdNeighbours(&$res, $sources, $depth)
+	{
+		if ($depth <= 0)
+		{
+			return;
+		}
+		foreach ($sources as $source)
+		{
+			if (array_search($source, $res, true) === false)	
+			{
+				$res[] = $source;
+			}						
+			
+			$neighbours = $this->getFieldNeighbours($source);
+			foreach ($neighbours as $neighbour){
+				if (array_search($neighbour, $res, true) === false)	
+				{
+					$res[] = $neighbour;	
+					$this->findDeepdNeighbours($res, $this->getFieldNeighbours($neighbour), $depth-1);
+				}						
+			}		
+		}	
+	
+	}
+	
+	
+	
+	
+	/**
+	 * Finds centers of seven-fields-sized hexagons which are >= $depth far from the nearest field of any other player
+	 * 
+	 * TODO: fix the "Call to a member function getX() on a non-object" error
+	 *
+	 * @param integer
+	 * @param array of fields
+	 * @param array of fields
+	 * @param field
+	 * @param boolean
+	 * @return array of fields
+	 */
+	public function findNeutralHexagons($depth, &$foundCenters = null, &$visitedFields = null, $startField = null, $firstRun = true){
+	
+	//search->inarray
+	
+		if($depth <= 0)
+		{
+			return $foundCenters;
+		}
+	
+		if ($firstRun)
+		{
+			$visitedFields = array();
+			$foundCenters = array();
+			$neutralFields = $this->findNeutralFields();	
+//			Debugger::barDump($neutralFields);
+			foreach ($neutralFields as $neutralField)
+			{
+				$visitedFields[] = $neutralField;
+				$this->findNeutralHexagons($depth, $foundCenters, $visitedFields, $neutralField, false);
+			}
+			
+		}
+		else
+		{
+			$neighbours = $this->getFieldNeighbours($startField); #tuto to zlobí ;)
+			//Debugger::barDump($neighbours);
+			foreach ($neighbours as $neighbour)
+			{
+				if ($neighbour->owner != null){
+					return;
+				}
+				if (array_search($neighbour, $visitedFields, true) === false){
+					$visitedFields[] = $neighbour;		
+					
+					$neigboursNextLvl = $this->getFieldNeighbours($neighbour);
+					foreach ($neigboursNextLvl as $neigbourNextLvl)
+					{
+						if ($neigbourNextLvl->owner != null)
+						{
+							return;
+						}
+							
+					}
+						$foundCenters[] = $neighbour;
+						$this->findNeutralHexagons($depth-1, $foundCenters, $visitedFields, $this->getFieldNeighbours($neighbour), false);
+					
+					
+				
+				}
+			}
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

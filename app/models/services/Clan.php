@@ -22,20 +22,27 @@ class Clan extends BaseService {
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
 		
-		$neutralFields[] = $fieldRepository->findNeutralFields();
+		
+		
+		//$neutralFields = $fieldRepository->findNeutralFields();
+		
+		
+		$neutralHexagons = $fieldRepository->findNeutralHexagons(10);
+		Debugger::barDump($neutralHexagons);
+		
 		
 		// findIsometricHexagonCentres($neutralFields);
 		
 //Debugger::barDump($neutralFields);
 
 
-
+/*
 		$isometricHexagons[] = null;
 		foreach ($neutralFields as $neutralField)
 		{
 		
 		//Debugger::barDump($neutralField);
-			$tmpIsometricHexagon = $fieldRepository->getFieldNeighbours($neutralField); /*foreach generates null*/
+			$tmpIsometricHexagon = $fieldRepository->getFieldNeighbours($neutralField);
 //			Debugger::barDump($tmpIsometricHexagon);
 		
 			$valid = $tmpIsometricHexagon.forAll(function($field){
@@ -65,7 +72,7 @@ class Clan extends BaseService {
 		}
 
 //Debugger::barDump($isometricHexagons);		
-		
+		*/
 		
 		$found[] = $fieldRepository->findByCoords($x, $y);
 		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
