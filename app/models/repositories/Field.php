@@ -152,63 +152,32 @@ class Field extends Doctrine\ORM\EntityRepository {
 	
 
 	/**
-	 * Finds fields which are >= $depth-th neighbour of given fields and saves them to given array
+	 * Finds fields which are <= $depth-th neighbour of given fields and saves them to given array
 	 * @param array of Entities\Field
 	 * @param array of Entities\Field
 	 * @param integer
+	 * @param array of Entities\Field
+	 * @param boolean
 	 * @return void
 	 */
 	protected function findDeepdNeighbours(&$res, $sources, $depth, &$map = array(), $firstRun = true)
 	{	
-		/*if ($depth <= 0)
-		{
+
+
+		if ($depth <= 0){
 			return;
 		}
-		
-		if ($firstRun)
-		{
+		if ($firstRun){
+			$depth++;
 			$map = $this->getMap();
 		}
-		else
-		{
-			foreach ($sources as $source)
-			{
-				if (in_array($source, $res, true) === false)	
-				{
-					$res[] = $source;
-				}						
-			
-				$neighbours = $this->getFieldNeighbours($source, $map); // add $map !!!!
-				foreach ($neighbours as $neighbour){
-					if (in_array($neighbour, $res, true) === false)	
-					{
-						$res[] = $neighbour;	
-						$this->findDeepdNeighbours($res, $this->getFieldNeighbours($neighbour, $map), $depth-1, $map, false);// add $map !!!!
-					}						
-				}		
-			}	
-		}*/
-		
-		if ($depth <= 0)
-		{
-			return;
-		}
-		foreach ($sources as $source)
-		{
-			if (in_array($source, $res, true) === false)	
-			{
+		foreach ($sources as $source){
+			if (in_array($source, $res, true) === false){
 				$res[] = $source;
+				$this->findDeepdNeighbours($res, $this->getFieldNeighbours($source), $depth-1, $map, false);
 			}						
-			
-			$neighbours = $this->getFieldNeighbours($source);
-			foreach ($neighbours as $neighbour){
-				if (in_array($neighbour, $res, true) === false)	
-				{
-					$res[] = $neighbour;	
-					$this->findDeepdNeighbours($res, $this->getFieldNeighbours($neighbour), $depth-1);
-				}						
-			}		
-		}	
+	
+		}
 		
 		
 	}
