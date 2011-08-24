@@ -277,11 +277,23 @@ class Field extends Doctrine\ORM\EntityRepository {
 	/**
 	 * Counts distance between field $a and $b
 	 * @param Entities\Field
+	 * @param Entities\Field
 	 * @return integer
 	 */
 	public function countDistance($a, $b)
 	{
-		return 5;
+		$sign = function ($x) {
+			return $x == 0 ? 0 : (abs($x) / $x);
+		};
+		$dx = $b->getX() - $a->getX();
+		$dy = $b->getY() - $a->getY();
+		
+		if ($sign($dx) = $sign($dy)) {
+			return abs($dx) + abs($dy);
+		}
+		else {
+			return max(abs($dx), abs($dy));
+		}
 	}
 	
 	
