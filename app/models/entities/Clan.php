@@ -27,9 +27,14 @@ class Clan extends BaseEntity {
 	 */
 	private $fields;
 	
-	public function __construct ()
+	/**
+	 * Constructor
+	 * @param Entities\User
+	 */
+	public function __construct (User $user)
 	{
 		$this->fields = new Doctrine\Common\Collections\ArrayCollection();
+		$this->user = $user;
 	}
 	
 	/**
@@ -58,16 +63,6 @@ class Clan extends BaseEntity {
 	public function getUser ()
 	{
 		return $this->user;
-	}
-	
-	/**
-	 * User setter
-	 * @param Entities\User
-	 * @return void
-	 */
-	public function setUser (User $user)
-	{
-		$this->user = $user;
 	}
 
 	/**

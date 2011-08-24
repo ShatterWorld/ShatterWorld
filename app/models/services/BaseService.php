@@ -61,7 +61,22 @@ class BaseService extends Nette\Object {
 	 */
 	public function create ($values, $flush = TRUE)
 	{
-		$object = new $this->entityClass;
+		$reflection = Nette\Reflection\ClassType::from($this->entityClass);
+		$constructorParams = array();
+		if ($constructor = $reflection->getConstructor()) {
+			foreach ($constructor->getParameters() as $param) {
+				if (!isset($values[$param->name])) {
+					if ($param->isDefaultValueAvailable()) {
+						$constructorParams[] = $param->getDefaultValue();
+					} else {
+						throw new Exception('Missing parameter ' . $param->name); # TODO: better exception
+					}
+				} else {
+					$constructorParams[$param->name] = $values[$param->name];
+				}
+			} 
+		}
+		$object = $constructorParams ? $reflection->newInstanceArgs($constructorParams) : new $this->entityClass;
 		$this->fillData($object, $values);
 		$this->entityManager->persist($object);
 		if ($flush) {
