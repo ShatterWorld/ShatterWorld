@@ -152,63 +152,32 @@ class Field extends Doctrine\ORM\EntityRepository {
 	
 
 	/**
-	 * Finds fields which are >= $depth-th neighbour of given fields and saves them to given array
+	 * Finds fields which are <= $depth-th neighbour of given fields and saves them to given array
 	 * @param array of Entities\Field
 	 * @param array of Entities\Field
 	 * @param integer
+	 * @param array of Entities\Field
+	 * @param boolean
 	 * @return void
 	 */
 	protected function findDeepdNeighbours(&$res, $sources, $depth, &$map = array(), $firstRun = true)
 	{	
-		/*if ($depth <= 0)
-		{
+
+
+		if ($depth <= 0){
 			return;
 		}
-		
-		if ($firstRun)
-		{
+		if ($firstRun){
+			$depth++;
 			$map = $this->getMap();
 		}
-		else
-		{
-			foreach ($sources as $source)
-			{
-				if (in_array($source, $res, true) === false)	
-				{
-					$res[] = $source;
-				}						
-			
-				$neighbours = $this->getFieldNeighbours($source, $map); // add $map !!!!
-				foreach ($neighbours as $neighbour){
-					if (in_array($neighbour, $res, true) === false)	
-					{
-						$res[] = $neighbour;	
-						$this->findDeepdNeighbours($res, $this->getFieldNeighbours($neighbour, $map), $depth-1, $map, false);// add $map !!!!
-					}						
-				}		
-			}	
-		}*/
-		
-		if ($depth <= 0)
-		{
-			return;
-		}
-		foreach ($sources as $source)
-		{
-			if (in_array($source, $res, true) === false)	
-			{
+		foreach ($sources as $source){
+			if (in_array($source, $res, true) === false){
 				$res[] = $source;
+				$this->findDeepdNeighbours($res, $this->getFieldNeighbours($source), $depth-1, $map, false);
 			}						
-			
-			$neighbours = $this->getFieldNeighbours($source);
-			foreach ($neighbours as $neighbour){
-				if (in_array($neighbour, $res, true) === false)	
-				{
-					$res[] = $neighbour;	
-					$this->findDeepdNeighbours($res, $this->getFieldNeighbours($neighbour), $depth-1);
-				}						
-			}		
-		}	
+	
+		}
 		
 		
 	}
@@ -230,7 +199,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	public function findNeutralHexagons($depth, &$foundCenters, $maxMapIndex, &$visitedFields = array(), $startField = null, &$map = array(), $firstRun = true){
 	
 		if($depth <= 0) {
-			return;
+			return true;
 		}
 	
 		if ($firstRun) {
@@ -238,38 +207,44 @@ class Field extends Doctrine\ORM\EntityRepository {
 			$map = $this->getMap();
 			foreach ($neutralFields as $neutralField) {
 				$visitedFields[] = $neutralField;
-				if ($neutralField->getX() <= 0 or $neutralField->getY() <= 0 or $neutralField->getX() >= $maxMapIndex or $neutralField->getY() >= $maxMapIndex)
+				if ($neutralField->getX() <= 0 or $neutralField->getY() <= 0 or $neutralField->getX() >= $maxMapIndex or $neutralField->getY() >= $maxMapIndex or $neutralField->owner != null)
 				{
 					continue;
 				}
 
-				$this->findNeutralHexagons($depth, $foundCenters, $maxMapIndex, $visitedFields, $neutralField, $map, false);
+				if ($this->findNeutralHexagons($depth, $foundCenters, $maxMapIndex, $visitedFields, $neutralField, $map, false)){
+					$foundCenters[] = $neutralField;
+				}
+				
 			}
-			
 		}
 		else {
+
 			if ($startField->getX() <= 0 or $startField->getY() <= 0 or $startField->getX() >= $maxMapIndex or $startField->getY() >= $maxMapIndex)
 			{
-				return;
+				return false;
 			}
 
 			$neighbours = $this->getFieldNeighbours($startField, $map);
 			if (count($neighbours) != 6)
 			{
-				return;
+				return false;
 			}
 			
 			foreach ($neighbours as $neighbour) {
 				if ($neighbour->owner != null){
-					return;
+					return false;
 				}
 			}	
 					
-			$foundCenters[] = $startField;
-			$visitedFields[] = $startField;		
 			foreach ($neighbours as $neighbour) {
-				$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, $map, false);			
-			}			
+				if (!$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, $map, false)){
+					return false;
+				}
+			}	
+			return true;
+		
+
 		}
 	}
 	

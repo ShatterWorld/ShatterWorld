@@ -91,5 +91,10 @@ class ClanPresenter extends BasePresenter {
 		
 	}
 	
+
+	
+	
+	
+	
 	
 }

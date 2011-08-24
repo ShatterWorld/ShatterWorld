@@ -78,18 +78,19 @@
 			{?$zIndex = $sizeX}
 			{foreach $fields as $field}
 				{?list($x, $y) = $field->coords}
-				{$left = ($x*43)+($y*43)}
-				{$top = ($x*-20)+($y*19)}
-				<img 
+				{?$left = ($x*43)+($y*43)}
+				{?$top = ($x*-20)+($y*19)}
+				<div 
 					class="field" 
 					id="field_{$x}_{$y}" 
-					alt="{$x}, {$y}" 
-					src="{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png" 
 					style="
+						width: 60px;
+						height: 40px;
 						position:absolute;
 						left:{$left}px;
 						top:{$top}px;
-						z-index:{$zIndex}
+						z-index:{$zIndex};
+						background: url('{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png');
 					"
 					data-coords="[{$x}, {$y}]"	
 					data-type="{$field->type}"
@@ -99,7 +100,42 @@
 					data-level="{$field->level}"	
 					data-facility="{if $field->facility == null}žádná{else}{$field->facility}{/if}"	
 					data-owner="{if $field->owner == null}---{else}{$field->owner->name}{/if}"	
-				/>
+				>
+					<img 
+						class="marker" 
+						id="marker_{$x}_{$y}" 
+						src="{$basePath}/images/fields/marker.png" 
+						style="
+							position:absolute;
+							left:0px;
+							top:0px;
+							z-index:99999999999;
+							display: none;
+						"
+					/>
+					<img 
+						class="border" 
+						id="border_{$x}_{$y}" 
+						
+						{if $field->owner == null}
+							{?$border="border_neutral"}
+						{*{elseif $field->owner->id == $clan->aliance}
+							{?$border="border_aliance"}*}
+						{elseif $field->owner->id == $clan->id}
+							{?$border="border_mine"}
+						{else}
+							{?$border="border_enemy"}
+						{/if}
+						
+						src="{$basePath}/images/fields/{$border}.png" 
+						style="
+							position:absolute;
+							left:0px;
+							top:0px;
+							z-index:9999999;
+						"
+					/>
+				</div>
 				{if $iterator->getCounter() % $sizeX === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}
 			{/foreach}
 		</div>

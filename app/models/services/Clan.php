@@ -10,7 +10,7 @@ class Clan extends BaseService {
 	/*
 	* The total number of filed which player is given
 	*/
-	const N = 3; 
+	const N = 3;//$this->context->params['game']['map']['initialFieldsCount'];
 
 	/**
 	* Creates an object as parent does
@@ -23,31 +23,23 @@ class Clan extends BaseService {
 	{
 		$clan = parent::create($values, $flush);
 		
-		$x = 4;
-		$y = 3;
-
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
 		
-		$mapSize = 8;
+		$mapSize = $this->context->params['game']['map']['sizeX'];
+		$playerDistance = $this->context->params['game']['map']['playerDistance'];
 		$maxMapIndex = $mapSize - 1;
 		
-		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 + 1);
+		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 - 1);
 		$neutralHexagons = array();
-		$fieldRepository->findNeutralHexagons(1, $neutralHexagons, $maxMapIndex);
-		Debugger::barDump($neutralHexagons);
+		$fieldRepository->findNeutralHexagons($playerDistance, $neutralHexagons, $maxMapIndex);
+		//Debugger::barDump($neutralHexagons);
 		
-		
-		
-		
-		//finds the one which is closest to the center
 		$minDist = 99999999999;
 		$minField;
-		foreach ($neutralHexagons as $neutralHexagon)
-		{
+		foreach ($neutralHexagons as $neutralHexagon){
 			$dist = $fieldRepository->calculateDistance($S, $neutralHexagon);
-			if ($dist < $minDist)
-			{
+			if ($dist < $minDist){
 				$minDist = $dist;
 				$minField = $neutralHexagon;
 			}
@@ -55,7 +47,9 @@ class Clan extends BaseService {
 
 		$found[] = $minField;		
 		
-//-------------------		
+// other fields search improvement required
+
+	
 		//$found[] = $fieldRepository->findByCoords($x, $y);
 		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
 //Debugger::barDump($neighbours);
@@ -99,7 +93,7 @@ class Clan extends BaseService {
 		
 
 //		Debugger::barDump($neighbours);
-		return clan; 
+		return $clan; 
 
 	}
 
