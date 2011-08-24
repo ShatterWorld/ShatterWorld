@@ -280,7 +280,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * @param Entities\Field
 	 * @return integer
 	 */
-	public function countDistance($a, $b)
+	public function calculateDistance($a, $b)
 	{
 		$sign = function ($x) {
 			return $x == 0 ? 0 : (abs($x) / $x);
@@ -295,7 +295,4 @@ class Field extends Doctrine\ORM\EntityRepository {
 			return max(abs($dx), abs($dy));
 		}
 	}
-	
-	
-	
 }
