@@ -288,7 +288,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		$dx = $b->getX() - $a->getX();
 		$dy = $b->getY() - $a->getY();
 		
-		if ($sign($dx) = $sign($dy)) {
+		if ($sign($dx) === $sign($dy)) {
 			return abs($dx) + abs($dy);
 		}
 		else {
