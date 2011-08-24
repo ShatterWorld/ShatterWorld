@@ -78,8 +78,8 @@
 			{?$zIndex = $sizeX}
 			{foreach $fields as $field}
 				{?list($x, $y) = $field->coords}
-				{$left = ($x*43)+($y*43)}
-				{$top = ($x*-20)+($y*19)}
+				{?$left = ($x*43)+($y*43)}
+				{?$top = ($x*-20)+($y*19)}
 				<img 
 					class="field" 
 					id="field_{$x}_{$y}" 
