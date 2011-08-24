@@ -10,7 +10,7 @@ class Clan extends BaseService {
 	/*
 	* The total number of filed which player is given
 	*/
-	const N = $this->context->params['game']['map']['initialFieldsCount'];
+	const N = 3;//$this->context->params['game']['map']['initialFieldsCount'];
 
 	/**
 	* Creates an object as parent does

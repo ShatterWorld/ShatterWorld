@@ -9,6 +9,7 @@ class MapPresenter extends BasePresenter {
 		$this->template->sizeX = $mapOptions['sizeX'];
 		$this->template->sizeY = $mapOptions['sizeY'];
 		//$this->template->fields = $this->getFieldRepository()->getVisibleFields($this->getPlayerClan()->getId(), 1);				
-		$this->template->fields = $this->getFieldRepository()->getMap();				
+		$this->template->fields = $this->getFieldRepository()->getMap();		
+		$this->template->clan = $this->getPlayerClan();		
 	}
 }
