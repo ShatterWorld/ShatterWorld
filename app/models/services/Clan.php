@@ -45,7 +45,7 @@ class Clan extends BaseService {
 		$minField;
 		foreach ($neutralHexagons as $neutralHexagon)
 		{
-			$dist = $fieldRepository->countDistance($S, $neutralHexagon);
+			$dist = $fieldRepository->calculateDistance($S, $neutralHexagon);
 			if ($dist < $minDist)
 			{
 				$minDist = $dist;

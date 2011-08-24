@@ -279,8 +279,13 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * @param Entities\Field
 	 * @return integer
 	 */
-	public function countDistance($a, $b)
+	public function calculateDistance($a, $b)
 	{
+		$dX = $a->getX() - $b->getX();
+		$dY = $a->getY() - $b->getY();
+		
+		
+		
 		return 5;
 	}
 	
