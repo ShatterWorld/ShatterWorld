@@ -230,7 +230,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	public function findNeutralHexagons($depth, &$foundCenters, $maxMapIndex, &$visitedFields = array(), $startField = null, &$map = array(), $firstRun = true){
 	
 		if($depth <= 0) {
-			return;
+			return true;
 		}
 	
 		if ($firstRun) {
@@ -238,38 +238,44 @@ class Field extends Doctrine\ORM\EntityRepository {
 			$map = $this->getMap();
 			foreach ($neutralFields as $neutralField) {
 				$visitedFields[] = $neutralField;
-				if ($neutralField->getX() <= 0 or $neutralField->getY() <= 0 or $neutralField->getX() >= $maxMapIndex or $neutralField->getY() >= $maxMapIndex)
+				if ($neutralField->getX() <= 0 or $neutralField->getY() <= 0 or $neutralField->getX() >= $maxMapIndex or $neutralField->getY() >= $maxMapIndex or $neutralField->owner != null)
 				{
 					continue;
 				}
 
-				$this->findNeutralHexagons($depth, $foundCenters, $maxMapIndex, $visitedFields, $neutralField, $map, false);
+				if ($this->findNeutralHexagons($depth, $foundCenters, $maxMapIndex, $visitedFields, $neutralField, $map, false)){
+					$foundCenters[] = $neutralField;
+				}
+				
 			}
-			
 		}
 		else {
+
 			if ($startField->getX() <= 0 or $startField->getY() <= 0 or $startField->getX() >= $maxMapIndex or $startField->getY() >= $maxMapIndex)
 			{
-				return;
+				return false;
 			}
 
 			$neighbours = $this->getFieldNeighbours($startField, $map);
 			if (count($neighbours) != 6)
 			{
-				return;
+				return false;
 			}
 			
 			foreach ($neighbours as $neighbour) {
 				if ($neighbour->owner != null){
-					return;
+					return false;
 				}
 			}	
 					
-			$foundCenters[] = $startField;
-			$visitedFields[] = $startField;		
 			foreach ($neighbours as $neighbour) {
-				$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, $map, false);			
-			}			
+				if (!$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, $map, false)){
+					return false;
+				}
+			}	
+			return true;
+		
+
 		}
 	}
 	

@@ -35,4 +35,30 @@ abstract class BasePresenter extends \BasePresenter
 		$map->setup($this->getFieldRepository, $this->context->params['game']['map']);
 		return $map;
 	}
+	
+	/**
+	* Test !!!
+	* TODO: remove
+	*/
+	public function handleCreateUser ()
+	{
+		$user = $this->getService('userService')->create(
+			array(
+				'nickname' => Nette\Utils\Strings::random(),
+				'email' => 'test@test.com',
+				'password' => '123456',
+				'role' => 'player'
+			)
+		);
+
+		$clan = $this->getService('clanService')->create(
+			array(
+				'name' => Nette\Utils\Strings::random(),
+				'owner' => $user
+			)
+		);
+		
+		$this->redirect('Map:');
+	}	
+	
 }
