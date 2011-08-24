@@ -16,64 +16,33 @@ class Clan extends BaseService {
 	{
 		$clan = parent::create($values, $flush);
 		
-		$x = 0;
-		$y = 0;
+		$x = 4;
+		$y = 3;
 
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
 		
+		$mapSize = 8;
+		$maxMapIndex = $mapSize - 1;
 		
+		$S = array('x' => $mapSize/2, 'y' => $mapSize/2 + 1);
 		
-		//$neutralFields = $fieldRepository->findNeutralFields();
-		
-		
-		$neutralHexagons = $fieldRepository->findNeutralHexagons(10);
+		$neutralHexagons = array();
+		$fieldRepository->findNeutralHexagons(1, $neutralHexagons, $maxMapIndex);
 		Debugger::barDump($neutralHexagons);
 		
 		
-		// findIsometricHexagonCentres($neutralFields);
 		
-//Debugger::barDump($neutralFields);
-
-
-/*
-		$isometricHexagons[] = null;
-		foreach ($neutralFields as $neutralField)
+		
+		//finds the one which is closest to the center
+		foreach ($neutralHexagons as $neutralHexagon)
 		{
+		//...
 		
-		//Debugger::barDump($neutralField);
-			$tmpIsometricHexagon = $fieldRepository->getFieldNeighbours($neutralField);
-//			Debugger::barDump($tmpIsometricHexagon);
-		
-			$valid = $tmpIsometricHexagon.forAll(function($field){
-			
-			Debugger::barDump($field);
-
-				if ($field == null or $field->owner != null){
-					return false;
-				}
-				else{
-					$neigboursNextLvl = $fieldRepository->getFieldNeighbours($field);
-					
-					$innerValid = $neigboursNextLvl.forAll(function($fieldNextLvl){
-						if ($fieldNextLvl == null or $fieldNextLvl->owner != null){
-							return false;
-						}
-				
-					});
-					return $innerValid;
-				}
-			});
-			
-			if(valid)
-			{
-				$isometricHexagons[] = tmpIsometricHexagon;			
-			}
 		}
-
-//Debugger::barDump($isometricHexagons);		
-		*/
 		
+		
+//-------------------		
 		$found[] = $fieldRepository->findByCoords($x, $y);
 		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
 //Debugger::barDump($neighbours);

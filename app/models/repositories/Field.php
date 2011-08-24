@@ -21,43 +21,80 @@ class Field extends Doctrine\ORM\EntityRepository {
 	
 	
 	/**
-	* Finds 2-6 neighbours of field
+	* Finds 2-6 neighbours of field. When &$map defined, searches in $map instand of exectuting query 
 	* @param Entities\Field
-	* @return array of field
+	* @param array of Entities\Field
+	* @return array of Entities\Field
 	*/
-	public function getFieldNeighbours (Entities\Field $field)
+	public function getFieldNeighbours (Entities\Field $field, &$map = array())
 	{
+		$neighbours = array();
 		$x = $field->getX();
 		$y = $field->getY();
 	
-		$qb = $this->createQueryBuilder('f');
-		$qb->where($qb->expr()->orX(
-			$qb->expr()->andX(# north
-				$qb->expr()->eq('f.coordX', $x+1),
-				$qb->expr()->eq('f.coordY', $y-1)
-			),
-			$qb->expr()->andX(# south
-				$qb->expr()->eq('f.coordX', $x-1),
-				$qb->expr()->eq('f.coordY', $y+1)
-			),
-			$qb->expr()->andX(# north-east
-				$qb->expr()->eq('f.coordX', $x+1),
-				$qb->expr()->eq('f.coordY', $y)
-			),
-			$qb->expr()->andX(# south-east
-				$qb->expr()->eq('f.coordX', $x),
-				$qb->expr()->eq('f.coordY', $y+1)
-			),
-			$qb->expr()->andX(# north-west
-				$qb->expr()->eq('f.coordX', $x),
-				$qb->expr()->eq('f.coordY', $y-1)
-			),
-			$qb->expr()->andX(# south-east
-				$qb->expr()->eq('f.coordX', $x-1),
-				$qb->expr()->eq('f.coordY', $y)
-			)
-		));
-		return $qb->getQuery()->getResult();	
+		if (count($map) > 0)
+		{
+			foreach ($map as $tmpField)
+			{
+				$tmpX = $tmpField->getX();
+				$tmpY = $tmpField->getY();
+				
+				if(
+						($tmpX == $x+1 and $tmpY == $y-1)
+					or
+						($tmpX == $x-1 and $tmpY == $y+1)
+					or
+						($tmpX == $x+1 and $tmpY == $y)
+					or
+						($tmpX == $x and $tmpY == $y+1)
+					or
+						($tmpX == $x and $tmpY == $y-1)
+					or
+						($tmpX == $x-1 and $tmpY == $y)
+				)
+				{
+					$neighbours[] = $tmpField;
+				}
+			
+			}
+
+		
+		}
+		else
+		{
+			$qb = $this->createQueryBuilder('f');
+			$qb->where($qb->expr()->orX(
+				$qb->expr()->andX(# north
+					$qb->expr()->eq('f.coordX', $x+1),
+					$qb->expr()->eq('f.coordY', $y-1)
+				),
+				$qb->expr()->andX(# south
+					$qb->expr()->eq('f.coordX', $x-1),
+					$qb->expr()->eq('f.coordY', $y+1)
+				),
+				$qb->expr()->andX(# north-east
+					$qb->expr()->eq('f.coordX', $x+1),
+					$qb->expr()->eq('f.coordY', $y)
+				),
+				$qb->expr()->andX(# south-east
+					$qb->expr()->eq('f.coordX', $x),
+					$qb->expr()->eq('f.coordY', $y+1)
+				),
+				$qb->expr()->andX(# north-west
+					$qb->expr()->eq('f.coordX', $x),
+					$qb->expr()->eq('f.coordY', $y-1)
+				),
+				$qb->expr()->andX(# south-east
+					$qb->expr()->eq('f.coordX', $x-1),
+					$qb->expr()->eq('f.coordY', $y)
+				)
+			));
+			$neighbours = $qb->getQuery()->getResult();	
+		}
+		
+		return $neighbours;	
+		
+		
 	}
 	
 
@@ -66,7 +103,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	* Finds the field by its coordinates
 	* @param integer
 	* @param integer
-	* @return field
+	* @return Entities\Field
 	*/
 	public function findByCoords ($x, $y)
 	{
@@ -81,7 +118,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	
 	/**
 	 * Finds fields with no owner
-	 * @return array
+	 * @return array of Entities\Field
 	 */
 	public function findNeutralFields ()
 	{
@@ -96,7 +133,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * Finds fields which are visible for the player
 	 * @param integer
 	 * @param integer
-	 * @return array
+	 * @return array of Entities\Field
 	 */
 	public function getVisibleFields ($userId, $depth)
 	{
@@ -116,34 +153,64 @@ class Field extends Doctrine\ORM\EntityRepository {
 
 	/**
 	 * Finds fields which are >= $depth-th neighbour of given fields and saves them to given array
-	 * @param array of fields
-	 * @param array of fields
+	 * @param array of Entities\Field
+	 * @param array of Entities\Field
 	 * @param integer
 	 * @return void
 	 */
-	protected function findDeepdNeighbours(&$res, $sources, $depth)
-	{
+	protected function findDeepdNeighbours(&$res, $sources, $depth, &$map = array(), $firstRun = true)
+	{	
+		/*if ($depth <= 0)
+		{
+			return;
+		}
+		
+		if ($firstRun)
+		{
+			$map = $this->getMap();
+		}
+		else
+		{
+			foreach ($sources as $source)
+			{
+				if (in_array($source, $res, true) === false)	
+				{
+					$res[] = $source;
+				}						
+			
+				$neighbours = $this->getFieldNeighbours($source, $map); // add $map !!!!
+				foreach ($neighbours as $neighbour){
+					if (in_array($neighbour, $res, true) === false)	
+					{
+						$res[] = $neighbour;	
+						$this->findDeepdNeighbours($res, $this->getFieldNeighbours($neighbour, $map), $depth-1, $map, false);// add $map !!!!
+					}						
+				}		
+			}	
+		}*/
+		
 		if ($depth <= 0)
 		{
 			return;
 		}
 		foreach ($sources as $source)
 		{
-			if (array_search($source, $res, true) === false)	
+			if (in_array($source, $res, true) === false)	
 			{
 				$res[] = $source;
 			}						
 			
 			$neighbours = $this->getFieldNeighbours($source);
 			foreach ($neighbours as $neighbour){
-				if (array_search($neighbour, $res, true) === false)	
+				if (in_array($neighbour, $res, true) === false)	
 				{
 					$res[] = $neighbour;	
 					$this->findDeepdNeighbours($res, $this->getFieldNeighbours($neighbour), $depth-1);
 				}						
 			}		
 		}	
-	
+		
+		
 	}
 	
 	
@@ -151,39 +218,53 @@ class Field extends Doctrine\ORM\EntityRepository {
 	
 	/**
 	 * Finds centers of seven-fields-sized hexagons which are >= $depth far from the nearest field of any other player
-	 * 
-	 * TODO: fix the "Call to a member function getX() on a non-object" error
-	 *
 	 * @param integer
-	 * @param array of fields
-	 * @param array of fields
-	 * @param field
+	 * @param array of Entities\Field
+	 * @param integer
+	 * @param array of Entities\Field
+	 * @param Entities\Field
+	 * @param array of Entities\Field
 	 * @param boolean
-	 * @return array of fields
+	 * @return void
 	 */
-	public function findNeutralHexagons($depth, &$foundCenters = array(), &$visitedFields = array(), $startField = null, $firstRun = true){
-	
-	//search->inarray
+	public function findNeutralHexagons($depth, &$foundCenters, $maxMapIndex, &$visitedFields = array(), $startField = null, &$map = array(), $firstRun = true){
 	
 		if($depth <= 0) {
-			return $foundCenters;
+			return;
 		}
 	
 		if ($firstRun) {
 			$neutralFields = $this->findNeutralFields();
+			$map = $this->getMap();
 			foreach ($neutralFields as $neutralField) {
 				$visitedFields[] = $neutralField;
-				$this->findNeutralHexagons($depth, $foundCenters, $visitedFields, $neutralField, false);
+				/*if ($neutralField->getX() == 0 or $neutralField->getY() == 0 or $neutralField->getX() == $maxMapIndex or $neutralField->getY() == $maxMapIndex)
+				{
+					break;
+				}*/
+
+				$this->findNeutralHexagons($depth, $foundCenters, $maxMapIndex, $visitedFields, $neutralField, $map, false);
 			}
 			
 		}
 		else {
-			$neighbours = $this->getFieldNeighbours($startField); #tuto to zlobí ;)
+			if ($startField->getX() == 0 or $startField->getY() == 0 or $startField->getX() == $maxMapIndex or $startField->getY() == $maxMapIndex)
+			{
+				return;
+			}
+
+			$neighbours = $this->getFieldNeighbours($startField, $map);
+			if (count($neighbours) != 6)
+			{
+				return;
+			}
 			foreach ($neighbours as $neighbour) {
 				if ($neighbour->owner != null){
 					return;
 				}
-				if (array_search($neighbour, $visitedFields, true) === false) {
+				
+				/*
+				if (in_array($neighbour, $visitedFields, true) === false) {
 					$visitedFields[] = $neighbour;		
 					
 					$neigboursNextLvl = $this->getFieldNeighbours($neighbour);
@@ -193,13 +274,17 @@ class Field extends Doctrine\ORM\EntityRepository {
 						}
 							
 					}
-						$foundCenters[] = $neighbour;
-						$this->findNeutralHexagons($depth-1, $foundCenters, $visitedFields, $this->getFieldNeighbours($neighbour), false);
-					
-					
-				
-				}
+					$foundCenters[] = $startField;
+					$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, false);
+														
+				}*/
 			}
+			$foundCenters[] = $startField;
+			$visitedFields[] = $startField;		
+			foreach ($neighbours as $neighbour) {
+				$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, $map, false);			
+			}
+			
 		}
 	}
 }
