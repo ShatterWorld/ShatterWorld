@@ -12,6 +12,13 @@ class Clan extends BaseService {
 	*/
 	const N = 3; 
 
+	/**
+	* Creates an object as parent does
+	* In addition, it assigns N fields to the clan
+	* @param array
+	* @param bool
+	* @return object
+	*/
 	public function create ($values, $flush = TRUE)
 	{
 		$clan = parent::create($values, $flush);
@@ -25,8 +32,7 @@ class Clan extends BaseService {
 		$mapSize = 8;
 		$maxMapIndex = $mapSize - 1;
 		
-		$S = array('x' => $mapSize/2, 'y' => $mapSize/2 + 1);
-		
+		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 + 1);
 		$neutralHexagons = array();
 		$fieldRepository->findNeutralHexagons(1, $neutralHexagons, $maxMapIndex);
 		Debugger::barDump($neutralHexagons);
@@ -35,15 +41,22 @@ class Clan extends BaseService {
 		
 		
 		//finds the one which is closest to the center
+		$minDist = 99999999999;
+		$minField;
 		foreach ($neutralHexagons as $neutralHexagon)
 		{
-		//...
-		
+			$dist = $fieldRepository->countDistance($S, $neutralHexagon);
+			if ($dist < $minDist)
+			{
+				$minDist = $dist;
+				$minField = $neutralHexagon;
+			}
 		}
-		
+
+		$found[] = $minField;		
 		
 //-------------------		
-		$found[] = $fieldRepository->findByCoords($x, $y);
+		//$found[] = $fieldRepository->findByCoords($x, $y);
 		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
 //Debugger::barDump($neighbours);
 
@@ -86,10 +99,16 @@ class Clan extends BaseService {
 		
 
 //		Debugger::barDump($neighbours);
-		//return sth; ?
+		return clan; 
 
 	}
 
+	/**
+	 * Delete a persisted object and also set all its field neutral
+	 * @param Entities\BaseEntity
+	 * @param bool
+	 * @return void
+	 */
 	public function delete ($object, $flush = TRUE)
 	{
 

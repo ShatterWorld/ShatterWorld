@@ -238,17 +238,17 @@ class Field extends Doctrine\ORM\EntityRepository {
 			$map = $this->getMap();
 			foreach ($neutralFields as $neutralField) {
 				$visitedFields[] = $neutralField;
-				/*if ($neutralField->getX() == 0 or $neutralField->getY() == 0 or $neutralField->getX() == $maxMapIndex or $neutralField->getY() == $maxMapIndex)
+				if ($neutralField->getX() <= 0 or $neutralField->getY() <= 0 or $neutralField->getX() >= $maxMapIndex or $neutralField->getY() >= $maxMapIndex)
 				{
-					break;
-				}*/
+					continue;
+				}
 
 				$this->findNeutralHexagons($depth, $foundCenters, $maxMapIndex, $visitedFields, $neutralField, $map, false);
 			}
 			
 		}
 		else {
-			if ($startField->getX() == 0 or $startField->getY() == 0 or $startField->getX() == $maxMapIndex or $startField->getY() == $maxMapIndex)
+			if ($startField->getX() <= 0 or $startField->getY() <= 0 or $startField->getX() >= $maxMapIndex or $startField->getY() >= $maxMapIndex)
 			{
 				return;
 			}
@@ -258,33 +258,32 @@ class Field extends Doctrine\ORM\EntityRepository {
 			{
 				return;
 			}
+			
 			foreach ($neighbours as $neighbour) {
 				if ($neighbour->owner != null){
 					return;
 				}
-				
-				/*
-				if (in_array($neighbour, $visitedFields, true) === false) {
-					$visitedFields[] = $neighbour;		
+			}	
 					
-					$neigboursNextLvl = $this->getFieldNeighbours($neighbour);
-					foreach ($neigboursNextLvl as $neigbourNextLvl) {
-						if ($neigbourNextLvl->owner != null) {
-							return;
-						}
-							
-					}
-					$foundCenters[] = $startField;
-					$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, false);
-														
-				}*/
-			}
 			$foundCenters[] = $startField;
 			$visitedFields[] = $startField;		
 			foreach ($neighbours as $neighbour) {
 				$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, $map, false);			
-			}
-			
+			}			
 		}
 	}
+	
+	
+	/**
+	 * Counts distance between field $a and $b
+	 * @param Entities\Field
+	 * @return integer
+	 */
+	public function countDistance($a, $b)
+	{
+		return 5;
+	}
+	
+	
+	
 }
