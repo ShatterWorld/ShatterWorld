@@ -143,32 +143,33 @@ class Field extends Doctrine\ORM\EntityRepository {
 			$qb->expr()->eq('f.owner', $userId)
 		);
 		$ownerFields = $qb->getQuery()->getResult();
-		
-		$visibleFields = array();
-		$this->findDeepdNeighbours($visibleFields, $ownerFields, $depth);
+		$visibleFields = $this->findDeepNeighbours($depth, $ownerFields);
 		
 		return $visibleFields;
 	}
 	
 
 	/**
-	 * Finds fields which are <= $depth-th neighbour of given fields and saves them to given array
-	 * @param array of Entities\Field
-	 * @param array of Entities\Field
+	 * Finds fields which are <= $depth-th neighbour of given fields
 	 * @param integer
+	 * @param array of Entities\Field
+	 * @param array of Entities\Field
 	 * @param array of integer
 	 * @param Entities\Field
 	 * @param array of Entities\Field
 	 * @param boolean
-	 * @return void
+	 * @return array of Entities\Field
+	 *
+	 * TODO: @param mapSize (required for setting $depthArr zero value)
 	 */
-	protected function findDeepdNeighbours(&$res, $sources, $depth, &$depthArr = null, $startField = null, &$map = array(), $firstRun = true)
+	protected function findDeepNeighbours($depth, $sources, &$deepNeigbours = array(), &$depthArr = array(), $startField = null, &$map = array(), $firstRun = true)
 	{	
 		if ($depth <= 0){
 			return;
 		}
 		if ($firstRun){
 			$depthArr = array();
+			$deepNeigbours = array();
 			
 			for($i=0; $i<16; $i++){
 				for($j=0; $j<16; $j++){
@@ -180,8 +181,10 @@ class Field extends Doctrine\ORM\EntityRepository {
 			
 			foreach ($sources as $source){
 				$neighbours = $this->getFieldNeighbours($source, $map);
-				$this->findDeepdNeighbours($res, null, $depth, $depthArr, $source, $map, false);
-			}			
+				$this->findDeepNeighbours($depth, null, $deepNeigbours, $depthArr, $source, $map, false);
+			}
+			return $deepNeigbours;
+			
 		}
 		else{		
 			if ($depth > $depthArr[$startField->getX()][$startField->getY()]){
@@ -189,10 +192,10 @@ class Field extends Doctrine\ORM\EntityRepository {
 				$depthArr[$startField->getX()][$startField->getY()] = $depth;
 				$neighbours = $this->getFieldNeighbours($startField, $map);
 				foreach ($neighbours as $neighbour){
-					if (in_array($neighbour, $res, true) === false){
-						$res[] = $neighbour;
+					if (in_array($neighbour, $deepNeigbours, true) === false){
+						$deepNeigbours[] = $neighbour;
 					}
-					$this->findDeepdNeighbours($res, null, $depth-1, $depthArr, $neighbour, $map, false);
+					$this->findDeepNeighbours($depth-1, null, $deepNeigbours, $depthArr, $neighbour, $map, false);
 				}
 			}
 		}		
