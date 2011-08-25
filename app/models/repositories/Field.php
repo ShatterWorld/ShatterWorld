@@ -156,30 +156,46 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * @param array of Entities\Field
 	 * @param array of Entities\Field
 	 * @param integer
+	 * @param array of integer
+	 * @param Entities\Field
 	 * @param array of Entities\Field
 	 * @param boolean
 	 * @return void
 	 */
-	protected function findDeepdNeighbours(&$res, $sources, $depth, &$map = array(), $firstRun = true)
+	protected function findDeepdNeighbours(&$res, $sources, $depth, &$depthArr = null, $startField = null, &$map = array(), $firstRun = true)
 	{	
-
-
 		if ($depth <= 0){
 			return;
 		}
 		if ($firstRun){
-			$depth++;
+			$depthArr = array();
+			
+			for($i=0; $i<16; $i++){
+				for($j=0; $j<16; $j++){
+					$depthArr[$i][$j] = 0;			
+				}
+			}
+			
 			$map = $this->getMap();
+			
+			foreach ($sources as $source){
+				$neighbours = $this->getFieldNeighbours($source, $map);
+				$this->findDeepdNeighbours($res, null, $depth, $depthArr, $source, $map, false);
+			}			
 		}
-		foreach ($sources as $source){
-			if (in_array($source, $res, true) === false){
-				$res[] = $source;
-				$this->findDeepdNeighbours($res, $this->getFieldNeighbours($source), $depth-1, $map, false);
-			}						
-	
-		}
-		
-		
+		else{		
+			if ($depth > $depthArr[$startField->getX()][$startField->getY()]){
+			
+				$depthArr[$startField->getX()][$startField->getY()] = $depth;
+				$neighbours = $this->getFieldNeighbours($startField, $map);
+				foreach ($neighbours as $neighbour){
+					if (in_array($neighbour, $res, true) === false){
+						$res[] = $neighbour;
+					}
+					$this->findDeepdNeighbours($res, null, $depth-1, $depthArr, $neighbour, $map, false);
+				}
+			}
+		}		
 	}
 	
 	
