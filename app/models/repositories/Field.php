@@ -214,12 +214,16 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * @param array of Entities\Field
 	 * @param boolean
 	 * @return void
+	 *
+	 * TODO: reduce area
+	 *
 	 */
 	public function findNeutralHexagons($depth, &$foundCenters, $maxMapIndex, &$visitedFields = array(), $startField = null, &$map = array(), $firstRun = true){
 	
 		if($depth <= 0) {
 			return true;
 		}
+
 	
 		if ($firstRun) {
 			$neutralFields = $this->findNeutralFields();
