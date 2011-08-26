@@ -26,14 +26,13 @@ class Clan extends BaseService {
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
 		
-		$mapSize = $this->context->params['game']['map']['sizeX'];
+		$mapSize = $this->context->params['game']['map']['size'];
 		$playerDistance = $this->context->params['game']['map']['playerDistance'];
 		$maxMapIndex = $mapSize - 1;
 		
 		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 - 1);
 		$neutralHexagons = array();
 		$fieldRepository->findNeutralHexagons($playerDistance, $neutralHexagons, $maxMapIndex);
-		//Debugger::barDump($neutralHexagons);
 		
 		$minDist = 99999999999;
 		$minField;
@@ -52,7 +51,6 @@ class Clan extends BaseService {
 	
 		//$found[] = $fieldRepository->findByCoords($x, $y);
 		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
-//Debugger::barDump($neighbours);
 
 
 		foreach ($neighbours as $neight) // founds appropriate fields
@@ -89,10 +87,6 @@ class Clan extends BaseService {
 		{
 			$fieldService->update($foundField, array('owner' => $clan));		
 		}
-
-		
-
-//		Debugger::barDump($neighbours);
 		return $clan; 
 
 	}
@@ -105,19 +99,12 @@ class Clan extends BaseService {
 	 */
 	public function delete ($object, $flush = TRUE)
 	{
-
-		$fields = $object->getFields();
-		
-		foreach ($fields as $field)
+		foreach ($object->getFields() as $field)
 		{
 			$field->setOwner(NULL);
 			$this->entityManager->persist($field);	
 		}
-
-
 		parent::delete($object, $flush);
-
-
 	}
 	
 }

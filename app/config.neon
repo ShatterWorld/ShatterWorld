@@ -12,8 +12,7 @@ common:
 
 	game:
 		map:
-			sizeX: 16
-			sizeY: 16
+			size: 16
 			playerDistance: 2
 			initialFieldsCount: 3
 

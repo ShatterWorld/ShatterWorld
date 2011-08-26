@@ -73,9 +73,9 @@
 
 
 
-		<div id="map" style="position:relative;background:#000;top:{$sizeY*40/2}px;left:{$sizeX*60/2}">
+		<div id="map" style="position:relative;background:#000;top:{$size*40/2}px;left:{$size*60/2}">
 			{?$typeMap = array('forest' => 'green', 'mountains' => 'brown', 'desert' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
-			{?$zIndex = $sizeX}
+			{?$zIndex = $size}
 			{foreach $fields as $field}
 				{?list($x, $y) = $field->coords}
 				{?$left = ($x*43)+($y*43)}
@@ -136,7 +136,7 @@
 						"
 					/>
 				</div>
-				{if $iterator->getCounter() % $sizeX === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}
+				{if $iterator->getCounter() % $size === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}
 			{/foreach}
 		</div>
 

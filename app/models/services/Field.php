@@ -18,8 +18,8 @@ class Field extends BaseService {
 		}
 		$this->entityManager->flush();
 		
-		for ($x = 0; $x < $this->options['sizeX']; $x++) {
-			for ($y = 0; $y < $this->options['sizeY']; $y++) {
+		for ($x = 0; $x < $this->options['size']; $x++) {
+			for ($y = 0; $y < $this->options['size']; $y++) {
 				$values = array();
 				$types = array('forest', 'mountains', 'desert', 'plain', 'lake');
 				$values['coords'] = array($x, $y);
