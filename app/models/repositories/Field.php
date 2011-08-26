@@ -18,10 +18,10 @@ class Field extends Doctrine\ORM\EntityRepository {
 			->getResult();
 		return $data;
 	}
-	
-	
+
+
 	/**
-	* Finds 2-6 neighbours of field. When &$map defined, searches in $map instand of exectuting query 
+	* Finds 2-6 neighbours of field. When &$map defined, searches in $map instand of exectuting query
 	* @param Entities\Field
 	* @param array of Entities\Field
 	* @return array of Entities\Field
@@ -31,14 +31,14 @@ class Field extends Doctrine\ORM\EntityRepository {
 		$neighbours = array();
 		$x = $field->getX();
 		$y = $field->getY();
-	
+
 		if (count($map) > 0)
 		{
 			foreach ($map as $tmpField)
 			{
 				$tmpX = $tmpField->getX();
 				$tmpY = $tmpField->getY();
-				
+
 				if(
 						($tmpX == $x+1 and $tmpY == $y-1)
 					or
@@ -55,10 +55,10 @@ class Field extends Doctrine\ORM\EntityRepository {
 				{
 					$neighbours[] = $tmpField;
 				}
-			
+
 			}
 
-		
+
 		}
 		else
 		{
@@ -89,33 +89,42 @@ class Field extends Doctrine\ORM\EntityRepository {
 					$qb->expr()->eq('f.coordY', $y)
 				)
 			));
-			$neighbours = $qb->getQuery()->getResult();	
+			$neighbours = $qb->getQuery()->getResult();
 		}
-		
-		return $neighbours;	
-		
-		
-	}
-	
 
-	
+		return $neighbours;
+
+
+	}
+
+
+
 	/**
-	* Finds the field by its coordinates
+	* Finds the field by its coordinates (If $map is given, iterates through it instand of quering)
 	* @param integer
 	* @param integer
+	* @param array of Entities\Field
 	* @return Entities\Field
 	*/
-	public function findByCoords ($x, $y)
+	public function findByCoords ($x, $y, &$map = array())
 	{
+		if(count($map) > 0){
+			foreach($map as $field){
+				if ($field->getX() == $x and $field->getY() == $y){
+					return $field;
+				}
+			}
+		}
+
 		$qb = $this->createQueryBuilder('f');
 		$qb->where($qb->expr()->andX(
 			$qb->expr()->eq('f.coordX', $x),
 			$qb->expr()->eq('f.coordY', $y)
 		));
-			
-		return $qb->getQuery()->getSingleResult();			
+
+		return $qb->getQuery()->getSingleResult();
 	}
-	
+
 	/**
 	 * Finds fields with no owner
 	 * @return array of Entities\Field
@@ -137,17 +146,17 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 */
 	public function getVisibleFields ($userId, $depth)
 	{
-	
+
 		$qb = $this->createQueryBuilder('f');
 		$qb->where(
 			$qb->expr()->eq('f.owner', $userId)
 		);
 		$ownerFields = $qb->getQuery()->getResult();
 		$visibleFields = $this->findDeepNeighbours($depth, $ownerFields);
-		
+
 		return $visibleFields;
 	}
-	
+
 
 	/**
 	 * Finds fields which are <= $depth-th neighbour of given fields
@@ -163,32 +172,32 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * TODO: @param mapSize (required for setting $depthArr zero value)
 	 */
 	protected function findDeepNeighbours($depth, $sources, &$deepNeigbours = array(), &$depthArr = array(), $startField = null, &$map = array(), $firstRun = true)
-	{	
+	{
 		if ($depth <= 0){
 			return;
 		}
 		if ($firstRun){
 			$depthArr = array();
 			$deepNeigbours = array();
-			
+
 			for($i=0; $i<16; $i++){
 				for($j=0; $j<16; $j++){
-					$depthArr[$i][$j] = 0;			
+					$depthArr[$i][$j] = 0;
 				}
 			}
-			
+
 			$map = $this->getMap();
-			
+
 			foreach ($sources as $source){
 				$neighbours = $this->getFieldNeighbours($source, $map);
 				$this->findDeepNeighbours($depth, null, $deepNeigbours, $depthArr, $source, $map, false);
 			}
 			return $deepNeigbours;
-			
+
 		}
-		else{		
+		else{
 			if ($depth > $depthArr[$startField->getX()][$startField->getY()]){
-			
+
 				$depthArr[$startField->getX()][$startField->getY()] = $depth;
 				$neighbours = $this->getFieldNeighbours($startField, $map);
 				foreach ($neighbours as $neighbour){
@@ -198,12 +207,12 @@ class Field extends Doctrine\ORM\EntityRepository {
 					$this->findDeepNeighbours($depth-1, null, $deepNeigbours, $depthArr, $neighbour, $map, false);
 				}
 			}
-		}		
+		}
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Finds centers of seven-fields-sized hexagons which are >= $depth far from the nearest field of any other player
 	 * @param integer
@@ -219,12 +228,12 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 *
 	 */
 	public function findNeutralHexagons($depth, &$foundCenters, $maxMapIndex, &$visitedFields = array(), $startField = null, &$map = array(), $firstRun = true){
-	
+
 		if($depth <= 0) {
 			return true;
 		}
 
-	
+
 		if ($firstRun) {
 			$neutralFields = $this->findNeutralFields();
 			$map = $this->getMap();
@@ -238,7 +247,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 				if ($this->findNeutralHexagons($depth, $foundCenters, $maxMapIndex, $visitedFields, $neutralField, $map, false)){
 					$foundCenters[] = $neutralField;
 				}
-				
+
 			}
 		}
 		else {
@@ -253,25 +262,25 @@ class Field extends Doctrine\ORM\EntityRepository {
 			{
 				return false;
 			}
-			
+
 			foreach ($neighbours as $neighbour) {
 				if ($neighbour->owner != null){
 					return false;
 				}
-			}	
-					
+			}
+
 			foreach ($neighbours as $neighbour) {
 				if (!$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, $map, false)){
 					return false;
 				}
-			}	
+			}
 			return true;
-		
+
 
 		}
 	}
-	
-	
+
+
 	/**
 	 * Counts distance between field $a and $b
 	 * @param Entities\Field
@@ -285,7 +294,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		};
 		$dx = $b->getX() - $a->getX();
 		$dy = $b->getY() - $a->getY();
-		
+
 		if ($sign($dx) === $sign($dy)) {
 			return abs($dx) + abs($dy);
 		}
@@ -293,4 +302,113 @@ class Field extends Doctrine\ORM\EntityRepository {
 			return max(abs($dx), abs($dy));
 		}
 	}
+
+
+	/**
+	 * Finds zone of fields which are settled in hexagon (center $S, radius $r)
+	 * @param Entities\Field
+	 * @param integer
+	 * @param Entities\Field
+	 * @return array of Entities\Field
+	 */
+	public function findCircuit($S, $r, &$map = array())
+	{
+		if(count($map) <= 0){
+			$map = $this->getMap();
+		}
+
+		if($r == 1){
+			return $this->getFieldNeighbours($S);
+		}
+
+		$x = $S->getX();
+		$y = $S->getY();
+
+		$coords = array(
+			'north' => array('x' => $x + $r, 'y' => $y - $r),
+			'south' => array('x' => $x - $r, 'y' => $y + $r),
+			'north-west' => array('x' => $x, 'y' => $y - $r),
+			'north-east' => array('x' => $x + $r, 'y' => $y),
+			'south-west' => array('x' => $x - $r, 'y' => $y),
+			'south-east' => array('x' => $x, 'y' => $y + $r)
+		);
+
+		$vertexes = array();
+		foreach($coords as $name => $coord){
+			$vertexes[$name] = $this->findByCoords($coord['x'], $coord['y']);
+		}
+
+		$circuit[] = array();
+
+		$tmpX = $vertexes['north']->getX();
+		$tmpY = $vertexes['north']->getY();
+		$targetX = $vertexes['north-east']->getX();
+		$targetY = $vertexes['north-east']->getY();
+		while($tmpY < $targetY){
+			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$tmpY++;
+		}
+
+		$tmpX = $vertexes['north-east']->getX();
+		$tmpY = $vertexes['north-east']->getY();
+		$targetX = $vertexes['south-east']->getX();
+		$targetY = $vertexes['south-east']->getY();
+		while($tmpY < $targetY and $tmpX > $targetX){
+			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$tmpY++;
+			$tmpX--;
+		}
+
+		$tmpX = $vertexes['south-east']->getX();
+		$tmpY = $vertexes['south-east']->getY();
+		$targetX = $vertexes['south']->getX();
+		$targetY = $vertexes['south']->getY();
+		while($tmpX > $targetX){
+			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$tmpX--;
+		}
+
+		$tmpX = $vertexes['south']->getX();
+		$tmpY = $vertexes['south']->getY();
+		$targetX = $vertexes['south-west']->getX();
+		$targetY = $vertexes['south-west']->getY();
+		while($tmpY > $targetY){
+			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$tmpY--;
+		}
+
+		$tmpX = $vertexes['south-west']->getX();
+		$tmpY = $vertexes['south-west']->getY();
+		$targetX = $vertexes['north-west']->getX();
+		$targetY = $vertexes['north-west']->getY();
+		while($tmpY > $targetY and $tmpX < $targetX){
+			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$tmpY--;
+			$tmpX++;
+		}
+
+		$tmpX = $vertexes['north-west']->getX();
+		$tmpY = $vertexes['north-west']->getY();
+		$targetX = $vertexes['north']->getX();
+		$targetY = $vertexes['north']->getY();
+		while($tmpX < $targetX){
+			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$tmpX++;
+		}
+
+		return $circuit;
+	}
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
