@@ -44,9 +44,10 @@ class RuleLoader extends Nette\Object
 	public function get ($type, $rule)
 	{
 		if (!isset($this->instances[$type][$rule])) {
-			$this->instances[$type][$rule] = new $this->aliases[$type] . '\\' . lcfirst($rule);
+			$class = $this->aliases[$type] . '\\' . lcfirst($rule);
+			$this->instances[$type][$rule] = new $class;
 		}
-		return $this->instances[$type][$object];
+		return $this->instances[$type][$rule];
 	}
 	
 	/**
@@ -58,7 +59,7 @@ class RuleLoader extends Nette\Object
 	{
 		$result = array();
 		foreach ($this->index[$type] as $rule) {
-			$result[] = $this->get($type, $rule);
+			$result[$rule] = $this->get($type, $rule);
 		}
 		return $result;
 	}
@@ -78,7 +79,9 @@ class RuleLoader extends Nette\Object
 					if (!isset($index[$type])) {
 						$index[$type] = array();
 					}
-					$index[$type][] = substr($class, $pos);
+					if (!interface_exists($class)) {
+						$index[$type][] = substr($class, $pos + 1);
+					}
 				}
 			}
 			$this->cache->save('index', $index);
