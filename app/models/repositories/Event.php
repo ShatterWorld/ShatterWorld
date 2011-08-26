@@ -2,7 +2,7 @@
 namespace Repositories;
 use Doctrine;
 
-class Event extends Doctrine\ORM\EntityRepository {
+class Event extends BaseRepository {
 	public function findPendingEvents ()
 	{
 		$now = new \DateTime;

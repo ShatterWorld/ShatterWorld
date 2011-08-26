@@ -19,7 +19,7 @@ class Container extends Nette\DI\Container {
 			$config->setSQLLogger(\Nella\Doctrine\Panel::register());
 		}
 		$connection = $this->params['database'];
-		return Doctrine\ORM\EntityManager::create($connection, $config);
+		return EntityManager::create($connection, $config);
 	}
 	
 	protected function createServiceAuthorizator ()
