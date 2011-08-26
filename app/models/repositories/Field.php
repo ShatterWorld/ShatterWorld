@@ -6,7 +6,7 @@ use Entities;
 use Nette\Diagnostics\Debugger;
 
 
-class Field extends Doctrine\ORM\EntityRepository {
+class Field extends BaseRepository {
 	/**
 	* Returns the whole map as an array
 	* @Deprecated (getIndexedMap)

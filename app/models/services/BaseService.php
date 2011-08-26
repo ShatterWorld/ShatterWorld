@@ -11,6 +11,9 @@ class BaseService extends Nette\Object {
 	/** @var Nette\DI\Container */
 	protected $context;
 	
+	/** @var Repositories\BaseRepository */
+	protected $repository;
+	
 	/** @var Doctrine\ORM\EntityManager */
 	protected $entityManager;
 	
@@ -35,7 +38,11 @@ class BaseService extends Nette\Object {
 	 */
 	public function getRepository ()
 	{
-		return $this->entityManager->getRepository($this->entityClass);
+		if (!$this->repository) {
+			$this->repository = $this->entityManager->getRepository($this->entityClass);
+			$this->repository->setContext($this->context);
+		}
+		return $this->repository;
 	}
 	
 	/**
