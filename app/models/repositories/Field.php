@@ -7,6 +7,11 @@ use Nette\Diagnostics\Debugger;
 
 
 class Field extends Doctrine\ORM\EntityRepository {
+	/**
+	* Returns the whole map
+	* @Deprecated (getIndexedMap)
+	* @return array of Entities\Field
+	*/
 	public function getMap ()
 	{
 		$data = $this->createQueryBuilder('f')
@@ -14,10 +19,14 @@ class Field extends Doctrine\ORM\EntityRepository {
 			->addOrderBy('f.coordY')
 			->getQuery()
 			->getResult();
-		
+
 		return $data;
 	}
 
+	/**
+	* Returns the indexed map
+	* @return array of arrays of Entities\Field
+	*/
 	public function getIndexedMap ()
 	{
 		$result = array();
@@ -38,9 +47,25 @@ class Field extends Doctrine\ORM\EntityRepository {
 	* @param array of Entities\Field
 	* @return array of Entities\Field
 	*/
-	public function getFieldNeighbours (Entities\Field $field, &$map = array())
+	public function getFieldNeighbours (Entities\Field $field, $depth = 1, &$map = array())
 	{
 		$neighbours = array();
+
+		if ($depth > 1){
+			if (count($map) <= 0){
+				$map = $this->getIndexedMap();
+			}
+
+			for($d = 1; $d <= $depth; $d++){
+				$circuitNeigbours = $this->findCircuit($field, $d, $map);
+				foreach ($circuitNeigbours as $circuitNeigbour){
+					$neigbours[] = $circuitNeigbour;
+				}
+			}
+
+			return $neigbours;
+		}
+
 		$x = $field->getX();
 		$y = $field->getY();
 
@@ -105,8 +130,6 @@ class Field extends Doctrine\ORM\EntityRepository {
 		}
 
 		return $neighbours;
-
-
 	}
 
 
@@ -117,15 +140,14 @@ class Field extends Doctrine\ORM\EntityRepository {
 	* @param integer
 	* @param array of Entities\Field
 	* @return Entities\Field
+	*
+	* TODO: needs boundaries check
+	*
 	*/
 	public function findByCoords ($x, $y, &$map = array())
 	{
 		if(count($map) > 0){
-			foreach($map as $field){
-				if ($field->getX() == $x and $field->getY() == $y){
-					return $field;
-				}
-			}
+			return $map[$x][$y];
 		}
 
 		$qb = $this->createQueryBuilder('f');
@@ -164,65 +186,20 @@ class Field extends Doctrine\ORM\EntityRepository {
 			$qb->expr()->eq('f.owner', $userId)
 		);
 		$ownerFields = $qb->getQuery()->getResult();
-		$visibleFields = $this->findDeepNeighbours($depth, $ownerFields);
+
+		$visibleFields = array();
+		foreach($ownerFields as $ownerField){
+			$neighbours = $this->getFieldNeighbours($ownerField, $depth);
+
+			foreach($neighbours as $neighbour){
+				if(array_search($neighbour, $visibleFields, true) === false){
+					$visibleFields[] = $neighbour;
+				}
+			}
+		}
 
 		return $visibleFields;
 	}
-
-
-	/**
-	 * Finds fields which are <= $depth-th neighbour of given fields
-	 * @param integer
-	 * @param array of Entities\Field
-	 * @param array of Entities\Field
-	 * @param array of integer
-	 * @param Entities\Field
-	 * @param array of Entities\Field
-	 * @param boolean
-	 * @return array of Entities\Field
-	 *
-	 * TODO: @param mapSize (required for setting $depthArr zero value)
-	 */
-	protected function findDeepNeighbours($depth, $sources, &$deepNeigbours = array(), &$depthArr = array(), $startField = null, &$map = array(), $firstRun = true)
-	{
-		if ($depth <= 0){
-			return;
-		}
-		if ($firstRun){
-			$depthArr = array();
-			$deepNeigbours = array();
-
-			for($i=0; $i<16; $i++){
-				for($j=0; $j<16; $j++){
-					$depthArr[$i][$j] = 0;
-				}
-			}
-
-			$map = $this->getMap();
-
-			foreach ($sources as $source){
-				$neighbours = $this->getFieldNeighbours($source, $map);
-				$this->findDeepNeighbours($depth, null, $deepNeigbours, $depthArr, $source, $map, false);
-			}
-			return $deepNeigbours;
-
-		}
-		else{
-			if ($depth > $depthArr[$startField->getX()][$startField->getY()]){
-
-				$depthArr[$startField->getX()][$startField->getY()] = $depth;
-				$neighbours = $this->getFieldNeighbours($startField, $map);
-				foreach ($neighbours as $neighbour){
-					if (in_array($neighbour, $deepNeigbours, true) === false){
-						$deepNeigbours[] = $neighbour;
-					}
-					$this->findDeepNeighbours($depth-1, null, $deepNeigbours, $depthArr, $neighbour, $map, false);
-				}
-			}
-		}
-	}
-
-
 
 
 	/**
@@ -299,7 +276,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * @param Entities\Field
 	 * @return integer
 	 */
-	public function calculateDistance($a, $b)
+	public function calculateDistance ($a, $b)
 	{
 		$sign = function ($x) {
 			return $x == 0 ? 0 : (abs($x) / $x);
@@ -323,10 +300,10 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * @param Entities\Field
 	 * @return array of Entities\Field
 	 */
-	public function findCircuit($S, $r, &$map = array())
+	public function findCircuit ($S, $r, &$map = array())
 	{
 		if(count($map) <= 0){
-			$map = $this->getMap();
+			$map = $this->getIndexedMap();
 		}
 
 		if($r == 1){
@@ -347,17 +324,17 @@ class Field extends Doctrine\ORM\EntityRepository {
 
 		$vertexes = array();
 		foreach($coords as $name => $coord){
-			$vertexes[$name] = $this->findByCoords($coord['x'], $coord['y']);
+			$vertexes[$name] = $this->findByCoords($coord['x'], $coord['y'], $map);
 		}
 
-		$circuit[] = array();
+		$circuit = array();
 
 		$tmpX = $vertexes['north']->getX();
 		$tmpY = $vertexes['north']->getY();
 		$targetX = $vertexes['north-east']->getX();
 		$targetY = $vertexes['north-east']->getY();
 		while($tmpY < $targetY){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
 			$tmpY++;
 		}
 
@@ -366,7 +343,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		$targetX = $vertexes['south-east']->getX();
 		$targetY = $vertexes['south-east']->getY();
 		while($tmpY < $targetY and $tmpX > $targetX){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
 			$tmpY++;
 			$tmpX--;
 		}
@@ -376,7 +353,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		$targetX = $vertexes['south']->getX();
 		$targetY = $vertexes['south']->getY();
 		while($tmpX > $targetX){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
 			$tmpX--;
 		}
 
@@ -385,7 +362,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		$targetX = $vertexes['south-west']->getX();
 		$targetY = $vertexes['south-west']->getY();
 		while($tmpY > $targetY){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
 			$tmpY--;
 		}
 
@@ -394,7 +371,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		$targetX = $vertexes['north-west']->getX();
 		$targetY = $vertexes['north-west']->getY();
 		while($tmpY > $targetY and $tmpX < $targetX){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
 			$tmpY--;
 			$tmpX++;
 		}
@@ -404,7 +381,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		$targetX = $vertexes['north']->getX();
 		$targetY = $vertexes['north']->getY();
 		while($tmpX < $targetX){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY);
+			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
 			$tmpX++;
 		}
 
