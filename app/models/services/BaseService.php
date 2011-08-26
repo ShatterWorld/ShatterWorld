@@ -7,19 +7,19 @@ use Nette;
  * @author Jan "Teyras" Buchar
  */
 class BaseService extends Nette\Object {
-	
+
 	/** @var Nette\DI\Container */
 	protected $context;
 	
 	/** @var Repositories\BaseRepository */
 	protected $repository;
-	
+
 	/** @var Doctrine\ORM\EntityManager */
 	protected $entityManager;
-	
+
 	/** @var string */
 	protected $entityClass;
-	
+
 	/**
 	 * Constructor
 	 * @param Doctrine\ORM\EntityManager
@@ -31,7 +31,7 @@ class BaseService extends Nette\Object {
 		$this->entityManager = $context->entityManager;
 		$this->entityClass = $entityClass;
 	}
-	
+
 	/**
 	 * Get the Repository (Data Access Object)
 	 * @return Doctrine\ORM\EntityRepository
@@ -44,7 +44,7 @@ class BaseService extends Nette\Object {
 		}
 		return $this->repository;
 	}
-	
+
 	/**
 	 * Fill an entity object with given values
 	 * @param Entities\BaseEntity
@@ -59,7 +59,7 @@ class BaseService extends Nette\Object {
 			}
 		}
 	}
-	
+
 	/**
 	 * Create a new object
 	 * @param array
@@ -76,12 +76,12 @@ class BaseService extends Nette\Object {
 					if ($param->isDefaultValueAvailable()) {
 						$constructorParams[] = $param->getDefaultValue();
 					} else {
-						throw new Exception('Missing parameter ' . $param->name); # TODO: better exception
+						throw new \Exception('Missing parameter ' . $param->name); # TODO: better exception
 					}
 				} else {
 					$constructorParams[$param->name] = $values[$param->name];
 				}
-			} 
+			}
 		}
 		$object = $constructorParams ? $reflection->newInstanceArgs($constructorParams) : new $this->entityClass;
 		$this->fillData($object, $values);
@@ -91,7 +91,7 @@ class BaseService extends Nette\Object {
 		}
 		return $object;
 	}
-	
+
 	/**
 	 * Update a persisted object
 	 * @param Entities\BaseEntity
@@ -107,7 +107,7 @@ class BaseService extends Nette\Object {
 			$this->entityManager->flush();
 		}
 	}
-	
+
 	/**
 	 * Delete a persisted object
 	 * @param Entities\BaseEntity

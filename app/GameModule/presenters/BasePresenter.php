@@ -35,7 +35,7 @@ abstract class BasePresenter extends \BasePresenter
 		$map->setup($this->getFieldRepository, $this->context->params['game']['map']);
 		return $map;
 	}
-	
+
 	/**
 	* Test !!!
 	* TODO: remove
@@ -54,11 +54,11 @@ abstract class BasePresenter extends \BasePresenter
 		$clan = $this->getService('clanService')->create(
 			array(
 				'name' => Nette\Utils\Strings::random(),
-				'owner' => $user
+				'user' => $user
 			)
 		);
-		
+
 		$this->redirect('Map:');
-	}	
-	
+	}
+
 }

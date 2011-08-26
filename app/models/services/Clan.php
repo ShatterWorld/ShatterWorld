@@ -22,18 +22,24 @@ class Clan extends BaseService {
 	public function create ($values, $flush = TRUE)
 	{
 		$clan = parent::create($values, $flush);
-		
+
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
-		
+
 		$mapSize = $this->context->params['game']['map']['size'];
 		$playerDistance = $this->context->params['game']['map']['playerDistance'];
 		$maxMapIndex = $mapSize - 1;
-		
+
 		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 - 1);
-		$neutralHexagons = array();
-		$fieldRepository->findNeutralHexagons($playerDistance, $neutralHexagons, $maxMapIndex);
-		
+		//$neutralHexagons = array();
+		//$fieldRepository->findNeutralHexagons($playerDistance, $neutralHexagons, $maxMapIndex);
+
+
+		$middleLine = 5;
+		$neutralHexagons = $fieldRepository->findNeutralHexagons($middleLine, $playerDistance, 2);
+
+
+
 		$minDist = 99999999999;
 		$minField;
 		foreach ($neutralHexagons as $neutralHexagon){
@@ -44,50 +50,50 @@ class Clan extends BaseService {
 			}
 		}
 
-		$found[] = $minField;		
-		
+		$found[] = $minField;
+
 // other fields search improvement required
 
-	
+
 		//$found[] = $fieldRepository->findByCoords($x, $y);
 		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
 
 
 		foreach ($neighbours as $neight) // founds appropriate fields
 		{
-			
+
 			if (count($found) >= self::N)
 			{
 				break;
 			}
-			
+
 			$cont = true;
-			
-			
-			foreach ($found as $foundField)	
+
+
+			foreach ($found as $foundField)
 			{
 				if($neight->type == $foundField->type)
 				{
 					$cont = false;
 					break;
 				}
-				
+
 			}
-			
+
 			if (!$cont){
 				continue;
 			}
 
 			$found[] = $neight;
-			
-								
+
+
 		}
-		
+
 		foreach ($found as $foundField)	// makes player the owner of $found fields
 		{
-			$fieldService->update($foundField, array('owner' => $clan));		
+			$fieldService->update($foundField, array('owner' => $clan));
 		}
-		return $clan; 
+		return $clan;
 
 	}
 
@@ -102,9 +108,9 @@ class Clan extends BaseService {
 		foreach ($object->getFields() as $field)
 		{
 			$field->setOwner(NULL);
-			$this->entityManager->persist($field);	
+			$this->entityManager->persist($field);
 		}
 		parent::delete($object, $flush);
 	}
-	
+
 }
