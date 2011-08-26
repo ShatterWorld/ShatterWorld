@@ -216,7 +216,52 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 * TODO: reduce area
 	 *
 	 */
-	public function findNeutralHexagons($depth, &$foundCenters, $maxMapIndex, &$visitedFields = array(), $startField = null, &$map = array(), $firstRun = true){
+	public function findNeutralHexagons($middleLine, $playerDistance, $tolerance, &$map = array()){
+		$mapSize = 16;
+
+		if(count($map) <= 0){
+			$map = $this->getIndexedMap();
+		}
+
+		$S = $this->findByCoords($mapSize/2, $mapSize/2 - 1);
+
+		$foundCenters = array();
+		/*$hasOwner = array();
+
+		for($i=0;$i<$mapSize;i++){
+			for($j=0;$j<$mapSize;j++){
+				$hasOwner = null;
+			}
+		}*/
+
+
+		for($d = $playerDistance - $tolerance; $d <= $playerDistance + $tolerance; $d++){
+			$circuit = $this->findCircuit($S, $d, $map);
+			$noOwners = 0;
+			foreach($circuit as $field){
+				if($field->owner == null){
+					$neighbours = $this->getFieldNeighbours($field, $playerDistance, $map);
+					$add = true;
+
+					foreach($neighbours as $neighbour){
+						if($neighbour->owner != null){
+							$add = false;
+							break;
+						}
+					}
+					if ($add){
+						$foundCenters[] = $field;
+					}
+				}
+			}
+		}
+
+
+
+		return $foundCenters;
+
+	}
+/*	public function findNeutralHexagons($depth, &$foundCenters, $maxMapIndex, &$visitedFields = array(), $startField = null, &$map = array(), $firstRun = true){
 
 		if($depth <= 0) {
 			return true;
@@ -268,7 +313,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 
 		}
 	}
-
+*/
 
 	/**
 	 * Counts distance between field $a and $b
