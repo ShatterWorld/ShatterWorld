@@ -73,7 +73,7 @@
 
 
 
-		<div id="map" style="position:relative;background:#000;top:{$size*40/2}px;left:{$size*60/2}">
+		<div id="map" style="position:relative;background:#000;top:{$size*40/2}px;left:{$size*60/2}" data-basepath="{$basePath}">
 			{?$typeMap = array('forest' => 'green', 'mountains' => 'brown', 'desert' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
 			{?$zIndex = $size}
 			{foreach $fields as $field}
@@ -94,25 +94,12 @@
 					"
 					data-coords="[{$x}, {$y}]"	
 					data-type="{$field->type}"
-					data-basepath="{$basePath}"	
 					data-color="{$typeMap[$field->type]}"	
 					data-realcoords="[{$left}, {$top}]"	
 					data-level="{$field->level}"	
 					data-facility="{if $field->facility == null}žádná{else}{$field->facility}{/if}"	
 					data-owner="{if $field->owner == null}---{else}{$field->owner->name}{/if}"	
 				>
-					<img 
-						class="marker" 
-						id="marker_{$x}_{$y}" 
-						src="{$basePath}/images/fields/marker.png" 
-						style="
-							position:absolute;
-							left:0px;
-							top:0px;
-							z-index:99999999999;
-							display: none;
-						"
-					/>
 					<img 
 						class="border" 
 						id="border_{$x}_{$y}" 

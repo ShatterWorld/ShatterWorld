@@ -35,7 +35,7 @@ class Clan extends BaseService {
 		//$fieldRepository->findNeutralHexagons($playerDistance, $neutralHexagons, $maxMapIndex);
 
 
-		$middleLine = 19;
+		$middleLine = 5;
 		$neutralHexagons = $fieldRepository->findNeutralHexagons($middleLine, $playerDistance, 5);
 
 

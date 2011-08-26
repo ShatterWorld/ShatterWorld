@@ -26,6 +26,7 @@ $(document).ready(function(){
 	*/
 	var data = null;
 	
+	var basepath = $('#map').data()['basepath'];
 	/**
 	* Array of marked fields
 	*/
@@ -35,6 +36,8 @@ $(document).ready(function(){
 	* Array of marked fields data
 	*/
 	var markedFieldsColors = new Array();
+	
+	var markerImage = $('<img class="marker" />').attr('src', basepath + '/images/fields/marker.png');
 	
 	/**
 	* Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
@@ -86,7 +89,7 @@ $(document).ready(function(){
 		$('#fieldDetail').show('fast');
 		
 		//$('#fieldImg').attr('src', '');
-		$('#fieldImg').attr('src', data['basepath']+'/images/fields/hex_'+data['color']+'.png');
+		$('#fieldImg').attr('src', basepath+'/images/fields/hex_'+data['color']+'.png');
 
 		$('#detailCoords').html('['+data['coords'][0]+';'+data['coords'][1]+']');
 		$('#detailOwner').html(data['owner']);
@@ -145,7 +148,7 @@ $(document).ready(function(){
 	*/
 	function mark(field)
 	{
-		$('#marker_'+data['coords'][0]+'_'+data['coords'][1]).css('display', 'block');
+		$('#field_'+data['coords'][0]+'_'+data['coords'][1]).append(markerImage.clone());
 	}
 	
 	/**
@@ -154,7 +157,7 @@ $(document).ready(function(){
 	*/
 	function unmarkAll()
 	{
-		$('.marker').css('display', 'none');
+		$('.marker').remove();
 		clicks = 0;
 	}
 	
