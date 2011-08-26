@@ -21,7 +21,6 @@ class Clan extends BaseService {
 	*/
 	public function create ($values, $flush = TRUE)
 	{
-		$clan = parent::create($values, $flush);
 
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
@@ -35,7 +34,9 @@ class Clan extends BaseService {
 		//$fieldRepository->findNeutralHexagons($playerDistance, $neutralHexagons, $maxMapIndex);
 
 
-		$middleLine = 19;
+		//TODO: better everything ;)
+
+		$middleLine = 20;
 		$neutralHexagons = $fieldRepository->findNeutralHexagons($middleLine, $playerDistance, 5);
 
 
@@ -43,7 +44,6 @@ class Clan extends BaseService {
 		$minDist = 99999999999;
 		$minField;
 
-		Debugger::barDump($neutralHexagons);
 
 		foreach ($neutralHexagons as $neutralHexagon){
 			$dist = $fieldRepository->calculateDistance($S, $neutralHexagon);
@@ -52,6 +52,8 @@ class Clan extends BaseService {
 				$minField = $neutralHexagon;
 			}
 		}
+
+
 
 		$found[] = $minField;
 
@@ -92,8 +94,8 @@ class Clan extends BaseService {
 
 		}
 
-		foreach ($found as $foundField)	// makes player the owner of $found fields
-		{
+		$clan = parent::create($values, $flush);
+		foreach ($found as $foundField){	// makes player the owner of $found fields
 			$fieldService->update($foundField, array('owner' => $clan));
 		}
 		return $clan;

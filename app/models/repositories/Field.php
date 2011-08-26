@@ -203,24 +203,21 @@ class Field extends BaseRepository {
 
 
 	/**
-	 * Finds centers of seven-fields-sized hexagons which are >= $depth far from the nearest field of any other player
+	 * Finds centers of seven-fields-sized hexagons which are located $middleLine +/- $tolerance from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral.
+	 * @param integer
+	 * @param integer
 	 * @param integer
 	 * @param array of Entities\Field
-	 * @param integer
-	 * @param array of Entities\Field
-	 * @param Entities\Field
-	 * @param array of Entities\Field
-	 * @param boolean
-	 * @return void
+	 * @return array of Entities\Field
 	 *
-	 * TODO: reduce area
+	 * TODO: $visitedFields
 	 *
 	 */
 	public function findNeutralHexagons($middleLine, $playerDistance, $tolerance, &$map = array()){
-		$mapSize = 50;
+		//$mapSize = 50;
 
 		if(count($map) <= 0){
-			$map = $this->getIndexedMap();
+			//$map = $this->getIndexedMap();
 		}
 
 		$S = $this->findByCoords($mapSize/2, $mapSize/2 - 1);
@@ -240,7 +237,7 @@ class Field extends BaseRepository {
 			$noOwners = 0;
 			foreach($circuit as $field){
 				if($field->owner == null){
-					$neighbours = $this->getFieldNeighbours($field, $playerDistance, $map);
+					$neighbours = $this->getFieldNeighbours($field, $playerDistance + 1, $map);
 					$add = true;
 
 					foreach($neighbours as $neighbour){
@@ -254,66 +251,16 @@ class Field extends BaseRepository {
 					}
 				}
 			}
+
+			if(count($foundCenters) > 0){
+				break;
+			}
+
 		}
-
-
 
 		return $foundCenters;
 
 	}
-/*	public function findNeutralHexagons($depth, &$foundCenters, $maxMapIndex, &$visitedFields = array(), $startField = null, &$map = array(), $firstRun = true){
-
-		if($depth <= 0) {
-			return true;
-		}
-
-
-		if ($firstRun) {
-			$neutralFields = $this->findNeutralFields();
-			$map = $this->getMap();
-			foreach ($neutralFields as $neutralField) {
-				$visitedFields[] = $neutralField;
-				if ($neutralField->getX() <= 0 or $neutralField->getY() <= 0 or $neutralField->getX() >= $maxMapIndex or $neutralField->getY() >= $maxMapIndex or $neutralField->owner != null)
-				{
-					continue;
-				}
-
-				if ($this->findNeutralHexagons($depth, $foundCenters, $maxMapIndex, $visitedFields, $neutralField, $map, false)){
-					$foundCenters[] = $neutralField;
-				}
-
-			}
-		}
-		else {
-
-			if ($startField->getX() <= 0 or $startField->getY() <= 0 or $startField->getX() >= $maxMapIndex or $startField->getY() >= $maxMapIndex)
-			{
-				return false;
-			}
-
-			$neighbours = $this->getFieldNeighbours($startField, $map);
-			if (count($neighbours) != 6)
-			{
-				return false;
-			}
-
-			foreach ($neighbours as $neighbour) {
-				if ($neighbour->owner != null){
-					return false;
-				}
-			}
-
-			foreach ($neighbours as $neighbour) {
-				if (!$this->findNeutralHexagons($depth-1, $foundCenters, $maxMapIndex, $visitedFields, $neighbour, $map, false)){
-					return false;
-				}
-			}
-			return true;
-
-
-		}
-	}
-*/
 
 	/**
 	 * Counts distance between field $a and $b
