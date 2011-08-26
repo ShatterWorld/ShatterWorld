@@ -8,7 +8,7 @@ use Nette\Diagnostics\Debugger;
 
 class Field extends Doctrine\ORM\EntityRepository {
 	/**
-	* Returns the whole map
+	* Returns the whole map as an array
 	* @Deprecated (getIndexedMap)
 	* @return array of Entities\Field
 	*/
@@ -24,7 +24,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	}
 
 	/**
-	* Returns the indexed map
+	* Returns the map indexed by coordinates
 	* @return array of arrays of Entities\Field
 	*/
 	public function getIndexedMap ()
@@ -42,7 +42,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	}
 
 	/**
-	* Finds 2-6 neighbours of field. When &$map defined, searches in $map instand of exectuting query
+	* Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
 	* @param Entities\Field
 	* @param array of Entities\Field
 	* @return array of Entities\Field
@@ -57,19 +57,19 @@ class Field extends Doctrine\ORM\EntityRepository {
 			}
 
 			for($d = 1; $d <= $depth; $d++){
-				$circuitNeigbours = $this->findCircuit($field, $d, $map);
-				foreach ($circuitNeigbours as $circuitNeigbour){
-					$neigbours[] = $circuitNeigbour;
+				$circuitNeighbours = $this->findCircuit($field, $d, $map);
+				foreach ($circuitNeighbours as $circuitNeighbour){
+					$neighbours[] = $circuitNeighbour;
 				}
 			}
 
-			return $neigbours;
+			return $neighbours;
 		}
 
 		$x = $field->getX();
 		$y = $field->getY();
 
-		if (count($map) > 0)
+		if ($map)
 		{
 			foreach ($map as $tmpField)
 			{
@@ -135,7 +135,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 
 
 	/**
-	* Finds the field by its coordinates (If $map is given, iterates through it instand of quering)
+	* Finds a field by its coordinates (If $map is given, iterates through it instand of quering)
 	* @param integer
 	* @param integer
 	* @param array of Entities\Field
@@ -387,10 +387,4 @@ class Field extends Doctrine\ORM\EntityRepository {
 
 		return $circuit;
 	}
-
-
-
-
-
-
 }
