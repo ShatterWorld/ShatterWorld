@@ -1,6 +1,4 @@
-$(document).ready(function(){
-	$("#menu").children("div:first-child").children("ul").show("slow"); /*displays the firth submenu*/
-	
+$(document).ready(function(){	
 	/**
 	* Hides flash message
 	*/
