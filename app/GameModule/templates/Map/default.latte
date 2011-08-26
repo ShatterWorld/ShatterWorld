@@ -74,7 +74,7 @@
 
 
 		<div id="map" style="position:relative;background:#000;top:{$size*40/2}px;left:{$size*60/2}" data-basepath="{$basePath}">
-			{?$typeMap = array('forest' => 'green', 'mountains' => 'brown', 'desert' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
+			{?$typeMap = array('forest' => 'green', 'mountain' => 'brown', 'barren' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
 			{?$zIndex = $size}
 			{foreach $fields as $field}
 				{?list($x, $y) = $field->coords}

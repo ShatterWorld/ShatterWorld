@@ -12,7 +12,7 @@ common:
 
 	game:
 		map:
-			size: 50
+			size: 20
 			playerDistance: 2
 			initialFieldsCount: 3
 
@@ -52,7 +52,7 @@ common:
 
 		rules:
 			class: RuleLoader
-			arguments: [@robotLoader, @cacheStorage, %ruleAliases%]
+			arguments: [@robotLoader, @cacheStorage, %game.ruleAliases%]
 
 production < common:
 
