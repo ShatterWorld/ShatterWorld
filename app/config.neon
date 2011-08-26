@@ -45,6 +45,10 @@ common:
 		authenticator:
 			class: Authenticator
 			arguments: [@userService]
+		
+		rules:
+			class: RuleLoader
+			arguments: [{unit: Rules\Units, field: Rules\Fields, resource: Rules\Resources}]
 
 production < common:
 
