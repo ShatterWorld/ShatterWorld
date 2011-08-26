@@ -3,8 +3,6 @@ namespace Repositories;
 use Nette;
 use Doctrine;
 use Entities;
-use Doctrine\Common\Collections\ArrayCollection;
-
 use Nette\Diagnostics\Debugger;
 
 
@@ -16,9 +14,23 @@ class Field extends Doctrine\ORM\EntityRepository {
 			->addOrderBy('f.coordY')
 			->getQuery()
 			->getResult();
+		
 		return $data;
 	}
 
+	public function getIndexedMap ()
+	{
+		$result = array();
+		foreach ($this->findAll() as $field) {
+			$x = $field->getX();
+			$y = $field->getY();
+			if (!isset($result[$x])) {
+				$result[$x] = array();
+			}
+			$result[$x][$y] = $field;
+		}
+		return $result;
+	}
 
 	/**
 	* Finds 2-6 neighbours of field. When &$map defined, searches in $map instand of exectuting query
@@ -405,10 +417,3 @@ class Field extends Doctrine\ORM\EntityRepository {
 
 
 }
-
-
-
-
-
-
-
