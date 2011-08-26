@@ -12,7 +12,7 @@ common:
 
 	game:
 		map:
-			size: 16
+			size: 50
 			playerDistance: 2
 			initialFieldsCount: 3
 
@@ -36,15 +36,15 @@ common:
 			run: true
 			option:
 				directory: [%appDir%, %libsDir%]
-		
+
 		doctrineCache:
 			class: DoctrineCache
 			arguments: [@cacheStorage]
-		
+
 		authenticator:
 			class: Authenticator
 			arguments: [@userService]
-		
+
 		rules:
 			class: RuleLoader
 			arguments: [{unit: Rules\Units, field: Rules\Fields, resource: Rules\Resources}]

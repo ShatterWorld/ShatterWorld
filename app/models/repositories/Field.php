@@ -217,7 +217,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 	 *
 	 */
 	public function findNeutralHexagons($middleLine, $playerDistance, $tolerance, &$map = array()){
-		$mapSize = 16;
+		$mapSize = 50;
 
 		if(count($map) <= 0){
 			$map = $this->getIndexedMap();
@@ -235,7 +235,7 @@ class Field extends Doctrine\ORM\EntityRepository {
 		}*/
 
 
-		for($d = $playerDistance - $tolerance; $d <= $playerDistance + $tolerance; $d++){
+		for($d = $middleLine - $tolerance; $d <= $middleLine + $tolerance; $d++){
 			$circuit = $this->findCircuit($S, $d, $map);
 			$noOwners = 0;
 			foreach($circuit as $field){

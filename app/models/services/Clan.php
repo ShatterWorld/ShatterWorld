@@ -35,13 +35,16 @@ class Clan extends BaseService {
 		//$fieldRepository->findNeutralHexagons($playerDistance, $neutralHexagons, $maxMapIndex);
 
 
-		$middleLine = 5;
-		$neutralHexagons = $fieldRepository->findNeutralHexagons($middleLine, $playerDistance, 2);
+		$middleLine = 19;
+		$neutralHexagons = $fieldRepository->findNeutralHexagons($middleLine, $playerDistance, 5);
 
 
 
 		$minDist = 99999999999;
 		$minField;
+
+		Debugger::barDump($neutralHexagons);
+
 		foreach ($neutralHexagons as $neutralHexagon){
 			$dist = $fieldRepository->calculateDistance($S, $neutralHexagon);
 			if ($dist < $minDist){
