@@ -7,7 +7,7 @@
 common:
 	php:
 		date.timezone: UTC
-		session.save_path: "%tempDir%/sessions"
+		session.save_path: %tempDir%/sessions
 		# zlib.output_compression: yes
 
 	game:
@@ -15,6 +15,11 @@ common:
 			size: 50
 			playerDistance: 2
 			initialFieldsCount: 3
+
+		ruleAliases:
+			unit: Rules\Units
+			field: Rules\Fields
+			resource: Rules\Resources
 
 	doctrine:
 		proxyDir: %tempDir%/proxies
@@ -47,7 +52,7 @@ common:
 
 		rules:
 			class: RuleLoader
-			arguments: [{unit: Rules\Units, field: Rules\Fields, resource: Rules\Resources}]
+			arguments: [@robotLoader, @cacheStorage, %ruleAliases%]
 
 production < common:
 

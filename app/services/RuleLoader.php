@@ -1,8 +1,21 @@
 <?php
+/**
+ * A loader of rules (or game mechanics) object representations
+ * @author Jan "Teyras" Buchar
+ */
 class RuleLoader extends Nette\Object
 {
+	/** @var Nette\Loaders\RobotLoader */
+	protected $robotLoader;
+	
+	/** @var Nette\Caching\Cache*/
+	protected $cache;
+	
 	/** @var array */
 	protected $aliases;
+	
+	/** @var array*/
+	protected $index;
 	
 	/** @var array */
 	protected $instances;
@@ -11,20 +24,68 @@ class RuleLoader extends Nette\Object
 	 * Constructor
 	 * @param array
 	 */
-	public function __construct ($aliases)
+	public function __construct ($robotLoader, $cacheStorage, $aliases)
 	{
+		$this->robotLoader = $robotLoader;
+		$this->cache = new Nette\Caching\Cache($cacheStorage, 'Rules');
 		$this->aliases = $aliases;
 		foreach ($aliases as $type) {
 			$this->instances[$type] = array();
 		}
+		$this->restoreIndex();
 	}
 	
-	public function getRule ($type, $object)
+	/**
+	 * Get a rule specified by its type and name
+	 * @param string
+	 * @param string
+	 * @return object
+	 */
+	public function get ($type, $rule)
 	{
-		if (!isset($this->instances[$type][$object])) {
-			$class = $this->aliases[$type] . '\\' . lcfirst($object);
-			$this->instances[$type][$object] = new $class;
+		if (!isset($this->instances[$type][$rule])) {
+			$this->instances[$type][$rule] = new $this->aliases[$type] . '\\' . lcfirst($rule);
 		}
 		return $this->instances[$type][$object];
+	}
+	
+	/**
+	 * Get all rules of given type
+	 * @param string
+	 * @return array
+	 */
+	public function getAll ($type)
+	{
+		$result = array();
+		foreach ($this->index[$type] as $rule) {
+			$result[] = $this->get($type, $rule);
+		}
+		return $result;
+	}
+	
+	/**
+	 * Load the index of known rules and rebuild it if necessary
+	 * @return void
+	 */
+	protected function restoreIndex ()
+	{
+		$classes = $this->robotLoader->getIndexedClasses();
+		$checksum = md5(serialize($classes));
+		if ($this->cache->load('checksum') !== $checksum) {
+			$index = array();
+			foreach ($classes as $class => $file) {
+				if ($type = array_search(substr($class, 0, $pos = strrpos($class, '\\')), $this->aliases)) {
+					if (!isset($index[$type])) {
+						$index[$type] = array();
+					}
+					$index[$type][] = substr($class, $pos);
+				}
+			}
+			$this->cache->save('index', $index);
+			$this->cache->save('checksum', $checksum);
+		} else {
+			$index = $this->cache->load('index');
+		}
+		$this->index = $index;
 	}
 }
