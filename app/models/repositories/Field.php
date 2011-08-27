@@ -195,19 +195,22 @@ class Field extends BaseRepository {
 
 
 	/**
-	 * Finds centers of seven-fields-sized hexagons which are located $outline from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral.
+	 * Finds centers of seven-fields-sized hexagons which are located $outline from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral. $S is the center of the map.
 	 * @param integer
 	 * @param integer
+	 * @param Entities\Field
 	 * @param array of Entities\Field
 	 * @return array of Entities\Field
 	 *
 	 * TODO: $visitedFields (maybe not necessary)
 	 *
 	 */
-	public function findNeutralHexagons($outline, $playerDistance, &$map = array()){
+	public function findNeutralHexagons($outline, $playerDistance, $S = null, &$map = array()){
 
-		$mapSize = $this->context->params['game']['map']['size'];
-		$S = $this->findByCoords($mapSize/2, $mapSize/2 - 1);
+		if ($S == null){
+			$mapSize = $this->context->params['game']['map']['size'];
+			$S = $this->findByCoords($mapSize/2 - 1, $mapSize/2);
+		}
 
 		$foundCenters = array();
 		$circuit = $this->findCircuit($S, $outline, $map);

@@ -59,7 +59,7 @@ abstract class BasePresenter extends \BasePresenter
 			)
 		);
 
-		//$this->redirect('Map:');
+		$this->redirect('Map:');
 	}
 
 }
