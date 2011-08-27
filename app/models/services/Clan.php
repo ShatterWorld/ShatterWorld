@@ -30,71 +30,77 @@ class Clan extends BaseService {
 		$maxMapIndex = $mapSize - 1;
 
 		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 - 1);
-		//$neutralHexagons = array();
-		//$fieldRepository->findNeutralHexagons($playerDistance, $neutralHexagons, $maxMapIndex);
 
 		//TODO: better everything ;)
 
-		$middleLine = 20;
-		$neutralHexagons = $fieldRepository->findNeutralHexagons($middleLine, $playerDistance, 5);
 
 
 
-		$minDist = 99999999999;
-		$minField;
+		$middleLine = 3;
+		$tolerance = 3;
+		$found = array();
 
+		while (count($found) < self::N){
 
-		foreach ($neutralHexagons as $neutralHexagon){
-			$dist = $fieldRepository->calculateDistance($S, $neutralHexagon);
-			if ($dist < $minDist){
-				$minDist = $dist;
-				$minField = $neutralHexagon;
-			}
-		}
+			$neutralHexagons = $fieldRepository->findNeutralHexagons($middleLine, $playerDistance, $tolerance, $mapSize);
 
-
-
-		$found[] = $minField;
-
-// other fields search improvement required
-
-
-		//$found[] = $fieldRepository->findByCoords($x, $y);
-		$neighbours = $fieldRepository->getFieldNeighbours($found[0]);
-
-
-		foreach ($neighbours as $neight) // founds appropriate fields
-		{
-
-			if (count($found) >= self::N)
-			{
-				break;
-			}
-
-			$cont = true;
-
-
-			foreach ($found as $foundField)
-			{
-				if($neight->type == $foundField->type)
-				{
-					$cont = false;
-					break;
-				}
-
-			}
-
-			if (!$cont){
+			if(count($neutralHexagons) <= 0){
+				$middleLine++;
 				continue;
 			}
 
-			$found[] = $neight;
+			usort($neutralHexagons, function ($a, $b) use ($fieldRepository, $S){
+				$dA = $fieldRepository->calculateDistance($S, $a);
+				$dB = $fieldRepository->calculateDistance($S, $b);
 
+				if ($dA == $dB) {
+					return 0;
+				}
+				return ($dA < $dB) ? -1 : 1;
+			});
+
+			foreach ($neutralHexagons as $neutralHexagon){
+				$neighbours = $fieldRepository->getFieldNeighbours($neutralHexagon);
+
+				$finalized = false;
+				$found = array();
+				$found[] = $neutralHexagon;
+
+				foreach ($neighbours as $neighbour){
+
+					if (count($found) >= self::N){
+						$finalized = true;
+						break;
+					}
+
+					$search = false;
+					foreach ($found as $foundField){
+						if($neighbour->type == $foundField->type){
+							$search = true;
+							break;
+						}
+					}
+
+					if ($search){
+						continue;
+					}
+
+					$found[] = $neighbour;
+
+
+				}
+				if ($finalized){
+					break;
+				}
+
+
+			}
+			$middleLine++;
 
 		}
 
 		$clan = parent::create($values, $flush);
-		foreach ($found as $foundField){	// makes player the owner of $found fields
+		foreach ($found as $foundField){
 			$fieldService->update($foundField, array('owner' => $clan));
 		}
 		return $clan;

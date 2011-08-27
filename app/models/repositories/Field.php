@@ -213,11 +213,10 @@ class Field extends BaseRepository {
 	 * TODO: $visitedFields
 	 *
 	 */
-	public function findNeutralHexagons($middleLine, $playerDistance, $tolerance, &$map = array()){
-		//$mapSize = 50;
+	public function findNeutralHexagons($middleLine, $playerDistance, $tolerance, $mapSize, &$map = array()){
 
 		if(count($map) <= 0){
-			//$map = $this->getIndexedMap();
+			$map = $this->getIndexedMap();
 		}
 
 		$S = $this->findByCoords($mapSize/2, $mapSize/2 - 1);
