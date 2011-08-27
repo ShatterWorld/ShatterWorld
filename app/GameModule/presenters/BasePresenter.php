@@ -10,8 +10,9 @@ abstract class BasePresenter extends \BasePresenter
 		if (!$this->getUser()->isLoggedIn()) {
 			$this->redirect(':Front:Homepage:');
 		}
+		$this->context->eventService->processPendingEvents();
 	}
-
+	
 	public function handleLogout ()
 	{
 		$this->getUser()->logout(TRUE);

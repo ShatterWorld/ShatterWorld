@@ -121,4 +121,16 @@ class BaseService extends Nette\Object {
 			$this->entityManager->flush();
 		}
 	}
+	
+	/**
+	 * Delete all objects
+	 * @return void
+	 */
+	 public function deleteAll ()
+	 {
+		foreach ($this->getRepository->findAll() as $object) {
+			$this->delete($object, FALSE);
+		}
+		$this->entityManager->flush();
+	 }
 }

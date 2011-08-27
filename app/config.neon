@@ -20,6 +20,7 @@ common:
 			unit: Rules\Units
 			field: Rules\Fields
 			resource: Rules\Resources
+			event: Rules\Events
 
 	doctrine:
 		proxyDir: %tempDir%/proxies

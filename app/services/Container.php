@@ -1,9 +1,6 @@
 <?php
-class Container extends Nette\DI\Container {
-	
-	/** @var array */
-	protected $modelServices = array();
-	
+class Container extends Nette\DI\Container 
+{	
 	protected function createServiceEntityManager ()
 	{
 		$config = new Doctrine\ORM\Configuration;
@@ -32,28 +29,31 @@ class Container extends Nette\DI\Container {
 		return $acl;
 	}
 	
-	public function getModelService ($name)
+	protected function createServiceModel ()
 	{
-		$namespace = $this->params['doctrine']['entityNamespace'];
-		if (!Nette\Utils\Strings::startsWith($name, $namespace)) {
-			$entityName = $namespace . '\\' . $name;
-		}
-		else {
-			$entityName = $name;
-		}
-		if (!$this->hasService($name)) {
-			if (!class_exists($class = $this->params['doctrine']['serviceNamespace'] . '\\' . $name)) {
-				$class = 'Services\\BaseService';
-			}
-			$this->addService($name, new $class($this, $entityName));
-		}
-		return $this->getService($name);
+		$context = new static;
+		$context->lazyCopy($this, 'cacheStorage');
+		$context->lazyCopy($this, 'doctrineCache');
+		$context->params['game'] = &$this->params['game'];
+		$context->params['database'] = &$this->params['database'];
+		$context->params['doctrine'] = &$this->params['doctrine'];
+		$context->params['appDir'] = $this->params['appDir'];
+		$context->params['wwwDir'] = $this->params['wwwDir'];
+		$context->params['productionMode'] = $this->params['productionMode'];
+		return new ModelContainer($context);
+	}
+	
+	public function lazyCopy ($container, $name)
+	{
+		$this->addService($name, function () use ($container, $name) {
+			return $container->getService($name);
+		});
 	}
 	
 	public function getService ($name) 
 	{
 		if (Nette\Utils\Strings::endsWith($name, 'Service')) {
-			return $this->getModelService(ucfirst(substr($name, 0, strpos($name, 'Service'))));
+			return $this->model->getService(ucfirst(substr($name, 0, -7)));
 		}
 		return parent::getService($name);
 	}

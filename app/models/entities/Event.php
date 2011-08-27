@@ -21,22 +21,28 @@ class Event extends BaseEntity {
 	private $term;
 	
 	/**
+	 * @Column(type = "boolean")
+	 * @var bool
+	 */
+	private $processed;
+	
+	/**
+	 * Constructor
+	 * @param string
+	 */
+	public function __construct ($type)
+	{
+		$this->type = $type;
+		$this->processed = FALSE;
+	}
+	
+	/**
 	 * Type getter
 	 * @return string
 	 */
 	public function getType ()
 	{
 		return $this->type;
-	}
-	
-	/**
-	 * Type setter
-	 * @param string
-	 * @return void
-	 */
-	public function setType ($type)
-	{
-		$this->type = $type;
 	}
 	
 	/**
@@ -56,5 +62,24 @@ class Event extends BaseEntity {
 	public function setTerm ($term)
 	{
 		$this->term = $term;
+	}
+	
+	/**
+	 * Has the event already been processed?
+	 * @return bool
+	 */
+	public function isProcessed ()
+	{
+		return $this->processed;
+	}
+	
+	/**
+	 * Processed setter
+	 * @param bool
+	 * @return void
+	 */
+	public function setProcessed ($processed = TRUE)
+	{
+		$this->processed = $processed;
 	}
 }
