@@ -51,10 +51,12 @@ class Field extends BaseRepository {
 	{
 		$neighbours = array();
 
+		if (count($map) <= 0){
+			$map = $this->getIndexedMap();
+		}
+
 		if ($depth > 1){
-			if (count($map) <= 0){
-				$map = $this->getIndexedMap();
-			}
+
 
 			for($d = 1; $d <= $depth; $d++){
 				$circuitNeighbours = $this->findCircuit($field, $d, $map);
@@ -63,11 +65,38 @@ class Field extends BaseRepository {
 				}
 			}
 
-			return $neighbours;
+			//return $neighbours;
 		}
+		else{
+			$x = $field->getX();
+			$y = $field->getY();
+			$mapSize = $this->context->params['game']['map']['size'] - 1;
 
-		$x = $field->getX();
-		$y = $field->getY();
+			if ($x+1 <= $mapSize){
+				if ($y-1 >= 0){
+					$neighbours[] = $map[$x+1][$y-1];
+				}
+				$neighbours[] = $map[$x+1][$y];
+			}
+
+			if ($x-1 >= 0){
+				if ($y+1 <= $mapSize){
+					$neighbours[] = $map[$x-1][$y+1];
+				}
+				$neighbours[] = $map[$x-1][$y];
+			}
+
+			if ($y+1 <= $mapSize){
+				$neighbours[] = $map[$x][$y+1];
+			}
+
+			if ($y-1 >= 0){
+				$neighbours[] = $map[$x][$y-1];
+			}
+
+		}
+		return $neighbours;
+/*
 
 		if ($map)
 		{
@@ -129,7 +158,7 @@ class Field extends BaseRepository {
 			$neighbours = $qb->getQuery()->getResult();
 		}
 
-		return $neighbours;
+		return $neighbours;*/
 	}
 
 
@@ -147,10 +176,10 @@ class Field extends BaseRepository {
 	public function findByCoords ($x, $y, &$map = array())
 	{
 		$mapSize = $this->context->params['game']['map']['size'];
-		if ($x >= $mapSize || $y >= $mapSize) {
+		if ($x >= $mapSize || $y >= $mapSize || $x < 0 || $y < 0) {
 			throw new InvalidCoordinatesException;
 		}
-		if ($map > 0){
+		if (count($map) > 0){
 			return $map[$x][$y];
 		}
 
@@ -207,58 +236,43 @@ class Field extends BaseRepository {
 
 
 	/**
-	 * Finds centers of seven-fields-sized hexagons which are located $middleLine +/- $tolerance from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral.
-	 * @param integer
+	 * Finds centers of seven-fields-sized hexagons which are located $outline from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral.
 	 * @param integer
 	 * @param integer
 	 * @param array of Entities\Field
 	 * @return array of Entities\Field
 	 *
-	 * TODO: $visitedFields
+	 * TODO: $visitedFields (maybe not necessary)
 	 *
 	 */
-	public function findNeutralHexagons($middleLine, $playerDistance, $tolerance, $mapSize, &$map = array()){
+	public function findNeutralHexagons($outline, $playerDistance, &$map = array()){
+
 
 		if(count($map) <= 0){
 			$map = $this->getIndexedMap();
 		}
 
+		$mapSize = $this->context->params['game']['map']['size'];
 		$S = $this->findByCoords($mapSize/2, $mapSize/2 - 1);
 
 		$foundCenters = array();
-		/*$hasOwner = array();
+		$circuit = $this->findCircuit($S, $outline, $map);
 
-		for($i=0;$i<$mapSize;i++){
-			for($j=0;$j<$mapSize;j++){
-				$hasOwner = null;
-			}
-		}*/
+		foreach($circuit as $field){
+			if($field->owner == null){
+				$neighbours = $this->getFieldNeighbours($field, $playerDistance + 1, $map);
+				$add = true;
 
-
-		for($d = $middleLine - $tolerance; $d <= $middleLine + $tolerance; $d++){
-			$circuit = $this->findCircuit($S, $d, $map);
-			$noOwners = 0;
-			foreach($circuit as $field){
-				if($field->owner == null){
-					$neighbours = $this->getFieldNeighbours($field, $playerDistance + 1, $map);
-					$add = true;
-
-					foreach($neighbours as $neighbour){
-						if($neighbour->owner != null){
-							$add = false;
-							break;
-						}
-					}
-					if ($add){
-						$foundCenters[] = $field;
+				foreach($neighbours as $neighbour){
+					if($neighbour->owner != null){
+						$add = false;
+						break;
 					}
 				}
+				if ($add){
+					$foundCenters[] = $field;
+				}
 			}
-
-			if(count($foundCenters) > 0){
-				break;
-			}
-
 		}
 
 		return $foundCenters;
@@ -289,7 +303,7 @@ class Field extends BaseRepository {
 
 
 	/**
-	 * Finds zone of fields which are settled in hexagon (center $S, radius $r)
+	 * Finds zone of fields which are settled in hexagon ABCDEF (center $S, radius $r i.e. |SA|==|SB|==$r)
 	 * @param Entities\Field
 	 * @param integer
 	 * @param Entities\Field
@@ -308,6 +322,8 @@ class Field extends BaseRepository {
 		$x = $S->getX();
 		$y = $S->getY();
 
+
+
 		$coords = array(
 			'north' => array('x' => $x + $r, 'y' => $y - $r),
 			'south' => array('x' => $x - $r, 'y' => $y + $r),
@@ -317,66 +333,89 @@ class Field extends BaseRepository {
 			'south-east' => array('x' => $x, 'y' => $y + $r)
 		);
 
-		$vertexes = array();
-		foreach($coords as $name => $coord){
-			$vertexes[$name] = $this->findByCoords($coord['x'], $coord['y'], $map);
-		}
-
 		$circuit = array();
+		foreach($coords as $coord){
+			try{
+				$vertexes[] = $this->findByCoords($coord['x'], $coord['y'], $map);
+			}
+			catch(InvalidCoordinatesException $e){
+				continue;
+			}
+		}
 
-		$tmpX = $vertexes['north']->getX();
-		$tmpY = $vertexes['north']->getY();
-		$targetX = $vertexes['north-east']->getX();
-		$targetY = $vertexes['north-east']->getY();
+
+		$tmpX = $coords['north']['x'];
+		$tmpY = $coords['north']['y'];
+		$targetX = $coords['north-east']['x'];
+		$targetY = $coords['north-east']['y'];
 		while($tmpY < $targetY){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			try{
+				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			}
+			catch(InvalidCoordinatesException $e){}
 			$tmpY++;
+
 		}
 
-		$tmpX = $vertexes['north-east']->getX();
-		$tmpY = $vertexes['north-east']->getY();
-		$targetX = $vertexes['south-east']->getX();
-		$targetY = $vertexes['south-east']->getY();
+		$tmpX = $coords['north-east']['x'];
+		$tmpY = $coords['north-east']['y'];
+		$targetX = $coords['south-east']['x'];
+		$targetY = $coords['south-east']['y'];
 		while($tmpY < $targetY and $tmpX > $targetX){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			try{
+				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			}
+			catch(InvalidCoordinatesException $e){}
 			$tmpY++;
 			$tmpX--;
 		}
 
-		$tmpX = $vertexes['south-east']->getX();
-		$tmpY = $vertexes['south-east']->getY();
-		$targetX = $vertexes['south']->getX();
-		$targetY = $vertexes['south']->getY();
+		$tmpX = $coords['south-east']['x'];
+		$tmpY = $coords['south-east']['y'];
+		$targetX = $coords['south']['x'];
+		$targetY = $coords['south']['y'];
 		while($tmpX > $targetX){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			try{
+				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			}
+			catch(InvalidCoordinatesException $e){}
 			$tmpX--;
 		}
 
-		$tmpX = $vertexes['south']->getX();
-		$tmpY = $vertexes['south']->getY();
-		$targetX = $vertexes['south-west']->getX();
-		$targetY = $vertexes['south-west']->getY();
+		$tmpX = $coords['south']['x'];
+		$tmpY = $coords['south']['y'];
+		$targetX = $coords['south-west']['x'];
+		$targetY = $coords['south-west']['y'];
 		while($tmpY > $targetY){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			try{
+				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			}
+			catch(InvalidCoordinatesException $e){}
 			$tmpY--;
 		}
 
-		$tmpX = $vertexes['south-west']->getX();
-		$tmpY = $vertexes['south-west']->getY();
-		$targetX = $vertexes['north-west']->getX();
-		$targetY = $vertexes['north-west']->getY();
+		$tmpX = $coords['south-west']['x'];
+		$tmpY = $coords['south-west']['y'];
+		$targetX = $coords['north-west']['x'];
+		$targetY = $coords['north-west']['y'];
 		while($tmpY > $targetY and $tmpX < $targetX){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			try{
+				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			}
+			catch(InvalidCoordinatesException $e){}
 			$tmpY--;
 			$tmpX++;
 		}
 
-		$tmpX = $vertexes['north-west']->getX();
-		$tmpY = $vertexes['north-west']->getY();
-		$targetX = $vertexes['north']->getX();
-		$targetY = $vertexes['north']->getY();
+		$tmpX = $coords['north-west']['x'];
+		$tmpY = $coords['north-west']['y'];
+		$targetX = $coords['north']['x'];
+		$targetY = $coords['north']['y'];
 		while($tmpX < $targetX){
-			$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			try{
+				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+			}
+			catch(InvalidCoordinatesException $e){}
 			$tmpX++;
 		}
 

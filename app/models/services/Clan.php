@@ -7,17 +7,15 @@ use Nette\Diagnostics\Debugger;
  */
 class Clan extends BaseService {
 
-	/*
-	* The total number of filed which player is given
-	*/
-	const N = 3;//$this->context->params['game']['map']['initialFieldsCount'];
-
 	/**
 	* Creates an object as parent does
 	* In addition, it assigns N fields to the clan
 	* @param array
 	* @param bool
 	* @return object
+	*
+	* TODO: outline caching and incrementing
+	*
 	*/
 	public function create ($values, $flush = TRUE)
 	{
@@ -27,25 +25,20 @@ class Clan extends BaseService {
 
 		$mapSize = $this->context->params['game']['map']['size'];
 		$playerDistance = $this->context->params['game']['map']['playerDistance'];
-		$maxMapIndex = $mapSize - 1;
+		$initialFieldsCount = $this->context->params['game']['map']['initialFieldsCount'];
 
 		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 - 1);
+		$map = $fieldRepository->getIndexedMap();
 
-		//TODO: better everything ;)
-
-
-
-
-		$middleLine = 3;
-		$tolerance = 3;
+		$outline = 0;
 		$found = array();
 
-		while (count($found) < self::N){
+		while (count($found) < $initialFieldsCount){
 
-			$neutralHexagons = $fieldRepository->findNeutralHexagons($middleLine, $playerDistance, $tolerance, $mapSize);
+			$neutralHexagons = $fieldRepository->findNeutralHexagons($outline, $playerDistance, $map);
 
 			if(count($neutralHexagons) <= 0){
-				$middleLine++;
+				$outline++;
 				continue;
 			}
 
@@ -60,7 +53,7 @@ class Clan extends BaseService {
 			});
 
 			foreach ($neutralHexagons as $neutralHexagon){
-				$neighbours = $fieldRepository->getFieldNeighbours($neutralHexagon);
+				$neighbours = $fieldRepository->getFieldNeighbours($neutralHexagon, 1,$map);
 
 				$finalized = false;
 				$found = array();
@@ -68,7 +61,7 @@ class Clan extends BaseService {
 
 				foreach ($neighbours as $neighbour){
 
-					if (count($found) >= self::N){
+					if (count($found) >= $initialFieldsCount){
 						$finalized = true;
 						break;
 					}
@@ -95,8 +88,7 @@ class Clan extends BaseService {
 
 
 			}
-			$middleLine++;
-
+			$outline++;
 		}
 
 		$clan = parent::create($values, $flush);
