@@ -15,27 +15,32 @@ class Profile extends BaseService {
 	public function update ($object, $values, $flush = TRUE)
 	{
 		parent::update($object, $values, $flush);
-		
+
 		if ($values['avatar']->getError() == 0){
 			$avatar = $values['avatar'];
 			$avatarPath = $avatar->getTemporaryFile();
-
-			$avatar = Image::fromFile($avatarPath);
-			$avatar->resize(96, 96);
-			$targetPath = $this->context->params['wwwDir'].'/images/avatars/'.$object->id.'.png';
-			$avatar->save($targetPath, 100, Image::PNG);
-
 		}
+		else{
+			$avatarPath = $this->context->params['wwwDir'].'/images/avatars/default.png';
+		}
+
+		$avatar = Image::fromFile($avatarPath);
+		$avatar->resize(96, 96);
+		$targetPath = $this->context->params['wwwDir'].'/images/avatars/'.$object->id.'.png';
+		$avatar->save($targetPath, 100, Image::PNG);
+
+
+
 	}
-	
+
 	public function delete ($object, $flush = TRUE)
 	{
 
 		unlink($this->context->params['wwwDir'].'/images/avatars/'.$object->id.'.png');
 
 		parent::delete($object, $flush);
-		
+
 	}
-	
-	
+
+
 }
