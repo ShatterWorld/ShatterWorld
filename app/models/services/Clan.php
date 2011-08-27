@@ -30,7 +30,7 @@ class Clan extends BaseService {
 		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 - 1);
 		$map = $fieldRepository->getIndexedMap();
 
-		$outline = 0;
+		$outline = 7;
 		$found = array();
 
 		while (count($found) < $initialFieldsCount){

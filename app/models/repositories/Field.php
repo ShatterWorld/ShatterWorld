@@ -51,12 +51,7 @@ class Field extends BaseRepository {
 	{
 		$neighbours = array();
 
-		if (count($map) <= 0){
-			$map = $this->getIndexedMap();
-		}
-
 		if ($depth > 1){
-
 
 			for($d = 1; $d <= $depth; $d++){
 				$circuitNeighbours = $this->findCircuit($field, $d, $map);
@@ -64,70 +59,35 @@ class Field extends BaseRepository {
 					$neighbours[] = $circuitNeighbour;
 				}
 			}
-
-			//return $neighbours;
 		}
-		else{
+		else if (count($map) > 0){
 			$x = $field->getX();
 			$y = $field->getY();
-			$mapSize = $this->context->params['game']['map']['size'] - 1;
 
-			if ($x+1 <= $mapSize){
-				if ($y-1 >= 0){
-					$neighbours[] = $map[$x+1][$y-1];
-				}
+			if (isset($map[$x+1][$y-1])){
+				$neighbours[] = $map[$x+1][$y-1];
+			}
+			if (isset($map[$x+1][$y])){
 				$neighbours[] = $map[$x+1][$y];
 			}
-
-			if ($x-1 >= 0){
-				if ($y+1 <= $mapSize){
-					$neighbours[] = $map[$x-1][$y+1];
-				}
+			if (isset($map[$x-1][$y+1])){
+				$neighbours[] = $map[$x-1][$y+1];
+			}
+			if (isset($map[$x-1][$y])){
 				$neighbours[] = $map[$x-1][$y];
 			}
-
-			if ($y+1 <= $mapSize){
+			if (isset($map[$x][$y+1])){
 				$neighbours[] = $map[$x][$y+1];
 			}
-
-			if ($y-1 >= 0){
+			if (isset($map[$x][$y-1])){
 				$neighbours[] = $map[$x][$y-1];
 			}
 
 		}
-		return $neighbours;
-/*
+		else{
+			$x = $field->getX();
+			$y = $field->getY();
 
-		if ($map)
-		{
-			foreach ($map as $tmpField)
-			{
-				$tmpX = $tmpField->getX();
-				$tmpY = $tmpField->getY();
-
-				if(
-						($tmpX == $x+1 and $tmpY == $y-1)
-					or
-						($tmpX == $x-1 and $tmpY == $y+1)
-					or
-						($tmpX == $x+1 and $tmpY == $y)
-					or
-						($tmpX == $x and $tmpY == $y+1)
-					or
-						($tmpX == $x and $tmpY == $y-1)
-					or
-						($tmpX == $x-1 and $tmpY == $y)
-				)
-				{
-					$neighbours[] = $tmpField;
-				}
-
-			}
-
-
-		}
-		else
-		{
 			$qb = $this->createQueryBuilder('f');
 			$qb->where($qb->expr()->orX(
 				$qb->expr()->andX(# north
@@ -158,10 +118,9 @@ class Field extends BaseRepository {
 			$neighbours = $qb->getQuery()->getResult();
 		}
 
-		return $neighbours;*/
+		return $neighbours;
+
 	}
-
-
 
 	/**
 	* Finds a field by its coordinates (If $map is given, iterates through it instand of quering)
@@ -247,11 +206,6 @@ class Field extends BaseRepository {
 	 */
 	public function findNeutralHexagons($outline, $playerDistance, &$map = array()){
 
-
-		if(count($map) <= 0){
-			$map = $this->getIndexedMap();
-		}
-
 		$mapSize = $this->context->params['game']['map']['size'];
 		$S = $this->findByCoords($mapSize/2, $mapSize/2 - 1);
 
@@ -311,18 +265,12 @@ class Field extends BaseRepository {
 	 */
 	public function findCircuit ($S, $r, &$map = array())
 	{
-		if(count($map) <= 0){
-			$map = $this->getIndexedMap();
-		}
-
 		if($r == 1){
 			return $this->getFieldNeighbours($S);
 		}
 
 		$x = $S->getX();
 		$y = $S->getY();
-
-
 
 		$coords = array(
 			'north' => array('x' => $x + $r, 'y' => $y - $r),
