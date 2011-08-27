@@ -146,7 +146,11 @@ class Field extends BaseRepository {
 	*/
 	public function findByCoords ($x, $y, &$map = array())
 	{
-		if(count($map) > 0){
+		$mapSize = $this->context->params['game']['map']['size'];
+		if ($x >= $mapSize || $y >= $mapSize) {
+			throw new InvalidCoordinatesException;
+		}
+		if ($map > 0){
 			return $map[$x][$y];
 		}
 
@@ -379,3 +383,5 @@ class Field extends BaseRepository {
 		return $circuit;
 	}
 }
+
+class InvalidCoordinatesException extends \Exception {}
