@@ -15,6 +15,7 @@ common:
 			size: 20
 			playerDistance: 2
 			initialFieldsCount: 3
+			toleration: 3
 
 		ruleAliases:
 			unit: Rules\Units

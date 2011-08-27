@@ -26,19 +26,28 @@ class Clan extends BaseService {
 		$mapSize = $this->context->params['game']['map']['size'];
 		$playerDistance = $this->context->params['game']['map']['playerDistance'];
 		$initialFieldsCount = $this->context->params['game']['map']['initialFieldsCount'];
+		$toleration = $this->context->params['game']['map']['toleration'];
 
-		$S = $fieldRepository->findByCoords($mapSize/2, $mapSize/2 - 1);
+		$S = $fieldRepository->findByCoords($mapSize/2 - 1, $mapSize/2);
 		$map = $fieldRepository->getIndexedMap();
 
-		$outline = 7;
+		$outline = 6;
+		if ($outline - $toleration < 0){
+			$level = 0;
+		}
+		else{
+			$level = $outline - $toleration;
+		}
+
+
 		$found = array();
 
 		while (count($found) < $initialFieldsCount){
 
-			$neutralHexagons = $fieldRepository->findNeutralHexagons($outline, $playerDistance, $map);
+			$neutralHexagons = $fieldRepository->findNeutralHexagons($level, $playerDistance, $S, $map);
 
 			if(count($neutralHexagons) <= 0){
-				$outline++;
+				$level++;
 				continue;
 			}
 
@@ -88,7 +97,7 @@ class Clan extends BaseService {
 
 
 			}
-			$outline++;
+			$level++;
 		}
 
 		$clan = parent::create($values, $flush);
