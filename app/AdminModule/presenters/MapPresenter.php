@@ -14,6 +14,8 @@ class MapPresenter extends BasePresenter {
 	
 	public function submitGenerateMapForm (Form $form)
 	{
+		$this->getFieldService()->deleteAll();
+		$this->getClanService()->deleteAll();
 		$this->getFieldService()->createMap();
 		$this->flashMessage('Nová mapa byla vygenerována');
 		$this->redirect('default');

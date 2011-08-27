@@ -13,11 +13,6 @@ class Field extends BaseService {
 	
 	public function createMap ()
 	{
-		foreach ($this->getRepository()->findAll() as $object) {
-			$this->delete($object, FALSE);
-		}
-		$this->entityManager->flush();
-		
 		$probabilityTable = array();
 		$probabilityPeak = 0;
 		
