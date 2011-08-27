@@ -25,7 +25,6 @@ class Field extends BaseService {
 			$probabilityTable[$probabilityPeak + $field->probability] = lcfirst($type);
 			$probabilityPeak = $probabilityPeak + $field->probability;
 		}
-		\Nette\Diagnostics\Debugger::barDump($probabilityTable);
 		$pickRandomType = function () use ($probabilityTable, $probabilityPeak) {
 			$rand = mt_rand(0, $probabilityPeak);
 			foreach ($probabilityTable as $probability => $type) {
