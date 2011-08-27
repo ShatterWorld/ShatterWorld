@@ -195,7 +195,7 @@ class Field extends BaseRepository {
 
 
 	/**
-	 * Finds centers of seven-fields-sized hexagons which are located $outline from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral.
+	 * Finds centers of seven-fields-sized hexagons which are located $outline from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral. $S is the center of the map.
 	 * @param integer
 	 * @param integer
 	 * @param Entities\Field
