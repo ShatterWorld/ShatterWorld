@@ -34,6 +34,7 @@ class Container extends Nette\DI\Container
 		$context = new static;
 		$context->lazyCopy($this, 'cacheStorage');
 		$context->lazyCopy($this, 'doctrineCache');
+		$context->lazyCopy($this, 'rules');
 		$context->params['game'] = &$this->params['game'];
 		$context->params['database'] = &$this->params['database'];
 		$context->params['doctrine'] = &$this->params['doctrine'];
