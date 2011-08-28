@@ -1,7 +1,7 @@
 <?php
 class Container extends Nette\DI\Container 
 {	
-	protected function createServiceEntityManager ()
+	public function createEntityManager ()
 	{
 		$config = new Doctrine\ORM\Configuration;
 		$driver = $config->newDefaultAnnotationDriver($this->params['doctrine']['entityDir']);
@@ -16,6 +16,7 @@ class Container extends Nette\DI\Container
 			$config->setSQLLogger(\Nella\Doctrine\Panel::register());
 		}
 		$connection = $this->params['database'];
+		Nette\Diagnostics\Debugger::dump('creating em');
 		return EntityManager::create($connection, $config);
 	}
 	
@@ -32,6 +33,7 @@ class Container extends Nette\DI\Container
 	protected function createServiceModel ()
 	{
 		$context = new static;
+		$context->lazyCopy($this, 'entityManager');
 		$context->lazyCopy($this, 'cacheStorage');
 		$context->lazyCopy($this, 'doctrineCache');
 		$context->lazyCopy($this, 'rules');

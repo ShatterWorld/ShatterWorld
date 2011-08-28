@@ -45,6 +45,9 @@ common:
 			option:
 				directory: [%appDir%, %libsDir%]
 
+		entityManager:
+			factory: [@container, createEntityManager]
+
 		doctrineCache:
 			class: DoctrineCache
 			arguments: [@cacheStorage]
