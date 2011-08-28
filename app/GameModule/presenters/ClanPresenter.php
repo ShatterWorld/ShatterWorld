@@ -16,9 +16,6 @@ class ClanPresenter extends BasePresenter {
 	*/
 	public function renderDefault ()
 	{
-		if (!$this->getPlayerClan()) {
-			$this->redirect('Clan:new');
-		}	
 		$this->template->clan = $this->getPlayerClan();
 	}
 	

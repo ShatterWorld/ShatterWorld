@@ -10,6 +10,9 @@ abstract class BasePresenter extends \BasePresenter
 		if (!$this->getUser()->isLoggedIn()) {
 			$this->redirect(':Front:Homepage:');
 		}
+		if ($this->getAction(TRUE) !== ':Game:Clan:new' && !$this->getPlayerClan()) {
+ 			$this->redirect('Clan:new');
+		}
 		$this->context->eventService->processPendingEvents();
 	}
 
