@@ -164,27 +164,18 @@ class Field extends BaseRepository {
 		return $qb->getQuery()->getResult();
 	}
 
-	public function getFieldsByUserQuery ($userId)
-	{
-		$qb = $this->createQueryBuilder('f');
-		$qb->where(
-			$qb->expr()->eq('f.owner', $userId)
-		);
-		return $qb->getQuery();
-	}
-
 	/**
 	 * Finds fields which are visible for the player
 	 * @param integer
 	 * @param integer
 	 * @return array of Entities\Field
 	 */
-	public function getVisibleFields ($userId, $depth)
+	public function getVisibleFields ($clanId, $depth)
 	{
 
 		$qb = $this->createQueryBuilder('f');
 		$qb->where(
-			$qb->expr()->eq('f.owner', $userId)
+			$qb->expr()->eq('f.owner', $clanId)
 		);
 		$ownerFields = $qb->getQuery()->getResult();
 
@@ -202,6 +193,16 @@ class Field extends BaseRepository {
 		return $visibleFields;
 	}
 
+	public function getVisibleFieldsArray ($clanId, $depth)
+	{
+		$result = array();
+		foreach ($this->getVisibleFields($clanId, $depth) as $field) {
+			$arr = $field->toArray();
+			$arr['owner'] = $field->owner ? $field->owner->toArray() : NULL;
+			$result[] = $arr;
+		}
+		return $result;
+	}
 
 	/**
 	 * Finds centers of seven-fields-sized hexagons which are located $outline from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral. $S is the center of the map.
