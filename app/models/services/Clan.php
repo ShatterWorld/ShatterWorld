@@ -28,9 +28,7 @@ class Clan extends BaseService {
 
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
-		
-		$clan = parent::create($values, $flush);
-		
+
 		$mapSize = $this->context->params['game']['map']['size'];
 		$playerDistance = $this->context->params['game']['map']['playerDistance'];
 		$initialFieldsCount = $this->context->params['game']['map']['initialFieldsCount'];
@@ -109,7 +107,8 @@ class Clan extends BaseService {
 		}
 
 		$this->cache->save('outline', $level + $toleration);
-		
+
+		$clan = parent::create($values, $flush);
 		foreach ($found as $foundField){
 			$fieldService->update($foundField, array('owner' => $clan));
 		}

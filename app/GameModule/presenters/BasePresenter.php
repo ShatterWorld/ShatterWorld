@@ -12,7 +12,7 @@ abstract class BasePresenter extends \BasePresenter
 		}
 		$this->context->eventService->processPendingEvents();
 	}
-	
+
 	public function handleLogout ()
 	{
 		$this->getUser()->logout(TRUE);
@@ -59,7 +59,18 @@ abstract class BasePresenter extends \BasePresenter
 			)
 		);
 
+		//$this->redirect('Map:');
+	}
+
+	public function handleCreate10Users ()
+	{
+		for($i = 0; $i < 10; $i++){
+			$this->handleCreateUser();
+		}
 		$this->redirect('Map:');
 	}
+
+
+
 
 }
