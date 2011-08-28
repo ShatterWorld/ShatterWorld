@@ -164,6 +164,15 @@ class Field extends BaseRepository {
 		return $qb->getQuery()->getResult();
 	}
 
+	public function getFieldsByUserQuery ($userId)
+	{
+		$qb = $this->createQueryBuilder('f');
+		$qb->where(
+			$qb->expr()->eq('f.owner', $userId)
+		);
+		return $qb->getQuery();
+	}
+
 	/**
 	 * Finds fields which are visible for the player
 	 * @param integer

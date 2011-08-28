@@ -6,6 +6,9 @@ class ModelContainer extends Nette\Object
 	/** @var array */
 	protected $services = array();
 	
+	/** @var array */
+	protected $repositories = array();
+	
 	/** @var Nette\DI\Container */
 	protected $context;
 	
@@ -32,13 +35,22 @@ class ModelContainer extends Nette\Object
 		return $this->services[$name];
 	}
 	
+	public function getRepository ($name)
+	{
+		if (!isset($this->repositories[$name])) {
+			$this->repositories[$name] = $this->getService($name)->getRepository();
+		}
+		return $this->repositories[$name];
+	}
+	
+	/** TODO: Results in notice: only variable references should be returned by reference */
 	public function &__get ($name)
 	{
 		if (Strings::endsWith($name, 'Service')) {
 			return $this->getService(substr($name, 0, -7));
 		}
 		if (Strings::endsWith($name, 'Repository')) {
-			return $this->getService(substr($name, 0, -10))->getRepository();
+			return $this->getRepository(substr($name, 0, -10));
 		}
 		return parent::__get($name);
 	}
