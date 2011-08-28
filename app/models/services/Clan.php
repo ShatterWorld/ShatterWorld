@@ -109,13 +109,8 @@ class Clan extends BaseService {
 			}
 			$level++;
 		}
-<<<<<<< HEAD
 
 		$this->cache->save('outline', $level/* + $toleration*/);
-=======
-		
-		//$this->cache->save('outline', $level + $toleration);
->>>>>>> 79573ae42a0a5f6823b804b58435dd1975844fb6
 
 		$clan = parent::create($values, $flush);
 		foreach ($found as $foundField){
