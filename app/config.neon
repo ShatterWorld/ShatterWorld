@@ -12,7 +12,7 @@ common:
 
 	game:
 		map:
-			size: 80
+			size: 50
 			diversityMinimum: 2
 			playerDistance: 3
 			initialFieldsCount: 3
