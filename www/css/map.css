@@ -17,9 +17,11 @@
 	background: lightgreen;
 	width: 170px;
 	height: 80px;
+	float: left;
 }
 
 #mapContainer {
+	position: relative;
 	background:black;
 	width:650px;
 	height:640px;
@@ -45,7 +47,7 @@
 
 
 
-#fieldDetail #fieldImg{
+#fieldDetail #fieldImg {
 	float: left;
 }
 
@@ -59,6 +61,18 @@
 	cursor: pointer;
 }
 
+#navigDiv {
+	float: right;
+}
+
+#navig {
+	background: #cdcdcd;
+}
+#navig td{
+	cursor: pointer;
+	padding: 1px;
+
+}
 
 
 
