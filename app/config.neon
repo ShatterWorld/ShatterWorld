@@ -45,8 +45,11 @@ common:
 			option:
 				directory: [%appDir%, %libsDir%]
 
+		model:
+			factory: ServiceFactory::createModelContainer
+
 		entityManager:
-			factory: [@container, createEntityManager]
+			factory: ServiceFactory::createEntityManager
 
 		doctrineCache:
 			class: DoctrineCache
@@ -55,6 +58,9 @@ common:
 		authenticator:
 			class: Authenticator
 			arguments: [@userService]
+
+		authorizator:
+			factory: ServiceFactory::createAuthorizator
 
 		rules:
 			class: RuleLoader
