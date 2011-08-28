@@ -16,7 +16,6 @@ class Container extends Nette\DI\Container
 			$config->setSQLLogger(\Nella\Doctrine\Panel::register());
 		}
 		$connection = $this->params['database'];
-		Nette\Diagnostics\Debugger::dump('creating em');
 		return EntityManager::create($connection, $config);
 	}
 	
