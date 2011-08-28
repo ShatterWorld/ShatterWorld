@@ -28,7 +28,7 @@
 					Zavřít
 				</div>
 				<div class="clearer"><span></span></div>
-				
+
 				<table>
 					<tr>
 						<th>
@@ -66,8 +66,8 @@
 						</td>
 					</tr>
 				</table>
-				
-			
+
+
 			</div>
 		</div>
 
@@ -77,12 +77,15 @@
 			{?$typeMap = array('forest' => 'green', 'mountain' => 'brown', 'barren' => 'yellow', 'lake' => 'blue', 'plain' => 'white')}
 			{?$zIndex = $size}
 			{foreach $fields as $field}
+
+
+
 				{?list($x, $y) = $field->coords}
 				{?$left = ($x*43)+($y*43)}
 				{?$top = ($x*-20)+($y*19)}
-				<div 
-					class="field" 
-					id="field_{$x}_{$y}" 
+				<div
+					class="field"
+					id="field_{$x}_{$y}"
 					style="
 						width: 60px;
 						height: 40px;
@@ -92,18 +95,18 @@
 						z-index:{$zIndex};
 						background: url('{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png');
 					"
-					data-coords="[{$x}, {$y}]"	
+					data-coords="[{$x}, {$y}]"
 					data-type="{$field->type}"
-					data-color="{$typeMap[$field->type]}"	
-					data-realcoords="[{$left}, {$top}]"	
-					data-level="{$field->level}"	
-					data-facility="{if $field->facility == null}žádná{else}{$field->facility}{/if}"	
-					data-owner="{if $field->owner == null}---{else}{$field->owner->name}{/if}"	
+					data-color="{$typeMap[$field->type]}"
+					data-realcoords="[{$left}, {$top}]"
+					data-level="{$field->level}"
+					data-facility="{if $field->facility == null}žádná{else}{$field->facility}{/if}"
+					data-owner="{if $field->owner == null}---{else}{$field->owner->name}{/if}"
 				>
-					<img 
-						class="border" 
-						id="border_{$x}_{$y}" 
-						
+					<img
+						class="border"
+						id="border_{$x}_{$y}"
+
 						{if $field->owner == null}
 							{?$border="border_neutral"}
 						{*{elseif $field->owner->id == $clan->aliance}
@@ -113,8 +116,8 @@
 						{else}
 							{?$border="border_enemy"}
 						{/if}
-						
-						src="{$basePath}/images/fields/{$border}.png" 
+
+						src="{$basePath}/images/fields/{$border}.png"
 						style="
 							position:absolute;
 							left:0px;

@@ -13,6 +13,12 @@ class Clan extends BaseService {
 	protected $cache;
 
 
+	public function __construct ($context, $entityClass)
+	{
+		parent::__construct($context, $entityClass);
+		$this->cache = new Cache($this->context->cacheStorage, 'Map');
+	}
+
 	/**
 	* Creates an object as parent does
 	* In addition, it assigns N fields to the clan
@@ -37,10 +43,7 @@ class Clan extends BaseService {
 		$S = $fieldRepository->findByCoords($mapSize/2 - 1, $mapSize/2);
 		$map = $fieldRepository->getIndexedMap();
 
-
-		//$this->cache = new Cache($this->context->cacheStorage, 'Map');
-
-		$outline = 2;//$this->cache->load('outline');
+		$outline = $this->cache->load('outline');
 		if ($outline === null || $outline - $toleration < 0){
 			$level = 0;
 		}
@@ -106,7 +109,7 @@ class Clan extends BaseService {
 			$level++;
 		}
 
-		//$this->cache->save('outline', $level + $toleration);
+		$this->cache->save('outline', $level + $toleration);
 
 		$clan = parent::create($values, $flush);
 		foreach ($found as $foundField){
@@ -131,5 +134,13 @@ class Clan extends BaseService {
 		}
 		parent::delete($object, $flush);
 	}
+
+
+	public function deleteAll (){
+		parent::deleteAll();
+		$this->cache->clean();
+	}
+
+
 
 }
