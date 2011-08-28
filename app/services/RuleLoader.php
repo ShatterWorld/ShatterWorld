@@ -5,6 +5,9 @@
  */
 class RuleLoader extends Nette\Object
 {
+	/** @var Nette\DI\Container */
+	protected $context;
+	
 	/** @var Nette\Loaders\RobotLoader */
 	protected $robotLoader;
 	
@@ -22,10 +25,14 @@ class RuleLoader extends Nette\Object
 	
 	/**
 	 * Constructor
+	 * @param Nette\DI\Container
+	 * @param Nette\Loaders\RobotLoader
+	 * @param Nette\Caching\Storages\IStorage
 	 * @param array
 	 */
-	public function __construct ($robotLoader, $cacheStorage, $aliases)
+	public function __construct ($context, $robotLoader, $cacheStorage, $aliases)
 	{
+		$this->context = $context;
 		$this->robotLoader = $robotLoader;
 		$this->cache = new Nette\Caching\Cache($cacheStorage, 'Rules');
 		$this->aliases = $aliases;
@@ -45,7 +52,7 @@ class RuleLoader extends Nette\Object
 	{
 		if (!isset($this->instances[$type][$rule])) {
 			$class = $this->aliases[$type] . '\\' . lcfirst($rule);
-			$this->instances[$type][$rule] = new $class;
+			$this->instances[$type][$rule] = new $class($this->context);
 		}
 		return $this->instances[$type][$rule];
 	}

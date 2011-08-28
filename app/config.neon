@@ -45,8 +45,12 @@ common:
 			option:
 				directory: [%appDir%, %libsDir%]
 
+		modelContext:
+			factory: ServiceFactory::createModelContext
+
 		model:
-			factory: ServiceFactory::createModelContainer
+			class: ModelContainer
+			arguments: [@modelContext]
 
 		entityManager:
 			factory: ServiceFactory::createEntityManager
@@ -64,7 +68,7 @@ common:
 
 		rules:
 			class: RuleLoader
-			arguments: [@robotLoader, @cacheStorage, %game.ruleAliases%]
+			arguments: [@modelContext, @robotLoader, @cacheStorage, %game.ruleAliases%]
 
 production < common:
 

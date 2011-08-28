@@ -1,8 +1,9 @@
 <?php
 namespace Rules\Fields;
+use Rules\AbstractRule;
 use Nette;
 
-class Moor extends Nette\Object implements IField
+class Moor extends AbstractRule implements IField
 {
 	public function getProbability ()
 	{

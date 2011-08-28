@@ -29,7 +29,7 @@ class ServiceFactory extends Nette\Object
 		return $acl;
 	}
 	
-	public static function createModelContainer ($container)
+	public static function createModelContext ($container)
 	{
 		$context = new Container();
 		$context->lazyCopy($container, 'entityManager');
@@ -43,6 +43,6 @@ class ServiceFactory extends Nette\Object
 		$context->params['appDir'] = $container->params['appDir'];
 		$context->params['wwwDir'] = $container->params['wwwDir'];
 		$context->params['productionMode'] = $container->params['productionMode'];
-		return new ModelContainer($context);
+		return $context;
 	}
 }
