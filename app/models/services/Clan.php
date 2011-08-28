@@ -38,9 +38,9 @@ class Clan extends BaseService {
 		$map = $fieldRepository->getIndexedMap();
 
 
-		$this->cache = new Cache($this->context->cacheStorage, 'Map');
+		//$this->cache = new Cache($this->context->cacheStorage, 'Map');
 
-		$outline = $this->cache->load('outline');
+		$outline = 2;//$this->cache->load('outline');
 		if ($outline === null || $outline - $toleration < 0){
 			$level = 0;
 		}
@@ -106,7 +106,7 @@ class Clan extends BaseService {
 			$level++;
 		}
 
-		$this->cache->save('outline', $level + $toleration);
+		//$this->cache->save('outline', $level + $toleration);
 
 		$clan = parent::create($values, $flush);
 		foreach ($found as $foundField){
