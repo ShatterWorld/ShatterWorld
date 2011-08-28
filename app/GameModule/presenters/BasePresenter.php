@@ -59,14 +59,27 @@ abstract class BasePresenter extends \BasePresenter
 			)
 		);
 
-		//$this->redirect('Map:');
+		$this->redirect('Map:');
 	}
 
 	public function handleCreate10Users ()
 	{
 		for($i = 0; $i < 10; $i++){
-			$this->handleCreateUser();
-		}
+		$user = $this->getService('userService')->create(
+			array(
+				'nickname' => Nette\Utils\Strings::random(),
+				'email' => 'test@test.com',
+				'password' => '123456',
+				'role' => 'player'
+			)
+		);
+
+		$clan = $this->getService('clanService')->create(
+			array(
+				'name' => Nette\Utils\Strings::random(),
+				'user' => $user
+			)
+		);		}
 		$this->redirect('Map:');
 	}
 

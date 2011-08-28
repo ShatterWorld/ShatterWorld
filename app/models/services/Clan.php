@@ -16,7 +16,7 @@ class Clan extends BaseService {
 	public function __construct ($context, $entityClass)
 	{
 		parent::__construct($context, $entityClass);
-		$this->cache = new Cache($this->context->cacheStorage, 'Map');
+		//$this->cache = new Cache($this->context->cacheStorage, 'Map');
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Clan extends BaseService {
 		$S = $fieldRepository->findByCoords($mapSize/2 - 1, $mapSize/2);
 		$map = $fieldRepository->getIndexedMap();
 
-		$outline = $this->cache->load('outline');
+		$outline = 4; //$this->cache->load('outline');
 		if ($outline === null || $outline - $toleration < 0){
 			$level = 0;
 		}
@@ -109,7 +109,7 @@ class Clan extends BaseService {
 			$level++;
 		}
 
-		$this->cache->save('outline', $level + $toleration);
+		//$this->cache->save('outline', $level + $toleration);
 
 		$clan = parent::create($values, $flush);
 		foreach ($found as $foundField){
@@ -138,7 +138,7 @@ class Clan extends BaseService {
 
 	public function deleteAll (){
 		parent::deleteAll();
-		$this->cache->clean();
+		//$this->cache->clean();
 	}
 
 
