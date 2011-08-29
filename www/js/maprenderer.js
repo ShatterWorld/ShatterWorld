@@ -4,9 +4,6 @@
 *
 */
 $(document).ready(function(){
-
-	alert("render");
-
 	/**
 	* @var string - Basepath
 	*/
@@ -48,17 +45,30 @@ $(document).ready(function(){
 			var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+zIndex+'; background: '+background+';';
 			div.attr('style', divStyle);
 
-			div.attr('data-coords', '[' + field['x'] + ',' + field['y'] + ']');
-			div.attr('data-type', field['type']);
-			div.attr('data-level', field['level']);
-			div.attr('data-facility', (field['facility'] == null) ? "žádná" : field['facility']);
-			div.attr('data-owner', (field['owner'] == null) ? "---" : field['owner']);
+			var borderType = 'neutral';
+			if(field['owner'] != null){
+				if (data['clanId'] == field['owner']['id']){
+					borderType = 'mine';
+				}
+				/*else if (field['aliance'] != null){
+					if(data['alianceId'] == field['owner']['aliance']['id']){
+						borderType = 'aliance';
+					}
+					else{
+						borderType = 'enemy';
+					}
+				}*/
+				else{
+					borderType = 'enemy';
+				}
 
-			var borderType = 'mine';
+			}
+
 			var borderStyle = 'position: absolute; left: 0px; top: 0px; z-index: 9999999';
 			var border = $('<img class="border" />').attr('src', basepath + '/images/fields/border_'+borderType+'.png');
 			border.attr('id', 'field_'+posX+'_'+posY);
 			border.attr('style', borderStyle);
+
 
 			div.append(border);
 			$('#map').append(div);
@@ -73,7 +83,13 @@ $(document).ready(function(){
 				$('#fieldInfo').show();
 
 				$("#fieldInfo #coords").html('Souřadnice ['+field['x']+';'+field['y']+']');
-				$("#fieldInfo #owner").html('Vlastník '+field['owner']);
+
+				var owner = '---';
+				if (field['owner'] != null){
+					owner = field['owner']['name'];
+				}
+				$("#fieldInfo #owner").html('Vlastník '+ owner);
+
 				$("#fieldInfo #type").html('Typ '+field['type']);
 
 			});
