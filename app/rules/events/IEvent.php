@@ -1,5 +1,5 @@
 <?php
-namespace Rules\Movements;
+namespace Rules\Events;
 
 /**
  * A game event

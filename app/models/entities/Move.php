@@ -1,6 +1,11 @@
 <?php
 namespace Entities;
 
+/**
+ * A unit movement representation
+ * @Entity
+ * @author Jan "Teyras" Buchar
+ */
 class Move extends BaseEntity
 {
 	/**

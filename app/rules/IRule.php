@@ -1,5 +1,6 @@
 <?php
 namespace Rules;
+use Nette;
 
 /**
  * A game mechanic representation

@@ -3,7 +3,7 @@ namespace Rules\Fields;
 use Rules\AbstractRule;
 use Nette;
 
-class Meadow extends Rules\AbstractRule implements IField
+class Meadow extends AbstractRule implements IField
 {
 	public function getProbability ()
 	{
