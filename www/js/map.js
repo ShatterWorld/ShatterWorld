@@ -12,31 +12,26 @@ $(document).ready(function(){
 
 
 	/**
-	* Number of clicks
+	* @var integer - Number of clicks
 	*/
 	var clicks = 0;
 
 	/**
-	* Last clicked field
+	* @var Field - Last clicked field
 	*/
 	var prevField = null;
 
 	/**
-	* Data (indexed by html tags data-STH, e.g. data-coords -> index='coords')
+	* @var JSON - Data (indexed by html tags data-STH, e.g. data-coords -> index='coords')
 	*/
 	var data = null;
 
+	/**
+	* @var string - Basepath
+	*/
 	var basepath = $('#map').data()['basepath'];
-	/**
-	* Array of marked fields
-	*/
-	var markedFieldsId = new Array();
 
-	/**
-	* Array of marked fields data
-	*/
-	var markedFieldsColors = new Array();
-
+/* tohle je sakra co? */
 	var markerImage = $('<img class="marker" />').attr('src', basepath + '/images/fields/marker.png');
 
 	/**
@@ -71,14 +66,9 @@ $(document).ready(function(){
 	//$(".field").mouseover(function(e){
 
 	$(".field").mousemove(function(e) {
-		//var msg = e.pageX + ", " + e.pageY;
-		//$("#fieldActions").html(msg);
 		$('#fieldInfo').css("left", e.pageX + 20);
 		$('#fieldInfo').css("top", e.pageY + 20);
 	});
-
-	//});
-
 
 	/**
 	* Shows #fieldDetail filled with details of field and possible actions
@@ -88,7 +78,6 @@ $(document).ready(function(){
 		$('#fieldDetail').hide();
 		$('#fieldDetail').show('fast');
 
-		//$('#fieldImg').attr('src', '');
 		$('#fieldImg').attr('src', basepath+'/images/fields/hex_'+data['color']+'.png');
 
 		$('#detailCoords').html('['+data['coords'][0]+';'+data['coords'][1]+']');
