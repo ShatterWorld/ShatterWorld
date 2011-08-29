@@ -40,23 +40,32 @@ $(document).ready(function(){
 			if(field['owner'] != null){
 				if (data['clanId'] == field['owner']['id']){
 					if(field['facility'] != null){
-						if (data['facility'] == 'headquarters'){
+						if (field['facility'] == 'headquarters'){
 							var posX = (field['x'] * 43) + (field['y'] * 43);
 							var posY = (field['x'] * -20) + (field['y'] * 19);
-							var centerX = $('#mapContainer').css('width');
-							dX = posX - centerX;
+							var centerXString = $('#mapContainer').css('width');
+							var centerX = centerXString.substring(0, centerXString.length -2);
+							dX = posX - centerX/2 +30;
+
+							var posY = (field['x'] * 43) + (field['y'] * 43);
+							var posY = (field['x'] * -20) + (field['y'] * 19);
+							var centerYString = $('#mapContainer').css('width');
+							var centerY = centerYString.substring(0, centerYString.length -2);
+							dY = posY - centerY/2 +30;
+
+						}
 					}
 
 				}
 			}
 
-		}
+		});
 
 
 		$.each(data['fields'], function(key, field) {
 
 			var posX = (field['x'] * 43) + (field['y'] * 43) - dX;
-			var posY = (field['x'] * -20) + (field['y'] * 19);
+			var posY = (field['x'] * -20) + (field['y'] * 19) -dY;
 			var zIndex = '5';
 			var background = "url('"+basepath+"/images/fields/hex_"+field['type']+".png')";
 
