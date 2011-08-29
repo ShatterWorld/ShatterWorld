@@ -1,0 +1,9 @@
+{block #content}
+<h1>{$alliance->name}</h1>
+<table>
+<tr><th>Jméno</th></tr>
+{foreach $alliance->members as $member}
+<tr><td>{$member->name}</td></tr>
+{/foreach}
+</table>
+{/block}

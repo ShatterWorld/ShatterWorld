@@ -28,6 +28,12 @@ class Clan extends BaseEntity {
 	private $fields;
 	
 	/**
+	 * @ManyToOne(targetEntity = "Entities\Alliance", inversedBy = "members")
+	 * @var Entities\Alliance
+	 */
+	private $alliance;
+	
+	/**
 	 * Constructor
 	 * @param Entities\User
 	 */
@@ -82,5 +88,30 @@ class Clan extends BaseEntity {
 	public function addField (Field $field)
 	{
 		$field->setOwner($this);
+	}
+	
+	/**
+	 * Alliance getter
+	 * @return Entities\Alliance
+	 */
+	public function getAlliance ()
+	{
+		return $this->alliance;
+	}
+	
+	/**
+	 * Alliance setter
+	 * @param Entities\Alliance
+	 * @return void
+	 */
+	public function setAlliance (Alliance $alliance = NULL)
+	{
+		$this->alliance = $alliance;
+		if ($this->alliance) {
+			$this->alliance->getMembers()->removeElement($this);
+		}
+		if ($alliance) {
+			$alliance->getMembers()->add($this);
+		}
 	}
 }

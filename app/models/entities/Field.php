@@ -69,6 +69,9 @@ class Field extends BaseEntity {
 	public function setOwner (Clan $clan = null)
 	{
 		$this->owner = $clan;
+		if ($this->owner) {
+			$this->owner->getFields()->removeElement($this);
+		}
 		if ($clan) {
 			$clan->getFields()->add($this);
 		}
