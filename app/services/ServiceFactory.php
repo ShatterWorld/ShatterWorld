@@ -9,6 +9,7 @@ class ServiceFactory extends Nette\Object
 		$config->setMetadataDriverImpl($driver);
 		$config->setMetadataCacheImpl($cache);
 		$config->setQueryCacheImpl($cache);
+		$config->setResultCacheImpl($cache);
 		$config->setProxyNamespace($container->params['doctrine']['proxyNamespace']);
 		$config->setProxyDir($container->params['doctrine']['proxyDir']);
 		$config->setAutoGenerateProxyClasses(!$container->params['productionMode']);
