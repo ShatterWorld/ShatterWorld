@@ -14,6 +14,7 @@ class MapPresenter extends BasePresenter {
 	
 	public function handleFetchMap ()
 	{
-		$this->payload->fields = Nette\Utils\Json::encode($this->getFieldRepository()->getVisibleFields($this->getPlayerClan()->id, 1));
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($this->getPlayerClan()->id, 1);
+		$this->sendPayload();
 	}
 }
