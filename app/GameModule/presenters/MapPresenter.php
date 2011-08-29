@@ -11,10 +11,12 @@ class MapPresenter extends BasePresenter {
 		$this->template->fields = $this->getFieldRepository()->getMap();
 		$this->template->clan = $this->getPlayerClan();
 	}
-	
+
 	public function handleFetchMap ()
 	{
-		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($this->getPlayerClan()->id, 1);
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($this->getPlayerClan()->id, 3);
+		$this->payload->clanId = $this->getPlayerClan()->id;
 		$this->sendPayload();
 	}
+
 }
