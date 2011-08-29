@@ -1,6 +1,6 @@
 {block #map-head-include}
-	<script type="text/javascript" src="{$basePath}/js/map.js"></script>
 	<script type="text/javascript" src="{$basePath}/js/maprenderer.js"></script>
+	<script type="text/javascript" src="{$basePath}/js/map.js"></script>
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/map.css" />
 
 {/block}
@@ -91,60 +91,6 @@
 
 
 		<div id="map" style="position:relative;background:#000;top:{$size*40/2}px;left:{$size*60/2}" data-basepath="{$basePath}">
-			{?$typeMap = array('forest' => 'green', 'mountain' => 'brown', 'barren' => 'lightbrown', 'lake' => 'blue', 'plain' => 'yellow', 'moor' => 'teal', 'meadow' => 'lightgreen')}
-			{?$zIndex = $size}
-			{foreach $fields as $field}
-
-
-
-				{?list($x, $y) = $field->coords}
-				{?$left = ($x*43)+($y*43)}
-				{?$top = ($x*-20)+($y*19)}
-				<div
-					class="field"
-					id="field_{$x}_{$y}"
-					style="
-						width: 60px;
-						height: 40px;
-						position:absolute;
-						left:{$left}px;
-						top:{$top}px;
-						z-index:{$zIndex};
-						background: url('{$basePath}/images/fields/hex_{$typeMap[$field->type]}.png');
-					"
-					data-coords="[{$x}, {$y}]"
-					data-type="{$field->type}"
-					data-color="{$typeMap[$field->type]}"
-					data-realcoords="[{$left}, {$top}]"
-					data-level="{$field->level}"
-					data-facility="{if $field->facility == null}žádná{else}{$field->facility}{/if}"
-					data-owner="{if $field->owner == null}---{else}{$field->owner->name}{/if}"
-				>
-					<img
-						class="border"
-						id="border_{$x}_{$y}"
-
-						{if $field->owner == null}
-							{?$border="border_neutral"}
-						{*{elseif $field->owner->id == $clan->aliance}
-							{?$border="border_aliance"}*}
-						{elseif $field->owner->id == $clan->id}
-							{?$border="border_mine"}
-						{else}
-							{?$border="border_enemy"}
-						{/if}
-
-						src="{$basePath}/images/fields/{$border}.png"
-						style="
-							position:absolute;
-							left:0px;
-							top:0px;
-							z-index:9999999;
-						"
-					/>
-				</div>
-				{if $iterator->getCounter() % $size === 0 && $iterator->getCounter() !== 0}{?$zIndex--}{/if}
-			{/foreach}
 		</div>
 
 
