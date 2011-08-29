@@ -34,9 +34,28 @@ $(document).ready(function(){
 
 		//$('#menu').append('<div>ajax</div>');
 
+		var dX;
+		var dY;
+		$.each(data['fields'], function(key, field) {
+			if(field['owner'] != null){
+				if (data['clanId'] == field['owner']['id']){
+					if(field['facility'] != null){
+						if (data['facility'] == 'headquarters'){
+							var posX = (field['x'] * 43) + (field['y'] * 43);
+							var posY = (field['x'] * -20) + (field['y'] * 19);
+							var centerX = $('#mapContainer').css('width');
+							dX = posX - centerX;
+					}
+
+				}
+			}
+
+		}
+
+
 		$.each(data['fields'], function(key, field) {
 
-			var posX = (field['x'] * 43) + (field['y']*43);
+			var posX = (field['x'] * 43) + (field['y'] * 43) - dX;
 			var posY = (field['x'] * -20) + (field['y'] * 19);
 			var zIndex = '5';
 			var background = "url('"+basepath+"/images/fields/hex_"+field['type']+".png')";
