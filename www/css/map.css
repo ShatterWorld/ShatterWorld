@@ -13,13 +13,6 @@
 	opacity: 0.9;/*Others*/
 }
 
-#fieldActions {
-	background: lightgreen;
-	width: 170px;
-	height: 80px;
-	float: left;
-}
-
 #mapContainer {
 	position: relative;
 	background:black;
@@ -28,9 +21,6 @@
 	overflow:auto;
 }
 
-.relativePositioner {
-	position: relative;
-}
 
 #fieldDetail {
 	background: #5D6555;
@@ -43,18 +33,6 @@
 	z-index: 999999999999999999999999999;
 	display: none;
 	color: white;
-}
-
-
-
-#fieldDetail #fieldImg {
-	float: left;
-}
-
-#fieldDetail #closeFieldDetail {
-	float: right;
-	padding: 10px 10px 10px 10px;
-	cursor: pointer;
 }
 
 .field {

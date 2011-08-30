@@ -200,15 +200,15 @@ $(document).ready(function(){
 				mark(div);
 				if(initialField == null){
 					initialField = this;
-					showMenu();
+					showContextMenu(posX, posY);
 				}
 				else if (initialField == this){
-					cleanMenu();
+					hideContextMenu();
 					unmarkAll();
 				}
 				else{
 					action(initialField, this);
-					cleanMenu();
+					hideContextMenu();
 					unmarkAll();
 				}
 			});
@@ -251,30 +251,66 @@ $(document).ready(function(){
 	* Displays context menu
 	* @return void
 	*/
-	function showMenu()
+	function showContextMenu(x, y)
 	{
-//some conditions what to display
-		cleanMenu();
+
+		/*
+		 * should be cloned
+		 * improve cursor, text styling
+		 * only this should by clickable
+		 * disable #fieldInfo
+		*/
+		var contextMenu = $('<div id="contextMenu" />').html('<h3>Nabídka akcí</h3>');
+		contextMenu.css('background', "#5D6555");
+		contextMenu.css('border', "white 1px solid");
+		contextMenu.css('color', "white");
+		contextMenu.css('text-decoration', "underline");
+		contextMenu.css('cursor', "pointer");
+		contextMenu.css('width', "350px");
+		contextMenu.css('height', "200px");
+		contextMenu.css('position', "absolute");
+		contextMenu.css('top', y+fieldHeight+"px");
+		contextMenu.css('left', x+fieldWidth+"px");
+		contextMenu.css('z-index', "999999999999999999999999999");
+		contextMenu.css('-ms-filter', "'progid:DXImageTransform.Microsoft.Alpha(Opacity=90)'");
+		contextMenu.css('-moz-opacity', "0.9");
+		contextMenu.css('opacity', "0.9");
+
+		$('#mapContainer').append(contextMenu);
+
+
+		//some conditions what to display
 		addAttackAction();
 		addImproveBuildingAction();
+		addCancelAction();
 	}
+
+	/**
+	* Hides context menu
+	* @return void
+	*/
+	function hideContextMenu()
+	{
+		$('#contextMenu').hide('fast');
+		$('#contextMenu').remove();
+	}
+
 
 	/**
 	* Adds the attack action
 	* @return void
 	*/
 	function addAttackAction(){
-		//action = this;
 		var actionDiv = $('<div class="action" />').html('Útok');
 		actionDiv.click(function(){
-			//fieldsRequired = 2;
+			hideContextMenu();
 			alert('vyberte cíl');
 			action = function(from, target){
 				alert('posílám jednotky');
 			};
 		});
 
-		$('#fieldActions').append(actionDiv);
+		$('#contextMenu').append(actionDiv);
 	}
 
 	/**
@@ -282,29 +318,29 @@ $(document).ready(function(){
 	* @return void
 	*/
 	function addImproveBuildingAction(){
-		//action = this;
 		var actionDiv = $('<div class="action" />').html('Vylepčit budovu');
 		actionDiv.click(function(){
-			//fieldsRequired = 1;
-
+			hideContextMenu();
 			alert('budova vylepšena');
 			unmarkAll();
-			cleanMenu();
+		});
+
+		$('#contextMenu').append(actionDiv);
+	}
+
+	/**
+	* Adds the cancel action
+	* @return void
+	*/
+	function addCancelAction(){
+		var actionDiv = $('<div class="action" />').html('Zrušit');
+		actionDiv.click(function(){
+			unmarkAll();
+			hideContextMenu();
 
 		});
 
-		$('#fieldActions').append(actionDiv);
-	}
-
-
-
-	/**
-	* Cleans #fieldActions
-	* @return void
-	*/
-	function cleanMenu()
-	{
-		$('#fieldActions').html('');
+		$('#contextMenu').append(actionDiv);
 	}
 
 	/**
