@@ -116,33 +116,32 @@ $(document).ready(function(){
 			var posX = calculateXPos(field) - dX;
 			var posY = calculateYPos(field) - dY;
 			var zIndex = '5';
-			var background = "url('"+basepath+"/images/fields/hex_"+field['type']+".png')";
-
+			
+			var borderType = 'neutral';
+			if(field['owner'] != null){
+				if (data['clanId'] == field['owner']['id']) {
+					borderType = 'player';
+				} else if (field['owner']['alliance'] != null) {
+					borderType = 'ally';
+				} else {
+					borderType = 'enemy';
+				}
+			}
+			
+			var background = "url('"+basepath+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
 			var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
 			var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+zIndex+'; background: '+background+';';
 			div.attr('style', divStyle);
 
-			var borderType = 'neutral';
-			if(field['owner'] != null){
-				if (data['clanId'] == field['owner']['id']){
-					borderType = 'mine';
-				}
+			
 
-				else if (field['owner']['alliance'] != null){
-					borderType = 'alliance';
-				}
-				else{
-					borderType = 'enemy';
-				}
-			}
-
-			var borderStyle = 'position: absolute; left: 0px; top: 0px; z-index: 9999999';
-			var border = $('<img class="border" />').attr('src', basepath + '/images/fields/border_'+borderType+'.png');
-			border.attr('id', 'field_'+posX+'_'+posY);
-			border.attr('style', borderStyle);
+// 			var borderStyle = 'position: absolute; left: 0px; top: 0px; z-index: 9999999';
+// 			var border = $('<img class="border" />').attr('src', basepath + '/images/fields/border_'+borderType+'.png');
+// 			border.attr('id', 'field_'+posX+'_'+posY);
+// 			border.attr('style', borderStyle);
 
 
-			div.append(border);
+// 			div.append(border);
 			$('#map').append(div);
 
 
