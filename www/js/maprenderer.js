@@ -118,14 +118,14 @@ $(document).ready(function(){
 				if (data['clanId'] == field['owner']['id']){
 					borderType = 'mine';
 				}
-				else if (field['aliance'] != null){
+				/*else if (field['aliance'] != null){
 					if(data['alianceId'] == field['owner']['aliance']['id']){
 						borderType = 'aliance';
 					}
 					else{
 						borderType = 'enemy';
 					}
-				}
+				}*/
 				else{
 					borderType = 'enemy';
 				}
