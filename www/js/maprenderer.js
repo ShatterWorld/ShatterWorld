@@ -1,5 +1,5 @@
 /**
-* Map renderer
+* Map renderer (including events, infobox, action menu etc.)
 * @author Petr Bělohlávek
 *
 */
@@ -34,8 +34,29 @@ $(document).ready(function(){
 
 		//$('#menu').append('<div>ajax</div>');
 
-		var dX;
-		var dY;
+		/**
+		 * @var represents x-offset between real and calculated coord. of fields
+		 */
+		var dX = 0;
+
+		/**
+		 * @var represents y-offset between real and calculated coord. of fields
+		 */
+		var dY = 0;
+
+		/**
+		 * @var represents how much the scroll bar must move to the left
+		 */
+		var scrollX = 0;
+
+		/**
+		 * @var represents how much the scroll bar must move to the bottom
+		 */
+		var scrollY = 0;
+
+		/**
+		 * finds the center and calculate dX and dY
+		 */
 		$.each(data['fields'], function(key, field) {
 			if(field['owner'] != null){
 				if (data['clanId'] == field['owner']['id']){
@@ -53,6 +74,7 @@ $(document).ready(function(){
 							var centerY = centerYString.substring(0, centerYString.length -2);
 							dY = posY - centerY/2 +30;
 
+							return false;
 						}
 					}
 
@@ -61,7 +83,25 @@ $(document).ready(function(){
 
 		});
 
+		/**
+		 * checks negative coords. of fields, slides them and sets scrollX and scrollY
+		 */
+		$.each(data['fields'], function(key, field) {
+			if((field['x'] * 43) + (field['y'] * 43) - dX < 0){
+				dX -= 60;
+				scrollX += 60;
+			}
+			if((field['x'] * -20) + (field['y'] * 19) - dY < 0){
+				dY -= 40;
+				scrollY += 40;
+			}
 
+		});
+
+
+		/**
+		 * renders fields and adds event-listeners to them
+		 */
 		$.each(data['fields'], function(key, field) {
 
 			var posX = (field['x'] * 43) + (field['y'] * 43) - dX;
@@ -78,14 +118,14 @@ $(document).ready(function(){
 				if (data['clanId'] == field['owner']['id']){
 					borderType = 'mine';
 				}
-				/*else if (field['aliance'] != null){
+				else if (field['aliance'] != null){
 					if(data['alianceId'] == field['owner']['aliance']['id']){
 						borderType = 'aliance';
 					}
 					else{
 						borderType = 'enemy';
 					}
-				}*/
+				}
 				else{
 					borderType = 'enemy';
 				}
@@ -202,8 +242,11 @@ $(document).ready(function(){
 
 		});
 
-
-		//$('#menu').append('<div>end</div>');
+		/**
+		 * slides the sliders
+		 */
+		$('#mapContainer').scrollLeft(scrollX);
+		$('#mapContainer').scrollTop(scrollY);
 
 	});
 
@@ -241,9 +284,6 @@ $(document).ready(function(){
 		addAction('Útok<br/>');
 		addAction('Podpora<br/>');
 		addAction('Poslat suroviny<br/>');
-
-		//$('#mapContainer').prepend('<div id="#contextMenu" style="background: url(\'../images/hex_marked.png\'); position: absolute; top: +'x'+; left: +'y'+; width: 50px; height:50px;">bla<br/>bla2<br/>bla3</div>');
-		//alert('<div id="#contextMenu" style="background: url(\'../images/hex_marked.png\'); position: absolute; top: +'x'+; left: +'y'+; width: 50px; height:50px;">bla<br/>bla2<br/>bla3</div>');
 	}
 
 
@@ -266,7 +306,13 @@ $(document).ready(function(){
 		$('#fieldActions').append(action);
 	}
 
-
+	/**
+	* Hides #fieldDetail
+	* @return void
+	*/
+	$('#closeFieldDetail').click(function(){
+		$('#fieldDetail').hide('fast');
+	});
 
 
 

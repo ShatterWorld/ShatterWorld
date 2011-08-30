@@ -1,11 +1,6 @@
 /**
-* Deals with field actions
+* Navigation in the map
 * @author Petr Bělohlávek
-*
-*
-*	TODO:	- improve actions
-			- create context menu
-*
 */
 $(document).ready(function(){
 
@@ -66,15 +61,5 @@ $(document).ready(function(){
 			var posLeft = $('#mapContainer').scrollLeft();
 			$('#mapContainer').animate({scrollLeft: posLeft+slide}, navigSpeed);
 	});
-
-
-	/**
-	* Hides #fieldDetail
-	* @return void
-	*/
-	$('#closeFieldDetail').click(function(){
-		$('#fieldDetail').hide('fast');
-	});
-
 
 });
