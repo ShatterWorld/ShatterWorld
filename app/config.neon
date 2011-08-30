@@ -18,6 +18,9 @@ common:
 			initialFieldsCount: 3
 			toleration: 3
 
+		stats:
+			baseLOS: 2
+
 		ruleAliases:
 			unit: Rules\Units
 			field: Rules\Fields
@@ -69,6 +72,10 @@ common:
 		rules:
 			class: RuleLoader
 			arguments: [@modelContext, @robotLoader, @cacheStorage, %game.ruleAliases%]
+
+		stats:
+			class: StatContainer
+			arguments: [@modelContext]
 
 production < common:
 

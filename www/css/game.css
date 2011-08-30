@@ -49,6 +49,10 @@ a:hover {
 	border-top: 1px solid #000;
 }
 
+#footer img {
+	vertical-align: middle;
+}
+
 #menu {
 	width: 200px;
 	float: left;
