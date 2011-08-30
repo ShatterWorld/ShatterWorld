@@ -108,6 +108,13 @@ $(document).ready(function(){
 		});
 
 
+
+		/**
+		 * @var integer
+		 * TODO : fix
+		 */
+		var zIndex = data['mapSize'];
+
 		/**
 		 * renders fields and adds event-listeners to them
 		 */
@@ -115,8 +122,7 @@ $(document).ready(function(){
 
 			var posX = calculateXPos(field) - dX;
 			var posY = calculateYPos(field) - dY;
-			var zIndex = '5';
-			
+
 			var borderType = 'neutral';
 			if(field['owner'] != null){
 				if (data['clanId'] == field['owner']['id']) {
@@ -127,13 +133,13 @@ $(document).ready(function(){
 					borderType = 'enemy';
 				}
 			}
-			
+
 			var background = "url('"+basepath+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
 			var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
 			var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+zIndex+'; background: '+background+';';
 			div.attr('style', divStyle);
 
-			
+
 
 // 			var borderStyle = 'position: absolute; left: 0px; top: 0px; z-index: 9999999';
 // 			var border = $('<img class="border" />').attr('src', basepath + '/images/fields/border_'+borderType+'.png');
