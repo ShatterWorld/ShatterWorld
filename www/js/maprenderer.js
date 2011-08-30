@@ -153,10 +153,16 @@ $(document).ready(function(){
 				$("#fieldInfo #coords").html('Souřadnice ['+field['x']+';'+field['y']+']');
 
 				var owner = '---';
+				var alliance = '---';
 				if (field['owner'] != null){
 					owner = field['owner']['name'];
+					if (field['owner']['alliance'] != null){
+						//alert(field['owner']['alliance']['name']);
+						alliance = field['owner']['alliance']['name'];
+					}
 				}
 				$("#fieldInfo #owner").html('Vlastník '+ owner);
+				$("#fieldInfo #alliance").html('Aliance '+ alliance);
 
 				$("#fieldInfo #type").html('Typ '+field['type']);
 
@@ -191,11 +197,35 @@ $(document).ready(function(){
 
 				$('#fieldImg').attr('src', basepath+'/images/fields/hex_'+field['type']+'.png');
 
-				$('#detailCoords').html('['+field['x']+';'+field['y']+']');
-				$('#detailOwner').html(field['owner']);
-				$('#detailType').html(field['type']);
-				$('#detailFacility').html(field['facility']);
-				$('#detailLevel').html(field['level']);
+				$('#fieldDetail #detailCoords').html('['+field['x']+';'+field['y']+']');
+
+
+
+
+				var owner = '---';
+				var alliance = '---';
+				if (field['owner'] != null){
+					owner = field['owner']['name'];
+					if (field['owner']['alliance'] != null){
+						//alert(field['owner']['alliance']['name']);
+						alliance = field['owner']['alliance']['name'];
+					}
+				}
+				$('#fieldDetail #detailOwner').html(owner);
+				$("#fieldInfo #detailAlliance").html(alliance);
+
+				$('#fieldDetail #detailType').html(field['type']);
+
+				var facility = '---';
+				if (field['facility'] != null){
+					facility = field['facility'];
+				}
+				$('#fieldDetail #detailFacility').html(facility);
+
+				$('#fieldDetail #detailLevel').html(field['level']);
+
+
+
 
 
 
