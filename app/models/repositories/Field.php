@@ -199,6 +199,7 @@ class Field extends BaseRepository {
 		foreach ($this->getVisibleFields($clanId, $depth) as $field) {
 			$arr = $field->toArray();
 			$arr['owner'] = $field->owner ? $field->owner->toArray() : NULL;
+			$arr['alliance'] = $field->alliance ? $field->alliance->toArray() : NULL;
 			$result[] = $arr;
 		}
 		return $result;
