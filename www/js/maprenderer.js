@@ -109,11 +109,6 @@ $(document).ready(function(){
 
 
 
-		/**
-		 * @var integer
-		 * TODO : fix
-		 */
-		//var baseZIndex = data['mapSize'] * data['mapSize'];
 
 		/**
 		 * renders fields and adds event-listeners to them
@@ -136,7 +131,7 @@ $(document).ready(function(){
 
 			var background = "url('"+basepath+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
 			var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
-			var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+/*(baseZIndex - field['x']*field['y'])*/5+'; background: '+background+';';
+			var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['x']*field['y']+'; background: '+background+';';
 			div.attr('style', divStyle);
 
 

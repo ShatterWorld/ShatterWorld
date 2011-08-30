@@ -15,7 +15,6 @@ class MapPresenter extends BasePresenter {
 	{
 		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($this->getPlayerClan()->id, 10);
 		$this->payload->clanId = $this->getPlayerClan()->id;
-		$this->payload->mapSize = $this->context->params['game']['map']['size'];
 		$this->sendPayload();
 	}
 
