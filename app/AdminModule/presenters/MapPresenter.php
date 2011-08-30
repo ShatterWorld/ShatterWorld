@@ -11,9 +11,10 @@ class MapPresenter extends BasePresenter {
 		$form->onSuccess[] = callback($this, 'submitGenerateMapForm');
 		return $form;
 	}
-	
+
 	public function submitGenerateMapForm (Form $form)
 	{
+		$this->getAllianceService()->deleteAll();
 		$this->getFieldService()->deleteAll();
 		$this->getClanService()->deleteAll();
 		$this->getFieldService()->createMap();
