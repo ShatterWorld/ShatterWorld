@@ -112,10 +112,18 @@ class Clan extends BaseService {
 
 		$this->cache->save('outline', $level/* + $toleration*/);
 
+		$maxNeighbours = 0;
+		$headq = null;
 		$clan = parent::create($values, $flush);
 		foreach ($found as $foundField){
+			$neighboursNmb = count($fieldRepository->getFieldNeighbours($foundField, 1, $map));
+			if ( $neighboursNmb > $maxNeighbours){
+				$maxNeighbours = $neighboursNmb;
+				$headq = $foundField;
+			}
 			$fieldService->update($foundField, array('owner' => $clan));
 		}
+		$fieldService->update($headq, array('facility' => 'headquarters'));
 		return $clan;
 
 	}

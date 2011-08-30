@@ -278,6 +278,7 @@ $(document).ready(function(){
 		/**
 		 * slides the sliders
 		 */
+
 		$('#mapContainer').scrollLeft(scrollX);
 		$('#mapContainer').scrollTop(scrollY);
 

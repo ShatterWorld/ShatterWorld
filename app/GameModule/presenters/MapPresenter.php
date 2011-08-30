@@ -13,7 +13,7 @@ class MapPresenter extends BasePresenter {
 
 	public function handleFetchMap ()
 	{
-		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($this->getPlayerClan()->id, 10);
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($this->getPlayerClan()->id, 5);
 		$this->payload->clanId = $this->getPlayerClan()->id;
 		$this->sendPayload();
 	}
