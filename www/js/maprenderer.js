@@ -4,6 +4,20 @@
 *
 */
 $(document).ready(function(){
+
+	/**
+	* @var Field - first clicked field (init. the action)
+	*/
+	var initialField = null;
+
+	/**
+	* @var function - action that runs when the target is selected
+	* @param Field
+	* @param Field
+	* @return void
+	*/
+	var action = null;
+
 	/**
 	* @var integer - width of field
 	*/
@@ -23,11 +37,6 @@ $(document).ready(function(){
 	* @var integer - Number of marked fields
 	*/
 	var markedFields = 0;
-
-	/**
-	* @var Field - Last clicked field
-	*/
-	var prevField = null;
 
 
 	/**
@@ -134,15 +143,6 @@ $(document).ready(function(){
 			var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['x']*field['y']+'; background: '+background+';';
 			div.attr('style', divStyle);
 
-
-
-// 			var borderStyle = 'position: absolute; left: 0px; top: 0px; z-index: 9999999';
-// 			var border = $('<img class="border" />').attr('src', basepath + '/images/fields/border_'+borderType+'.png');
-// 			border.attr('id', 'field_'+posX+'_'+posY);
-// 			border.attr('style', borderStyle);
-
-
-// 			div.append(border);
 			$('#map').append(div);
 
 
@@ -190,51 +190,6 @@ $(document).ready(function(){
 				$('#fieldInfo').css("top", e.pageY + 20);
 			});
 
-			/**
-			* Shows #fieldDetail filled with details of field and possible actions
-			* @return void
-			*/
-			div.dblclick(function(){
-				$('#fieldDetail').hide();
-				$('#fieldDetail').show('fast');
-
-				$('#fieldImg').attr('src', basepath+'/images/fields/hex_'+field['type']+'.png');
-
-				$('#fieldDetail #detailCoords').html('['+field['x']+';'+field['y']+']');
-
-
-
-
-				var owner = '---';
-				var alliance = '---';
-				if (field['owner'] != null){
-					owner = field['owner']['name'];
-					if (field['owner']['alliance'] != null){
-						//alert(field['owner']['alliance']['name']);
-						alliance = field['owner']['alliance']['name'];
-					}
-				}
-				$('#fieldDetail #detailOwner').html(owner);
-				$("#fieldDetail #detailAlliance").html(alliance);
-
-				$('#fieldDetail #detailType').html(field['type']);
-
-				var facility = '---';
-				if (field['facility'] != null){
-					facility = field['facility'];
-				}
-				$('#fieldDetail #detailFacility').html(facility);
-
-				$('#fieldDetail #detailLevel').html(field['level']);
-
-
-
-
-
-
-			});
-
-
 
 			/**
 			* Runs when user click some field and increment markedFields by one
@@ -242,34 +197,21 @@ $(document).ready(function(){
 			* @return void
 			*/
 			div.click(function(){
-
-				markedFields++;
 				mark(div);
-
-				if (markedFields < 2)
-				{
-					clearActions();
-					prevField = this;
-
-				}
-				else if ((markedFields > 2) || (this == prevField))
-				{
-					unmarkAll();
-					clearActions();
-					prevField = null;
-
-				}
-				else if (markedFields == 2)
-				{
+				if(initialField == null){
+					initialField = this;
 					showMenu();
-					prevField = this;
 				}
-
-
+				else if (initialField == this){
+					cleanMenu();
+					unmarkAll();
+				}
+				else{
+					action(initialField, this);
+					cleanMenu();
+					unmarkAll();
+				}
 			});
-
-
-
 
 
 
@@ -302,6 +244,7 @@ $(document).ready(function(){
 	{
 		$('.marker').remove();
 		markedFields = 0;
+		initialField = null;
 	}
 
 	/**
@@ -310,44 +253,59 @@ $(document).ready(function(){
 	*/
 	function showMenu()
 	{
-//		alert('tmp');
+//some conditions what to display
+		cleanMenu();
+		addAttackAction();
+		addImproveBuildingAction();
+	}
 
-		/*TODO: action-click clears actions and unmarks fields*/
+	/**
+	* Adds the attack action
+	* @return void
+	*/
+	function addAttackAction(){
+		//action = this;
+		var actionDiv = $('<div class="action" />').html('Útok');
+		actionDiv.click(function(){
+			//fieldsRequired = 2;
+			alert('vyberte cíl');
+			action = function(from, target){
+				alert('posílám jednotky');
+			};
+		});
 
-		clearActions();
-		addAction('Útok<br/>');
-		addAction('Podpora<br/>');
-		addAction('Poslat suroviny<br/>');
+		$('#fieldActions').append(actionDiv);
+	}
+
+	/**
+	* Adds the inmprove building action
+	* @return void
+	*/
+	function addImproveBuildingAction(){
+		//action = this;
+		var actionDiv = $('<div class="action" />').html('Vylepčit budovu');
+		actionDiv.click(function(){
+			//fieldsRequired = 1;
+
+			alert('budova vylepšena');
+			unmarkAll();
+			cleanMenu();
+
+		});
+
+		$('#fieldActions').append(actionDiv);
 	}
 
 
+
 	/**
-	* Clears #fieldActions
+	* Cleans #fieldActions
 	* @return void
 	*/
-	function clearActions()
+	function cleanMenu()
 	{
 		$('#fieldActions').html('');
 	}
-
-	/**
-	* Clears #fieldActions
-	* @param action
-	* @return void
-	*/
-	function addAction(action)
-	{
-		$('#fieldActions').append(action);
-	}
-
-	/**
-	* Hides #fieldDetail
-	* @return void
-	*/
-	$('#closeFieldDetail').click(function(){
-		$('#fieldDetail').hide('fast');
-	});
-
 
 	/**
 	* Calculates somehow x-position of the field
