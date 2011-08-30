@@ -16,6 +16,7 @@ class MapPresenter extends BasePresenter {
 	{
 		$this->getAllianceService()->deleteAll();
 		$this->getFieldService()->deleteAll();
+		$this->getAllianceService()->deleteAll();
 		$this->getClanService()->deleteAll();
 		$this->getFieldService()->createMap();
 		$this->flashMessage('Nová mapa byla vygenerována');
