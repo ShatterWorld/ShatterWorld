@@ -5,6 +5,16 @@
 */
 $(document).ready(function(){
 	/**
+	* @var integer - width of field
+	*/
+	var fieldWidth = 60;
+
+	/**
+	* @var integer - height of field
+	*/
+	var fieldHeight = 40;
+
+	/**
 	* @var string - Basepath
 	*/
 	var basepath = $('#map').data()['basepath'];
@@ -62,17 +72,16 @@ $(document).ready(function(){
 				if (data['clanId'] == field['owner']['id']){
 					if(field['facility'] != null){
 						if (field['facility'] == 'headquarters'){
-							var posX = (field['x'] * 43) + (field['y'] * 43);
-							var posY = (field['x'] * -20) + (field['y'] * 19);
+							var posX = calculateXPos(field);
+							var posY = calculateYPos(field);
+
 							var centerXString = $('#mapContainer').css('width');
 							var centerX = centerXString.substring(0, centerXString.length -2);
-							dX = posX - centerX/2 +30;
+							dX = posX - centerX/2 + fieldWidth/2;
 
-							var posY = (field['x'] * 43) + (field['y'] * 43);
-							var posY = (field['x'] * -20) + (field['y'] * 19);
 							var centerYString = $('#mapContainer').css('width');
 							var centerY = centerYString.substring(0, centerYString.length -2);
-							dY = posY - centerY/2 +30;
+							dY = posY - centerY/2 + 2*fieldHeight;
 
 							return false;
 						}
@@ -87,13 +96,13 @@ $(document).ready(function(){
 		 * checks negative coords. of fields, slides them and sets scrollX and scrollY
 		 */
 		$.each(data['fields'], function(key, field) {
-			if((field['x'] * 43) + (field['y'] * 43) - dX < 0){
-				dX -= 60;
-				scrollX += 60;
+			if(calculateXPos(field) - dX < 0){
+				dX -= fieldWidth;
+				scrollX += fieldWidth;
 			}
-			if((field['x'] * -20) + (field['y'] * 19) - dY < 0){
-				dY -= 40;
-				scrollY += 40;
+			if(calculateYPos(field) - dY < 0){
+				dY -= fieldHeight;
+				scrollY += fieldHeight;
 			}
 
 		});
@@ -104,8 +113,8 @@ $(document).ready(function(){
 		 */
 		$.each(data['fields'], function(key, field) {
 
-			var posX = (field['x'] * 43) + (field['y'] * 43) - dX;
-			var posY = (field['x'] * -20) + (field['y'] * 19) -dY;
+			var posX = calculateXPos(field) - dX;
+			var posY = calculateYPos(field) - dY;
 			var zIndex = '5';
 			var background = "url('"+basepath+"/images/fields/hex_"+field['type']+".png')";
 
@@ -118,18 +127,13 @@ $(document).ready(function(){
 				if (data['clanId'] == field['owner']['id']){
 					borderType = 'mine';
 				}
-				/*else if (field['aliance'] != null){
-					if(data['alianceId'] == field['owner']['aliance']['id']){
-						borderType = 'aliance';
-					}
-					else{
-						borderType = 'enemy';
-					}
-				}*/
+
+				else if (field['owner']['alliance'] != null){
+					borderType = 'alliance';
+				}
 				else{
 					borderType = 'enemy';
 				}
-
 			}
 
 			var borderStyle = 'position: absolute; left: 0px; top: 0px; z-index: 9999999';
@@ -157,7 +161,6 @@ $(document).ready(function(){
 				if (field['owner'] != null){
 					owner = field['owner']['name'];
 					if (field['owner']['alliance'] != null){
-						//alert(field['owner']['alliance']['name']);
 						alliance = field['owner']['alliance']['name'];
 					}
 				}
@@ -212,7 +215,7 @@ $(document).ready(function(){
 					}
 				}
 				$('#fieldDetail #detailOwner').html(owner);
-				$("#fieldInfo #detailAlliance").html(alliance);
+				$("#fieldDetail #detailAlliance").html(alliance);
 
 				$('#fieldDetail #detailType').html(field['type']);
 
@@ -345,5 +348,23 @@ $(document).ready(function(){
 	});
 
 
+	/**
+	* Calculates somehow x-position of the field
+	* @param field
+	* @return integer
+	*/
+	function calculateXPos(field)
+	{
+		return (field['x'] * 43) + (field['y'] * 43);
+	}
 
+	/**
+	* Calculates somehow y-position of the field
+	* @param field
+	* @return integer
+	*/
+	function calculateYPos(field)
+	{
+		return (field['x'] * -20) + (field['y'] * 19);
+	}
 });
