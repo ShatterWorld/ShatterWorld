@@ -5,7 +5,7 @@ class ServiceFactory extends Nette\Object
 	{
 		$config = new Doctrine\ORM\Configuration;
 		$driver = $config->newDefaultAnnotationDriver($container->params['doctrine']['entityDir']);
-		$cache = $container->getService('doctrineCache');
+		$cache = new Doctrine\Common\Cache\ArrayCache()/*$container->getService('doctrineCache')*/;
 		$config->setMetadataDriverImpl($driver);
 		$config->setMetadataCacheImpl($cache);
 		$config->setQueryCacheImpl($cache);

@@ -4,7 +4,7 @@ use Doctrine;
 
 /**
  * A clan entity
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Clan")
  * @author Jan "Teyras" Buchar
  */
 class Clan extends BaseEntity {
