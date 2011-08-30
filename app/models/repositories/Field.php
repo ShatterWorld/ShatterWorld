@@ -42,6 +42,20 @@ class Field extends BaseRepository {
 	}
 
 	/**
+	 * Get the count of fields owned by given clan
+	 * @param Entities\Clan
+	 * @return int
+	 */
+	public function getTerritorySize (Entities\Clan $clan)
+	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select($qb->expr()->count('f.id'))
+			->from($this->getEntityName(), 'f')
+			->where($qb->expr()->eq('f.owner', $clan->id));
+		return $qb->getQuery()->getSingleScalarResult();
+	}
+
+	/**
 	* Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
 	* @param Entities\Field
 	* @param array of Entities\Field

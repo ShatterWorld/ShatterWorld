@@ -18,6 +18,12 @@ class Move extends BaseEntity
 	 * @ManyToOne(targetEntity = "Entities\Field")
 	 * @var Entities\Field
 	 */
+	private $origin;
+	
+	/**
+	 * @ManyToOne(targetEntity = "Entities\Field")
+	 * @var Entities\Field
+	 */
 	private $target;
 	
 	/**
@@ -32,9 +38,10 @@ class Move extends BaseEntity
 	 * @param Entities\Field
 	 * @param Entities\Event
 	 */
-	public function __construct (Clan $clan, Field $target, Event $event)
+	public function __construct (Clan $clan, Field $origin, Field $target, Event $event)
 	{
 		$this->clan = $clan;
+		$this->origin = $origin;
 		$this->target = $target;
 		$this->event = $event;
 	}
@@ -46,6 +53,15 @@ class Move extends BaseEntity
 	public function getClan ()
 	{
 		return $this->clan;
+	}
+	
+	/**
+	 * Origin getter
+	 * @return Entities\Field
+	 */
+	public function getOrigin ()
+	{
+		return $this->origin;
 	}
 	
 	/**

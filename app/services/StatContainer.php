@@ -27,4 +27,18 @@ class StatContainer extends Nette\Object
 	{
 		return $this->context->params['game']['stats']['baseLOS'];
 	}
+	
+	/**
+	 * Calculate the time needed to colonise a field
+	 * @param Entities\Field
+	 * @param Entities\Field
+	 * @return int
+	 */
+	public function getColonisationTime ($origin, $target)
+	{
+		$base = $this->context->params['game']['stats']['baseColonisationTime'];
+		$distance = $this->context->model->getFieldRepository()->calculateDistance($origin, $target);
+		$count = $this->context->model->getFieldRepository()->getTerritorySize($origin->owner);
+		return $base * $distance * $count;
+	}
 }

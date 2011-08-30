@@ -1,54 +1,54 @@
 /**
-* Map renderer (including events, infobox, action menu etc.)
-* @author Petr Bělohlávek
-*
-*/
+ * Map renderer (including events, infobox, action menu etc.)
+ * @author Petr Bělohlávek
+ *
+ */
 $(document).ready(function(){
 
 	/**
-	* @var Field - first clicked field (init. the action)
-	*/
+	 * @var Field - first clicked field (init. the action)
+	 */
 	var initialField = null;
 
 	/**
-	* @var function - action that runs when the target is selected
-	* @param Field
-	* @param Field
-	* @return void
-	*/
+	 * @var function - action that runs when the target is selected
+	 * @param Field
+	 * @param Field
+	 * @return void
+	 */
 	var action = null;
 
 	/**
-	* @var integer - width of field
-	*/
+	 * @var integer - width of field
+	 */
 	var fieldWidth = 60;
 
 	/**
-	* @var integer - height of field
-	*/
+	 * @var integer - height of field
+	 */
 	var fieldHeight = 40;
 
 	/**
-	* @var string - Basepath
-	*/
+	 * @var string - Basepath
+	 */
 	var basepath = $('#map').data()['basepath'];
 
 	/**
-	* @var integer - Number of marked fields
-	*/
+	 * @var integer - Number of marked fields
+	 */
 	var markedFields = 0;
 
 
 	/**
-	 * @var represents marker
-	 */
+	  * @var represents marker
+	  */
 	var markerImage = $('<img class="marker" />').attr('src', basepath + '/images/fields/marker.png');
 
 
 	/**
-	 * ajax that gets JSON data of visibleFields
-	 *
-	 */
+	  * ajax that gets JSON data of visibleFields
+	  *
+	  */
 	$.getJSON('?do=fetchMap', function(data) {
 
 		//$('#menu').append('<div>ajax</div>');
@@ -142,15 +142,16 @@ $(document).ready(function(){
 			var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
 			var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['x']*field['y']+'; background: '+background+';';
 			div.attr('style', divStyle);
+			div.attr('data-id', field['id']);
 
 			$('#map').append(div);
 
 
 
 			/**
-			* Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
-			* @return void
-			*/
+			 * Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
+			 * @return void
+			 */
 			div.mouseenter(function(){
 				$('#fieldInfo').show();
 
@@ -173,18 +174,18 @@ $(document).ready(function(){
 
 
 			/**
-			* Hides #fieldInfo
-			* @return void
-			*/
+			 * Hides #fieldInfo
+			 * @return void
+			 */
 			div.mouseleave(function(){
 				$('#fieldInfo').hide();
 			});
 
 
 			/**
-			* Moves with #infoBox
-			* @return void
-			*/
+			 * Moves with #infoBox
+			 * @return void
+			 */
 			div.mousemove(function(e) {
 				$('#fieldInfo').css("left", e.pageX + 20);
 				$('#fieldInfo').css("top", e.pageY + 20);
@@ -192,10 +193,10 @@ $(document).ready(function(){
 
 
 			/**
-			* Runs when user click some field and increment markedFields by one
-			* Bugs:	-doesnt mark the second field
-			* @return void
-			*/
+			 * Runs when user click some field and increment markedFields by one
+			 * Bugs:	-doesnt mark the second field
+			 * @return void
+			 */
 			div.click(function(){
 				mark(div);
 				if(initialField == null){
@@ -228,18 +229,18 @@ $(document).ready(function(){
 
 
 	/**
-	* Marks the specified field
-	* @return void
-	*/
+	 * Marks the specified field
+	 * @return void
+	 */
 	function mark(field)
 	{
 		$(field).append(markerImage.clone());
 	}
 
 	/**
-	* Unmarks all fields and sets click to zero
-	* @return void
-	*/
+	 * Unmarks all fields and sets click to zero
+	 * @return void
+	 */
 	function unmarkAll()
 	{
 		$('.marker').remove();
@@ -248,9 +249,9 @@ $(document).ready(function(){
 	}
 
 	/**
-	* Displays context menu
-	* @return void
-	*/
+	 * Displays context menu
+	 * @return void
+	 */
 	function showContextMenu(x, y)
 	{
 
@@ -259,7 +260,7 @@ $(document).ready(function(){
 		 * improve cursor, text styling
 		 * only this should by clickable
 		 * disable #fieldInfo
-		*/
+		 */
 		var contextMenu = $('<div id="contextMenu" />').html('<h3>Nabídka akcí</h3>');
 		contextMenu.css('background', "#5D6555");
 		contextMenu.css('border', "white 1px solid");
@@ -280,26 +281,42 @@ $(document).ready(function(){
 
 
 		//some conditions what to display
+		addColonisationAction();
 		addAttackAction();
 		addImproveBuildingAction();
 		addCancelAction();
 	}
 
 	/**
-	* Hides context menu
-	* @return void
-	*/
+	 * Hides context menu
+	 * @return void
+	 */
 	function hideContextMenu()
 	{
 		$('#contextMenu').hide('fast');
 		$('#contextMenu').remove();
 	}
 
+	function addColonisationAction () {
+		var actionDiv = $('<div class="action" />').html('Kolonizace');
+		actionDiv.click(function(){
+			hideContextMenu();
+			alert('vyberte cíl');
+			action = function(from, target){
+				$.get('?' + $.param({
+					'do': 'sendColonisation', 
+					'originId': $(from).data()['id'], 
+					'targetId': $(target).data()['id']
+				}));
+			};
+		});
+		$('#contextMenu').append(actionDiv);
+	}
 
 	/**
-	* Adds the attack action
-	* @return void
-	*/
+	 * Adds the attack action
+	 * @return void
+	 */
 	function addAttackAction(){
 		var actionDiv = $('<div class="action" />').html('Útok');
 		actionDiv.click(function(){
@@ -314,11 +331,11 @@ $(document).ready(function(){
 	}
 
 	/**
-	* Adds the inmprove building action
-	* @return void
-	*/
+	 * Adds the improve building action
+	 * @return void
+	 */
 	function addImproveBuildingAction(){
-		var actionDiv = $('<div class="action" />').html('Vylepčit budovu');
+		var actionDiv = $('<div class="action" />').html('Vylepšit budovu');
 		actionDiv.click(function(){
 			hideContextMenu();
 			alert('budova vylepšena');
@@ -329,9 +346,9 @@ $(document).ready(function(){
 	}
 
 	/**
-	* Adds the cancel action
-	* @return void
-	*/
+	 * Adds the cancel action
+	 * @return void
+	 */
 	function addCancelAction(){
 		var actionDiv = $('<div class="action" />').html('Zrušit');
 		actionDiv.click(function(){
@@ -344,20 +361,20 @@ $(document).ready(function(){
 	}
 
 	/**
-	* Calculates somehow x-position of the field
-	* @param field
-	* @return integer
-	*/
+	 * Calculates somehow x-position of the field
+	 * @param field
+	 * @return integer
+	 */
 	function calculateXPos(field)
 	{
 		return (field['x'] * 43) + (field['y'] * 43);
 	}
 
 	/**
-	* Calculates somehow y-position of the field
-	* @param field
-	* @return integer
-	*/
+	 * Calculates somehow y-position of the field
+	 * @param field
+	 * @return integer
+	 */
 	function calculateYPos(field)
 	{
 		return (field['x'] * -20) + (field['y'] * 19);

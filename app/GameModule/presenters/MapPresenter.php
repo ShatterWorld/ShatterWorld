@@ -18,4 +18,19 @@ class MapPresenter extends BasePresenter
 		$this->payload->clanId = $this->getPlayerClan()->id;
 		$this->sendPayload();
 	}
+	
+	public function handleSendColonisation ($originId, $targetId)
+	{
+		$origin = $this->context->model->getFieldRepository()->find($originId);
+		$target = $this->context->model->getFieldRepository()->find($targetId);
+		$clan = $this->getPlayerClan();
+		if ($origin->owner->id === $clan->id && $target->owner === NULL) {
+			$this->context->model->getMoveService()->create(array(
+				'origin' => $origin,
+				'target' => $target,
+				'clan' => $clan,
+				'type' => 'colonisation'
+			));
+		}
+	}
 }
