@@ -31,6 +31,7 @@ class MapPresenter extends BasePresenter
 				'clan' => $clan,
 				'type' => 'colonisation'
 			));
+			$this->flashMessage('Kolonizace zahájena');
 		}
 	}
 }
