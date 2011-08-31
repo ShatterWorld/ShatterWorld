@@ -75,6 +75,26 @@ $(document).ready(function(){
 		'z-index' : '99999999999'
 	});
 
+	var contextMenu = $('<div id="contextMenu" />').html('<h3>Nabídka akcí</h3>');
+
+	contextMenu.css({
+		'background' : "#5D6555",
+		'border' : "white 1px solid",
+		'color' : "white",
+		'text-decoration' : "underline",
+		'cursor' : "pointer",
+		'width' : "350px",
+		'height' : "200px",
+		'position' : "absolute",
+		'z-index' : "999999999999999999999999999",
+		'-ms-filter' : "'progid:DXImageTransform.Microsoft.Alpha(Opacity=90)'",
+		'-moz-opacity' : "0.9",
+		'opacity' : "0.9"
+
+	});
+
+
+
 	showSpinner();
 
 
@@ -114,13 +134,7 @@ $(document).ready(function(){
 						if (field['facility'] == 'headquarters'){
 							var posX = calculateXPos(field);
 							var posY = calculateYPos(field);
-
-							//var mapContainerWidthStr = $('#mapContainer').css('width');
-							//var mapContainerWidth = mapContainerWidthStr.substring(0, mapContainerWidthStr.length -2);
 							dX = posX - mapContainerWidth/2 + fieldWidth/2;
-
-							//var mapContainerHeightStr = $('#mapContainer').css('height');
-							//var mapContainerHeight = mapContainerHeightStr.substring(0, mapContainerHeightStr.length -2);
 							dY = posY - mapContainerHeight/2 + 2*fieldHeight;
 
 							return false;
@@ -286,33 +300,11 @@ $(document).ready(function(){
 	 */
 	function showContextMenu(x, y)
 	{
-
-		/*
-		 * should be cloned
-		 * improve cursor, text styling
-		 * only this should by clickable
-		 * disable #fieldInfo
-		 */
-		var contextMenu = $('<div id="contextMenu" />').html('<h3>Nabídka akcí</h3>');
-		contextMenu.css('background', "#5D6555");
-		contextMenu.css('border', "white 1px solid");
-		contextMenu.css('color', "white");
-		contextMenu.css('text-decoration', "underline");
-		contextMenu.css('cursor', "pointer");
-		contextMenu.css('width', "350px");
-		contextMenu.css('height', "200px");
-		contextMenu.css('position', "absolute");
 		contextMenu.css('top', y+fieldHeight+"px");
 		contextMenu.css('left', x+fieldWidth+"px");
-		contextMenu.css('z-index', "999999999999999999999999999");
-		contextMenu.css('-ms-filter', "'progid:DXImageTransform.Microsoft.Alpha(Opacity=90)'");
-		contextMenu.css('-moz-opacity', "0.9");
-		contextMenu.css('opacity', "0.9");
 
-		$('#mapContainer').append(contextMenu);
+		$('#mapContainer').append(contextMenu.clone());
 
-
-		//some conditions what to display
 		addColonisationAction();
 		addAttackAction();
 		addImproveBuildingAction();
