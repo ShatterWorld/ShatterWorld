@@ -40,11 +40,20 @@
 }
 
 #navigDiv {
-	float: right;
+	position: absolute;
+	top: 10px;
+	right: 30px;
+	z-index: 9999999999999999999999;
 }
 
 #navig {
-	background: #cdcdcd;
+	background: #5D6555;
+	color: white;
+	border: 1px solid white;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";/*IE*/
+	-moz-opacity: 0.9; /*Old mozzila*/
+	opacity: 0.9;/*Others*/
+
 }
 #navig td{
 	cursor: pointer;

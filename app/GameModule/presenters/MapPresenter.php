@@ -3,7 +3,7 @@ namespace GameModule;
 use Nette;
 use Nette\Diagnostics\Debugger;
 
-class MapPresenter extends BasePresenter 
+class MapPresenter extends BasePresenter
 {
 	public function renderDefault ()
 	{
@@ -14,11 +14,11 @@ class MapPresenter extends BasePresenter
 	public function handleFetchMap ()
 	{
 		$clan = $this->getPlayerClan();
-		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, /*$this->context->stats->getVisibilityRadius($clan)*/10);
 		$this->payload->clanId = $this->getPlayerClan()->id;
 		$this->sendPayload();
 	}
-	
+
 	public function handleSendColonisation ($originId, $targetId)
 	{
 		$origin = $this->context->model->getFieldRepository()->find($originId);
