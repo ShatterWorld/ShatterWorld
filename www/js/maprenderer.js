@@ -44,14 +44,45 @@ $(document).ready(function(){
 	  */
 	var markerImage = $('<img class="marker" />').attr('src', basepath + '/images/fields/marker.png');
 
+	/**
+	  * @var string - width of #mapContainer (width+'px')
+	  */
+	var mapContainerWidthStr = $('#mapContainer').css('width');
+
+	/**
+	  * @var integer - width of #mapContainer
+	  */
+	var mapContainerWidth = mapContainerWidthStr.substring(0, mapContainerWidthStr.length -2);
+
+	/**
+	  * @var string - height of #mapContainer (height+'px')
+	  */
+	var mapContainerHeightStr = $('#mapContainer').css('height');
+
+	/**
+	  * @var integer - height of #mapContainer
+	  */
+	var mapContainerHeight = mapContainerHeightStr.substring(0, mapContainerHeightStr.length -2);
+
+	/**
+	  * @var represents spinner
+	  */
+	var spinner = $('<img class="spinner" />').attr('src', basepath + '/images/spinner.gif');
+	spinner.css({
+		'position' : 'absolute',
+		'top' : mapContainerHeight/2+'px',
+		'left' : mapContainerWidth/2+'px',
+		'z-index' : '99999999999'
+	});
+
+	showSpinner();
+
 
 	/**
 	  * ajax that gets JSON data of visibleFields
 	  *
 	  */
 	$.getJSON('?do=fetchMap', function(data) {
-
-		//$('#menu').append('<div>ajax</div>');
 
 		/**
 		 * @var represents x-offset between real and calculated coord. of fields
@@ -84,13 +115,13 @@ $(document).ready(function(){
 							var posX = calculateXPos(field);
 							var posY = calculateYPos(field);
 
-							var centerXString = $('#mapContainer').css('width');
-							var centerX = centerXString.substring(0, centerXString.length -2);
-							dX = posX - centerX/2 + fieldWidth/2;
+							//var mapContainerWidthStr = $('#mapContainer').css('width');
+							//var mapContainerWidth = mapContainerWidthStr.substring(0, mapContainerWidthStr.length -2);
+							dX = posX - mapContainerWidth/2 + fieldWidth/2;
 
-							var centerYString = $('#mapContainer').css('width');
-							var centerY = centerYString.substring(0, centerYString.length -2);
-							dY = posY - centerY/2 + 2*fieldHeight;
+							//var mapContainerHeightStr = $('#mapContainer').css('height');
+							//var mapContainerHeight = mapContainerHeightStr.substring(0, mapContainerHeightStr.length -2);
+							dY = posY - mapContainerHeight/2 + 2*fieldHeight;
 
 							return false;
 						}
@@ -221,11 +252,12 @@ $(document).ready(function(){
 		/**
 		 * slides the sliders
 		 */
-
 		$('#mapContainer').scrollLeft(scrollX);
 		$('#mapContainer').scrollTop(scrollY);
 
+		hideSpinner();
 	});
+
 
 
 	/**
@@ -297,6 +329,10 @@ $(document).ready(function(){
 		$('#contextMenu').remove();
 	}
 
+	/**
+	 * Adds the colonisation action
+	 * @return void
+	 */
 	function addColonisationAction () {
 		var actionDiv = $('<div class="action" />').html('Kolonizace');
 		actionDiv.click(function(){
@@ -304,8 +340,8 @@ $(document).ready(function(){
 			alert('vyberte cíl');
 			action = function(from, target){
 				$.get('?' + $.param({
-					'do': 'sendColonisation', 
-					'originId': $(from).data()['id'], 
+					'do': 'sendColonisation',
+					'originId': $(from).data()['id'],
 					'targetId': $(target).data()['id']
 				}));
 			};
@@ -379,4 +415,27 @@ $(document).ready(function(){
 	{
 		return (field['x'] * -20) + (field['y'] * 19);
 	}
+
+	/**
+	 * Shows spinner
+	 * @return void
+	 */
+	function showSpinner()
+	{
+		$('#mapContainer').append(spinner.clone());
+
+	}
+
+	/**
+	 * Hides spinner
+	 * @return void
+	 */
+	function hideSpinner()
+	{
+		$('.spinner').remove();
+
+	}
+
+
 });
+
