@@ -33,6 +33,7 @@ class ServiceFactory extends Nette\Object
 	public static function createModelContext ($container)
 	{
 		$context = new Container();
+		$context->lazyCopy($container, 'user');
 		$context->lazyCopy($container, 'entityManager');
 		$context->lazyCopy($container, 'cacheStorage');
 		$context->lazyCopy($container, 'doctrineCache');

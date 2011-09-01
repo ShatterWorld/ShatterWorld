@@ -33,11 +33,10 @@ abstract class BasePresenter extends \BasePresenter
 		return $this->getClanRepository()->findOneByUser($this->getUser()->getId());
 	}
 
-	protected function createComponentMap ()
+	public function flashMessage ($message, $type = 'info')
 	{
-		$map = new Map();
-		$map->setup($this->getFieldRepository, $this->context->params['game']['map']);
-		return $map;
+		$this->invalidateControl('flashes');
+		parent::flashMessage($message, $type);
 	}
 
 	/**
