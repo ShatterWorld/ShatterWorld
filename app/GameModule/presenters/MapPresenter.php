@@ -3,7 +3,7 @@ namespace GameModule;
 use Nette;
 use Nette\Diagnostics\Debugger;
 
-class MapPresenter extends BasePresenter 
+class MapPresenter extends BasePresenter
 {
 	public function renderDefault ()
 	{
@@ -18,7 +18,7 @@ class MapPresenter extends BasePresenter
 		$this->payload->clanId = $this->getPlayerClan()->id;
 		$this->sendPayload();
 	}
-	
+
 	public function handleSendColonisation ($originId, $targetId)
 	{
 		$origin = $this->context->model->getFieldRepository()->find($originId);
