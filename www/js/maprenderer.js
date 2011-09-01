@@ -197,7 +197,8 @@ $(document).ready(function(){
 			 * Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
 			 * @return void
 			 */
-			div.mouseenter(function(){
+			div.mouseenter(function(e){
+
 				$('#fieldInfo').show();
 
 				$("#fieldInfo #coords").html('Souřadnice ['+field['x']+';'+field['y']+']');
@@ -232,8 +233,14 @@ $(document).ready(function(){
 			 * @return void
 			 */
 			div.mousemove(function(e) {
-				$('#fieldInfo').css("left", e.pageX + 20);
-				$('#fieldInfo').css("top", e.pageY + 20);
+				var localCoordinates = globalToLocal(
+					div.parent(),
+					e.pageX,
+					e.pageY
+				);
+
+				$('#fieldInfo').css("left", localCoordinates.x + 30);
+				$('#fieldInfo').css("top", localCoordinates.y + 30);
 			});
 
 
@@ -345,7 +352,7 @@ $(document).ready(function(){
 	 * Adds the attack action
 	 * @return void
 	 */
-	function addAttackAction(){
+	function addAttackAction (){
 		var actionDiv = $('<div class="action" />').html('Útok');
 		actionDiv.click(function(){
 			hideContextMenu();
@@ -362,7 +369,7 @@ $(document).ready(function(){
 	 * Adds the improve building action
 	 * @return void
 	 */
-	function addImproveBuildingAction(){
+	function addImproveBuildingAction (){
 		var actionDiv = $('<div class="action" />').html('Vylepšit budovu');
 		actionDiv.click(function(){
 			hideContextMenu();
@@ -377,7 +384,7 @@ $(document).ready(function(){
 	 * Adds the cancel action
 	 * @return void
 	 */
-	function addCancelAction(){
+	function addCancelAction (){
 		var actionDiv = $('<div class="action" />').html('Zrušit');
 		actionDiv.click(function(){
 			unmarkAll();
@@ -393,7 +400,7 @@ $(document).ready(function(){
 	 * @param field
 	 * @return integer
 	 */
-	function calculateXPos(field)
+	function calculateXPos (field)
 	{
 		return (field['x'] * 43) + (field['y'] * 43);
 	}
@@ -403,7 +410,7 @@ $(document).ready(function(){
 	 * @param field
 	 * @return integer
 	 */
-	function calculateYPos(field)
+	function calculateYPos (field)
 	{
 		return (field['x'] * -20) + (field['y'] * 19);
 	}
@@ -412,7 +419,7 @@ $(document).ready(function(){
 	 * Shows spinner
 	 * @return void
 	 */
-	function showSpinner()
+	function showSpinner ()
 	{
 		$('#mapContainer').append(spinner.clone());
 
@@ -422,10 +429,28 @@ $(document).ready(function(){
 	 * Hides spinner
 	 * @return void
 	 */
-	function hideSpinner()
+	function hideSpinner ()
 	{
 		$('.spinner').remove();
 
+	}
+
+
+	/**
+	 * Calculates relative position
+	 * @param object
+	 * @param integer
+	 * @param integer
+	 * @return array of integer
+	 */
+	function globalToLocal (context, globalX, globalY)
+	{
+		var position = context.offset();
+
+		return({
+			x: Math.floor( globalX - position.left ),
+			y: Math.floor( globalY - position.top )
+		});
 	}
 
 

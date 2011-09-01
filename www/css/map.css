@@ -14,14 +14,14 @@
 }
 
 #mapContainer {
-	position: relative;
+	/*position: relative;*/
 	background:black;
 	width:650px;
 	height:640px;
 	overflow:auto;
 }
 
-
+/*
 #fieldDetail {
 	background: #5D6555;
 	border: 2px white solid;
@@ -34,7 +34,7 @@
 	display: none;
 	color: white;
 }
-
+*/
 .field {
 	cursor: pointer;
 }
