@@ -199,22 +199,57 @@ $(document).ready(function(){
 			 */
 			div.mouseenter(function(e){
 
+
 				$('#fieldInfo').show();
 
 				$("#fieldInfo #coords").html('Souřadnice ['+field['x']+';'+field['y']+']');
 
-				var owner = '---';
-				var alliance = '---';
+				var secret = '???';
+				var none = '---';
+
+				var owner = none;
+				var alliance = none;
+				var facility = none;
+				var level = none;
+				var type = field['type'];
+
+
+				var ownerId = false;
+				var allianceId = false;
+
 				if (field['owner'] != null){
 					owner = field['owner']['name'];
+					ownerId = field['owner']['id'];
+
 					if (field['owner']['alliance'] != null){
 						alliance = field['owner']['alliance']['name'];
+						allianceId = field['owner']['alliance']['id'];
 					}
 				}
+
+
+				/*if the field is mine or alliance's' */
+				if ((ownerId != null && ownerId == data['clanId']) || (allianceId != null && allianceId == data['allianceId'])){
+					if (field['facility'] != null){
+						facility = field['facility'];
+					}
+
+					if (field['level'] != null){
+						facility = field['level'];
+					}
+
+				}
+				else{
+					facility = secret;
+					level = secret;
+
+				}
+
 				$("#fieldInfo #owner").html('Vlastník '+ owner);
 				$("#fieldInfo #alliance").html('Aliance '+ alliance);
-
-				$("#fieldInfo #type").html('Typ '+field['type']);
+				$("#fieldInfo #type").html('Typ '+ type);
+				$("#fieldInfo #facility").html('Budova '+facility);
+				$("#fieldInfo #level").html('Úroveň '+ level);
 
 			});
 
@@ -239,8 +274,8 @@ $(document).ready(function(){
 					e.pageY
 				);
 
-				$('#fieldInfo').css("left", localCoordinates.x + 30);
-				$('#fieldInfo').css("top", localCoordinates.y + 30);
+				$('#fieldInfo').css("left", localCoordinates.x + 30 - div.parent().parent().scrollLeft());
+				$('#fieldInfo').css("top", localCoordinates.y + 30 - div.parent().parent().scrollTop());
 			});
 
 
