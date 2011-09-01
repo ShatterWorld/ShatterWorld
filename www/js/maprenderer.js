@@ -343,18 +343,12 @@ $(document).ready(function(){
 	 */
 	function showContextMenu(object, e)
 	{
-/*
- *zkus odkomentovat, nebude to fachat a nechápu proč... zkusil jsem to podle toho návodu a hovno,
- * resp. na řádce 269 to funguje a tady ne, což si fakt neumim vysvětlit.. zkus tam najít chybu no... todlec fakt nechápu
- * */
-
-/*
 		var localCoords = globalToLocal(
-			object.parent(),
+			$(object).parent(),
 			e.pageX,
 			e.pageY
 		);
-*/
+
 		var contextMenuClone = contextMenu.clone();
 
 		contextMenuClone.css("left", /*localCoords.x*/ + 30 - $('#mapContainer').scrollLeft() + 'px');
