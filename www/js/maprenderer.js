@@ -235,7 +235,7 @@ $(document).ready(function(){
 					}
 
 					if (field['level'] != null){
-						facility = field['level'];
+						level = field['level'];
 					}
 
 				}
