@@ -273,8 +273,8 @@ $(document).ready(function(){
 					e.pageY
 				);
 
-				$('#fieldInfo').css("left", localCoordinates.x + 30 - div.parent().parent().scrollLeft());
-				$('#fieldInfo').css("top", localCoordinates.y + 30 - div.parent().parent().scrollTop());
+				$('#fieldInfo').css("left", localCoordinates.x + 30 - $('#mapContainer').scrollLeft() + 'px');
+				$('#fieldInfo').css("top", localCoordinates.y + 30 - $('#mapContainer').scrollTop() + 'px');
 			});
 
 
@@ -284,7 +284,7 @@ $(document).ready(function(){
 			 * @return void
 			 */
 			div.click(function(e){
-				mark(div);
+				mark(this);
 				if(initialField == null){
 					initialField = this;
 					showContextMenu(this, e);
@@ -337,28 +337,30 @@ $(document).ready(function(){
 
 	/**
 	 * Displays context menu
+	 * @param object - clicked div
+	 * @param event - fired event
 	 * @return void
 	 */
 	function showContextMenu(object, e)
 	{
+/*
+ *zkus odkomentovat, nebude to fachat a nechápu proč... zkusil jsem to podle toho návodu a hovno,
+ * resp. na řádce 269 to funguje a tady ne, což si fakt neumim vysvětlit.. zkus tam najít chybu no... todlec fakt nechápu
+ * */
 
-		alert('context ' + e.pageX + ' ' + e.pageY);
-		alert('offset: '+object.parent.offset().left);
-		var localCoordinates = globalToLocal(
+/*
+		var localCoords = globalToLocal(
 			object.parent(),
 			e.pageX,
 			e.pageY
 		);
+*/
+		var contextMenuClone = contextMenu.clone();
 
-		contextMenu.css("left", localCoordinates.x + 30 - object.parent().parent().scrollLeft());
-		//contextMenu.css("top", localCoordinates.y + 30 - object.parent().parent().scrollTop());
+		contextMenuClone.css("left", /*localCoords.x*/ + 30 - $('#mapContainer').scrollLeft() + 'px');
+		contextMenuClone.css("top", /*localCoords.y*/ + 30 - $('#mapContainer').scrollTop() + 'px');
 
-
-		alert(localCoordinates.x + 30 - object.parent().parent().scrollLeft());
-		alert('finished');
-
-
-		$('#mapContainer').append(contextMenu.clone());
+		$('#mapContainer').append(contextMenuClone);
 
 		addColonisationAction();
 		addAttackAction();
@@ -503,5 +505,7 @@ $(document).ready(function(){
 	}
 
 
+
 });
+
 
