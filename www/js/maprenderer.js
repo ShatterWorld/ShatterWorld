@@ -93,6 +93,16 @@ $(document).ready(function(){
 
 	});
 
+	/**
+	  * @var boolean
+	  */
+	var contextMenuShown = false;
+
+	/**
+	  * @var boolean
+	  */
+	var selectTarget = false;
+
 
 
 	showSpinner();
@@ -198,7 +208,9 @@ $(document).ready(function(){
 			 * @return void
 			 */
 			div.mouseenter(function(e){
-
+				if (contextMenuShown){
+					return;
+				}
 
 				$('#fieldInfo').show();
 
@@ -284,16 +296,31 @@ $(document).ready(function(){
 			 * @return void
 			 */
 			div.click(function(e){
-				mark(this);
+				if(contextMenuShown){
+					hideContextMenu();
+					unmarkAll();
+					return;
+				}
+
 				if(initialField == null){
-					initialField = this;
-					showContextMenu(this, e);
+					if((field['owner'] != null && data['clanId'] != null && field['owner']['id'] == data['clanId']) || (field['owner']['alliance'] != null && data['allianceId'] != null && field['owner']['alliance']['id'] == data['allianceId'])){
+						mark(this);
+						initialField = this;
+						showContextMenu(this, e);
+					}
+					else{
+						return;
+					}
 				}
 				else if (initialField == this){
 					hideContextMenu();
 					unmarkAll();
 				}
+				/*else if(initialField == this &&){
+					return;
+				}*/
 				else{
+					mark(this);
 					action(initialField, this);
 					hideContextMenu();
 					unmarkAll();
@@ -343,6 +370,8 @@ $(document).ready(function(){
 	 */
 	function showContextMenu(object, e)
 	{
+		$('#fieldInfo').hide();
+		contextMenuShown = true;
 		var localCoords = globalToLocal(
 			$(object).parent(),
 			e.pageX,
@@ -351,8 +380,8 @@ $(document).ready(function(){
 
 		var contextMenuClone = contextMenu.clone();
 
-		contextMenuClone.css("left", /*localCoords.x*/ + 30 - $('#mapContainer').scrollLeft() + 'px');
-		contextMenuClone.css("top", /*localCoords.y*/ + 30 - $('#mapContainer').scrollTop() + 'px');
+		contextMenuClone.css("left", localCoords.x + 30 - $('#mapContainer').scrollLeft() + 'px');
+		contextMenuClone.css("top", localCoords.y + 30 - $('#mapContainer').scrollTop() + 'px');
 
 		$('#mapContainer').append(contextMenuClone);
 
@@ -370,6 +399,7 @@ $(document).ready(function(){
 	{
 		$('#contextMenu').hide('fast');
 		$('#contextMenu').remove();
+		contextMenuShown = false;
 	}
 
 	/**
@@ -389,6 +419,8 @@ $(document).ready(function(){
 				}));
 			};
 		});
+
+		action = null;
 		$('#contextMenu').append(actionDiv);
 	}
 
@@ -402,10 +434,12 @@ $(document).ready(function(){
 			hideContextMenu();
 			alert('vyberte cíl');
 			action = function(from, target){
+
 				alert('posílám jednotky');
 			};
 		});
 
+		action = null;
 		$('#contextMenu').append(actionDiv);
 	}
 
@@ -421,6 +455,7 @@ $(document).ready(function(){
 			unmarkAll();
 		});
 
+		action = null;
 		$('#contextMenu').append(actionDiv);
 	}
 
@@ -433,9 +468,9 @@ $(document).ready(function(){
 		actionDiv.click(function(){
 			unmarkAll();
 			hideContextMenu();
-
 		});
 
+		action = null;
 		$('#contextMenu').append(actionDiv);
 	}
 
