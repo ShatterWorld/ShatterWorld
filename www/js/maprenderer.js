@@ -316,9 +316,6 @@ $(document).ready(function(){
 					hideContextMenu();
 					unmarkAll();
 				}
-				/*else if(initialField == this &&){
-					return;
-				}*/
 				else{
 					mark(this);
 					action(initialField, this);
@@ -501,7 +498,6 @@ $(document).ready(function(){
 	function showSpinner ()
 	{
 		$('#mapContainer').append(spinner.clone());
-
 	}
 
 	/**
@@ -511,7 +507,6 @@ $(document).ready(function(){
 	function hideSpinner ()
 	{
 		$('.spinner').remove();
-
 	}
 
 
