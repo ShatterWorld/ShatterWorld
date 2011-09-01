@@ -21,6 +21,18 @@ class Event extends BaseEntity {
 	private $term;
 	
 	/**
+	 * @Column(type = "integer", nullable = true)
+	 * @var int
+	 */
+	private $lockUserId;
+	
+	/**
+	 * @Column(type = "datetime", nullable = true)
+	 * @var DateTime
+	 */
+	private $lockTimeout;
+	
+	/**
 	 * @Column(type = "boolean")
 	 * @var bool
 	 */
