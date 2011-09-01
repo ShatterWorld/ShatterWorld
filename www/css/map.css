@@ -4,7 +4,6 @@
 	border: 1px solid white;
 	padding: 3px;
 	width: 170px;
-	height: 80px;
 	position: absolute;
 	z-index: 99999999999999999;
 	display: none;
@@ -14,14 +13,14 @@
 }
 
 #mapContainer {
-	position: relative;
+	/*position: relative;*/
 	background:black;
 	width:650px;
 	height:640px;
 	overflow:auto;
 }
 
-
+/*
 #fieldDetail {
 	background: #5D6555;
 	border: 2px white solid;
@@ -34,7 +33,7 @@
 	display: none;
 	color: white;
 }
-
+*/
 .field {
 	cursor: pointer;
 }
