@@ -202,20 +202,19 @@ $(document).ready(function(){
 
 				$('#fieldInfo').show();
 
-				$("#fieldInfo #coords").html('Souřadnice ['+field['x']+';'+field['y']+']');
-
 				var secret = '???';
 				var none = '---';
 
+				var coords = '['+field['x']+';'+field['y']+']';
+				var type = field['type'];
 				var owner = none;
 				var alliance = none;
 				var facility = none;
 				var level = none;
-				var type = field['type'];
 
 
-				var ownerId = false;
-				var allianceId = false;
+				var ownerId = null;
+				var allianceId = null;
 
 				if (field['owner'] != null){
 					owner = field['owner']['name'];
@@ -228,7 +227,6 @@ $(document).ready(function(){
 				}
 
 
-				/*if the field is mine or alliance's' */
 				if ((ownerId != null && ownerId == data['clanId']) || (allianceId != null && allianceId == data['allianceId'])){
 					if (field['facility'] != null){
 						facility = field['facility'];
@@ -239,17 +237,18 @@ $(document).ready(function(){
 					}
 
 				}
-				else{
+				else if ((ownerId != null && ownerId != data['clanId']) || (allianceId != null && allianceId != data['allianceId'])){
 					facility = secret;
 					level = secret;
 
 				}
 
-				$("#fieldInfo #owner").html('Vlastník '+ owner);
-				$("#fieldInfo #alliance").html('Aliance '+ alliance);
-				$("#fieldInfo #type").html('Typ '+ type);
-				$("#fieldInfo #facility").html('Budova '+facility);
-				$("#fieldInfo #level").html('Úroveň '+ level);
+				$("#fieldInfo #coords").html(coords);
+				$("#fieldInfo #type").html(type);
+				$("#fieldInfo #owner").html(owner);
+				$("#fieldInfo #alliance").html(alliance);
+				$("#fieldInfo #facility").html(facility);
+				$("#fieldInfo #level").html(level);
 
 			});
 
@@ -284,11 +283,11 @@ $(document).ready(function(){
 			 * Bugs:	-doesnt mark the second field
 			 * @return void
 			 */
-			div.click(function(){
+			div.click(function(e){
 				mark(div);
 				if(initialField == null){
 					initialField = this;
-					showContextMenu(posX, posY);
+					showContextMenu(this, e);
 				}
 				else if (initialField == this){
 					hideContextMenu();
@@ -340,10 +339,24 @@ $(document).ready(function(){
 	 * Displays context menu
 	 * @return void
 	 */
-	function showContextMenu(x, y)
+	function showContextMenu(object, e)
 	{
-		contextMenu.css('top', y+fieldHeight+"px");
-		contextMenu.css('left', x+fieldWidth+"px");
+
+		alert('context ' + e.pageX + ' ' + e.pageY);
+		alert('offset: '+object.parent.offset().left);
+		var localCoordinates = globalToLocal(
+			object.parent(),
+			e.pageX,
+			e.pageY
+		);
+
+		contextMenu.css("left", localCoordinates.x + 30 - object.parent().parent().scrollLeft());
+		//contextMenu.css("top", localCoordinates.y + 30 - object.parent().parent().scrollTop());
+
+
+		alert(localCoordinates.x + 30 - object.parent().parent().scrollLeft());
+		alert('finished');
+
 
 		$('#mapContainer').append(contextMenu.clone());
 
@@ -481,6 +494,7 @@ $(document).ready(function(){
 	function globalToLocal (context, globalX, globalY)
 	{
 		var position = context.offset();
+		//alert('global2local: '+position.left+' '+position.top);
 
 		return({
 			x: Math.floor( globalX - position.left ),
