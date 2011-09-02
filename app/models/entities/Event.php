@@ -27,8 +27,8 @@ class Event extends BaseEntity {
 	private $lockUserId;
 	
 	/**
-	 * @Column(type = "datetime", nullable = true)
-	 * @var DateTime
+	 * @Column(type = "float", nullable = true)
+	 * @var float
 	 */
 	private $lockTimeout;
 	

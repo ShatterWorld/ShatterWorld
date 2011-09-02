@@ -9,7 +9,7 @@ class Event extends BaseService
 	{
 		$userId = $this->context->user->id;
 		$now = new \DateTime('@' . date('U'));
-		$timeout = new \DateTime('@' . (date('U') + self::LOCK_TIMEOUT));
+		$timeout = microtime(TRUE) + self::LOCK_TIMEOUT;
 		$qb = $this->entityManager->createQueryBuilder();
 		$qb->update('Entities\Event', 'e')
 			->set('e.lockUserId', '?1')
@@ -27,7 +27,7 @@ class Event extends BaseService
 		$qb->setParameter(1, $userId);
 		$qb->setParameter(2, $timeout);
 		$qb->setParameter(3, $now);
-		$qb->setParameter(4, $now);
+		$qb->setParameter(4, $now->format('U'));
 		$qb->setParameter(5, FALSE);
 		if ($qb->getQuery()->execute() !== 0) {
 			foreach ($this->getRepository()->findPendingEvents($userId, $timeout) as $event) {

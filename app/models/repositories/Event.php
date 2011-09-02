@@ -7,7 +7,7 @@ class Event extends BaseRepository {
 	/**
 	 * Finds pending events locked by given user on given time
 	 * @param int
-	 * @param DateTime
+	 * @param float
 	 * @return array
 	 */
 	public function findPendingEvents ($lockUserId, $lockTimeout)
