@@ -75,23 +75,29 @@ $(document).ready(function(){
 		'z-index' : '99999999999'
 	});
 
-	var contextMenu = $('<div id="contextMenu" />').html('<h3>Nabídka akcí</h3>');
+	/**
+	  * @var represents context menu
+	  */
+	var contextMenu = $('<div id="contextMenu" />')
+		.html('<h3>Akce:</h3>')
+		.css({
+			'background' : "#5D6555",
+			'border' : "white 1px solid",
+			'color' : "white",
+			'padding' : '5px',
+			'width' : "150px",
+			'position' : "absolute",
+			'z-index' : "999999999999999999999999999",
+			'-ms-filter' : "'progid:DXImageTransform.Microsoft.Alpha(Opacity=90)'",
+			'-moz-opacity' : "0.9",
+			'opacity' : "0.9"
+		});
 
-	contextMenu.css({
-		'background' : "#5D6555",
-		'border' : "white 1px solid",
-		'color' : "white",
-		'text-decoration' : "underline",
-		'cursor' : "pointer",
-		'width' : "350px",
-		'height' : "200px",
-		'position' : "absolute",
-		'z-index' : "999999999999999999999999999",
-		'-ms-filter' : "'progid:DXImageTransform.Microsoft.Alpha(Opacity=90)'",
-		'-moz-opacity' : "0.9",
-		'opacity' : "0.9"
-
-	});
+	var basicActionDiv = $('<div class="action" />')
+		.css({
+			'cursor' : "pointer",
+			'text-decoration' : "underline",
+		});
 
 	/**
 	  * @var boolean
@@ -426,7 +432,7 @@ $(document).ready(function(){
 	 * @return void
 	 */
 	function addColonisationAction (target) {
-		var actionDiv = $('<div class="action" />').html('Kolonizace');
+		var actionDiv = basicActionDiv.clone().html('Kolonizace');
 		actionDiv.click(function(){
 			hideContextMenu();
 			$.get('?' + $.param({
@@ -445,7 +451,7 @@ $(document).ready(function(){
 	 * @return void
 	 */
 	function addAttackAction (){
-		var actionDiv = $('<div class="action" />').html('Útok');
+		var actionDiv = basicActionDiv.clone().html('Útok');
 		actionDiv.click(function(){
 			hideContextMenu();
 			alert('vyberte cíl');
@@ -463,7 +469,7 @@ $(document).ready(function(){
 	 * @return void
 	 */
 	function addImproveBuildingAction (){
-		var actionDiv = $('<div class="action" />').html('Vylepšit budovu');
+		var actionDiv = basicActionDiv.clone().html('Vylepšit budovu');
 		actionDiv.click(function(){
 			hideContextMenu();
 			alert('budova vylepšena');
@@ -480,7 +486,7 @@ $(document).ready(function(){
 	 * @return void
 	 */
 	function addLeaveFieldAction(target) {
-		var actionDiv = $('<div class="action" />').html('Opustit');
+		var actionDiv = basicActionDiv.clone().html('Opustit pole');
 		actionDiv.click(function(){
 			hideContextMenu();
 			$.get('?' + $.param({
@@ -500,7 +506,7 @@ $(document).ready(function(){
 	 * @return void
 	 */
 	function addCancelAction (){
-		var actionDiv = $('<div class="action" />').html('Zrušit');
+		var actionDiv = basicActionDiv.clone().html('Zrušit');
 		actionDiv.click(function(){
 			unmarkAll();
 			hideContextMenu();
