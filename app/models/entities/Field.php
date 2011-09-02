@@ -7,43 +7,49 @@ namespace Entities;
  * @author Jan "Teyras" Buchar
  */
 class Field extends BaseEntity {
-	
+
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan", inversedBy = "fields")
 	 * @var Entities\Clan
 	 */
 	private $owner;
-	
+
 	/**
 	 * @Column(type = "integer")
 	 * @var int
 	 */
 	private $coordX;
-	
+
 	/**
 	 * @Column(type = "integer")
 	 * @var int
 	 */
 	private $coordY;
-	
+
 	/**
 	 * @Column(type = "string")
 	 * @var string
 	 */
 	private $type;
-	
+
 	/**
 	 * @Column(type = "string", nullable = TRUE)
 	 * @var string
 	 */
 	private $facility;
-	
+
 	/**
 	 * @Column(type = "integer")
 	 * @var int
 	 */
 	private $level;
-	
+
+	/**
+	 * @Column(type = "integer")
+	 * @var field
+	 */
+	private $headquarters;
+
 	/**
 	 * Constructor
 	 */
@@ -51,7 +57,7 @@ class Field extends BaseEntity {
 	{
 		$this->level = 1;
 	}
-	
+
 	/**
 	 * Owner getter
 	 * @return Entities\Clan
@@ -60,7 +66,7 @@ class Field extends BaseEntity {
 	{
 		return $this->owner;
 	}
-	
+
 	/**
 	 * Owner setter
 	 * @param Entities\Clan
@@ -76,7 +82,7 @@ class Field extends BaseEntity {
 			$clan->getFields()->add($this);
 		}
 	}
-	
+
 	/**
 	 * Coordinates getter
 	 * @return array
@@ -85,7 +91,7 @@ class Field extends BaseEntity {
 	{
 		return array($this->coordX, $this->coordY);
 	}
-	
+
 	/**
 	 * X coordinate getter
 	 * @return integer
@@ -103,7 +109,7 @@ class Field extends BaseEntity {
 	{
 		return $this->coordY;
 	}
-	
+
 	/**
 	 * Coordinates setter
 	 * @param int
@@ -118,7 +124,7 @@ class Field extends BaseEntity {
 		$this->coordX = $x;
 		$this->coordY = $y;
 	}
-	
+
 	/**
 	 * Type getter
 	 * @return string
@@ -127,7 +133,7 @@ class Field extends BaseEntity {
 	{
 		return $this->type;
 	}
-	
+
 	/**
 	 * Type setter
 	 * @param string
@@ -137,7 +143,7 @@ class Field extends BaseEntity {
 	{
 		$this->type = $type;
 	}
-	
+
 	/**
 	 * Facility getter
 	 * @return string
@@ -146,7 +152,7 @@ class Field extends BaseEntity {
 	{
 		return $this->facility;
 	}
-	
+
 	/**
 	 * Facility setter
 	 * @param string
@@ -157,7 +163,7 @@ class Field extends BaseEntity {
 		$this->facility = $facility;
 		$this->setLevel(1);
 	}
-	
+
 	/**
 	 * Level getter
 	 * @return int
@@ -166,7 +172,7 @@ class Field extends BaseEntity {
 	{
 		return $this->level;
 	}
-	
+
 	/**
 	 * Level setter
 	 * @param int
