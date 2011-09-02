@@ -28,6 +28,12 @@ class Clan extends BaseEntity {
 	private $fields;
 	
 	/**
+	 * @OneToOne(targetEntity = "Entities\Field")
+	 * @var Entities\Field
+	 */
+	private $headquarters;
+	
+	/**
 	 * @ManyToOne(targetEntity = "Entities\Alliance", inversedBy = "members")
 	 * @var Entities\Alliance
 	 */
@@ -88,6 +94,25 @@ class Clan extends BaseEntity {
 	public function addField (Field $field)
 	{
 		$field->setOwner($this);
+	}
+	
+	/**
+	 * Headquarters getter
+	 * @return Entities\Field
+	 */
+	public function getHeadquarters ()
+	{
+		return $this->headquarters;
+	}
+	
+	/**
+	 * Headquarters setter
+	 * @param Entities\Field
+	 * @return void
+	 */
+	public function setHeadquarters (Entities\Field $headquarters)
+	{
+		$this->headquarters = $headquarters;
 	}
 	
 	/**

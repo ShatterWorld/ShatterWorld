@@ -123,6 +123,7 @@ class Clan extends BaseService {
 			}
 			$fieldService->update($foundField, array('owner' => $clan));
 		}
+		$this->update($clan, array('headquarters' => $headq));
 		$fieldService->update($headq, array('facility' => 'headquarters'));
 		return $clan;
 

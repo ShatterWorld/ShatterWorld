@@ -45,12 +45,6 @@ class Field extends BaseEntity {
 	private $level;
 
 	/**
-	 * @Column(type = "integer")
-	 * @var field
-	 */
-	private $headquarters;
-
-	/**
 	 * Constructor
 	 */
 	public function __construct ()
