@@ -110,7 +110,7 @@ class Clan extends BaseEntity {
 	 * @param Entities\Field
 	 * @return void
 	 */
-	public function setHeadquarters (Entities\Field $headquarters)
+	public function setHeadquarters (Field $headquarters)
 	{
 		$this->headquarters = $headquarters;
 	}
