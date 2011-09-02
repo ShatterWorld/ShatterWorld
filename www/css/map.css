@@ -12,6 +12,10 @@
 	opacity: 0.9;/*Others*/
 }
 
+#fieldInfo table {
+	width: 100%;
+}
+
 #mapContainer {
 	/*position: relative;*/
 	background:black;
