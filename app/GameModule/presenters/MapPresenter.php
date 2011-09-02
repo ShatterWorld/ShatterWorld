@@ -21,12 +21,12 @@ class MapPresenter extends BasePresenter
 		$this->sendPayload();
 	}
 
-	public function handleSendColonisation ($originId, $targetId)
+	public function handleSendColonisation ($targetId)
 	{
-		$origin = $this->context->model->getFieldRepository()->find($originId);
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		$clan = $this->getPlayerClan();
-		if ($origin->owner->id === $clan->id && $target->owner === NULL) {
+//		if ($origin->owner->id === $clan->id && $target->owner === NULL) {
+		if (true){ //needs neighbour condition
 			$this->context->model->getMoveService()->create(array(
 				'origin' => $origin,
 				'target' => $target,

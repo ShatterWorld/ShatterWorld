@@ -378,14 +378,14 @@ $(document).ready(function(){
 		$('#mapContainer').append(contextMenuClone);
 
 
-		//mine
+		//my
 		if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
-			alert('muj');
+			//alert('muj');
 			addAttackAction();
 			addImproveBuildingAction();
 		}
 		//alliance's
-		else if(field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId']){
+		else if(field['owner'] !== null && field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId']){
 			alert('aliance');
 		}
 		//my neigbour
@@ -394,7 +394,7 @@ $(document).ready(function(){
 			addColonisationAction(field);
 		}
 		else {
-			alert('else');
+			//alert('else');
 			contextMenuShown = false;
 			unmarkAll();
 			return;
