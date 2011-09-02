@@ -377,24 +377,25 @@ $(document).ready(function(){
 		contextMenuShown = true;
 		$('#mapContainer').append(contextMenuClone);
 
-
 		//my
 		if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
-			//alert('muj');
 			addAttackAction();
 			addImproveBuildingAction();
 		}
-		//alliance's
+		//alliance
 		else if(field['owner'] !== null && field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId']){
 			alert('aliance');
 		}
-		//my neigbour
-		else if(true){ //tmp
-			//alert('soused');
+		//enemy
+		else if(field['owner'] !== null){
+			alert('enemy');
+		}
+		//neutral neighbour
+		else if(isNeighbour(field, data)){
 			addColonisationAction(field);
 		}
+		//other neutral
 		else {
-			//alert('else');
 			contextMenuShown = false;
 			unmarkAll();
 			return;
@@ -542,6 +543,18 @@ $(document).ready(function(){
 			x: Math.floor( globalX - position.left ),
 			y: Math.floor( globalY - position.top )
 		});
+	}
+
+	/**
+	 * If field is neighbour of (at least) one clan field, returns true
+	 * @param field
+	 * @param data
+	 * @return boolean
+	 */
+	function isNeighbour(field, data)
+	{
+		return true;
+
 	}
 
 
