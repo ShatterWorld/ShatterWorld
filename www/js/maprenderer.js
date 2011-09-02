@@ -381,6 +381,7 @@ $(document).ready(function(){
 		if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 			addAttackAction();
 			addImproveBuildingAction();
+			addLeaveFieldAction(field);
 		}
 		//alliance
 		else if(field['owner'] !== null && field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId']){
@@ -472,6 +473,27 @@ $(document).ready(function(){
 		action = null;
 		$('#contextMenu').append(actionDiv);
 	}
+
+
+	/**
+	 * Adds the colonisation action
+	 * @return void
+	 */
+	function addLeaveFieldAction(target) {
+		var actionDiv = $('<div class="action" />').html('Opustit');
+		actionDiv.click(function(){
+			hideContextMenu();
+			$.get('?' + $.param({
+				'do': 'leaveField',
+				'targetId': target['id']
+			}));
+			unmarkAll();
+		});
+
+		action = null;
+		$('#contextMenu').append(actionDiv);
+	}
+
 
 	/**
 	 * Adds the cancel action

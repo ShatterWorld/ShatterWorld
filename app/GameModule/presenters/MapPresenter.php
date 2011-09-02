@@ -31,7 +31,7 @@ class MapPresenter extends BasePresenter
 		$neighbours = $this->context->model->getFieldRepository()->getFieldNeighbours($target);
 
 		foreach ($neighbours as $neighbour){
-			if ($neighbour->owner !== null && $neighbour->owner->id == $this->getPlayerClan()->id){
+			if ($neighbour->owner !== null && $neighbour->owner->id == $clan->id){
 				$colonisate = true;
 				break;
 			}
@@ -40,7 +40,7 @@ class MapPresenter extends BasePresenter
 
 		if ($colonisate){
 			$this->context->model->getMoveService()->create(array(
-				'origin' => $this->getPlayerClan()->getHeadquarters(),
+				'origin' => $clan->getHeadquarters(),
 				'target' => $target,
 				'clan' => $clan,
 				'type' => 'colonisation'
@@ -51,6 +51,26 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
 		}
 
+
+	}
+
+	public function handleLeaveField ($targetId)
+	{
+		$target = $this->context->model->getFieldRepository()->find($targetId);
+		$clan = $this->getPlayerClan();
+
+		if ($target->owner !== null && $target->owner->id == $clan->id){
+			$this->context->model->getFieldService()->update($target, array(
+				'owner' => null,
+				'facility' => null,
+				'level' => 1,
+			));
+			$this->flashMessage('Opuštěno');
+			$this->redirect('Map:');
+		}
+		else{
+			$this->flashMessage('Nelze opustit pole, které není vaše', 'error');
+		}
 
 	}
 }
