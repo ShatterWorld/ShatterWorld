@@ -28,7 +28,7 @@ class MapPresenter extends BasePresenter
 //		if ($origin->owner->id === $clan->id && $target->owner === NULL) {
 		if (true){ //needs neighbour condition
 			$this->context->model->getMoveService()->create(array(
-				'origin' => $origin,
+				'origin' => $this->context->model->getClanRepository()->getHeadquarters(),
 				'target' => $target,
 				'clan' => $clan,
 				'type' => 'colonisation'
