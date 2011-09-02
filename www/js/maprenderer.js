@@ -239,17 +239,17 @@ $(document).ready(function(){
 				}
 
 
-				if ((ownerId != null && ownerId == data['clanId']) || (allianceId != null && allianceId == data['allianceId'])){
+				if ((ownerId !== null && ownerId == data['clanId']) || (allianceId !== null && allianceId == data['allianceId'])){
 					if (field['facility'] != null){
 						facility = field['facility'];
 					}
 
-					if (field['level'] != null){
+					if (field['level'] !== null && field['facility'] !== null && field['facility'] != 'headquarters'){
 						level = field['level'];
 					}
 
 				}
-				else if ((ownerId != null && ownerId != data['clanId']) || (allianceId != null && allianceId != data['allianceId'])){
+				else if ((ownerId !== null && ownerId != data['clanId']) || (allianceId !== null && allianceId != data['allianceId'])){
 					facility = secret;
 					level = secret;
 
