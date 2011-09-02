@@ -302,22 +302,16 @@ $(document).ready(function(){
 					return;
 				}
 
-				if(initialField == null){
-					if((field['owner'] != null && data['clanId'] != null && field['owner']['id'] == data['clanId']) || (field['owner']['alliance'] != null && data['allianceId'] != null && field['owner']['alliance']['id'] == data['allianceId'])){
-						mark(this);
-						initialField = this;
-						showContextMenu(this, e);
-					}
-					else{
-						return;
-					}
+				mark(this);
+				if(initialField === null){
+					initialField = this;
+					showContextMenu(this, e, field, data);
 				}
 				else if (initialField == this){
 					hideContextMenu();
 					unmarkAll();
 				}
 				else{
-					mark(this);
 					action(initialField, this);
 					hideContextMenu();
 					unmarkAll();
@@ -365,27 +359,53 @@ $(document).ready(function(){
 	 * @param event - fired event
 	 * @return void
 	 */
-	function showContextMenu(object, e)
+	function showContextMenu(object, e, field, data)
 	{
+
+		var contextMenuClone = contextMenu.clone();
+
 		$('#fieldInfo').hide();
-		contextMenuShown = true;
 		var localCoords = globalToLocal(
 			$(object).parent(),
 			e.pageX,
 			e.pageY
 		);
 
-		var contextMenuClone = contextMenu.clone();
-
 		contextMenuClone.css("left", localCoords.x + 30 - $('#mapContainer').scrollLeft() + 'px');
 		contextMenuClone.css("top", localCoords.y + 30 - $('#mapContainer').scrollTop() + 'px');
 
+		contextMenuShown = true;
 		$('#mapContainer').append(contextMenuClone);
 
-		addColonisationAction();
-		addAttackAction();
-		addImproveBuildingAction();
+
+		//mine
+		if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
+			alert('muj');
+			addAttackAction();
+			addImproveBuildingAction();
+		}
+		//alliance's
+		else if(field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId']){
+			alert('aliance');
+		}
+		//my neigbour
+		else if(true){ //tmp
+			alert('soused');
+			addColonisationAction(field);
+		}
+		else {
+			alert('else');
+			contextMenuShown = false;
+			unmarkAll();
+			return;
+		}
+
 		addCancelAction();
+
+
+
+
+
 	}
 
 	/**
@@ -403,18 +423,15 @@ $(document).ready(function(){
 	 * Adds the colonisation action
 	 * @return void
 	 */
-	function addColonisationAction () {
+	function addColonisationAction (target) {
 		var actionDiv = $('<div class="action" />').html('Kolonizace');
 		actionDiv.click(function(){
 			hideContextMenu();
-			alert('vyberte cíl');
-			action = function(from, target){
-				$.get('?' + $.param({
-					'do': 'sendColonisation',
-					'originId': $(from).data()['id'],
-					'targetId': $(target).data()['id']
-				}));
-			};
+			alert('kolo');
+			$.get('?' + $.param({
+				'do': 'sendColonisation',
+				'targetId': target['id']
+			}));
 		});
 
 		action = null;
