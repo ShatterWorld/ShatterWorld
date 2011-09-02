@@ -2,7 +2,7 @@ $(document).ready(function(){
 	/**
 	* Hides flash message
 	*/
-	$("#flashes .flash").click(function(){ 
+	$("#flashes .flash").live('click', function(){ 
 		$(this).hide("fast");
 	});
 });
