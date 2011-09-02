@@ -390,7 +390,7 @@ $(document).ready(function(){
 		}
 		//my neigbour
 		else if(true){ //tmp
-			alert('soused');
+			//alert('soused');
 			addColonisationAction(field);
 		}
 		else {
@@ -427,11 +427,11 @@ $(document).ready(function(){
 		var actionDiv = $('<div class="action" />').html('Kolonizace');
 		actionDiv.click(function(){
 			hideContextMenu();
-			alert('kolo');
 			$.get('?' + $.param({
 				'do': 'sendColonisation',
 				'targetId': target['id']
 			}));
+			unmarkAll();
 		});
 
 		action = null;
@@ -448,7 +448,6 @@ $(document).ready(function(){
 			hideContextMenu();
 			alert('vyberte cíl');
 			action = function(from, target){
-
 				alert('posílám jednotky');
 			};
 		});

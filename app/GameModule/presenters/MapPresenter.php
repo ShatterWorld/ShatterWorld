@@ -26,14 +26,31 @@ class MapPresenter extends BasePresenter
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		$clan = $this->getPlayerClan();
 //		if ($origin->owner->id === $clan->id && $target->owner === NULL) {
-		if (true){ //needs neighbour condition
+
+		$colonisate = false;
+		$neighbours = $this->context->model->getFieldRepository()->getFieldNeighbours($target);
+
+		foreach ($neighbours as $neighbour){
+			if ($neighbour->owner !== null && $neighbour->owner->id == $this->getPlayerClan()->id){
+				$colonisate = true;
+				break;
+			}
+		}
+
+
+		if ($colonisate){
 			$this->context->model->getMoveService()->create(array(
-				'origin' => $this->context->model->getClanRepository()->getHeadquarters(),
+				'origin' => $this->getPlayerClan()->getHeadquarters(),
 				'target' => $target,
 				'clan' => $clan,
 				'type' => 'colonisation'
 			));
 			$this->flashMessage('Kolonizace zahájena');
 		}
+		else{
+			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
+		}
+
+
 	}
 }
