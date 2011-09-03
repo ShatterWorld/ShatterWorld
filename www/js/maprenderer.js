@@ -544,13 +544,38 @@ $(document).ready(function(){
 	function addBuildFacilityAction (target){
 		var actionDiv = basicActionDiv.clone().html('Postavit budovu*');
 		actionDiv.click(function(){
-			hideContextMenu();
-			$.get('?' + $.param({
-				'do': 'buildFacility',
-				'targetId': target['id'],
-				'facility': 'mine'
-			}));
-			unmarkAll();
+			//hideContextMenu();
+			$('#contextMenu').html('Budovy:');
+
+			var mineDiv = $('<div />')
+				.append('Důl')
+				.css('cursor', 'pointer')
+				.click(function(){
+					$.get('?' + $.param({
+						'do': 'buildFacility',
+						'targetId': target['id'],
+						'facility': 'mine'
+					}));
+					hideContextMenu();
+					unmarkAll();
+				});
+
+			var barracksDiv = $('<div />')
+				.append('Kasárny')
+				.css('cursor', 'pointer')
+				.click(function(){
+					$.get('?' + $.param({
+						'do': 'buildFacility',
+						'targetId': target['id'],
+						'facility': 'barracks'
+					}));
+					hideContextMenu();
+					unmarkAll();
+				});
+
+			$('#contextMenu').append(mineDiv);
+			$('#contextMenu').append(barracksDiv);
+
 		});
 
 		action = null;
