@@ -35,7 +35,17 @@
 	</head>
 
 	<body>
-
+		{snippet flashes}
+		{if $flashes}
+			<div id="flashes">
+				{foreach $flashes as $flash}
+					<div class="flash {$flash->type}">
+						{$flash->message}
+					</div>
+				{/foreach}
+			</div>
+		{/if}
+		{/snippet}
 		<div id="frame">
 			<div id="userBar">
 				<a href="{link Profile:}" class="caption">{$user->identity->nickname}:</a>
@@ -47,17 +57,7 @@
 			</div>
 			<div class="clearer"><span></span></div>
 
-			{snippet flashes}
-			{if $flashes}
-				<div id="flashes">
-					{foreach $flashes as $flash}
-						<div class="flash {$flash->type}">
-							{$flash->message}
-						</div>
-					{/foreach}
-				</div>
-			{/if}
-			{/snippet}
+			
 
 			<div id="menu">
 				<div class="submenu">
