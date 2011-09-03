@@ -391,10 +391,11 @@ $(document).ready(function(){
 				if(field['facility'] !== 'headquarters'){
 					addUpgradeFacilityAction(field);
 					addDestroyFacilityAction(field);
+					if(field['level'] > 1){
+						addDowngradeFacilityAction(field);
+					}
 				}
-				if(field['level'] > 1){
-					addDowngradeFacilityAction(field);
-				}
+
 			}
 			else{
 				addBuildFacilityAction(field);
