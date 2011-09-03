@@ -386,17 +386,23 @@ $(document).ready(function(){
 		//my
 		if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 			addAttackAction();
-
+			/*resources check*/
 			if (field['facility'] !== null){
-				addUpgradeFacilityAction(field);
-				addDowngradeFacilityAction(field);
-				addDestroyFacilityAction(field);
+				if(field['facility'] !== 'headquarters'){
+					addUpgradeFacilityAction(field);
+					addDestroyFacilityAction(field);
+				}
+				if(field['level'] > 1){
+					addDowngradeFacilityAction(field);
+				}
 			}
 			else{
 				addBuildFacilityAction(field);
 			}
 
-			addLeaveFieldAction(field);
+			if ((field['facility'] === null) || (field['facility'] !== null && field['facility'] !== 'headquarters')){
+				addLeaveFieldAction(field);
+			}
 		}
 		//alliance
 		else if(field['owner'] !== null && field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId']){
