@@ -1,5 +1,6 @@
 <?php
 namespace Entities;
+use InsufficientResourcesException;
 
 /**
  * A resource balance
@@ -53,14 +54,17 @@ class Resource extends BaseEntity
 	
 	/**
 	 * Sets the balance to current value
+	 * @param DateTime
 	 * @return void
 	 */
-	public function settleBalance ()
+	public function settleBalance ($time = NULL)
 	{
-		$now = new DateTime();
-		$diff = $now->format('U') - $this->clearance->format('U');
+		if (!$time) {
+			$time = new DateTime();
+		}
+		$diff = $time->format('U') - $this->clearance->format('U');
 		$this->balance = $this->balance + $diff * $this->production;
-		$this->clearance = $now;
+		$this->clearance = $time;
 	}
 	
 	/**
@@ -82,13 +86,29 @@ class Resource extends BaseEntity
 	}
 	
 	/**
-	 * Balance setter
+	 * Pays given value from the account
+	 * @param int
+	 * @throws InsufficientResourcesException
+	 * @return void
+	 */
+	public function pay ($value)
+	{
+		$this->settleBalance();
+		$balance = $this->balance - $value;
+		if ($balance < 0) {
+			throw new InsufficientResourcesException;
+		}
+		$this->balance = $balance;
+	}
+	
+	/**
+	 * Add given value to the account
 	 * @param int
 	 * @return void
 	 */
-	public function setBalance ($balance)
+	public function increase ($value)
 	{
-		$this->balance = $balance;
+		$this->balance = $this->balance + $value;
 	}
 	
 	/**
@@ -124,9 +144,9 @@ class Resource extends BaseEntity
 	 * @param int
 	 * @return void
 	 */
-	public function setProduction ($production)
+	public function setProduction ($production, $time = NULL)
 	{
-		$this->settleBalance();
+		$this->settleBalance($time);
 		$this->production = $production;
 	}
 	
