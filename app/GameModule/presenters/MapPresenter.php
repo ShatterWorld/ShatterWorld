@@ -73,4 +73,85 @@ class MapPresenter extends BasePresenter
 		}
 
 	}
+
+	public function handleBuildFacility ($targetId, $facility)
+	{
+		$target = $this->context->model->getFieldRepository()->find($targetId);
+		$clan = $this->getPlayerClan();
+
+/*resources check etc*/
+		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility === null){
+			$this->context->model->getFieldService()->update($target, array(
+				'facility' => $facility,
+				'level' => 1,
+			));
+			$this->flashMessage('Stavba zahájena');
+			$this->redirect('Map:');
+		}
+		else{
+			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
+		}
+
+	}
+
+	public function handleDestroyFacility ($targetId)
+	{
+		$target = $this->context->model->getFieldRepository()->find($targetId);
+		$clan = $this->getPlayerClan();
+
+/*resources check etc*/
+		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null){
+			$this->context->model->getFieldService()->update($target, array(
+				'facility' => null,
+				'level' => 1,
+			));
+			$this->flashMessage('Stržení zahájeno');
+			$this->redirect('Map:');
+		}
+		else{
+			$this->flashMessage('Nelze bourat budovu na cizím, nebo nezastaveném poli', 'error');
+		}
+
+	}
+
+	public function handleUpgradeFacility ($targetId)
+	{
+		$target = $this->context->model->getFieldRepository()->find($targetId);
+		$clan = $this->getPlayerClan();
+
+/*resources check etc*/
+		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null){
+			$this->context->model->getFieldService()->update($target, array(
+				'level' => $target->level + 1,
+			));
+			$this->flashMessage('Upgrade zahájen');
+			$this->redirect('Map:');
+		}
+		else{
+			$this->flashMessage('Nelze upgradovat budovu na cizím, nebo nezastaveném poli', 'error');
+		}
+
+	}
+
+	public function handleDowngradeFacility ($targetId)
+	{
+		$target = $this->context->model->getFieldRepository()->find($targetId);
+		$clan = $this->getPlayerClan();
+
+/*resources check etc*/
+		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null && $target->level > 1){
+			$this->context->model->getFieldService()->update($target, array(
+				'level' => $target->level - 1,
+			));
+			$this->flashMessage('Downgrade zahájen');
+			$this->redirect('Map:');
+		}
+		else{
+			$this->flashMessage('Nelze downgradovat budovu na cizím, nebo nezastaveném poli', 'error');
+		}
+
+	}
+
+
+
 }

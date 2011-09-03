@@ -386,7 +386,16 @@ $(document).ready(function(){
 		//my
 		if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 			addAttackAction();
-			addImproveBuildingAction();
+
+			if (field['facility'] !== null){
+				addUpgradeFacilityAction(field);
+				addDowngradeFacilityAction(field);
+				addDestroyFacilityAction(field);
+			}
+			else{
+				addBuildFacilityAction(field);
+			}
+
 			addLeaveFieldAction(field);
 		}
 		//alliance
@@ -398,7 +407,7 @@ $(document).ready(function(){
 			alert('enemy');
 		}
 		//neutral neighbour
-		else if(isNeighbour(field, data)){
+		else if(isNeighbour(field, data['clanId'])){
 			addColonisationAction(field);
 		}
 		//other neutral
@@ -451,7 +460,7 @@ $(document).ready(function(){
 	 * @return void
 	 */
 	function addAttackAction (){
-		var actionDiv = basicActionDiv.clone().html('Útok');
+		var actionDiv = basicActionDiv.clone().html('Útok*');
 		actionDiv.click(function(){
 			hideContextMenu();
 			alert('vyberte cíl');
@@ -465,14 +474,75 @@ $(document).ready(function(){
 	}
 
 	/**
-	 * Adds the improve building action
+	 * Adds the upgrade building action
 	 * @return void
 	 */
-	function addImproveBuildingAction (){
-		var actionDiv = basicActionDiv.clone().html('Vylepšit budovu');
+	function addUpgradeFacilityAction (target){
+		var actionDiv = basicActionDiv.clone().html('Upgradovat budovu*');
 		actionDiv.click(function(){
 			hideContextMenu();
-			alert('budova vylepšena');
+			$.get('?' + $.param({
+				'do': 'upgradeFacility',
+				'targetId': target['id']
+			}));
+			unmarkAll();
+		});
+
+		action = null;
+		$('#contextMenu').append(actionDiv);
+	}
+
+	/**
+	 * Adds the downgrade building action
+	 * @return void
+	 */
+	function addDowngradeFacilityAction (target){
+		var actionDiv = basicActionDiv.clone().html('Downgradovat budovu*');
+		actionDiv.click(function(){
+			hideContextMenu();
+			$.get('?' + $.param({
+				'do': 'downgradeFacility',
+				'targetId': target['id']
+			}));
+			unmarkAll();
+		});
+
+		action = null;
+		$('#contextMenu').append(actionDiv);
+	}
+
+	/**
+	 * Adds the destroy building action
+	 * @return void
+	 */
+	function addDestroyFacilityAction (target){
+		var actionDiv = basicActionDiv.clone().html('Strhnout budovu*');
+		actionDiv.click(function(){
+			hideContextMenu();
+			$.get('?' + $.param({
+				'do': 'destroyFacility',
+				'targetId': target['id']
+			}));
+			unmarkAll();
+		});
+
+		action = null;
+		$('#contextMenu').append(actionDiv);
+	}
+
+	/**
+	 * Adds the build building action
+	 * @return void
+	 */
+	function addBuildFacilityAction (target){
+		var actionDiv = basicActionDiv.clone().html('Postavit budovu*');
+		actionDiv.click(function(){
+			hideContextMenu();
+			$.get('?' + $.param({
+				'do': 'buildFacility',
+				'targetId': target['id'],
+				'facility': 'mine'
+			}));
 			unmarkAll();
 		});
 
@@ -499,7 +569,6 @@ $(document).ready(function(){
 		action = null;
 		$('#contextMenu').append(actionDiv);
 	}
-
 
 	/**
 	 * Adds the cancel action
@@ -576,10 +645,10 @@ $(document).ready(function(){
 	/**
 	 * If field is neighbour of (at least) one clan field, returns true
 	 * @param field
-	 * @param data
+	 * @param iteger
 	 * @return boolean
 	 */
-	function isNeighbour(field, data)
+	function isNeighbour(field, ownerId)
 	{
 		return true;
 
