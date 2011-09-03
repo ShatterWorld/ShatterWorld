@@ -386,17 +386,24 @@ $(document).ready(function(){
 		//my
 		if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 			addAttackAction();
-
+			/*resources check*/
 			if (field['facility'] !== null){
-				addUpgradeFacilityAction(field);
-				addDowngradeFacilityAction(field);
-				addDestroyFacilityAction(field);
+				if(field['facility'] !== 'headquarters'){
+					addUpgradeFacilityAction(field);
+					addDestroyFacilityAction(field);
+					if(field['level'] > 1){
+						addDowngradeFacilityAction(field);
+					}
+				}
+
 			}
 			else{
 				addBuildFacilityAction(field);
 			}
 
-			addLeaveFieldAction(field);
+			if ((field['facility'] === null) || (field['facility'] !== null && field['facility'] !== 'headquarters')){
+				addLeaveFieldAction(field);
+			}
 		}
 		//alliance
 		else if(field['owner'] !== null && field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId']){
@@ -537,13 +544,38 @@ $(document).ready(function(){
 	function addBuildFacilityAction (target){
 		var actionDiv = basicActionDiv.clone().html('Postavit budovu*');
 		actionDiv.click(function(){
-			hideContextMenu();
-			$.get('?' + $.param({
-				'do': 'buildFacility',
-				'targetId': target['id'],
-				'facility': 'mine'
-			}));
-			unmarkAll();
+			//hideContextMenu();
+			$('#contextMenu').html('Budovy:');
+
+			var mineDiv = $('<div />')
+				.append('Důl')
+				.css('cursor', 'pointer')
+				.click(function(){
+					$.get('?' + $.param({
+						'do': 'buildFacility',
+						'targetId': target['id'],
+						'facility': 'mine'
+					}));
+					hideContextMenu();
+					unmarkAll();
+				});
+
+			var barracksDiv = $('<div />')
+				.append('Kasárny')
+				.css('cursor', 'pointer')
+				.click(function(){
+					$.get('?' + $.param({
+						'do': 'buildFacility',
+						'targetId': target['id'],
+						'facility': 'barracks'
+					}));
+					hideContextMenu();
+					unmarkAll();
+				});
+
+			$('#contextMenu').append(mineDiv);
+			$('#contextMenu').append(barracksDiv);
+
 		});
 
 		action = null;

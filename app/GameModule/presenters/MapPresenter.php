@@ -121,11 +121,23 @@ class MapPresenter extends BasePresenter
 
 /*resources check etc*/
 		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null){
-			$this->context->model->getFieldService()->update($target, array(
-				'level' => $target->level + 1,
-			));
-			$this->flashMessage('Upgrade zahájen');
-			$this->redirect('Map:');
+			if ($targer->facility !== null){
+				if($targer->facility !== 'headquarters'){
+					$this->context->model->getFieldService()->update($target, array(
+						'level' => $target->level + 1,
+					));
+					$this->flashMessage('Upgrade zahájen');
+					$this->redirect('Map:');
+				}
+				else{
+					$this->flashMessage('Nelze upgradovat velitelství', 'error');
+				}
+
+			}
+			else{
+				$this->flashMessage('Nelze upgradovat budovu, která neexistuje', 'error');
+			}
+
 		}
 		else{
 			$this->flashMessage('Nelze upgradovat budovu na cizím, nebo nezastaveném poli', 'error');
@@ -140,11 +152,23 @@ class MapPresenter extends BasePresenter
 
 /*resources check etc*/
 		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null && $target->level > 1){
-			$this->context->model->getFieldService()->update($target, array(
-				'level' => $target->level - 1,
-			));
-			$this->flashMessage('Downgrade zahájen');
-			$this->redirect('Map:');
+			if ($targer->facility !== null){
+				if($targer->facility !== 'headquarters'){
+					$this->context->model->getFieldService()->update($target, array(
+						'level' => $target->level + 1,
+					));
+					$this->flashMessage('Downgrade zahájen');
+					$this->redirect('Map:');
+				}
+				else{
+					$this->flashMessage('Nelze downgradovat velitelství', 'error');
+				}
+
+			}
+			else{
+				$this->flashMessage('Nelze downgradovat budovu, která neexistuje', 'error');
+			}
+
 		}
 		else{
 			$this->flashMessage('Nelze downgradovat budovu na cizím, nebo nezastaveném poli', 'error');
