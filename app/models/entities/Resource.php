@@ -4,7 +4,7 @@ use InsufficientResourcesException;
 
 /**
  * A resource balance
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Resource")
  * @Table(indexes = {@Index(name = "idx_clan", columns = {"clan_id"}), @Index(name = "idx_resource", columns = {"clan_id", "type"})})
  * @author Jan "Teyras" Buchar
  */
@@ -44,11 +44,13 @@ class Resource extends BaseEntity
 	 * Constructor
 	 * @param Entites\Clan
 	 * @param string
+	 * @param int
 	 */
-	public function __construct (Clan $clan, $type)
+	public function __construct (Clan $clan, $type, $balance = 0)
 	{
 		$this->clan = $clan;
 		$this->type = $type;
+		$this->balance = $balance;
 		$this->production = 0;
 	}
 	
@@ -60,7 +62,7 @@ class Resource extends BaseEntity
 	public function settleBalance ($time = NULL)
 	{
 		if (!$time) {
-			$time = new DateTime();
+			$time = new \DateTime();
 		}
 		$diff = $time->format('U') - $this->clearance->format('U');
 		$this->balance = $this->balance + $diff * $this->production;
@@ -83,6 +85,17 @@ class Resource extends BaseEntity
 	public function getBalance ()
 	{
 		return $this->balance;
+	}
+	
+	/**
+	 * Does the account has balance larger than given amount?
+	 * @param int
+	 * @return bool
+	 */
+	public function has ($amount)
+	{
+		$this->settleBalance();
+		return $this->balance >= $amount;
 	}
 	
 	/**

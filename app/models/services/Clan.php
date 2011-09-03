@@ -125,8 +125,19 @@ class Clan extends BaseService {
 		}
 		$this->update($clan, array('headquarters' => $headq));
 		$fieldService->update($headq, array('facility' => 'headquarters'));
+		
+		$now = new \DateTime();
+		foreach ($this->context->rules->getAll('resource') as $type => $rule) {
+			$this->context->model->getResourceService()->create(array(
+				'clan' => $clan,
+				'type' => lcfirst($type),
+				'balance' => $rule->getInitialAmount(),
+				'clearance' => $now
+			), FALSE);
+			$this->entityManager->flush();
+		}
+		
 		return $clan;
-
 	}
 
 	/**
