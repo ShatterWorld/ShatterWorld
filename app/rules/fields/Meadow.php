@@ -9,4 +9,14 @@ class Meadow extends AbstractRule implements IField
 	{
 		return 5;
 	}
+	
+	public function getOilProbability ()
+	{
+		return 0;
+	}
+	
+	public function getProductionBonuses ()
+	{
+		return array();
+	}
 }
