@@ -9,4 +9,14 @@ class Lake extends AbstractRule implements IField
 	{
 		return 3;
 	}
+	
+	public function getOilProbability ()
+	{
+		return 0;
+	}
+	
+	public function getProductionBonuses ()
+	{
+		return array();
+	}
 }

@@ -12,4 +12,16 @@ interface IField extends \Rules\IRule {
      * @return int
      */
     public function getProbability();
+    
+    /**
+     * Percentual chance of this type of field having an oil field
+     * @return int between 0 and 100
+     */
+    public function getOilProbability ();
+    
+    /**
+     * Percentual bonuses to production of certain resources on this type of field
+     * @return array of $resource => $bonus
+     */
+    public function getProductionBonuses ();
 }
