@@ -200,8 +200,8 @@ class Field extends BaseRepository {
 			foreach($neighbours as $neighbour){
 				if(array_search($neighbour, $visibleFields, true) === false){
 					if ($neighbour->owner != null && $neighbour->owner->id != $clanId){
-					//	$neighbour->facility = null;
-					//	$neighbour->level = null;
+						$neighbour->facility = null;
+						$neighbour->level = null;
 					}
 					$visibleFields[] = $neighbour;
 				}

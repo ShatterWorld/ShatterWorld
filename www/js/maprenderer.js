@@ -544,7 +544,6 @@ $(document).ready(function(){
 	function addBuildFacilityAction (target){
 		var actionDiv = basicActionDiv.clone().html('Postavit budovu*');
 		actionDiv.click(function(){
-			//hideContextMenu();
 			$('#contextMenu').html('Budovy:');
 
 			var mineDiv = $('<div />')
@@ -556,6 +555,7 @@ $(document).ready(function(){
 						'targetId': target['id'],
 						'facility': 'mine'
 					}));
+					addCountdown('důl', 65);
 					hideContextMenu();
 					unmarkAll();
 				});
@@ -575,7 +575,7 @@ $(document).ready(function(){
 
 			$('#contextMenu').append(mineDiv);
 			$('#contextMenu').append(barracksDiv);
-
+			addCancelAction();
 		});
 
 		action = null;
@@ -686,6 +686,63 @@ $(document).ready(function(){
 
 	}
 
+	/**
+	 * Adds countdown
+	 * @param string
+	 * @param integer [s]
+	 * @return void
+	 */
+	function addCountdown(title, remainingTime)
+	{
+		var countdownDiv = $('<div class="countdown" />');
+		var countdownTitleDiv = $('<div class="countdownTitle" />').html(title);
+		var countdownTimeDiv = $('<div class="countdownTime" />');
+
+		countdownDiv.append(countdownTitleDiv);
+		countdownDiv.append(countdownTimeDiv);
+
+		$('#mapContainer').parent().prepend(countdownDiv);
+
+		countdown(countdownTimeDiv, remainingTime);
+	}
+
+	/**
+	 * Countdowns and display remaining time
+	 * @param object
+	 * @param integer [s]
+	 * @return void
+	 */
+	function countdown(countdownTimeDiv, remainingTime)
+	{
+
+		if (remainingTime < 0){
+			location.reload(true);
+		}
+		var t = remainingTime;
+
+		var h = Math.floor(t / 3600);
+		t -= h*3600;
+		var m = Math.floor(t / 60);
+		t -= m*60;
+		var s = t;
+
+		if (s < 10){
+			s = '0' + s;
+		}
+		if (m < 10){
+			m = '0' + m;
+		}
+
+		var time = h + ':' + m + ':' + s;
+
+		setTimeout(function(){
+			$(countdownTimeDiv).html(time);
+			countdown(countdownTimeDiv, remainingTime - 1);
+
+		}, 1000);
+
+
+	}
 
 
 });
