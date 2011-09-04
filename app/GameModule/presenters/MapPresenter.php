@@ -23,13 +23,8 @@ class MapPresenter extends BasePresenter
 
 	public function handleFetchEvents ()
 	{
-		/*
-		$clan = $this->getPlayerClan();
-		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
-		$this->payload->clanId = $this->getPlayerClan()->id;
-		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
-
-		$this->sendPayload();*/
+		$this->payload->events = $this->getEventRepository()->getUpcomingEventsArray($this->getPlayerClan());
+		$this->sendPayload();
 	}
 
 	public function handleFetchFacilities ()
@@ -45,13 +40,7 @@ class MapPresenter extends BasePresenter
 
 	public function handleFetchResources ()
 	{
-		/*
-		$clan = $this->getPlayerClan();
-		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
-		$this->payload->clanId = $this->getPlayerClan()->id;
-		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
-
-		$this->sendPayload();*/
+		$this->payload->resources = $this->getResourceRepository()->getResourcesArray($this->getPlayerClan());
 	}
 
 	public function handleSendColonisation ($targetId)

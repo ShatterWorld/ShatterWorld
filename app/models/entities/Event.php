@@ -21,6 +21,12 @@ class Event extends BaseEntity {
 	private $term;
 	
 	/**
+	 * @ManyToOne(targetEntity = "Entities\Clan")
+	 * @var Entities\Clan
+	 */
+	private $owner;
+	
+	/**
 	 * @Column(type = "integer", nullable = true)
 	 * @var int
 	 */
@@ -41,10 +47,12 @@ class Event extends BaseEntity {
 	/**
 	 * Constructor
 	 * @param string
+	 * @param Entities\Clan
 	 */
-	public function __construct ($type)
+	public function __construct ($type, Clan $owner)
 	{
 		$this->type = $type;
+		$this->owner = $owner;
 		$this->processed = FALSE;
 	}
 	
