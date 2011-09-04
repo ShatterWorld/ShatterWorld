@@ -33,6 +33,7 @@ class MapPresenter extends BasePresenter
 		$this->payload->events = $this->getEventRepository()->getUpcomingEventsArray($this->getPlayerClan());
 		$this->sendPayload();
 	}
+
 	public function handleFetchFacilities ()
 	{
 		$this->sendPayload();
