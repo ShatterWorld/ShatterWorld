@@ -130,18 +130,56 @@ $(document).ready(function(){
 	var scrollY = 0;
 
 
-
+	defaultCountdown();
 	renderMap();
 
+
+
+	/**
+	  * Renders all countable events (from db)
+	  */
+	function defaultCountdown()
+	{
+		$.getJSON('?do=fetchEvents', function(data) {
+			//addCountdown(title, remainingTime)
+
+		});
+
+
+	}
+
+	/**
+	  * Fetches all facilities data (price, time etc)
+	  */
+	function fetchFacilities()
+	{
+		$.getJSON('?do=fetchEvents', function(data) {
+			//facilities = ...
+
+		});
+	}
+
+	/**
+	  * Fetches clans resources
+	  */
+	function fetchResources()
+	{
+		$.getJSON('?do=fetchResources', function(data) {
+			//resources[] = ...
+
+		});
+	}
+
+	/**
+	  * Cleans the #map and rerender the map (using db-data)
+	  */
 	function renderMap(){
 		$('#map').html('');
 		showSpinner();
 
 		/**
 		  * ajax that gets JSON data of visibleFields
-		  *
 		  */
-
 		$.getJSON('?do=fetchMap', function(data) {
 
 

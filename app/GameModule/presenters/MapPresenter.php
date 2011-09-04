@@ -21,6 +21,39 @@ class MapPresenter extends BasePresenter
 		$this->sendPayload();
 	}
 
+	public function handleFetchEvents ()
+	{
+		/*
+		$clan = $this->getPlayerClan();
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
+		$this->payload->clanId = $this->getPlayerClan()->id;
+		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
+
+		$this->sendPayload();*/
+	}
+
+	public function handleFetchFacilities ()
+	{
+		/*
+		$clan = $this->getPlayerClan();
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
+		$this->payload->clanId = $this->getPlayerClan()->id;
+		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
+
+		$this->sendPayload();*/
+	}
+
+	public function handleFetchResources ()
+	{
+		/*
+		$clan = $this->getPlayerClan();
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
+		$this->payload->clanId = $this->getPlayerClan()->id;
+		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
+
+		$this->sendPayload();*/
+	}
+
 	public function handleSendColonisation ($targetId)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);

@@ -19,7 +19,7 @@ common:
 			toleration: 3
 
 		stats:
-			baseLOS: 10
+			baseLOS: 4
 			baseColonisationTime: 30
 
 		ruleAliases:
