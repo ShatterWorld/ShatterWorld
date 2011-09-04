@@ -24,28 +24,8 @@ class MapPresenter extends BasePresenter
 		$this->sendPayload();
 	}
 
-	/**
-	 * Send upcoming events via ajax
-	 * @return void
-	 */
-	public function handleFetchEvents ()
-	{
-		$this->payload->events = $this->getEventRepository()->getUpcomingEventsArray($this->getPlayerClan());
-		$this->sendPayload();
-	}
-
 	public function handleFetchFacilities ()
 	{
-		$this->sendPayload();
-	}
-
-	/**
-	 * Send resources list via ajax
-	 * @return void
-	 */
-	public function handleFetchResources ()
-	{
-		$this->payload->resources = $this->getResourceRepository()->getResourcesArray($this->getPlayerClan());
 		$this->sendPayload();
 	}
 

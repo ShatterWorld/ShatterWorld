@@ -38,6 +38,26 @@ abstract class BasePresenter extends \BasePresenter
 		$this->invalidateControl('flashes');
 		parent::flashMessage($message, $type);
 	}
+	
+	/**
+	 * Send resources list via ajax
+	 * @return void
+	 */
+	public function handleFetchResources ()
+	{
+		$this->payload->resources = $this->getResourceRepository()->getResourcesArray($this->getPlayerClan());
+		$this->sendPayload();
+	}
+	
+	/**
+	 * Send upcoming events via ajax
+	 * @return void
+	 */
+	public function handleFetchEvents ()
+	{
+		$this->payload->events = $this->getEventRepository()->getUpcomingEventsArray($this->getPlayerClan());
+		$this->sendPayload();
+	}
 
 	/**
 	* Test !!!
