@@ -41,6 +41,7 @@ class MapPresenter extends BasePresenter
 	public function handleFetchResources ()
 	{
 		$this->payload->resources = $this->getResourceRepository()->getResourcesArray($this->getPlayerClan());
+		$this->sendPayload();
 	}
 
 	public function handleSendColonisation ($targetId)
