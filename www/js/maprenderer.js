@@ -109,234 +109,238 @@ $(document).ready(function(){
 	  */
 	var selectTarget = false;
 
+			/**
+			 * @var represents x-offset between real and calculated coord. of fields
+			 */
+			var dX = 0;
 
+			/**
+			 * @var represents y-offset between real and calculated coord. of fields
+			 */
+			var dY = 0;
 
-	showSpinner();
+			/**
+			 * @var represents how much the scroll bar must move to the left
+			 */
+			var scrollX = 0;
 
+			/**
+			 * @var represents how much the scroll bar must move to the bottom
+			 */
+			var scrollY = 0;
 
-	/**
-	  * ajax that gets JSON data of visibleFields
-	  *
-	  */
-	$.getJSON('?do=fetchMap', function(data) {
+	renderMap();
 
-		/**
-		 * @var represents x-offset between real and calculated coord. of fields
-		 */
-		var dX = 0;
-
-		/**
-		 * @var represents y-offset between real and calculated coord. of fields
-		 */
-		var dY = 0;
-
-		/**
-		 * @var represents how much the scroll bar must move to the left
-		 */
-		var scrollX = 0;
-
-		/**
-		 * @var represents how much the scroll bar must move to the bottom
-		 */
-		var scrollY = 0;
+	function renderMap(){
+		$('#map').html('');
+		showSpinner();
 
 		/**
-		 * finds the center and calculate dX and dY
-		 */
-		$.each(data['fields'], function(key, field) {
-			if(field['owner'] != null){
-				if (data['clanId'] == field['owner']['id']){
-					if(field['facility'] != null){
-						if (field['facility'] == 'headquarters'){
-							var posX = calculateXPos(field);
-							var posY = calculateYPos(field);
-							dX = posX - mapContainerWidth/2 + fieldWidth/2;
-							dY = posY - mapContainerHeight/2 + 2*fieldHeight;
+		  * ajax that gets JSON data of visibleFields
+		  *
+		  */
 
-							return false;
+		$.getJSON('?do=fetchMap', function(data) {
+
+
+
+			/**
+			 * finds the center and calculate dX and dY
+			 */
+			$.each(data['fields'], function(key, field) {
+				if(field['owner'] != null){
+					if (data['clanId'] == field['owner']['id']){
+						if(field['facility'] != null){
+							if (field['facility'] == 'headquarters'){
+								var posX = calculateXPos(field);
+								var posY = calculateYPos(field);
+								dX = posX - mapContainerWidth/2 + fieldWidth/2;
+								dY = posY - mapContainerHeight/2 + 2*fieldHeight;
+
+								return false;
+							}
+						}
+
+					}
+				}
+
+			});
+
+			/**
+			 * checks negative coords. of fields, slides them and sets scrollX and scrollY
+			 */
+			$.each(data['fields'], function(key, field) {
+				if(calculateXPos(field) - dX < 0){
+					dX -= fieldWidth;
+					scrollX += fieldWidth;
+				}
+				if(calculateYPos(field) - dY < 0){
+					dY -= fieldHeight;
+					scrollY += fieldHeight;
+				}
+
+			});
+
+
+
+
+			/**
+			 * renders fields and adds event-listeners to them
+			 */
+			$.each(data['fields'], function(key, field) {
+
+				var posX = calculateXPos(field) - dX;
+				var posY = calculateYPos(field) - dY;
+
+				var borderType = 'neutral';
+				if(field['owner'] != null){
+					if (data['clanId'] == field['owner']['id']) {
+						borderType = 'player';
+					} else if (field['owner']['alliance'] != null) {
+						borderType = 'ally';
+					} else {
+						borderType = 'enemy';
+					}
+				}
+
+				var background = "url('"+basepath+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
+				var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
+				var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['x']*field['y']+'; background: '+background+';';
+				div.attr('style', divStyle);
+				div.attr('data-id', field['id']);
+
+				$('#map').append(div);
+
+
+
+				/**
+				 * Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
+				 * @return void
+				 */
+				div.mouseenter(function(e){
+					if (contextMenuShown){
+						return;
+					}
+
+					$('#fieldInfo').show();
+
+					var secret = '???';
+					var none = '---';
+
+					var coords = '['+field['x']+';'+field['y']+']';
+					var type = field['type'];
+					var owner = none;
+					var alliance = none;
+					var facility = none;
+					var level = none;
+
+
+					var ownerId = null;
+					var allianceId = null;
+
+					if (field['owner'] != null){
+						owner = field['owner']['name'];
+						ownerId = field['owner']['id'];
+
+						if (field['owner']['alliance'] != null){
+							alliance = field['owner']['alliance']['name'];
+							allianceId = field['owner']['alliance']['id'];
 						}
 					}
 
-				}
-			}
 
-		});
+					if ((ownerId !== null && ownerId == data['clanId']) || (allianceId !== null && allianceId == data['allianceId'])){
+						if (field['facility'] != null){
+							facility = field['facility'];
+						}
 
-		/**
-		 * checks negative coords. of fields, slides them and sets scrollX and scrollY
-		 */
-		$.each(data['fields'], function(key, field) {
-			if(calculateXPos(field) - dX < 0){
-				dX -= fieldWidth;
-				scrollX += fieldWidth;
-			}
-			if(calculateYPos(field) - dY < 0){
-				dY -= fieldHeight;
-				scrollY += fieldHeight;
-			}
+						if (field['level'] !== null && field['facility'] !== null && field['facility'] != 'headquarters'){
+							level = field['level'];
+						}
 
-		});
-
-
-
-
-		/**
-		 * renders fields and adds event-listeners to them
-		 */
-		$.each(data['fields'], function(key, field) {
-
-			var posX = calculateXPos(field) - dX;
-			var posY = calculateYPos(field) - dY;
-
-			var borderType = 'neutral';
-			if(field['owner'] != null){
-				if (data['clanId'] == field['owner']['id']) {
-					borderType = 'player';
-				} else if (field['owner']['alliance'] != null) {
-					borderType = 'ally';
-				} else {
-					borderType = 'enemy';
-				}
-			}
-
-			var background = "url('"+basepath+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
-			var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
-			var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['x']*field['y']+'; background: '+background+';';
-			div.attr('style', divStyle);
-			div.attr('data-id', field['id']);
-
-			$('#map').append(div);
-
-
-
-			/**
-			 * Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
-			 * @return void
-			 */
-			div.mouseenter(function(e){
-				if (contextMenuShown){
-					return;
-				}
-
-				$('#fieldInfo').show();
-
-				var secret = '???';
-				var none = '---';
-
-				var coords = '['+field['x']+';'+field['y']+']';
-				var type = field['type'];
-				var owner = none;
-				var alliance = none;
-				var facility = none;
-				var level = none;
-
-
-				var ownerId = null;
-				var allianceId = null;
-
-				if (field['owner'] != null){
-					owner = field['owner']['name'];
-					ownerId = field['owner']['id'];
-
-					if (field['owner']['alliance'] != null){
-						alliance = field['owner']['alliance']['name'];
-						allianceId = field['owner']['alliance']['id'];
 					}
-				}
+					else if ((ownerId !== null && ownerId != data['clanId']) || (allianceId !== null && allianceId != data['allianceId'])){
+						facility = secret;
+						level = secret;
 
-
-				if ((ownerId !== null && ownerId == data['clanId']) || (allianceId !== null && allianceId == data['allianceId'])){
-					if (field['facility'] != null){
-						facility = field['facility'];
 					}
 
-					if (field['level'] !== null && field['facility'] !== null && field['facility'] != 'headquarters'){
-						level = field['level'];
+					$("#fieldInfo #coords").html(coords);
+					$("#fieldInfo #type").html(type);
+					$("#fieldInfo #owner").html(owner);
+					$("#fieldInfo #alliance").html(alliance);
+					$("#fieldInfo #facility").html(facility);
+					$("#fieldInfo #level").html(level);
+
+				});
+
+
+				/**
+				 * Hides #fieldInfo
+				 * @return void
+				 */
+				div.mouseleave(function(){
+					$('#fieldInfo').hide();
+				});
+
+
+				/**
+				 * Moves with #infoBox
+				 * @return void
+				 */
+				div.mousemove(function(e) {
+					var localCoordinates = globalToLocal(
+						div.parent(),
+						e.pageX,
+						e.pageY
+					);
+
+					$('#fieldInfo').css("left", localCoordinates.x + 30 - $('#mapContainer').scrollLeft() + 'px');
+					$('#fieldInfo').css("top", localCoordinates.y + 30 - $('#mapContainer').scrollTop() + 'px');
+				});
+
+
+				/**
+				 * Runs when user click some field and increment markedFields by one
+				 * Bugs:	-doesnt mark the second field
+				 * @return void
+				 */
+				div.click(function(e){
+					if(contextMenuShown){
+						hideContextMenu();
+						unmarkAll();
+						return;
 					}
 
-				}
-				else if ((ownerId !== null && ownerId != data['clanId']) || (allianceId !== null && allianceId != data['allianceId'])){
-					facility = secret;
-					level = secret;
+					mark(this);
+					if(initialField === null){
+						initialField = this;
+						showContextMenu(this, e, field, data);
+					}
+					else if (initialField == this){
+						hideContextMenu();
+						unmarkAll();
+					}
+					else{
+						action(initialField, this);
+						hideContextMenu();
+						unmarkAll();
+					}
+				});
 
-				}
 
-				$("#fieldInfo #coords").html(coords);
-				$("#fieldInfo #type").html(type);
-				$("#fieldInfo #owner").html(owner);
-				$("#fieldInfo #alliance").html(alliance);
-				$("#fieldInfo #facility").html(facility);
-				$("#fieldInfo #level").html(level);
 
 			});
-
 
 			/**
-			 * Hides #fieldInfo
-			 * @return void
+			 * slides the sliders
 			 */
-			div.mouseleave(function(){
-				$('#fieldInfo').hide();
-			});
+			$('#mapContainer').scrollLeft(scrollX);
+			$('#mapContainer').scrollTop(scrollY);
 
-
-			/**
-			 * Moves with #infoBox
-			 * @return void
-			 */
-			div.mousemove(function(e) {
-				var localCoordinates = globalToLocal(
-					div.parent(),
-					e.pageX,
-					e.pageY
-				);
-
-				$('#fieldInfo').css("left", localCoordinates.x + 30 - $('#mapContainer').scrollLeft() + 'px');
-				$('#fieldInfo').css("top", localCoordinates.y + 30 - $('#mapContainer').scrollTop() + 'px');
-			});
-
-
-			/**
-			 * Runs when user click some field and increment markedFields by one
-			 * Bugs:	-doesnt mark the second field
-			 * @return void
-			 */
-			div.click(function(e){
-				if(contextMenuShown){
-					hideContextMenu();
-					unmarkAll();
-					return;
-				}
-
-				mark(this);
-				if(initialField === null){
-					initialField = this;
-					showContextMenu(this, e, field, data);
-				}
-				else if (initialField == this){
-					hideContextMenu();
-					unmarkAll();
-				}
-				else{
-					action(initialField, this);
-					hideContextMenu();
-					unmarkAll();
-				}
-			});
-
-
-
+			hideSpinner();
 		});
-
-		/**
-		 * slides the sliders
-		 */
-		$('#mapContainer').scrollLeft(scrollX);
-		$('#mapContainer').scrollTop(scrollY);
-
-		hideSpinner();
-	});
-
+	}
 
 
 	/**
@@ -555,7 +559,7 @@ $(document).ready(function(){
 						'targetId': target['id'],
 						'facility': 'mine'
 					}));
-					addCountdown('důl', 65);
+					addCountdown('důl', 11);
 					hideContextMenu();
 					unmarkAll();
 				});
@@ -701,6 +705,7 @@ $(document).ready(function(){
 		countdownDiv.append(countdownTitleDiv);
 		countdownDiv.append(countdownTimeDiv);
 
+		//change append location
 		$('#mapContainer').parent().prepend(countdownDiv);
 
 		countdown(countdownTimeDiv, remainingTime);
@@ -716,7 +721,8 @@ $(document).ready(function(){
 	{
 
 		if (remainingTime < 0){
-			location.reload(true);
+			renderMap();
+			return;
 		}
 		var t = remainingTime;
 
@@ -735,10 +741,9 @@ $(document).ready(function(){
 
 		var time = h + ':' + m + ':' + s;
 
+		$(countdownTimeDiv).html(time);
 		setTimeout(function(){
-			$(countdownTimeDiv).html(time);
 			countdown(countdownTimeDiv, remainingTime - 1);
-
 		}, 1000);
 
 

@@ -86,7 +86,7 @@ class MapPresenter extends BasePresenter
 				'level' => 1,
 			));
 			$this->flashMessage('Stavba zahájena');
-			$this->redirect('Map:');
+			//$this->redirect('Map:');
 		}
 		else{
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
