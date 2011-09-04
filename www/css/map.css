@@ -24,6 +24,11 @@
 	overflow:auto;
 }
 
+#map {
+	position: relative;
+	background: #000;
+}
+
 .field {
 	cursor: pointer;
 }

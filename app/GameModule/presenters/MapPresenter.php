@@ -7,10 +7,13 @@ class MapPresenter extends BasePresenter
 {
 	public function renderDefault ()
 	{
-		$this->template->size = $this->context->params['game']['map']['size'];
 		$this->template->clan = $this->getPlayerClan();
 	}
 
+	/**
+	 * Send the map via ajax
+	 * @return void
+	 */
 	public function handleFetchMap ()
 	{
 		$clan = $this->getPlayerClan();
@@ -21,23 +24,24 @@ class MapPresenter extends BasePresenter
 		$this->sendPayload();
 	}
 
+	/**
+	 * Send upcoming events via ajax
+	 * @return void
+	 */
 	public function handleFetchEvents ()
 	{
 		$this->payload->events = $this->getEventRepository()->getUpcomingEventsArray($this->getPlayerClan());
 		$this->sendPayload();
 	}
-
 	public function handleFetchFacilities ()
 	{
-		/*
-		$clan = $this->getPlayerClan();
-		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
-		$this->payload->clanId = $this->getPlayerClan()->id;
-		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
-
-		$this->sendPayload();*/
+		$this->sendPayload();
 	}
 
+	/**
+	 * Send resources list via ajax
+	 * @return void
+	 */
 	public function handleFetchResources ()
 	{
 		$this->payload->resources = $this->getResourceRepository()->getResourcesArray($this->getPlayerClan());
