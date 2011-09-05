@@ -149,7 +149,6 @@ a:hover {
 	color: white;
 	float: left;
 	margin-left: 15px;
-
 }
 
 #infoBar #countdownBar{
@@ -157,6 +156,9 @@ a:hover {
 	float: right;
 	margin-right: 15px;
 	cursor: pointer;
-
-
 }
+
+#infoBar #countdownBar:hover{
+	text-decoration: underline;
+}
+
