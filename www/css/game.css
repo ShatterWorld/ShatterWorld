@@ -145,4 +145,20 @@ a:hover {
 	position: relative;
 }
 
+#infoBar #resourceBar{
+	color: white;
+	float: left;
+	margin-left: 15px;
+}
+
+#infoBar #countdownBar{
+	color: white;
+	float: right;
+	margin-right: 15px;
+	cursor: pointer;
+}
+
+#infoBar #countdownBar:hover{
+	text-decoration: underline;
+}
 
