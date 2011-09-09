@@ -129,16 +129,33 @@ $(document).ready(function(){
 	 */
 	var scrollY = 0;
 
+	var resources = new Array();
+	resources['food'] = 0;
+	resources['stone'] = 0;
+	resources['metal'] = 0;
+	resources['fuel'] = 0;
 
-	defaultCountdown();
+	var production = new Array();
+	production['food'] = 0;
+	production['stone'] = 0;
+	production['metal'] = 0;
+	production['fuel'] = 0;
+
+	//fetchEvents();
+	//fetchFacilities();
+	fetchResources();
+
+	//incrementResources();
+	//countdownEvents();
+
 	renderMap();
 
 
 
 	/**
-	  * Renders all countable events (from db)
+	  * Fetches all events data (price, time etc)
 	  */
-	function defaultCountdown()
+	/*function fetchEvents()
 	{
 		$.getJSON('?do=fetchEvents', function(data) {
 			//addCountdown(title, remainingTime)
@@ -146,18 +163,18 @@ $(document).ready(function(){
 		});
 
 
-	}
+	}*/
 
 	/**
 	  * Fetches all facilities data (price, time etc)
 	  */
-	function fetchFacilities()
+	/*function fetchFacilities()
 	{
 		$.getJSON('?do=fetchEvents', function(data) {
 			//facilities = ...
 
 		});
-	}
+	}*/
 
 	/**
 	  * Fetches clans resources
@@ -165,9 +182,56 @@ $(document).ready(function(){
 	function fetchResources()
 	{
 		$.getJSON('?do=fetchResources', function(data) {
-			//resources[] = ...
 
+			alert(data['stone']['balance']);
+			resources['food'] = data['food']['balance'];
+			production['food'] = data['food']['production'];
+
+			resources['stone'] = data['stone']['balance'];
+			production['stone'] = data['stone']['production'];
+
+			resources['metal'] = data['metal']['balance'];
+			production['metal'] = data['metal']['production'];
+
+			resources['fuel'] = data['fuel']['balance'];
+			production['fuel'] = data['fuel']['production'];
+			incrementResources();
 		});
+	}
+
+	/**
+	  * Starts events countdown
+	  */
+/*	function countdownEvents()
+	{
+
+	}*/
+
+	/**
+	  * Starts resources incrementation
+	  */
+	function incrementResources()
+	{
+		var stoneSpan = '#infoBar #resourceBar #stone';
+		incrementResource('stone', stoneSpan);
+	}
+
+	/**
+	  * Incrementats resource
+	  */
+	function incrementResource(resource, span)
+	{
+		//alert(resources[resource]);
+
+		if (production[resource] <= 0){
+			return;
+		}
+
+		resources[resource]++;
+		$(span).html(resources[resource]);
+		setTimeout(function(){
+			incrementResource(resource, span);
+		}, 1000/production[resource]);
 	}
 
 	/**
@@ -710,7 +774,6 @@ $(document).ready(function(){
 	function globalToLocal (context, globalX, globalY)
 	{
 		var position = context.offset();
-		//alert('global2local: '+position.left+' '+position.top);
 
 		return({
 			x: Math.floor( globalX - position.left ),
