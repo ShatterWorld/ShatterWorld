@@ -89,10 +89,7 @@ class MapPresenter extends BasePresenter
 
 /*resources check etc*/
 		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility === null){
-			$this->context->model->getFieldService()->update($target, array(
-				'facility' => $facility,
-				'level' => 1,
-			));
+			$this->context->model->getFieldService()->buildFacility($target, $facility);
 			$this->flashMessage('Stavba zahájena');
 			//$this->redirect('Map:');
 		}

@@ -1,5 +1,6 @@
 <?php
 namespace Rules\Facilities;
+use Rules\IRule;
 
 interface IFacility extends IRule
 {
@@ -14,7 +15,14 @@ interface IFacility extends IRule
 	 * @param int
 	 * @return array of $resource => $cost
 	 */
-	public function getCost ($level = 1);
+	public function getConstructionCost ($level = 1);
+	
+	/**
+	 * Get the construction time of this building or its upgrade to given level
+	 * @param int
+	 * @return int
+	 */
+	public function getConstructionTime ($level = 1);
 	
 	/**
 	 * Get the raw production of the building (before applying any bonuses)

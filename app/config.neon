@@ -25,6 +25,7 @@ common:
 		ruleAliases:
 			unit: Rules\Units
 			field: Rules\Fields
+			facility: Rules\Facilities
 			resource: Rules\Resources
 			event: Rules\Events
 

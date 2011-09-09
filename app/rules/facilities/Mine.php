@@ -9,12 +9,17 @@ class Mine extends AbstractRule implements IFacility
 		return array();
 	}
 	
-	public function getCost ($level = 1)
+	public function getConstructionCost ($level = 1)
 	{
 		return array(
 			'stone' => $level * 10,
 			'metal' => ($level - 1) * 5 
 		);
+	}
+	
+	public function getConstructionTime ($level = 1)
+	{
+		return pow($level, 2) * 90;
 	}
 	
 	public function getProduction ($level = 1)

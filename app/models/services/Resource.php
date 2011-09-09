@@ -35,7 +35,7 @@ class Resource extends BaseService
 		$resources = $this->getRepository()->findResourcesByClan($clan);
 		foreach ($payment as $resource => $amount) {
 			$resources[$resource]->increase($amount);
-			$this->entityManager()->persist($resources[$resource]);
+			$this->entityManager->persist($resources[$resource]);
 		}
 		$this->entityManager->flush();
 	}
