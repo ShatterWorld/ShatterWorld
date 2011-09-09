@@ -17,7 +17,7 @@ class Resource extends BaseEntity
 	private $type;
 	
 	/**
-	 * @Column(type = "integer")
+	 * @Column(type = "float")
 	 * @var int
 	 */
 	private $balance;
@@ -29,7 +29,7 @@ class Resource extends BaseEntity
 	private $clearance;
 	
 	/**
-	 * @Column(type = "integer", nullable = true)
+	 * @Column(type = "float", nullable = true)
 	 * @var int
 	 */
 	private $production;
@@ -44,7 +44,7 @@ class Resource extends BaseEntity
 	 * Constructor
 	 * @param Entites\Clan
 	 * @param string
-	 * @param int
+	 * @param float
 	 */
 	public function __construct (Clan $clan, $type, $balance = 0)
 	{
@@ -80,7 +80,7 @@ class Resource extends BaseEntity
 	
 	/**
 	 * Balance getter
-	 * @return int
+	 * @return float
 	 */
 	public function getBalance ()
 	{
@@ -89,7 +89,7 @@ class Resource extends BaseEntity
 	
 	/**
 	 * Does the account has balance larger than given amount?
-	 * @param int
+	 * @param float
 	 * @return bool
 	 */
 	public function has ($amount)
@@ -100,7 +100,7 @@ class Resource extends BaseEntity
 	
 	/**
 	 * Pays given value from the account
-	 * @param int
+	 * @param float
 	 * @throws InsufficientResourcesException
 	 * @return void
 	 */
@@ -116,7 +116,7 @@ class Resource extends BaseEntity
 	
 	/**
 	 * Add given value to the account
-	 * @param int
+	 * @param float
 	 * @return void
 	 */
 	public function increase ($value)
@@ -145,7 +145,7 @@ class Resource extends BaseEntity
 	
 	/**
 	 * Production getter
-	 * @return int
+	 * @return float
 	 */
 	public function getProduction ()
 	{
@@ -154,7 +154,7 @@ class Resource extends BaseEntity
 	
 	/**
 	 * Production setter
-	 * @param int
+	 * @param float
 	 * @return void
 	 */
 	public function setProduction ($production, $time = NULL)
