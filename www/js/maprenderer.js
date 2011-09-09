@@ -182,19 +182,17 @@ $(document).ready(function(){
 	function fetchResources()
 	{
 		$.getJSON('?do=fetchResources', function(data) {
+			resources['food'] = data['resources']['food']['balance'];
+			production['food'] = data['resources']['food']['production'];
 
-			alert(data['stone']['balance']);
-			resources['food'] = data['food']['balance'];
-			production['food'] = data['food']['production'];
+			resources['stone'] = data['resources']['stone']['balance'];
+			production['stone'] = data['resources']['stone']['production'];
 
-			resources['stone'] = data['stone']['balance'];
-			production['stone'] = data['stone']['production'];
+			resources['metal'] = data['resources']['metal']['balance'];
+			production['metal'] = data['resources']['metal']['production'];
 
-			resources['metal'] = data['metal']['balance'];
-			production['metal'] = data['metal']['production'];
-
-			resources['fuel'] = data['fuel']['balance'];
-			production['fuel'] = data['fuel']['production'];
+			resources['fuel'] = data['resources']['fuel']['balance'];
+			production['fuel'] = data['resources']['fuel']['production'];
 			incrementResources();
 		});
 	}
