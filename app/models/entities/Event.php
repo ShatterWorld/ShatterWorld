@@ -4,6 +4,7 @@ namespace Entities;
 /**
  * A pending event entity
  * @Entity(repositoryClass = "Repositories\Event")
+ * @Table(indexes = {@Index(name = "idx_lock", columns = {"term", "processed", "lockUserId", "lockTimeout"})})
  * @author Jan "Teyras" Buchar
  */
 class Event extends BaseEntity {
