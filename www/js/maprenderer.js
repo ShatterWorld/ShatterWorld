@@ -739,14 +739,13 @@ $(document).ready(function(){
 	function addCountdown(title, remainingTime)
 	{
 		var countdownDiv = $('<div class="countdown" />');
-		var countdownTitleDiv = $('<div class="countdownTitle" />').html(title);
-		var countdownTimeDiv = $('<div class="countdownTime" />');
+		var countdownTitleDiv = $('<span class="countdownTitle" />').html(title+': ');
+		var countdownTimeDiv = $('<span class="countdownTime" />');
 
 		countdownDiv.append(countdownTitleDiv);
 		countdownDiv.append(countdownTimeDiv);
 
-		//change append location
-		$('#mapContainer').parent().prepend(countdownDiv);
+		$('#countdownDialog').prepend(countdownDiv);
 
 		countdown(countdownTimeDiv, remainingTime);
 	}
@@ -762,6 +761,7 @@ $(document).ready(function(){
 
 		if (remainingTime < 0){
 			renderMap();
+			$(countdownTimeDiv).parent().remove();
 			return;
 		}
 		var t = remainingTime;
