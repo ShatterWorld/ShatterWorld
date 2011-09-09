@@ -20,8 +20,12 @@ class Resource extends BaseRepository
 		$qb = $this->createQueryBuilder('r');
 		$qb->where($qb->expr()->eq('r.clan', $clan->id));
 		$result = array();
-		foreach ($qb->getQuery()->getArrayResult() as $resource) {
-			$result[$resource['type']] = $resource;
+		foreach ($qb->getQuery()->getResult() as $resource) {
+			$row = array();
+			$resource->settleBalance();
+			$row['balance'] = $resource->balance;
+			$row['production'] = $resource->production;
+			$result[$resource->type] = $row;
 		}
 		return $result;
 	}
