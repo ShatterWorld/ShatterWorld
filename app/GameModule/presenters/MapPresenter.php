@@ -160,8 +160,8 @@ class MapPresenter extends BasePresenter
 
 /*resources check etc*/
 		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null && $target->level > 1){
-			if ($targer->facility !== null){
-				if($targer->facility !== 'headquarters'){
+			if ($target->facility !== null){
+				if($target->facility !== 'headquarters'){
 					$this->context->model->getFieldService()->update($target, array(
 						'level' => $target->level + 1,
 					));
