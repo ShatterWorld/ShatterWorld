@@ -34,6 +34,10 @@ class Event extends BaseRepository {
 		))->orderBy('e.term');
 		$qb->setParameter(1, $now->format('Y-m-d H:i:s'));
 		$qb->setParameter(2, FALSE);
-		return $qb->getQuery()->getArrayResult();
+		$result = $qb->getQuery()->getArrayResult();
+		foreach ($result as $key => $event) {
+			$result[$key]['countdown'] = $event['term']->format('U') - date('U');
+		}
+		return $result;
 	}
 }
