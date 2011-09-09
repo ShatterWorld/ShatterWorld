@@ -2,6 +2,7 @@
 namespace GameModule;
 use Nette;
 use Nette\Diagnostics\Debugger;
+use InsufficientResourcesException;
 
 class MapPresenter extends BasePresenter
 {
@@ -89,9 +90,12 @@ class MapPresenter extends BasePresenter
 
 /*resources check etc*/
 		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility === null){
-			$this->context->model->getFieldService()->buildFacility($target, $facility);
-			$this->flashMessage('Stavba zahájena');
-			//$this->redirect('Map:');
+			try {
+				$this->context->model->getFieldService()->buildFacility($target, $facility);
+				$this->flashMessage('Stavba zahájena');
+			} catch (InsufficientResourcesException $e) {
+				$this->flashMessage('Nemáte dostatek surovin');
+			}
 		}
 		else{
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');

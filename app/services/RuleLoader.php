@@ -51,7 +51,7 @@ class RuleLoader extends Nette\Object
 	public function get ($type, $rule)
 	{
 		if (!isset($this->instances[$type][$rule])) {
-			$class = $this->aliases[$type] . '\\' . lcfirst($rule);
+			$class = $this->aliases[$type] . '\\' . ucfirst($rule);
 			$this->instances[$type][$rule] = new $class($this->context);
 		}
 		return $this->instances[$type][$rule];

@@ -51,10 +51,10 @@ class StatContainer extends Nette\Object
 	public function getResourceProduction (Entities\Clan $clan, $resource)
 	{
 		$result = 0;
-		foreach ($this->context->model->getFieldRepository()->findByOwner($clan) as $field) {
+		foreach ($this->context->model->getFieldRepository()->findByOwner($clan->id) as $field) {
 			if ($field->facility) {
 				$production = $this->context->rules->get('facility', $field->facility)->getProduction($field->level);
-				$fieldBonus = $this->context->rules->get('field', $field->type)->getProductionBonus();
+				$fieldBonus = $this->context->rules->get('field', $field->type)->getProductionBonuses();
 				$modifier = 1;
 				if (array_key_exists($resource, $fieldBonus)) {
 					$modifier = $modifier + $fieldBonus[$resource] / 100;

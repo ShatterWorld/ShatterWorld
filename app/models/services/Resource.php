@@ -39,4 +39,12 @@ class Resource extends BaseService
 		}
 		$this->entityManager->flush();
 	}
+	
+	public function recalculateProduction (Entities\Clan $clan)
+	{
+		foreach ($this->context->rules->getAll('resource') as $resource => $rule) {
+			$this->update($this->getRepository()->findOneBy(array('clan' => $clan->id, 'type' => lcfirst($resource))), 
+				array('production' => $this->context->stats->getResourceProduction($clan, lcfirst($resource))));
+		}
+	}
 }

@@ -86,6 +86,15 @@ class Event extends BaseEntity {
 	}
 	
 	/**
+	 * Owner getter
+	 * @return Entities\Clan
+	 */
+	public function getOwner ()
+	{
+		return $this->owner;
+	}
+	
+	/**
 	 * Has the event already been processed?
 	 * @return bool
 	 */

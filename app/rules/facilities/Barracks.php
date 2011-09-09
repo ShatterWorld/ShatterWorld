@@ -2,7 +2,7 @@
 namespace Rules\Facilities;
 use Rules\AbstractRule;
 
-class Mine extends AbstractRule implements IFacility
+class Barracks extends AbstractRule implements IFacility
 {
 	public function getDependencies ()
 	{
@@ -13,7 +13,7 @@ class Mine extends AbstractRule implements IFacility
 	{
 		return array(
 			'stone' => $level * 10,
-			'metal' => ($level - 1) * 5 
+			'metal' => ($level - 1) * 5
 		);
 	}
 	
@@ -24,8 +24,6 @@ class Mine extends AbstractRule implements IFacility
 	
 	public function getProduction ($level = 1)
 	{
-		return array(
-			'metal' => $level / 100
-		);
+		return array();
 	}
 }
