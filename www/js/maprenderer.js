@@ -327,15 +327,15 @@ jQuery.extend({
 		addColonisationAction: function(target) {
 			var actionDiv = this.basicActionDiv.clone().html('Kolonizace');
 			actionDiv.click(function(){
-				this.hideContextMenu();
+				jQuery.gameMap.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'sendColonisation',
 					'targetId': target['id']
 				}));
-				this.unmarkAll();
+				jQuery.gameMap.unmarkAll();
 			});
 
-			this.action = null;
+			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -346,14 +346,14 @@ jQuery.extend({
 		addAttackAction: function (){
 			var actionDiv = this.basicActionDiv.clone().html('Útok*');
 			actionDiv.click(function(){
-				this.hideContextMenu();
+				jQuery.gameMap.hideContextMenu();
 				alert('vyberte cíl');
-				this.action = function(from, target){
+				jQuery.gameMap.action = function(from, target){
 					alert('posílám jednotky');
 				};
 			});
 
-			this.action = null;
+			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -364,15 +364,15 @@ jQuery.extend({
 		addUpgradeFacilityAction: function (target){
 			var actionDiv = this.basicActionDiv.clone().html('Upgradovat budovu*');
 			actionDiv.click(function(){
-				this.hideContextMenu();
+				jQuery.gameMap.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'upgradeFacility',
 					'targetId': target['id']
 				}));
-				this.unmarkAll();
+				jQuery.gameMap.unmarkAll();
 			});
 
-			this.action = null;
+			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -383,15 +383,15 @@ jQuery.extend({
 		addDowngradeFacilityAction: function (target){
 			var actionDiv = this.basicActionDiv.clone().html('Downgradovat budovu*');
 			actionDiv.click(function(){
-				this.hideContextMenu();
+				jQuery.gameMap.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'downgradeFacility',
 					'targetId': target['id']
 				}));
-				this.unmarkAll();
+				jQuery.gameMap.unmarkAll();
 			});
 
-			this.action = null;
+			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -402,15 +402,15 @@ jQuery.extend({
 		addDestroyFacilityAction: function (target){
 			var actionDiv = this.basicActionDiv.clone().html('Strhnout budovu*');
 			actionDiv.click(function(){
-				this.hideContextMenu();
+				jQuery.gameMap.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'destroyFacility',
 					'targetId': target['id']
 				}));
-				this.unmarkAll();
+				jQuery.gameMap.unmarkAll();
 			});
 
-			this.action = null;
+			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -432,9 +432,9 @@ jQuery.extend({
 							'targetId': target['id'],
 							'facility': 'mine'
 						}));
-						this.addCountdown('důl', 11);
-						this.hideContextMenu();
-						this.unmarkAll();
+						jQuery.gameMap.addCountdown('důl', 11);
+						jQuery.gameMap.hideContextMenu();
+						jQuery.gameMap.unmarkAll();
 					});
 
 				var barracksDiv = $('<div />')
@@ -446,16 +446,16 @@ jQuery.extend({
 							'targetId': target['id'],
 							'facility': 'barracks'
 						}));
-						this.hideContextMenu();
-						this.unmarkAll();
+						jQuery.gameMap.hideContextMenu();
+						jQuery.gameMap.unmarkAll();
 					});
 
 				$('#contextMenu').append(mineDiv);
 				$('#contextMenu').append(barracksDiv);
-				this.addCancelAction();
+				jQuery.gameMap.addCancelAction();
 			});
 
-			this.action = null;
+			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -467,15 +467,15 @@ jQuery.extend({
 		addLeaveFieldAction: function(target) {
 			var actionDiv = this.basicActionDiv.clone().html('Opustit pole');
 			actionDiv.click(function(){
-				this.hideContextMenu();
+				jQuery.gameMap.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'leaveField',
 					'targetId': target['id']
 				}));
-				this.unmarkAll();
+				jQuery.gameMap.unmarkAll();
 			});
 
-			this.action = null;
+			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -486,11 +486,11 @@ jQuery.extend({
 		addCancelAction: function (){
 			var actionDiv = this.basicActionDiv.clone().html('Zrušit');
 			actionDiv.click(function(){
-				this.unmarkAll();
-				this.hideContextMenu();
+				jQuery.gameMap.unmarkAll();
+				jQuery.gameMap.hideContextMenu();
 			});
 
-			this.action = null;
+			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -557,7 +557,6 @@ jQuery.extend({
 		isNeighbour: function(field, ownerId)
 		{
 			return true;
-
 		},
 
 		/**
@@ -588,9 +587,8 @@ jQuery.extend({
 		 */
 		countdown: function(countdownTimeDiv, remainingTime)
 		{
-
 			if (remainingTime < 0){
-				this.renderMap();
+				this.render();
 				$(countdownTimeDiv).parent().remove();
 				return;
 			}
@@ -613,7 +611,7 @@ jQuery.extend({
 
 			$(countdownTimeDiv).html(time);
 			setTimeout(function(){
-				this.countdown(countdownTimeDiv, remainingTime - 1);
+				jQuery.gameMap.countdown(countdownTimeDiv, remainingTime - 1);
 			}, 1000);
 
 
