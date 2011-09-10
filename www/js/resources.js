@@ -100,7 +100,7 @@ $(document).ready(function(){
 	  */
 	function incrementResource(resource, span)
 	{
-		$(span).html(resources[resource]);
+		$(span).html(Math.floor(resources[resource]));
 
 		period = 0;
 		if (production[resource] == 0){
