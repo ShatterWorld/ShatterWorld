@@ -4,7 +4,7 @@ jQuery.extend({
 		 * @var string - Basepath
 		 */
 		getBasepath : function () {return $('#map').data()['basepath'];},
-	      
+
 		/**
 		  * Cleans the #map and rerender the map (using db-data)
 		  */
@@ -17,7 +17,7 @@ jQuery.extend({
 			  * ajax that gets JSON data of visibleFields
 			  */
 			$.getJSON('?do=fetchMap', function(data) {
-				
+
 				/**
 				 * finds the center and calculate dX and dY
 				 */
@@ -28,8 +28,8 @@ jQuery.extend({
 								if (field['facility'] == 'headquarters'){
 									var posX = jQuery.gameMap.calculateXPos(field);
 									var posY = jQuery.gameMap.calculateYPos(field);
-									dX = posX - jQuery.gameMap.getMapContainerWidth()/2 + jQuery.gameMap.fieldWidth/2;
-									dY = posY - jQuery.gameMap.getMapContainerHeight()/2 + 2*jQuery.gameMap.fieldHeight;
+									jQuery.gameMap.dX = posX - jQuery.gameMap.getMapContainerWidth()/2 + jQuery.gameMap.fieldWidth/2;
+									jQuery.gameMap.dY = posY - jQuery.gameMap.getMapContainerHeight()/2 + 2*jQuery.gameMap.fieldHeight;
 
 									return false;
 								}
@@ -663,7 +663,7 @@ jQuery.extend({
 			'left' : this.getMapContainerWidth()/2+'px',
 			'z-index' : '99999999999'});
 		},
-	      
+
 		/**
 		 * @var represents context menu
 		 */
