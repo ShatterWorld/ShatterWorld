@@ -1,20 +1,23 @@
 jQuery.extend({
-	map: {
+	gameMap: {
+		/**
+		 * @var string - Basepath
+		 */
+		getBasepath : function () {return $('#map').data()['basepath'];},
+	      
 		/**
 		  * Cleans the #map and rerender the map (using db-data)
 		  */
 		render: function () {
 
 			$('#map').html('');
-			jQuery.gameMap.showSpinner();
+			this.showSpinner();
 
 			/**
 			  * ajax that gets JSON data of visibleFields
 			  */
 			$.getJSON('?do=fetchMap', function(data) {
-
-
-
+				
 				/**
 				 * finds the center and calculate dX and dY
 				 */
@@ -25,8 +28,8 @@ jQuery.extend({
 								if (field['facility'] == 'headquarters'){
 									var posX = jQuery.gameMap.calculateXPos(field);
 									var posY = jQuery.gameMap.calculateYPos(field);
-									dX = posX - jQuery.gameMap.mapContainerWidth/2 + jQuery.gameMap.fieldWidth/2;
-									dY = posY - jQuery.gameMap.mapContainerHeight/2 + 2*jQuery.gameMap.fieldHeight;
+									dX = posX - jQuery.gameMap.getMapContainerWidth()/2 + jQuery.gameMap.fieldWidth/2;
+									dY = posY - jQuery.gameMap.getMapContainerHeight()/2 + 2*jQuery.gameMap.fieldHeight;
 
 									return false;
 								}
@@ -74,7 +77,7 @@ jQuery.extend({
 						}
 					}
 
-					var background = "url('"+basepath+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
+					var background = "url('"+jQuery.gameMap.getBasepath()+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
 					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['x']*field['y']+'; background: '+background+';';
 					div.attr('style', divStyle);
@@ -183,17 +186,17 @@ jQuery.extend({
 							return;
 						}
 
-						jQuery.gameMap.mark(this);
+						jQuery.gameMap.mark(jQuery.gameMap);
 						if(jQuery.gameMap.initialField === null){
-							jQuery.gameMap.initialField = this;
-							jQuery.gameMap.showContextMenu(this, e, field, data);
+							jQuery.gameMap.initialField = jQuery.gameMap;
+							jQuery.gameMap.showContextMenu(jQuery.gameMap, e, field, data);
 						}
-						else if (jQuery.gameMap.initialField == this){
+						else if (jQuery.gameMap.initialField == jQuery.gameMap){
 							jQuery.gameMap.hideContextMenu();
 							jQuery.gameMap.unmarkAll();
 						}
 						else{
-							jQuery.gameMap.action(jQuery.gameMap.initialField, this);
+							jQuery.gameMap.action(jQuery.gameMap.initialField, jQuery.gameMap);
 							jQuery.gameMap.hideContextMenu();
 							jQuery.gameMap.unmarkAll();
 						}
@@ -217,7 +220,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		mark: function (field) {
-			$(field).append(jQuery.gameMap.markerImage.clone());
+			$(field).append(this.getMarkerImage().clone());
 		},
 
 			/**
@@ -226,8 +229,8 @@ jQuery.extend({
 	 */
 		unmarkAll: function(){
 			$('.marker').remove();
-			jQuery.gameMap.markedFields = 0;
-			jQuery.gameMap.initialField = null;
+			this.markedFields = 0;
+			this.initialField = null;
 		},
 
 		/**
@@ -238,10 +241,10 @@ jQuery.extend({
 		 */
 		showContextMenu: function(object, e, field, data){
 
-			var contextMenuClone = jQuery.gameMap.contextMenu.clone();
+			var contextMenuClone = this.contextMenu.clone();
 
 			$('#fieldInfo').hide();
-			var localCoords = jQuery.gameMap.globalToLocal(
+			var localCoords = this.globalToLocal(
 				$(object).parent(),
 				e.pageX,
 				e.pageY
@@ -250,29 +253,29 @@ jQuery.extend({
 			contextMenuClone.css("left", localCoords.x + 30 - $('#mapContainer').scrollLeft() + 'px');
 			contextMenuClone.css("top", localCoords.y + 30 - $('#mapContainer').scrollTop() + 'px');
 
-			jQuery.gameMap.contextMenuShown = true;
+			this.contextMenuShown = true;
 			$('#mapContainer').append(contextMenuClone);
 
 			//my
 			if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
-				jQuery.gameMap.addAttackAction();
+				this.addAttackAction();
 				/*resources check*/
 				if (field['facility'] !== null){
 					if(field['facility'] !== 'headquarters'){
-						jQuery.gameMap.addUpgradeFacilityAction(field);
-						jQuery.gameMap.addDestroyFacilityAction(field);
+						this.addUpgradeFacilityAction(field);
+						this.addDestroyFacilityAction(field);
 						if(field['level'] > 1){
-							jQuery.gameMap.addDowngradeFacilityAction(field);
+							this.addDowngradeFacilityAction(field);
 						}
 					}
 
 				}
 				else{
-					jQuery.gameMap.addBuildFacilityAction(field);
+					this.addBuildFacilityAction(field);
 				}
 
 				if ((field['facility'] === null) || (field['facility'] !== null && field['facility'] !== 'headquarters')){
-					jQuery.gameMap.addLeaveFieldAction(field);
+					this.addLeaveFieldAction(field);
 				}
 			}
 			//alliance
@@ -285,15 +288,15 @@ jQuery.extend({
 			}
 			//neutral neighbour
 			else if(isNeighbour(field, data['clanId'])){
-				jQuery.gameMap.addColonisationAction(field);
+				this.addColonisationAction(field);
 			}
 			//other neutral
 			else {
-				jQuery.gameMap.contextMenuShown = false;
-				jQuery.gameMap.unmarkAll();
+				this.contextMenuShown = false;
+				this.unmarkAll();
 			}
 
-			jQuery.gameMap.addCancelAction();
+			this.addCancelAction();
 
 		},
 
@@ -306,25 +309,25 @@ jQuery.extend({
 		{
 			$('#contextMenu').hide('fast');
 			$('#contextMenu').remove();
-			jQuery.gameMap.contextMenuShown = false;
+			this.contextMenuShown = false;
 		},
 
 		/**
 		 * Adds the colonisation action
 		 * @return void
 		 */
-		 addColonisationAction: function(target) {
+		addColonisationAction: function(target) {
 			var actionDiv = basicActionDiv.clone().html('Kolonizace');
 			actionDiv.click(function(){
-				jQuery.gameMap.hideContextMenu();
+				this.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'sendColonisation',
 					'targetId': target['id']
 				}));
-				jQuery.gameMap.unmarkAll();
+				this.unmarkAll();
 			});
 
-			jQuery.gameMap.action = null;
+			this.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -335,14 +338,14 @@ jQuery.extend({
 		addAttackAction: function (){
 			var actionDiv = basicActionDiv.clone().html('Útok*');
 			actionDiv.click(function(){
-				jQuery.gameMap.hideContextMenu();
+				this.hideContextMenu();
 				alert('vyberte cíl');
-				jQuery.gameMap.action = function(from, target){
+				this.action = function(from, target){
 					alert('posílám jednotky');
 				};
 			});
 
-			jQuery.gameMap.action = null;
+			this.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -353,15 +356,15 @@ jQuery.extend({
 		addUpgradeFacilityAction: function (target){
 			var actionDiv = basicActionDiv.clone().html('Upgradovat budovu*');
 			actionDiv.click(function(){
-				jQuery.gameMap.hideContextMenu();
+				this.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'upgradeFacility',
 					'targetId': target['id']
 				}));
-				jQuery.gameMap.unmarkAll();
+				this.unmarkAll();
 			});
 
-			jQuery.gameMap.action = null;
+			this.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -369,18 +372,18 @@ jQuery.extend({
 		 * Adds the downgrade building action
 		 * @return void
 		 */
-		 addDowngradeFacilityAction: function (target){
+		addDowngradeFacilityAction: function (target){
 			var actionDiv = basicActionDiv.clone().html('Downgradovat budovu*');
 			actionDiv.click(function(){
-				jQuery.gameMap.hideContextMenu();
+				this.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'downgradeFacility',
 					'targetId': target['id']
 				}));
-				jQuery.gameMap.unmarkAll();
+				this.unmarkAll();
 			});
 
-			jQuery.gameMap.action = null;
+			this.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -391,15 +394,15 @@ jQuery.extend({
 		addDestroyFacilityAction: function (target){
 			var actionDiv = basicActionDiv.clone().html('Strhnout budovu*');
 			actionDiv.click(function(){
-				jQuery.gameMap.hideContextMenu();
+				this.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'destroyFacility',
 					'targetId': target['id']
 				}));
-				jQuery.gameMap.unmarkAll();
+				this.unmarkAll();
 			});
 
-			jQuery.gameMap.action = null;
+			this.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -407,7 +410,7 @@ jQuery.extend({
 		 * Adds the build building action
 		 * @return void
 		 */
-		 addBuildFacilityAction: function (target){
+		addBuildFacilityAction: function (target){
 			var actionDiv = basicActionDiv.clone().html('Postavit budovu*');
 			actionDiv.click(function(){
 				$('#contextMenu').html('Budovy:');
@@ -421,9 +424,9 @@ jQuery.extend({
 							'targetId': target['id'],
 							'facility': 'mine'
 						}));
-						jQuery.gameMap.addCountdown('důl', 11);
-						jQuery.gameMap.hideContextMenu();
-						jQuery.gameMap.unmarkAll();
+						this.addCountdown('důl', 11);
+						this.hideContextMenu();
+						this.unmarkAll();
 					});
 
 				var barracksDiv = $('<div />')
@@ -435,16 +438,16 @@ jQuery.extend({
 							'targetId': target['id'],
 							'facility': 'barracks'
 						}));
-						jQuery.gameMap.hideContextMenu();
-						jQuery.gameMap.unmarkAll();
+						this.hideContextMenu();
+						this.unmarkAll();
 					});
 
 				$('#contextMenu').append(mineDiv);
 				$('#contextMenu').append(barracksDiv);
-				jQuery.gameMap.addCancelAction();
+				this.addCancelAction();
 			});
 
-			jQuery.gameMap.action = null;
+			this.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -456,15 +459,15 @@ jQuery.extend({
 		addLeaveFieldAction: function(target) {
 			var actionDiv = basicActionDiv.clone().html('Opustit pole');
 			actionDiv.click(function(){
-				jQuery.gameMap.hideContextMenu();
+				this.hideContextMenu();
 				$.get('?' + $.param({
 					'do': 'leaveField',
 					'targetId': target['id']
 				}));
-				jQuery.gameMap.unmarkAll();
+				this.unmarkAll();
 			});
 
-			jQuery.gameMap.action = null;
+			this.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -472,14 +475,14 @@ jQuery.extend({
 		 * Adds the cancel action
 		 * @return void
 		 */
-		 addCancelAction: function (){
+		addCancelAction: function (){
 			var actionDiv = basicActionDiv.clone().html('Zrušit');
 			actionDiv.click(function(){
-				jQuery.gameMap.unmarkAll();
-				jQuery.gameMap.hideContextMenu();
+				this.unmarkAll();
+				this.hideContextMenu();
 			});
 
-			jQuery.gameMap.action = null;
+			this.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
@@ -488,8 +491,7 @@ jQuery.extend({
 		 * @param field
 		 * @return integer
 		 */
-		 calculateXPos:function (field)
-		{
+		calculateXPos : function (field) {
 			return (field['x'] * 43) + (field['y'] * 43);
 		},
 
@@ -498,8 +500,7 @@ jQuery.extend({
 		 * @param field
 		 * @return integer
 		 */
-		 calculateYPos: function (field)
-		{
+		calculateYPos : function (field) {
 			return (field['x'] * -20) + (field['y'] * 19);
 		},
 
@@ -507,9 +508,9 @@ jQuery.extend({
 		 * Shows spinner
 		 * @return void
 		 */
-		 showSpinner: function ()
+		showSpinner: function ()
 		{
-			$('#mapContainer').append(jQuery.gameMap.spinner.clone());
+			$('#mapContainer').append(this.getSpinner().clone());
 		},
 
 		/**
@@ -529,7 +530,7 @@ jQuery.extend({
 		 * @param integer
 		 * @return array of integer
 		 */
-		 globalToLocal: function (context, globalX, globalY)
+		globalToLocal: function (context, globalX, globalY)
 		{
 			var position = context.offset();
 
@@ -545,7 +546,7 @@ jQuery.extend({
 		 * @param iteger
 		 * @return boolean
 		 */
-		 isNeighbour: function(field, ownerId)
+		isNeighbour: function(field, ownerId)
 		{
 			return true;
 
@@ -557,7 +558,7 @@ jQuery.extend({
 		 * @param integer [s]
 		 * @return void
 		 */
-		 addCountdown: function(title, remainingTime)
+		addCountdown: function(title, remainingTime)
 		{
 			var countdownDiv = $('<div class="countdown" />');
 			var countdownTitleDiv = $('<span class="countdownTitle" />').html(title+': ');
@@ -568,7 +569,7 @@ jQuery.extend({
 
 			$('#countdownDialog').prepend(countdownDiv);
 
-			jQuery.gameMap.countdown(countdownTimeDiv, remainingTime);
+			this.countdown(countdownTimeDiv, remainingTime);
 		},
 
 		/**
@@ -577,11 +578,11 @@ jQuery.extend({
 		 * @param integer [s]
 		 * @return void
 		 */
-		 countdown: function(countdownTimeDiv, remainingTime)
+		countdown: function(countdownTimeDiv, remainingTime)
 		{
 
 			if (remainingTime < 0){
-				jQuery.gameMap.renderMap();
+				this.renderMap();
 				$(countdownTimeDiv).parent().remove();
 				return;
 			}
@@ -604,7 +605,7 @@ jQuery.extend({
 
 			$(countdownTimeDiv).html(time);
 			setTimeout(function(){
-				jQuery.gameMap.countdown(countdownTimeDiv, remainingTime - 1);
+				this.countdown(countdownTimeDiv, remainingTime - 1);
 			}, 1000);
 
 
@@ -622,69 +623,51 @@ jQuery.extend({
 		 * @param Field
 		 * @return void
 		 */
-		 action : null,
+		action : null,
 
 		/**
 		 * @var integer - width of field
 		 */
-		 fieldWidth : 60,
+		fieldWidth : 60,
 
 		/**
 		 * @var integer - height of field
 		 */
-		 fieldHeight : 40,
-
-		/**
-		 * @var string - Basepath
-		 */
-		 basepath : $('#map').data()['basepath'],
+		fieldHeight : 40,
 
 		/**
 		 * @var integer - Number of marked fields
 		 */
-		 markedFields : 0,
+		markedFields : 0,
 
 
 		/**
-		  * @var represents marker
-		  */
-		 markerImage : $('<img class="marker" />').attr('src', basepath + '/images/fields/marker.png'),
+		 * @var represents marker
+		 */
+		getMarkerImage : function () {return $('<img class="marker" />').attr('src', this.getBasepath() + '/images/fields/marker.png');},
 
-		/**
-		  * @var string - width of #mapContainer (width+'px')
-		  */
-		 mapContainerWidthStr : $('#mapContainer').css('width'),
+		getMapContainerWidth : function () {
+			var width = $('#mapContainer').css('width');
+			return width.substring(0, width.length -2);
+		},
 
-		/**
-		  * @var integer - width of #mapContainer
-		  */
-		 mapContainerWidth : mapContainerWidthStr.substring(0, mapContainerWidthStr.length -2),
+		getMapContainerHeight : function () {
+			var height = $('#mapContainer').css('height');
+			return height.substring(0, height.length -2)
+		},
 
-		/**
-		  * @var string - height of #mapContainer (height+'px')
-		  */
-		 mapContainerHeightStr : $('#mapContainer').css('height'),
-
-		/**
-		  * @var integer - height of #mapContainer
-		  */
-		 mapContainerHeight : mapContainerHeightStr.substring(0, mapContainerHeightStr.length -2),
-
-		/**
-		  * @var represents spinner
-		  */
-		 spinner : $('<img class="spinner" />').attr('src', basepath + '/images/spinner.gif'),
-		spinner.css({
+		getSpinner : function () {
+			return $('<img class="spinner" />').attr('src', this.getBasepath() + '/images/spinner.gif').css({
 			'position' : 'absolute',
-			'top' : mapContainerHeight/2+'px',
-			'left' : mapContainerWidth/2+'px',
-			'z-index' : '99999999999'
-		}),
-
+			'top' : this.getMapContainerHeight()/2+'px',
+			'left' : this.getMapContainerWidth()/2+'px',
+			'z-index' : '99999999999'});
+		},
+	      
 		/**
-		  * @var represents context menu
-		  */
-		 contextMenu : $('<div id="contextMenu" />')
+		 * @var represents context menu
+		 */
+		contextMenu : $('<div id="contextMenu" />')
 			.html('<h3>Akce:</h3>')
 			.css({
 				'background' : "#5D6555",
@@ -699,47 +682,41 @@ jQuery.extend({
 				'opacity' : "0.9"
 			}),
 
-		 basicActionDiv : $('<div class="action" />')
+		basicActionDiv : $('<div class="action" />')
 			.css({
 				'cursor' : "pointer",
 				'text-decoration' : "underline",
 			}),
 
 		/**
-		  * @var boolean
-		  */
-		 contextMenuShown : false,
+		 * @var boolean
+		 */
+		contextMenuShown : false,
 
 		/**
-		  * @var boolean
-		  */
-		 selectTarget : false,
+		 * @var boolean
+		 */
+		selectTarget : false,
 
 		/**
 		 * @var represents x-offset between real and calculated coord. of fields
 		 */
-		 dX : 0,
+		dX : 0,
 
 		/**
 		 * @var represents y-offset between real and calculated coord. of fields
 		 */
-		 dY : 0,
+		dY : 0,
 
 		/**
 		 * @var represents how much the scroll bar must move to the left
 		 */
-		 scrollX : 0,
+		scrollX : 0,
 
 		/**
 		 * @var represents how much the scroll bar must move to the bottom
 		 */
-		 scrollY : 0
-
-
-
-
-
-
+		scrollY : 0
 	}
 });
 
