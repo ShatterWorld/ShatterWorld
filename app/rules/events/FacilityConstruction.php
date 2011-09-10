@@ -11,6 +11,6 @@ class FacilityConstruction extends AbstractRule implements IEvent
 			'facility' => $construction->constructionType,
 			'level' => 1
 		));
-		$this->getContext()->model->getResourceService()->recalculateProduction($construction->event->owner);
+		$this->getContext()->model->getResourceService()->recalculateProduction($construction->event->owner, $construction->event->term);
 	}
 }
