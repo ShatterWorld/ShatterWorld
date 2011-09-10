@@ -1,3 +1,11 @@
+/**
+ * Map renderer (including action, infobox, context menu, countdown etc.)
+ * @author Petr Bělohlávek
+ */
+
+/**
+ * Global functions
+ */
 jQuery.extend({
 	gameMap: {
 		/**
@@ -287,7 +295,7 @@ jQuery.extend({
 				alert('enemy');
 			}
 			//neutral neighbour
-			else if(isNeighbour(field, data['clanId'])){
+			else if(this.isNeighbour(field, data['clanId'])){
 				this.addColonisationAction(field);
 			}
 			//other neutral
@@ -317,7 +325,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addColonisationAction: function(target) {
-			var actionDiv = basicActionDiv.clone().html('Kolonizace');
+			var actionDiv = this.basicActionDiv.clone().html('Kolonizace');
 			actionDiv.click(function(){
 				this.hideContextMenu();
 				$.get('?' + $.param({
@@ -336,7 +344,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addAttackAction: function (){
-			var actionDiv = basicActionDiv.clone().html('Útok*');
+			var actionDiv = this.basicActionDiv.clone().html('Útok*');
 			actionDiv.click(function(){
 				this.hideContextMenu();
 				alert('vyberte cíl');
@@ -354,7 +362,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addUpgradeFacilityAction: function (target){
-			var actionDiv = basicActionDiv.clone().html('Upgradovat budovu*');
+			var actionDiv = this.basicActionDiv.clone().html('Upgradovat budovu*');
 			actionDiv.click(function(){
 				this.hideContextMenu();
 				$.get('?' + $.param({
@@ -373,7 +381,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addDowngradeFacilityAction: function (target){
-			var actionDiv = basicActionDiv.clone().html('Downgradovat budovu*');
+			var actionDiv = this.basicActionDiv.clone().html('Downgradovat budovu*');
 			actionDiv.click(function(){
 				this.hideContextMenu();
 				$.get('?' + $.param({
@@ -392,7 +400,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addDestroyFacilityAction: function (target){
-			var actionDiv = basicActionDiv.clone().html('Strhnout budovu*');
+			var actionDiv = this.basicActionDiv.clone().html('Strhnout budovu*');
 			actionDiv.click(function(){
 				this.hideContextMenu();
 				$.get('?' + $.param({
@@ -411,7 +419,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addBuildFacilityAction: function (target){
-			var actionDiv = basicActionDiv.clone().html('Postavit budovu*');
+			var actionDiv = this.basicActionDiv.clone().html('Postavit budovu*');
 			actionDiv.click(function(){
 				$('#contextMenu').html('Budovy:');
 
@@ -457,7 +465,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addLeaveFieldAction: function(target) {
-			var actionDiv = basicActionDiv.clone().html('Opustit pole');
+			var actionDiv = this.basicActionDiv.clone().html('Opustit pole');
 			actionDiv.click(function(){
 				this.hideContextMenu();
 				$.get('?' + $.param({
@@ -476,7 +484,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addCancelAction: function (){
-			var actionDiv = basicActionDiv.clone().html('Zrušit');
+			var actionDiv = this.basicActionDiv.clone().html('Zrušit');
 			actionDiv.click(function(){
 				this.unmarkAll();
 				this.hideContextMenu();
@@ -642,20 +650,33 @@ jQuery.extend({
 
 
 		/**
-		 * @var represents marker
+		 * Returns object representing the marker
+		 * @return object
 		 */
 		getMarkerImage : function () {return $('<img class="marker" />').attr('src', this.getBasepath() + '/images/fields/marker.png');},
 
+		/**
+		 * Returns the width of #mapContainer
+		 * @return int
+		 */
 		getMapContainerWidth : function () {
 			var width = $('#mapContainer').css('width');
 			return width.substring(0, width.length -2);
 		},
 
+		/**
+		 * Returns the height of #mapContainer
+		 * @return int
+		 */
 		getMapContainerHeight : function () {
 			var height = $('#mapContainer').css('height');
 			return height.substring(0, height.length -2)
 		},
 
+		/**
+		 * Returns object representing the spinner
+		 * @return object
+		 */
 		getSpinner : function () {
 			return $('<img class="spinner" />').attr('src', this.getBasepath() + '/images/spinner.gif').css({
 			'position' : 'absolute',
@@ -665,7 +686,7 @@ jQuery.extend({
 		},
 
 		/**
-		 * @var represents context menu
+		 * @var representing the context menu
 		 */
 		contextMenu : $('<div id="contextMenu" />')
 			.html('<h3>Akce:</h3>')
@@ -682,6 +703,9 @@ jQuery.extend({
 				'opacity' : "0.9"
 			}),
 
+		/**
+		 * @var representing a div used in #contextMenu
+		 */
 		basicActionDiv : $('<div class="action" />')
 			.css({
 				'cursor' : "pointer",
@@ -722,9 +746,7 @@ jQuery.extend({
 
 
 /**
- * Map renderer (including action, infobox, context menu, countdown etc.)
- * @author Petr Bělohlávek
- *
+ * Document ready
  */
 $(document).ready(function(){
 	jQuery.gameMap.render();
