@@ -189,7 +189,7 @@ jQuery.extend({
 						jQuery.gameMap.mark(jQuery.gameMap);
 						if(jQuery.gameMap.initialField === null){
 							jQuery.gameMap.initialField = jQuery.gameMap;
-							jQuery.gameMap.showContextMenu(jQuery.gameMap, e, field, data);
+							jQuery.gameMap.showContextMenu(div, e, field, data);
 						}
 						else if (jQuery.gameMap.initialField == jQuery.gameMap){
 							jQuery.gameMap.hideContextMenu();
