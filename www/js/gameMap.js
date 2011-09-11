@@ -430,7 +430,7 @@ jQuery.extend({
 							'targetId': target['id'],
 							'facility': 'mine'
 						}));
-						jQuery.countdown.addCountdown('důl', 11);
+						jQuery.events.fetchEvents();
 						jQuery.gameMap.hideContextMenu();
 						jQuery.gameMap.unmarkAll();
 					});
@@ -442,6 +442,7 @@ jQuery.extend({
 							'targetId': target['id'],
 							'facility': 'barracks'
 						}));
+						jQuery.events.fetchEvents();
 						jQuery.gameMap.hideContextMenu();
 						jQuery.gameMap.unmarkAll();
 					});
