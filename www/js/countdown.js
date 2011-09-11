@@ -37,7 +37,9 @@ jQuery.extend({
 		countdown: function(countdownTimeDiv, remainingTime)
 		{
 			if (remainingTime < 0){
-				jQuery.gameMap.render();
+				if (typeof(jQuery.jews) != 'undefined'){
+					jQuery.gameMap.render();
+				}
 				$(countdownTimeDiv).parent().remove();
 				return;
 			}
