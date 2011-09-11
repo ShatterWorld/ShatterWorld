@@ -29,14 +29,14 @@ class Event extends BaseRepository {
 		$now = new \DateTime;
 		$qb = $this->createQueryBuilder('e');
 		$qb->where($qb->expr()->andX(
-			$qb->expr()->gte('e.term', '?1'),
+			$qb->expr()->gte('e.owner', '?1'),
 			$qb->expr()->eq('e.processed', '?2')
 		))->orderBy('e.term');
-		$qb->setParameter(1, $now->format('Y-m-d H:i:s'));
+		$qb->setParameter(1, $clan->id);
 		$qb->setParameter(2, FALSE);
 		$result = $qb->getQuery()->getArrayResult();
 		foreach ($result as $key => $event) {
-			$result[$key]['countdown'] = $event['term']->format('U') - date('U');
+			$result[$key]['countdown'] = max($event['term']->format('U') - date('U'), 0);
 		}
 		return $result;
 	}

@@ -72,7 +72,7 @@ class Event extends BaseEntity {
 	 */
 	public function getTerm ()
 	{
-		return $this->type;
+		return $this->term;
 	}
 	
 	/**
