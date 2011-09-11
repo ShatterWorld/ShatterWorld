@@ -6,7 +6,7 @@ interface IFacility extends IRule
 {
 	/**
 	 * Get this building's dependencies
-	 * @return array
+	 * @return array of $facility => $level
 	 */
 	public function getDependencies ();
 	

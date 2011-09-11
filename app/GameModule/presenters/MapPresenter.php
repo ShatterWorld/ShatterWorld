@@ -27,6 +27,7 @@ class MapPresenter extends BasePresenter
 
 	public function handleFetchFacilities ()
 	{
+		$this->payload->facilities = $this->context->stats->getAvailableFacilities($this->getPlayerClan());
 		$this->sendPayload();
 	}
 

@@ -55,6 +55,22 @@ class Field extends BaseRepository {
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
+	public function getClanFacilities (Entities\Clan $clan)
+	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('max(f.level) level', 'f.facility')
+			->from($this->getEntityName(), 'f')
+			->where($qb->expr()->andX(
+				$qb->expr()->isNotNull('f.facility'),
+				$qb->expr()->eq('f.owner', $clan->id)))
+			->groupBy('f.facility');
+		$result = array();
+		foreach ($qb->getQuery()->getArrayResult() as $row) {
+			$result[$row['facility']] = $row['level'];
+		}
+		return $result;
+	}
+	
 	/**
 	* Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
 	* @param Entities\Field

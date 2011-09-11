@@ -66,4 +66,23 @@ class StatContainer extends Nette\Object
 		}
 		return $result;
 	}
+	
+	public function getAvailableFacilities (Entities\Clan $clan)
+	{
+		$result = array();
+		$buildings = $this->context->model->getFieldRepository()->getClanFacilities($clan);
+		foreach ($this->context->rules->getAll('facility') as $name => $facility) {
+			$depsSatisfied = TRUE;
+			foreach ($facility->getDependencies() as $dep => $level) {
+				if (!isset($buildings[$dep]) || $buildings[$dep] <= $level) {
+					$depsSatisfied = FALSE;
+					break;
+				}
+			}
+			if ($depsSatisfied) {
+				$result[] = $name;
+			}
+		}
+		return $result;
+	}
 }
