@@ -680,8 +680,8 @@ jQuery.extend({
 		 * @var represents how much the scroll bar must move to the bottom
 		 */
 		scrollY : 0
-	}
-	countdown{
+	},
+	countdown: {
 		/**
 		 * Adds countdown
 		 * @param string
@@ -738,7 +738,7 @@ jQuery.extend({
 			}, 1000);
 
 
-		},
+		}
 
 
 	}
