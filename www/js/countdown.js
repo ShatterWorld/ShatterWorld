@@ -74,8 +74,12 @@ jQuery.extend({
 		 */
 		cleanDialog: function(){
 			$('#countdownDialog').html('');
-		}
+		},
 
+		/**
+		 * @var boolean, true if dialog is shown, otherwise false
+		 */
+		dialogShown : false
 
 	}
 });
@@ -86,19 +90,16 @@ jQuery.extend({
 
 $(document).ready(function(){
 	$('#countdownBar').click(function(){
-		//$('#countdownDialog').toggle('fast');
-
-		$('#countdownDialog').dialog({
-			autoOpen: true,
-			//width: 600,
-			buttons: {
-				"Zavřít": function() {
-					$('#countdownDialog').dialog("close");
-				}
-			},
-			title: "Odpočítávání"
-		});
-
+		if (!jQuery.countdown.dialogShown){
+			$('#countdownDialog').dialog({
+				title: "Odpočítávání"
+			});
+			jQuery.countdown.dialogShown = true;
+		}
+		else{
+			$('#countdownDialog').dialog("close");
+			jQuery.countdown.dialogShown = false;
+		}
 
 	});
 });
