@@ -79,3 +79,14 @@ jQuery.extend({
 
 	}
 });
+
+/**
+ * Manages countdownDialog
+ */
+
+$(document).ready(function(){
+	$('#countdownBar').click(function(){
+		$('#countdownDialog').toggle('fast');
+	});
+});
+

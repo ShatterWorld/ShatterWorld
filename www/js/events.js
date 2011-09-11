@@ -15,9 +15,15 @@ jQuery.extend({
 			$.getJSON('?do=fetchEvents', function(data) {
 
 				jQuery.countdown.cleanDialog();
+				var count = 0;
 				$.each(data['events'], function(key, event) {
 					jQuery.countdown.addCountdown('ahoj', event['countdown']);
+					count++
 				});
+				if (count > 0){
+					$('#countdownBar').show();
+					$('#countdownCount').html(count);
+				}
 
 			});
 

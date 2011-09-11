@@ -332,6 +332,7 @@ jQuery.extend({
 					'do': 'sendColonisation',
 					'targetId': target['id']
 				}));
+				jQuery.events.fetchEvents();
 				jQuery.gameMap.unmarkAll();
 			});
 
@@ -369,6 +370,7 @@ jQuery.extend({
 					'do': 'upgradeFacility',
 					'targetId': target['id']
 				}));
+				jQuery.events.fetchEvents();
 				jQuery.gameMap.unmarkAll();
 			});
 
@@ -388,6 +390,7 @@ jQuery.extend({
 					'do': 'downgradeFacility',
 					'targetId': target['id']
 				}));
+				jQuery.events.fetchEvents();
 				jQuery.gameMap.unmarkAll();
 			});
 
@@ -407,6 +410,7 @@ jQuery.extend({
 					'do': 'destroyFacility',
 					'targetId': target['id']
 				}));
+				jQuery.events.fetchEvents();
 				jQuery.gameMap.unmarkAll();
 			});
 
@@ -469,6 +473,7 @@ jQuery.extend({
 					'do': 'leaveField',
 					'targetId': target['id']
 				}));
+				jQuery.events.fetchEvents();
 				jQuery.gameMap.unmarkAll();
 			});
 
