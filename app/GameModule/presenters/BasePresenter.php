@@ -13,9 +13,7 @@ abstract class BasePresenter extends \BasePresenter
 		if ($this->getAction(TRUE) !== ':Game:Clan:new' && !$this->getPlayerClan()) {
  			$this->redirect('Clan:new');
 		}
-		if (!$this->isAjax()) {
-			$this->context->eventService->processPendingEvents();
-		}
+		$this->context->eventService->processPendingEvents();
 	}
 
 	public function handleLogout ()
