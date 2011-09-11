@@ -1,5 +1,5 @@
 /**
- * Game map
+ * GameMap
  * @author Petr Bělohlávek
  */
 
@@ -423,9 +423,7 @@ jQuery.extend({
 			actionDiv.click(function(){
 				$('#contextMenu').html('Budovy:');
 
-				var mineDiv = $('<div />')
-					.append('Důl')
-					.css('cursor', 'pointer')
+				var mineDiv = jQuery.gameMap.basicActionDiv.clone().html('Důl')
 					.click(function(){
 						$.get('?' + $.param({
 							'do': 'buildFacility',
@@ -437,9 +435,7 @@ jQuery.extend({
 						jQuery.gameMap.unmarkAll();
 					});
 
-				var barracksDiv = $('<div />')
-					.append('Kasárny')
-					.css('cursor', 'pointer')
+				var barracksDiv = jQuery.gameMap.basicActionDiv.clone().html('Kasárny')
 					.click(function(){
 						$.get('?' + $.param({
 							'do': 'buildFacility',
@@ -648,9 +644,8 @@ jQuery.extend({
 		basicActionDiv : $('<div class="action" />')
 			.css({
 				'cursor' : "pointer",
-				'text-decoration' : "underline",
+				'text-decoration' : "underline"
 			}),
-
 		/**
 		 * @var boolean
 		 */
