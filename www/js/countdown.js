@@ -92,12 +92,6 @@ $(document).ready(function(){
 	$('#countdownBar').click(function(){
 		if (!jQuery.countdown.dialogShown){
 			$('#countdownDialog').dialog({
-				autoOpen: true,
-				buttons: {
-					"Zavřít": function() {
-						$('#countdownDialog').dialog("close");
-					}
-				},
 				title: "Odpočítávání"
 			});
 			jQuery.countdown.dialogShown = true;
