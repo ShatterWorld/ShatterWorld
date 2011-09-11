@@ -23,7 +23,7 @@ jQuery.extend({
 			countdownDiv.append(countdownTitleDiv);
 			countdownDiv.append(countdownTimeDiv);
 
-			$('#countdownDialog').prepend(countdownDiv);
+			$('#countdownDialog').append(countdownDiv);
 
 			this.countdown(countdownTimeDiv, remainingTime);
 		},
@@ -37,10 +37,10 @@ jQuery.extend({
 		countdown: function(countdownTimeDiv, remainingTime)
 		{
 			if (remainingTime < 0){
-				if (typeof(jQuery.jews) != 'undefined'){
+				if (typeof(jQuery.gameMap) != 'undefined'){
 					jQuery.gameMap.render();
 				}
-				$(countdownTimeDiv).parent().remove();
+				jQuery.events.fetchEvents();
 				return;
 			}
 			var t = remainingTime;
@@ -66,6 +66,14 @@ jQuery.extend({
 			}, 1000);
 
 
+		},
+
+		/**
+		 * Cleans the #countdownDialog
+		 * @return void
+		 */
+		cleanDialog: function(){
+			$('#countdownDialog').html('');
 		}
 
 
