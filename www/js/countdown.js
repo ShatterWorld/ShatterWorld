@@ -86,7 +86,20 @@ jQuery.extend({
 
 $(document).ready(function(){
 	$('#countdownBar').click(function(){
-		$('#countdownDialog').toggle('fast');
+		//$('#countdownDialog').toggle('fast');
+
+		$('#countdownDialog').dialog({
+			autoOpen: true,
+			//width: 600,
+			buttons: {
+				"Zavřít": function() {
+					$('#countdownDialog').dialog("close");
+				}
+			},
+			title: "Odpočítávání"
+		});
+
+
 	});
 });
 

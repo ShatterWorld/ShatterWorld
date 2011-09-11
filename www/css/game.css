@@ -166,8 +166,8 @@ a:hover {
 }
 
 #countdownDialog{
-	color: white;
+	/*color: white;*/
 	display: none;
-	padding-left: 15px;
-	margin-bottom: 10px;
+	/*padding-left: 15px;
+	margin-bottom: 10px;*/
 }
