@@ -1,122 +1,95 @@
+/**
+ * Countdown
+ * @author Petr Bělohlávek
+ */
+
+/**
+ * Global functions
+ */
+jQuery.extend({
+	resources: {
+
+		/**
+		  * @var int
+		  * asoc array representing the balance of each resource
+		  */
+		resources : new Array(),
+
+		/**
+		  * @var int
+		  * asoc array representing the productin of each resource
+		  */
+		production : new Array(),
+
+		init: function(){
+			this.resources['food'] = 0;
+			this.resources['stone'] = 0;
+			this.resources['metal'] = 0;
+			this.resources['fuel'] = 0;
+			this.production['food'] = 0;
+			this.production['stone'] = 0;
+			this.production['metal'] = 0;
+			this.production['fuel'] = 0;
+		},
+
+		/**
+		  * Fetches clans resources
+		  */
+		fetchResources: function ()
+		{
+			$.getJSON('?do=fetchResources', function(data) {
+				jQuery.resources.resources['food'] = data['resources']['food']['balance'];
+				jQuery.resources.production['food'] = data['resources']['food']['production'];
+
+				jQuery.resources.resources['stone'] = data['resources']['stone']['balance'];
+				jQuery.resources.production['stone'] = data['resources']['stone']['production'];
+
+				jQuery.resources.resources['metal'] = data['resources']['metal']['balance'];
+				jQuery.resources.production['metal'] = data['resources']['metal']['production'];
+
+				jQuery.resources.resources['fuel'] = data['resources']['fuel']['balance'];
+				jQuery.resources.production['fuel'] = data['resources']['fuel']['production'];
+
+				jQuery.resources.incrementResource('food', '#infoBar #resourceBar #food');
+				jQuery.resources.incrementResource('stone', '#infoBar #resourceBar #stone');
+				jQuery.resources.incrementResource('metal', '#infoBar #resourceBar #metal');
+				jQuery.resources.incrementResource('fuel', '#infoBar #resourceBar #fuel');
+			});
+		},
+
+		/**
+		  * Increments resource
+		  */
+		incrementResource: function(resource, span)
+		{
+			$(span).html(Math.floor(this.resources[resource]));
+
+			period = 0;
+			if (this.production[resource] == 0){
+				return;
+			}
+			else if (this.production[resource] < 0){
+				this.resources[resource]--;
+				period = -1000/this.production[resource];
+			}
+			else{
+				this.resources[resource]++;
+				period = 1000/this.production[resource];
+			}
+
+			setTimeout(function(){
+				jQuery.resources.incrementResource(resource, span);
+			}, period);
+		}
+
+
+
+
+	}
+});
+
+
 $(document).ready(function(){
-
-	/**
-	  * @var int
-	  * asoc array representing the balance of each resource
-	  */
-	var resources = new Array();
-	resources['food'] = 0;
-	resources['stone'] = 0;
-	resources['metal'] = 0;
-	resources['fuel'] = 0;
-
-	/**
-	  * @var int
-	  * asoc array representing the productin of each resource
-	  */
-	var production = new Array();
-	production['food'] = 0;
-	production['stone'] = 0;
-	production['metal'] = 0;
-	production['fuel'] = 0;
-
-	//fetchEvents();
-	//fetchFacilities();
-	fetchResources();
-
-	//countdownEvents();
-
-
-/*countdown events etc move to renderer*/
-
-
-	/**
-	  * Fetches all events data (price, time etc)
-	  */
-	/*function fetchEvents()
-	{
-		$.getJSON('?do=fetchEvents', function(data) {
-			//addCountdown(title, remainingTime)
-
-		});
-
-
-	}*/
-
-	/**
-	  * Fetches all facilities data (price, time etc)
-	  */
-	/*function fetchFacilities()
-	{
-		$.getJSON('?do=fetchEvents', function(data) {
-			//facilities = ...
-
-		});
-	}*/
-
-	/**
-	  * Fetches clans resources
-	  */
-	function fetchResources()
-	{
-		$.getJSON('?do=fetchResources', function(data) {
-			resources['food'] = data['resources']['food']['balance'];
-			production['food'] = data['resources']['food']['production'];
-
-			resources['stone'] = data['resources']['stone']['balance'];
-			production['stone'] = data['resources']['stone']['production'];
-
-			resources['metal'] = data['resources']['metal']['balance'];
-			production['metal'] = data['resources']['metal']['production'];
-
-			resources['fuel'] = data['resources']['fuel']['balance'];
-			production['fuel'] = data['resources']['fuel']['production'];
-
-			incrementResources();
-		});
-	}
-
-	/**
-	  * Starts events countdown
-	  */
-/*	function countdownEvents()
-	{
-
-	}*/
-
-	/**
-	  * Starts resources incrementation
-	  */
-	function incrementResources()
-	{
-		incrementResource('food', '#infoBar #resourceBar #food');
-		incrementResource('stone', '#infoBar #resourceBar #stone');
-		incrementResource('metal', '#infoBar #resourceBar #metal');
-		incrementResource('fuel', '#infoBar #resourceBar #fuel');
-	}
-
-	/**
-	  * Increments resource
-	  */
-	function incrementResource(resource, span)
-	{
-		$(span).html(Math.floor(resources[resource]));
-
-		period = 0;
-		if (production[resource] == 0){
-			return;
-		}
-		else if (production[resource] < 0){
-			resources[resource]--;
-			period = -1000/production[resource];
-		}
-		else{
-			resources[resource]++;
-			period = 1000/production[resource];
-		}
-
-		setTimeout(function(){
-			incrementResource(resource, span);
-		}, period);
-	}
+	jQuery.resources.init();
+	jQuery.resources.fetchResources();
 });

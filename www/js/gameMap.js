@@ -268,7 +268,6 @@ jQuery.extend({
 			//my
 			if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 				this.addAttackAction();
-				/*resources check*/
 				if (field['facility'] !== null){
 					if(field['facility'] !== 'headquarters'){
 						this.addUpgradeFacilityAction(field);
@@ -433,20 +432,27 @@ jQuery.extend({
 			actionDiv.click(function(){
 				$('#contextMenu').html('Budovy:');
 
-				$.each(jQuery.gameMap.facilities, function(key, facility) {
-					var facilityDiv = jQuery.gameMap.basicActionDiv.clone().html(facility)
-						.click(function(){
+				$.each(jQuery.gameMap.facilities, function(name, facility) {
+
+					var facilityDiv = jQuery.gameMap.basicActionDiv.clone().html(name)
+					if (jQuery.resources['metal'] >= facility['cost']['metal'] && jQuery.resources['stone'] >= facility['cost']['stone'] && jQuery.resources['food'] >= facility['cost']['food'] && jQuery.resources['fuel'] >= facility['cost']['fuel']){
+						facilityDiv.click(function(){
 							$.get('?' + $.param({
 								'do': 'buildFacility',
 								'targetId': target['id'],
-								'facility': facility
+								'facility': name
 							}));
 
 							jQuery.events.fetchEvents();
 							jQuery.gameMap.hideContextMenu();
 							jQuery.gameMap.unmarkAll();
 						});
-						$('#contextMenu').append(facilityDiv);
+					}
+					else{
+						facilityDiv.css('text-decoration', 'line-through');
+					}
+					$('#contextMenu').append(facilityDiv);
+
 				});
 
 				jQuery.gameMap.addCancelAction();
