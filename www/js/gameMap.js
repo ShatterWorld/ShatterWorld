@@ -435,7 +435,8 @@ jQuery.extend({
 				$.each(jQuery.gameMap.facilities, function(name, facility) {
 
 					var facilityDiv = jQuery.gameMap.basicActionDiv.clone().html(name)
-					if (jQuery.resources['metal'] >= facility['cost']['metal'] && jQuery.resources['stone'] >= facility['cost']['stone'] && jQuery.resources['food'] >= facility['cost']['food'] && jQuery.resources['fuel'] >= facility['cost']['fuel']){
+					if (jQuery.resources.resources['metal'] >= facility['cost']['metal'] && jQuery.resources.resources['stone'] >= facility['cost']['stone'] && jQuery.resources.resources['food'] >= facility['cost']['food'] && jQuery.resources.resources['fuel'] >= facility['cost']['fuel']){
+
 						facilityDiv.click(function(){
 							$.get('?' + $.param({
 								'do': 'buildFacility',
@@ -443,7 +444,13 @@ jQuery.extend({
 								'facility': name
 							}));
 
+							jQuery.resources.resources['metal'] -= facility['cost']['metal'];
+							jQuery.resources.resources['stone'] -= facility['cost']['stone'];
+							jQuery.resources.resources['food'] -= facility['cost']['food'];
+							jQuery.resources.resources['fuel'] -= facility['cost']['fuel'];
+
 							jQuery.events.fetchEvents();
+							jQuery.resources.fetchResources();
 							jQuery.gameMap.hideContextMenu();
 							jQuery.gameMap.unmarkAll();
 						});
