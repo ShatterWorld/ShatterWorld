@@ -21,13 +21,19 @@ class MapPresenter extends BasePresenter
 		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
 		$this->payload->clanId = $this->getPlayerClan()->id;
 		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
-
 		$this->sendPayload();
 	}
 
 	public function handleFetchFacilities ()
 	{
-		$this->payload->facilities = $this->context->stats->getAvailableFacilities($this->getPlayerClan());
+		$facilities = array();
+		foreach ($this->context->stats->getAvailableFacilities($this->getPlayerClan()) as $facility) {
+			$rule = $this->context->rules->get('facility', $facility);
+			$facilities[$facility] = array();
+			$facilities[$facility]['cost'] = $rule->getConstructionCost(1);
+			$facilities[$facility]['time'] = $rule->getConstructionTime(1);
+		}
+		$this->payload->facilities = $facilities;
 		$this->sendPayload();
 	}
 
