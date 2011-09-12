@@ -20,6 +20,7 @@ jQuery.extend({
 
 			$('#map').html('');
 			this.showSpinner();
+			this.fetchFacilities();
 
 			/**
 			  * ajax that gets JSON data of visibleFields
@@ -322,6 +323,7 @@ jQuery.extend({
 
 		/**
 		 * Adds the colonisation action
+		 * @param field
 		 * @return void
 		 */
 		addColonisationAction: function(target) {
@@ -360,6 +362,7 @@ jQuery.extend({
 
 		/**
 		 * Adds the upgrade building action
+		 * @param field
 		 * @return void
 		 */
 		addUpgradeFacilityAction: function (target){
@@ -380,6 +383,7 @@ jQuery.extend({
 
 		/**
 		 * Adds the downgrade building action
+		 * @param field
 		 * @return void
 		 */
 		addDowngradeFacilityAction: function (target){
@@ -400,6 +404,7 @@ jQuery.extend({
 
 		/**
 		 * Adds the destroy building action
+		 * @param field
 		 * @return void
 		 */
 		addDestroyFacilityAction: function (target){
@@ -420,6 +425,7 @@ jQuery.extend({
 
 		/**
 		 * Adds the build building action
+		 * @param field
 		 * @return void
 		 */
 		addBuildFacilityAction: function (target){
@@ -427,42 +433,33 @@ jQuery.extend({
 			actionDiv.click(function(){
 				$('#contextMenu').html('Budovy:');
 
-				var mineDiv = jQuery.gameMap.basicActionDiv.clone().html('Důl')
-					.click(function(){
-						$.get('?' + $.param({
-							'do': 'buildFacility',
-							'targetId': target['id'],
-							'facility': 'mine'
-						}));
-						jQuery.events.fetchEvents();
-						jQuery.gameMap.hideContextMenu();
-						jQuery.gameMap.unmarkAll();
-					});
+				$.each(jQuery.gameMap.facilities, function(key, facility) {
+					var facilityDiv = jQuery.gameMap.basicActionDiv.clone().html(facility)
+						.click(function(){
+							$.get('?' + $.param({
+								'do': 'buildFacility',
+								'targetId': target['id'],
+								'facility': facility
+							}));
 
-				var barracksDiv = jQuery.gameMap.basicActionDiv.clone().html('Kasárny')
-					.click(function(){
-						$.get('?' + $.param({
-							'do': 'buildFacility',
-							'targetId': target['id'],
-							'facility': 'barracks'
-						}));
-						jQuery.events.fetchEvents();
-						jQuery.gameMap.hideContextMenu();
-						jQuery.gameMap.unmarkAll();
-					});
+							jQuery.events.fetchEvents();
+							jQuery.gameMap.hideContextMenu();
+							jQuery.gameMap.unmarkAll();
+						});
+						$('#contextMenu').append(facilityDiv);
+				});
 
-				$('#contextMenu').append(mineDiv);
-				$('#contextMenu').append(barracksDiv);
 				jQuery.gameMap.addCancelAction();
+
 			});
 
 			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
 		},
 
-
 		/**
 		 * Adds the colonisation action
+		 * @param field
 		 * @return void
 		 */
 		addLeaveFieldAction: function(target) {
@@ -494,6 +491,17 @@ jQuery.extend({
 
 			jQuery.gameMap.action = null;
 			$('#contextMenu').append(actionDiv);
+		},
+
+		/**
+		 * Fetches facilities data and saves them into jQuery.gameMap.facilities
+		 * @return void
+		 */
+		fetchFacilities: function (){
+			$.getJSON('?do=fetchFacilities', function(data) {
+				jQuery.gameMap.facilities = data['facilities'];
+			});
+
 		},
 
 		/**
@@ -663,23 +671,27 @@ jQuery.extend({
 		selectTarget : false,
 
 		/**
-		 * @var represents x-offset between real and calculated coord. of fields
+		 * @var integer represents x-offset between real and calculated coord. of fields
 		 */
 		dX : 0,
 
 		/**
-		 * @var represents y-offset between real and calculated coord. of fields
+		 * @var integer represents y-offset between real and calculated coord. of fields
 		 */
 		dY : 0,
 
 		/**
-		 * @var represents how much the scroll bar must move to the left
+		 * @var integer represents how much the scroll bar must move to the left
 		 */
 		scrollX : 0,
 
 		/**
-		 * @var represents how much the scroll bar must move to the bottom
+		 * @var integer represents how much the scroll bar must move to the bottom
 		 */
-		scrollY : 0
+		scrollY : 0,
+		/**
+		 * @var JSON represents facilities
+		 */
+		facilities : null
 	}
 });
