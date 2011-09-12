@@ -27,10 +27,12 @@ class MapPresenter extends BasePresenter
 	public function handleFetchFacilities ()
 	{
 		$facilities = array();
+		$resources = $this->context->rules->getAll('resource');
+		$zeroCost = array_combine(array_keys($resources), array_fill(0, count($resources), 0));
 		foreach ($this->context->stats->getAvailableFacilities($this->getPlayerClan()) as $facility) {
 			$rule = $this->context->rules->get('facility', $facility);
 			$facilities[$facility] = array();
-			$facilities[$facility]['cost'] = $rule->getConstructionCost(1);
+			$facilities[$facility]['cost'] = array_merge($zeroCost, $rule->getConstructionCost(1));
 			$facilities[$facility]['time'] = $rule->getConstructionTime(1);
 		}
 		$this->payload->facilities = $facilities;
