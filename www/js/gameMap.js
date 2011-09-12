@@ -88,7 +88,7 @@ jQuery.extend({
 
 					var background = "url('"+jQuery.gameMap.getBasepath()+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
-					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['x']*field['y']+'; background: '+background+';';
+					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['coordX']*field['coordY']+'; background: '+background+';';
 					div.attr('style', divStyle);
 					div.attr('data-id', field['id']);
 
@@ -110,7 +110,7 @@ jQuery.extend({
 						var secret = '???';
 						var none = '---';
 
-						var coords = '['+field['x']+';'+field['y']+']';
+						var coords = '['+field['coordX']+';'+field['coordY']+']';
 						var type = field['type'];
 						var owner = none;
 						var alliance = none;
@@ -270,7 +270,7 @@ jQuery.extend({
 		 * @return integer
 		 */
 		calculateXPos : function (field) {
-			return (field['x'] * 43) + (field['y'] * 43);
+			return (field['coordX'] * 43) + (field['coordY'] * 43);
 		},
 
 		/**
@@ -279,7 +279,7 @@ jQuery.extend({
 		 * @return integer
 		 */
 		calculateYPos : function (field) {
-			return (field['x'] * -20) + (field['y'] * 19);
+			return (field['coordX'] * -20) + (field['coordY'] * 19);
 		},
 
 		/**

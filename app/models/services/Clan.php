@@ -51,8 +51,6 @@ class Clan extends BaseService {
 			$level = $outline - $toleration;
 		}
 
-		Debugger::barDump($level);
-
 		$found = array();
 
 		while (count($found) < $initialFieldsCount){
@@ -109,7 +107,6 @@ class Clan extends BaseService {
 			}
 			$level++;
 		}
-
 		$this->cache->save('outline', $level/* + $toleration*/);
 
 		$maxNeighbours = 0;

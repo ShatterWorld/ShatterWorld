@@ -4,24 +4,10 @@ use Nette;
 use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
+use Nette\Caching\Cache;
 
 
 class Field extends BaseRepository {
-	/**
-	* Returns the whole map as an array
-	* @Deprecated (getIndexedMap)
-	* @return array of Entities\Field
-	*/
-	public function getMap ()
-	{
-		$data = $this->createQueryBuilder('f')
-			->addOrderBy('f.coordX')
-			->addOrderBy('f.coordY')
-			->getQuery()
-			->getResult();
-
-		return $data;
-	}
 
 	/**
 	* Returns the map indexed by coordinates
@@ -41,6 +27,39 @@ class Field extends BaseRepository {
 		return $result;
 	}
 
+	public function getIndexedMapIds ()
+	{
+		$result = array();
+		foreach ($this->createQueryBuilder('f')->select('f.id', 'f.coordX', 'f.coordY')->getQuery()->getArrayResult() as $row) {
+			$x = $row['coordX'];
+			$y = $row['coordY'];
+			if (!isset($result[$x])) {
+				$result[$x] = array();
+			}
+			$result[$x][$y] = $row['id'];
+		}
+		return $result;
+	}
+	
+	public function findIdByCoords ($x, $y, &$map = array())
+	{
+		$mapSize = $this->context->params['game']['map']['size'];
+		if ($x >= $mapSize || $y >= $mapSize || $x < 0 || $y < 0) {
+			throw new InvalidCoordinatesException;
+		}
+		if (count($map) > 0){
+			return $map[$x][$y];
+		}
+
+		$qb = $this->createQueryBuilder('f');
+		$qb->select('f.id')->where($qb->expr()->andX(
+			$qb->expr()->eq('f.coordX', $x),
+			$qb->expr()->eq('f.coordY', $y)
+		));
+
+		return $qb->getQuery()->getSingleScalarResult();
+	}
+	
 	/**
 	 * Get the count of fields owned by given clan
 	 * @param Entities\Clan
@@ -149,7 +168,6 @@ class Field extends BaseRepository {
 		}
 
 		return $neighbours;
-
 	}
 
 	/**
@@ -208,17 +226,17 @@ class Field extends BaseRepository {
 			$qb->expr()->eq('f.owner', $clanId)
 		);
 		$ownerFields = $qb->getQuery()->getResult();
-
+		$map = $this->getIndexedMapIds();
 		$visibleFields = array();
 		foreach($ownerFields as $ownerField){
-			$neighbours = $this->getFieldNeighbours($ownerField, $depth);
+			$neighbours = $this->getFieldNeighbours($ownerField, $depth, $map);
 
 			foreach($neighbours as $neighbour){
 				if(array_search($neighbour, $visibleFields, true) === false){
-					if ($neighbour->owner != null && $neighbour->owner->id != $clanId){
-						$neighbour->facility = null;
-						$neighbour->level = null;
-					}
+// 					if ($neighbour->owner != null && $neighbour->owner->id != $clanId){
+// 						$neighbour->facility = null;
+// 						$neighbour->level = null;
+// 					}
 					$visibleFields[] = $neighbour;
 				}
 			}
@@ -229,11 +247,19 @@ class Field extends BaseRepository {
 
 	public function getVisibleFieldsArray ($clanId, $depth)
 	{
-		$result = array();
-		foreach ($this->getVisibleFields($clanId, $depth) as $field) {
-			$result[] = $field->toArray();
+// 		$result = array();
+// 		foreach ($this->getVisibleFields($clanId, $depth) as $field) {
+// 			$result[] = $field->toArray();
+// 		}
+		$cache = new Cache($this->context->cacheStorage, 'VisibleFields');
+		$ids = $cache->load($clanId);
+		if ($ids === NULL) {
+			$cache->save($clanId, $ids = $this->getVisibleFields($clanId, $depth));
 		}
-		return $result;
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
+		$qb->where($qb->expr()->in('f.id', $ids));
+		return $qb->getQuery()->getArrayResult();
 	}
 
 	/**
@@ -311,7 +337,7 @@ class Field extends BaseRepository {
 	public function findCircuit ($S, $r, &$map = array())
 	{
 		if($r == 1){
-			return $this->getFieldNeighbours($S);
+			return $this->getFieldNeighbours($S, 1, $map);
 		}
 
 		$x = $S->getX();
@@ -329,7 +355,7 @@ class Field extends BaseRepository {
 		$circuit = array();
 		foreach($coords as $coord){
 			try{
-				$vertexes[] = $this->findByCoords($coord['x'], $coord['y'], $map);
+				$vertexes[] = $this->findIdByCoords($coord['x'], $coord['y'], $map);
 			}
 			catch(InvalidCoordinatesException $e){
 				continue;
@@ -343,7 +369,7 @@ class Field extends BaseRepository {
 		$targetY = $coords['north-east']['y'];
 		while($tmpY < $targetY){
 			try{
-				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
 			}
 			catch(InvalidCoordinatesException $e){}
 			$tmpY++;
@@ -356,7 +382,7 @@ class Field extends BaseRepository {
 		$targetY = $coords['south-east']['y'];
 		while($tmpY < $targetY and $tmpX > $targetX){
 			try{
-				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
 			}
 			catch(InvalidCoordinatesException $e){}
 			$tmpY++;
@@ -369,7 +395,7 @@ class Field extends BaseRepository {
 		$targetY = $coords['south']['y'];
 		while($tmpX > $targetX){
 			try{
-				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
 			}
 			catch(InvalidCoordinatesException $e){}
 			$tmpX--;
@@ -381,7 +407,7 @@ class Field extends BaseRepository {
 		$targetY = $coords['south-west']['y'];
 		while($tmpY > $targetY){
 			try{
-				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
 			}
 			catch(InvalidCoordinatesException $e){}
 			$tmpY--;
@@ -393,7 +419,7 @@ class Field extends BaseRepository {
 		$targetY = $coords['north-west']['y'];
 		while($tmpY > $targetY and $tmpX < $targetX){
 			try{
-				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
 			}
 			catch(InvalidCoordinatesException $e){}
 			$tmpY--;
@@ -406,7 +432,7 @@ class Field extends BaseRepository {
 		$targetY = $coords['north']['y'];
 		while($tmpX < $targetX){
 			try{
-				$circuit[] = $this->findByCoords($tmpX, $tmpY, $map);
+				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
 			}
 			catch(InvalidCoordinatesException $e){}
 			$tmpX++;
