@@ -336,7 +336,7 @@ class Field extends BaseRepository {
 	 */
 	public function findCircuit ($S, $r, &$map = array())
 	{
-		if($r == 1){
+		if ($r === 1) {
 			return $this->getFieldNeighbours($S, 1, $map);
 		}
 
@@ -353,89 +353,32 @@ class Field extends BaseRepository {
 		);
 
 		$circuit = array();
-		foreach($coords as $coord){
-			try{
-				$vertexes[] = $this->findIdByCoords($coord['x'], $coord['y'], $map);
-			}
-			catch(InvalidCoordinatesException $e){
-				continue;
-			}
-		}
 
-
-		$tmpX = $coords['north']['x'];
-		$tmpY = $coords['north']['y'];
-		$targetX = $coords['north-east']['x'];
-		$targetY = $coords['north-east']['y'];
-		while($tmpY < $targetY){
-			try{
-				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
+		$vectors = array(
+			array('origin' => 'north', 'target' => 'north-east', 'direction' => array(0, 1)),
+			array('origin' => 'north-east', 'target' => 'south-east', 'direction' => array(-1, 1)),
+			array('origin' => 'south-east', 'target' => 'south', 'direction' => array(-1, 0)),
+			array('origin' => 'south', 'target' => 'south-west', 'direction' => array(0, -1)),
+			array('origin' => 'south-west', 'target' => 'north-west', 'direction' => array(1, -1)),
+			array('origin' => 'north-west', 'target' => 'north', 'direction' => array(1, 0)),
+		);
+		
+		foreach ($vectors as $vector) {
+			$tmpX = $coords[$vector['origin']]['x'];
+			$tmpY = $coords[$vector['origin']]['y'];
+			$targetX = $coords[$vector['target']]['x'];
+			$targetY = $coords[$vector['target']]['y'];
+			$dirX = $vector['direction'][0];
+			$dirY = $vector['direction'][1];
+			while (($dirX === 0 or $dirX * ($targetX - $tmpX) > 0) and 
+				($dirY === 0 or $dirY * ($targetY - $tmpY) > 0)) {
+				try {
+					$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
+				}
+				catch (InvalidCoordinatesException $e) {}
+				$tmpX = $tmpX + $dirX;
+				$tmpY = $tmpY + $dirY;
 			}
-			catch(InvalidCoordinatesException $e){}
-			$tmpY++;
-
-		}
-
-		$tmpX = $coords['north-east']['x'];
-		$tmpY = $coords['north-east']['y'];
-		$targetX = $coords['south-east']['x'];
-		$targetY = $coords['south-east']['y'];
-		while($tmpY < $targetY and $tmpX > $targetX){
-			try{
-				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
-			}
-			catch(InvalidCoordinatesException $e){}
-			$tmpY++;
-			$tmpX--;
-		}
-
-		$tmpX = $coords['south-east']['x'];
-		$tmpY = $coords['south-east']['y'];
-		$targetX = $coords['south']['x'];
-		$targetY = $coords['south']['y'];
-		while($tmpX > $targetX){
-			try{
-				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
-			}
-			catch(InvalidCoordinatesException $e){}
-			$tmpX--;
-		}
-
-		$tmpX = $coords['south']['x'];
-		$tmpY = $coords['south']['y'];
-		$targetX = $coords['south-west']['x'];
-		$targetY = $coords['south-west']['y'];
-		while($tmpY > $targetY){
-			try{
-				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
-			}
-			catch(InvalidCoordinatesException $e){}
-			$tmpY--;
-		}
-
-		$tmpX = $coords['south-west']['x'];
-		$tmpY = $coords['south-west']['y'];
-		$targetX = $coords['north-west']['x'];
-		$targetY = $coords['north-west']['y'];
-		while($tmpY > $targetY and $tmpX < $targetX){
-			try{
-				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
-			}
-			catch(InvalidCoordinatesException $e){}
-			$tmpY--;
-			$tmpX++;
-		}
-
-		$tmpX = $coords['north-west']['x'];
-		$tmpY = $coords['north-west']['y'];
-		$targetX = $coords['north']['x'];
-		$targetY = $coords['north']['y'];
-		while($tmpX < $targetX){
-			try{
-				$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
-			}
-			catch(InvalidCoordinatesException $e){}
-			$tmpX++;
 		}
 
 		return $circuit;
