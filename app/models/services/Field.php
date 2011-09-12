@@ -34,9 +34,13 @@ class Field extends BaseService {
 		));
 	}
 	
+	public function invalidateVisibleFields ($clanId)
+	{
+		$this->getRepository()->getVisibleFieldsCache()->save($clanId, NULL);
+	}
+	
 	public function createMap ()
 	{
-		
 		$map = array();
 		for ($x = 0; $x < $this->options['size']; $x++) {
 			$map[$x] = array();

@@ -10,5 +10,6 @@ class Colonisation extends AbstractRule implements IEvent
 		if ($move->target->owner === NULL) {
 			$move->target->setOwner($move->clan);
 		}
+		$this->context->model->getFieldService()->invalidateVisibleFields($move->clan);
 	}
 }

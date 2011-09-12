@@ -212,6 +212,11 @@ class Field extends BaseRepository {
 		return $qb->getQuery()->getResult();
 	}
 
+	public function getVisibleFieldsCache ()
+	{
+		return new Nette\Caching\Cache($this->context->cacheStorage, 'VisibleFields');
+	}
+	
 	/**
 	 * Finds fields which are visible for the player
 	 * @param integer
@@ -247,11 +252,7 @@ class Field extends BaseRepository {
 
 	public function getVisibleFieldsArray ($clanId, $depth)
 	{
-// 		$result = array();
-// 		foreach ($this->getVisibleFields($clanId, $depth) as $field) {
-// 			$result[] = $field->toArray();
-// 		}
-		$cache = new Cache($this->context->cacheStorage, 'VisibleFields');
+		$cache = $this->getVisibleFieldsCache();
 		$ids = $cache->load($clanId);
 		if ($ids === NULL) {
 			$cache->save($clanId, $ids = $this->getVisibleFields($clanId, $depth));
