@@ -24,6 +24,10 @@ jQuery.extend({
 					$('#countdownBar').show();
 					$('#countdownCount').html(count);
 				}
+				else{
+					$('#countdownBar').hide();
+					$('#countdownDialog').dialog("close");
+				}
 
 			});
 

@@ -73,6 +73,7 @@ jQuery.extend({
 		show: function(object, e, field, data){
 
 			this.contextMenu.html('');
+			this.contextMenu.show();
 
 			$('#fieldInfo').hide();
 			var localCoords = jQuery.utils.globalToLocal(
@@ -137,8 +138,8 @@ jQuery.extend({
 		 */
 		hide: function ()
 		{
-			//this.contextMenu.hide();
-			this.contextMenu.remove();
+			this.contextMenu.hide();
+			//this.contextMenu.remove();
 			this.contextMenuShown = false;
 		},
 
@@ -280,7 +281,7 @@ jQuery.extend({
 					else{
 						facilityDiv.css('text-decoration', 'line-through');
 					}
-					this.contextMenu.append(facilityDiv);
+					jQuery.contextMenu.contextMenu.append(facilityDiv);
 
 				});
 
