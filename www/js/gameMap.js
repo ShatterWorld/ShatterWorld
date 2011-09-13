@@ -182,28 +182,6 @@ jQuery.extend({
 						$('#fieldInfo').css("top", localCoordinates.y + 30 - $('#mapContainer').scrollTop() + 'px');
 					});
 
-/*					div.click(function(e){
-						if(jQuery.gameMap.contextMenuShown){
-							jQuery.gameMap.hideContextMenu();
-							jQuery.gameMap.unmarkAll();
-							return;
-						}
-
-						jQuery.gameMap.mark(div);
-						if(jQuery.gameMap.initialField === null){
-							jQuery.gameMap.initialField = jQuery.gameMap;
-							jQuery.gameMap.showContextMenu(div, e, field, data);
-						}
-						else if (jQuery.gameMap.initialField == jQuery.gameMap){
-							jQuery.gameMap.hideContextMenu();
-							jQuery.gameMap.unmarkAll();
-						}
-						else{
-							jQuery.gameMap.action(jQuery.gameMap.initialField, jQuery.gameMap);
-							jQuery.gameMap.hideContextMenu();
-							jQuery.gameMap.unmarkAll();
-						}
-					});*/
 					/**
 					 * Runs when user click some field and increment markedFields by one
 					 * @return void
@@ -212,19 +190,14 @@ jQuery.extend({
 
 						if(jQuery.contextMenu.contextMenuShown){
 							jQuery.contextMenu.hideContextMenu();
-							jQuery.contextMenu.initialField = null;
 							jQuery.gameMap.unmarkAll();
 							return;
 						}
 
 						jQuery.gameMap.mark(div);
-						if(jQuery.contextMenu.initialField === null){
+						if(jQuery.contextMenu.initialField === null || jQuery.contextMenu.action === null){
 							jQuery.contextMenu.initialField = field;
 							jQuery.contextMenu.showContextMenu(div, e, field, data);
-						}
-						else if (jQuery.contextMenu.initialField == field){
-							jQuery.contextMenu.hideContextMenu();
-							jQuery.gameMap.unmarkAll();
 						}
 						else{
 							jQuery.contextMenu.action(jQuery.contextMenu.initialField, field);
