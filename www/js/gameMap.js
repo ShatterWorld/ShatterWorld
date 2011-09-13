@@ -19,7 +19,7 @@ jQuery.extend({
 		render : function () {
 
 			$('#map').html('');
-			this.showSpinner();
+			jQuery.spinner.show('#mapContainer');
 			jQuery.contextMenu.fetchFacilities();
 
 			/**
@@ -216,7 +216,7 @@ jQuery.extend({
 				$('#mapContainer').scrollLeft(scrollX);
 				$('#mapContainer').scrollTop(scrollY);
 
-				jQuery.gameMap.hideSpinner();
+				jQuery.spinner.hide();
 			});
 		},
 		/**
@@ -253,24 +253,6 @@ jQuery.extend({
 		 */
 		calculateYPos : function (field) {
 			return (field['coordX'] * -20) + (field['coordY'] * 19);
-		},
-
-		/**
-		 * Shows spinner
-		 * @return void
-		 */
-		showSpinner : function ()
-		{
-			$('#mapContainer').append(this.getSpinner().clone());
-		},
-
-		/**
-		 * Hides spinner
-		 * @return void
-		 */
-		hideSpinner : function ()
-		{
-			$('.spinner').remove();
 		},
 
 		/**
@@ -311,18 +293,6 @@ jQuery.extend({
 		getMapContainerHeight : function () {
 			var height = $('#mapContainer').css('height');
 			return height.substring(0, height.length -2)
-		},
-
-		/**
-		 * Returns object representing the spinner
-		 * @return object
-		 */
-		getSpinner : function () {
-			return $('<img class="spinner" />').attr('src', this.getBasepath() + '/images/spinner.gif').css({
-			'position' : 'absolute',
-			'top' : this.getMapContainerHeight()/2+'px',
-			'left' : this.getMapContainerWidth()/2+'px',
-			'z-index' : '99999999999'});
 		},
 
 		/**

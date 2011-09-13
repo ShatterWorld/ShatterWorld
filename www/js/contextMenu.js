@@ -139,7 +139,6 @@ jQuery.extend({
 		hide: function ()
 		{
 			this.contextMenu.hide();
-			//this.contextMenu.remove();
 			this.contextMenuShown = false;
 		},
 
@@ -151,13 +150,20 @@ jQuery.extend({
 		addColonisationAction: function(target) {
 			var actionDiv = this.basicActionDiv.clone().html('Kolonizace');
 			actionDiv.click(function(){
-				jQuery.contextMenu.hide();
+
+				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 				$.get('?' + $.param({
-					'do': 'sendColonisation',
-					'targetId': target['id']
-				}));
-				jQuery.events.fetchEvents();
-				jQuery.gameMap.unmarkAll();
+						'do': 'sendColonisation',
+						'targetId': target['id']
+					}),
+					function(data){
+						jQuery.events.fetchEvents();
+						jQuery.gameMap.unmarkAll();
+						jQuery.spinner.hide();
+						jQuery.contextMenu.hide();
+					}
+				);
+
 			});
 
 			this.action = null;
@@ -170,6 +176,7 @@ jQuery.extend({
 		 */
 		addAttackAction: function (){
 			var actionDiv = this.basicActionDiv.clone().html('Útok*');
+
 			actionDiv.click(function(){
 				jQuery.contextMenu.hide();
 				alert('vyberte cíl');
@@ -190,13 +197,19 @@ jQuery.extend({
 		addUpgradeFacilityAction: function (target){
 			var actionDiv = this.basicActionDiv.clone().html('Upgradovat budovu*');
 			actionDiv.click(function(){
-				jQuery.contextMenu.hide();
+
+				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 				$.get('?' + $.param({
-					'do': 'upgradeFacility',
-					'targetId': target['id']
-				}));
-				jQuery.events.fetchEvents();
-				jQuery.gameMap.unmarkAll();
+						'do': 'upgradeFacility',
+						'targetId': target['id']
+					}),
+					function(data){
+						jQuery.events.fetchEvents();
+						jQuery.gameMap.unmarkAll();
+						jQuery.spinner.hide();
+						jQuery.contextMenu.hide();
+					}
+				);
 			});
 
 			this.action = null;
@@ -211,13 +224,19 @@ jQuery.extend({
 		addDowngradeFacilityAction: function (target){
 			var actionDiv = this.basicActionDiv.clone().html('Downgradovat budovu*');
 			actionDiv.click(function(){
-				jQuery.contextMenu.hide();
+
+				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 				$.get('?' + $.param({
-					'do': 'downgradeFacility',
-					'targetId': target['id']
-				}));
-				jQuery.events.fetchEvents();
-				jQuery.gameMap.unmarkAll();
+						'do': 'downgradeFacility',
+						'targetId': target['id']
+					}),
+					function(data){
+						jQuery.events.fetchEvents();
+						jQuery.gameMap.unmarkAll();
+						jQuery.spinner.hide();
+						jQuery.contextMenu.hide();
+					}
+				);
 			});
 
 			this.action = null;
@@ -232,13 +251,20 @@ jQuery.extend({
 		addDestroyFacilityAction: function (target){
 			var actionDiv = this.basicActionDiv.clone().html('Strhnout budovu*');
 			actionDiv.click(function(){
+
+				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 				jQuery.contextMenu.hide();
 				$.get('?' + $.param({
-					'do': 'destroyFacility',
-					'targetId': target['id']
-				}));
-				jQuery.events.fetchEvents();
-				jQuery.gameMap.unmarkAll();
+						'do': 'destroyFacility',
+						'targetId': target['id']
+					}),
+					function(data){
+						jQuery.events.fetchEvents();
+						jQuery.gameMap.unmarkAll();
+						jQuery.spinner.hide();
+						jQuery.contextMenu.hide();
+					}
+				);
 			});
 
 			this.action = null;
@@ -261,21 +287,30 @@ jQuery.extend({
 
 						facilityDiv.click(function(){
 
+							jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 							$.get('?' + $.param({
 								'do': 'buildFacility',
 								'targetId': target['id'],
 								'facility': name
-							}));
+								}),
+								function(data){
+									jQuery.resources.resources['metal'] -= facility['cost']['metal'];
+									jQuery.resources.resources['stone'] -= facility['cost']['stone'];
+									jQuery.resources.resources['food'] -= facility['cost']['food'];
+									jQuery.resources.resources['fuel'] -= facility['cost']['fuel'];
 
-							jQuery.resources.resources['metal'] -= facility['cost']['metal'];
-							jQuery.resources.resources['stone'] -= facility['cost']['stone'];
-							jQuery.resources.resources['food'] -= facility['cost']['food'];
-							jQuery.resources.resources['fuel'] -= facility['cost']['fuel'];
+									jQuery.events.fetchEvents();
+									jQuery.gameMap.unmarkAll();
+									jQuery.spinner.hide();
+									jQuery.contextMenu.hide();
+								}
+							);
 
-							jQuery.events.fetchEvents();
+
+						/*	jQuery.events.fetchEvents();
 							jQuery.resources.fetchResources();
 							jQuery.contextMenu.hide();
-							jQuery.gameMap.unmarkAll();
+							jQuery.gameMap.unmarkAll();*/
 						});
 					}
 					else{
@@ -301,13 +336,19 @@ jQuery.extend({
 		addLeaveFieldAction: function(target) {
 			var actionDiv = this.basicActionDiv.clone().html('Opustit pole');
 			actionDiv.click(function(){
-				jQuery.contextMenu.hide();
+
+				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 				$.get('?' + $.param({
-					'do': 'leaveField',
-					'targetId': target['id']
-				}));
-				jQuery.events.fetchEvents();
-				jQuery.gameMap.unmarkAll();
+						'do': 'leaveField',
+						'targetId': target['id']
+					}),
+					function(data){
+						jQuery.events.fetchEvents();
+						jQuery.gameMap.unmarkAll();
+						jQuery.spinner.hide();
+						jQuery.contextMenu.hide();
+					}
+				);
 			});
 
 			this.action = null;
