@@ -189,7 +189,7 @@ jQuery.extend({
 					div.click(function(e){
 
 						if(jQuery.contextMenu.contextMenuShown){
-							jQuery.contextMenu.hideContextMenu();
+							jQuery.contextMenu.hide();
 							jQuery.gameMap.unmarkAll();
 							return;
 						}
@@ -197,11 +197,11 @@ jQuery.extend({
 						jQuery.gameMap.mark(div);
 						if(jQuery.contextMenu.initialField === null || jQuery.contextMenu.action === null){
 							jQuery.contextMenu.initialField = field;
-							jQuery.contextMenu.showContextMenu(div, e, field, data);
+							jQuery.contextMenu.show(div, e, field, data);
 						}
 						else{
 							jQuery.contextMenu.action(jQuery.contextMenu.initialField, field);
-							jQuery.contextMenu.hideContextMenu();
+							jQuery.contextMenu.hide();
 							jQuery.gameMap.unmarkAll();
 						}
 					});
