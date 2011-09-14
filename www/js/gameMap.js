@@ -19,11 +19,79 @@ jQuery.extend({
 		map : null,
 
 		/**
+		 * @var integer - width of field
+		 */
+		fieldWidth : 60,
+
+		/**
+		 * @var integer - height of field
+		 */
+		fieldHeight : 40,
+
+		/**
+		 * @var integer - Number of marked fields
+		 */
+		markedFields : 0,
+
+
+		/**
+		 * Returns object representing the marker
+		 * @return object
+		 */
+		getMarkerImage : function () {return $('<img class="marker" />').attr('src', this.getBasepath() + '/images/fields/marker.png');},
+
+		/**
+		 * Returns the width of #mapContainer
+		 * @return int
+		 */
+		getMapContainerWidth : function () {
+			var width = $('#mapContainer').css('width');
+			return width.substring(0, width.length -2);
+		},
+
+		/**
+		 * Returns the height of #mapContainer
+		 * @return int
+		 */
+		getMapContainerHeight : function () {
+			var height = $('#mapContainer').css('height');
+			return height.substring(0, height.length -2)
+		},
+
+		/**
+		 * @var boolean
+		 */
+		selectTarget : false,
+
+		/**
+		 * @var integer represents x-offset between real and calculated coord. of fields
+		 */
+		dX : 0,
+
+		/**
+		 * @var integer represents y-offset between real and calculated coord. of fields
+		 */
+		dY : 0,
+
+		/**
+		 * @var integer represents how much the scroll bar must move to the left
+		 */
+		scrollX : 0,
+
+		/**
+		 * @var integer represents how much the scroll bar must move to the bottom
+		 */
+		scrollY : 0,
+
+		/**
 		  * Cleans the #map and rerender the map (using db-data)
+		  * @return void
 		  */
 		render : function () {
 
 			$('#map').html('');
+			jQuery.fieldInfo.append('#content');
+
 			jQuery.spinner.show('#mapContainer');
 			jQuery.contextMenu.fetchFacilities();
 
@@ -107,7 +175,7 @@ jQuery.extend({
 
 
 						/**
-						 * Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
+						 * Shows and fills fieldInfo when user gets mouse over a field
 						 * @return void
 						 */
 						div.mouseenter(function(e){
@@ -115,7 +183,7 @@ jQuery.extend({
 								return;
 							}
 
-							$('#fieldInfo').show();
+							jQuery.fieldInfo.show();
 
 							var secret = '???';
 							var none = '---';
@@ -173,7 +241,7 @@ jQuery.extend({
 						 * @return void
 						 */
 						div.mouseleave(function(){
-							$('#fieldInfo').hide();
+							jQuery.fieldInfo.hide();
 						});
 
 
@@ -188,8 +256,10 @@ jQuery.extend({
 								e.pageY
 							);
 
-							$('#fieldInfo').css("left", localCoordinates.x + 30 - $('#mapContainer').scrollLeft() + 'px');
-							$('#fieldInfo').css("top", localCoordinates.y + 30 - $('#mapContainer').scrollTop() + 'px');
+							var leftPos = localCoordinates.x + 30 - $('#mapContainer').scrollLeft();
+							var topPos = localCoordinates.y + 30 - $('#mapContainer').scrollTop();
+
+							jQuery.fieldInfo.position(leftPos, topPos);
 						});
 
 						/**
@@ -264,71 +334,7 @@ jQuery.extend({
 		 */
 		calculateYPos : function (field) {
 			return (field['coordX'] * -20) + (field['coordY'] * 19);
-		},
+		}
 
-		/**
-		 * @var integer - width of field
-		 */
-		fieldWidth : 60,
-
-		/**
-		 * @var integer - height of field
-		 */
-		fieldHeight : 40,
-
-		/**
-		 * @var integer - Number of marked fields
-		 */
-		markedFields : 0,
-
-
-		/**
-		 * Returns object representing the marker
-		 * @return object
-		 */
-		getMarkerImage : function () {return $('<img class="marker" />').attr('src', this.getBasepath() + '/images/fields/marker.png');},
-
-		/**
-		 * Returns the width of #mapContainer
-		 * @return int
-		 */
-		getMapContainerWidth : function () {
-			var width = $('#mapContainer').css('width');
-			return width.substring(0, width.length -2);
-		},
-
-		/**
-		 * Returns the height of #mapContainer
-		 * @return int
-		 */
-		getMapContainerHeight : function () {
-			var height = $('#mapContainer').css('height');
-			return height.substring(0, height.length -2)
-		},
-
-		/**
-		 * @var boolean
-		 */
-		selectTarget : false,
-
-		/**
-		 * @var integer represents x-offset between real and calculated coord. of fields
-		 */
-		dX : 0,
-
-		/**
-		 * @var integer represents y-offset between real and calculated coord. of fields
-		 */
-		dY : 0,
-
-		/**
-		 * @var integer represents how much the scroll bar must move to the left
-		 */
-		scrollX : 0,
-
-		/**
-		 * @var integer represents how much the scroll bar must move to the bottom
-		 */
-		scrollY : 0
 	}
 });
