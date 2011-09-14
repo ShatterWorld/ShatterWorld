@@ -389,7 +389,28 @@ jQuery.extend({
 		 */
 		isNeighbour : function(field, ownerId)
 		{
-			return true;
+			var x = field['coordX'];
+			var y = field['coordY'];
+			alert(jQuery.gameMap.map[x-1][y+1]['owner']['id']);
+
+			if (jQuery.gameMap.map !== null){
+				if (
+					(typeof(jQuery.gameMap.map[x-1][y+1]) !== 'undefined' && jQuery.gameMap.map[x-1][y+1]['owner'] !== null && jQuery.gameMap.map[x-1][y+1]['owner']['id'] == ownerId)
+					||
+					(typeof(jQuery.gameMap.map[x+1][y-1]) !== 'undefined' && jQuery.gameMap.map[x+1][y-1]['owner'] !== null && jQuery.gameMap.map[x+1][y-1]['owner']['id'] == ownerId)
+					||
+					(typeof(jQuery.gameMap.map[x][y-1]) !== 'undefined' && jQuery.gameMap.map[x][y-1]['owner'] !== null && jQuery.gameMap.map[x][y-1]['owner']['id'] == ownerId)
+					||
+					(typeof(jQuery.gameMap.map[x-1][y]) !== 'undefined' && jQuery.gameMap.map[x-1][y]['owner'] !== null && jQuery.gameMap.map[x-1][y]['owner']['id'] == ownerId)
+					||
+					(typeof(jQuery.gameMap.map[x+1][y]) !== 'undefined' && jQuery.gameMap.map[x+1][y]['owner'] !== null && jQuery.gameMap.map[x+1][y]['owner']['id'] == ownerId)
+					||
+					(typeof(jQuery.gameMap.map[x][y+1]) !== 'undefined' && jQuery.gameMap.map[x][y+1]['owner'] !== null && jQuery.gameMap.map[x][y+1]['owner']['id'] == ownerId)
+				){
+					return true;
+				}
+			}
+			return false;
 		},
 
 	}

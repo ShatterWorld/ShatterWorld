@@ -14,6 +14,11 @@ jQuery.extend({
 		getBasepath : function () {return $('#map').data()['basepath'];},
 
 		/**
+		 * @var JSON - indexed map
+		 */
+		map : null,
+
+		/**
 		  * Cleans the #map and rerender the map (using db-data)
 		  */
 		render : function () {
@@ -26,6 +31,7 @@ jQuery.extend({
 			  * ajax that gets JSON data of visibleFields
 			  */
 			$.getJSON('?do=fetchMap', function(data) {
+				jQuery.gameMap.map = data;
 
 				/**
 				 * finds the center and calculate dX and dY
