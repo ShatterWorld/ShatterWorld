@@ -12,4 +12,9 @@ class Colonisation extends AbstractRule implements IEvent
 		}
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($move->clan->id);
 	}
+	
+	public function getInfo ($eventId)
+	{
+		return $this->getContext()->model->getMoveRepository()->getEventInfo($eventId);
+	}
 }

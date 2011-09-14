@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * A unit movement representation
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Move")
  * @author Jan "Teyras" Buchar
  */
 class Move extends BaseEntity

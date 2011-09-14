@@ -37,6 +37,7 @@ class Event extends BaseRepository {
 		$result = $qb->getQuery()->getArrayResult();
 		foreach ($result as $key => $event) {
 			$result[$key]['countdown'] = max($event['term']->format('U') - date('U'), 0);
+			$result[$key]['info'] = $this->context->rules->get('event', $event['type'])->getInfo($event['id']);
 		}
 		return $result;
 	}

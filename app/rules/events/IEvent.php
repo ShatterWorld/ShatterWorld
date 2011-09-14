@@ -14,4 +14,10 @@ interface IEvent extends \Rules\IRule {
 	 */
 	public function process ($id);
 	
+	/**
+	 * Get information about event with given event id
+	 * @param int
+	 * @return array
+	 */
+	public function getInfo ($eventId);
 }
