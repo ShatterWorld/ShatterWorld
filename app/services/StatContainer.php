@@ -79,7 +79,7 @@ class StatContainer extends Nette\Object
 					break;
 				}
 			}
-			if ($depsSatisfied) {
+			if ($depsSatisfied && $name !== 'headquarters') {
 				$result[] = $name;
 			}
 		}
