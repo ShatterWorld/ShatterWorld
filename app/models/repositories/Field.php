@@ -225,7 +225,6 @@ class Field extends BaseRepository {
 	 */
 	public function getVisibleFields ($clanId, $depth)
 	{
-
 		$qb = $this->createQueryBuilder('f');
 		$qb->where(
 			$qb->expr()->eq('f.owner', $clanId)
@@ -238,10 +237,6 @@ class Field extends BaseRepository {
 
 			foreach($neighbours as $neighbour){
 				if(array_search($neighbour, $visibleFields, true) === false){
-// 					if ($neighbour->owner != null && $neighbour->owner->id != $clanId){
-// 						$neighbour->facility = null;
-// 						$neighbour->level = null;
-// 					}
 					$visibleFields[] = $neighbour;
 				}
 			}
@@ -266,6 +261,10 @@ class Field extends BaseRepository {
 			$y = $row['coordY'];
 			if (!isset($result[$x])) {
 				$result[$x] = array();
+			}
+			if ($row['owner'] != null && $row['owner']['id'] != $clanId){
+				$row['facility'] = null;
+				$row['level'] = null;
 			}
 			$result[$x][$y] = $row;
 		}
