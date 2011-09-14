@@ -31,6 +31,9 @@ jQuery.extend({
 					jQuery.countdown.addCountdown(label, event['countdown']);
 					count++
 				});
+
+				jQuery.countdown.closeTable();
+
 				if (count > 0){
 					$('#countdownBar').show();
 					$('#countdownCount').html(count);

@@ -16,16 +16,27 @@ jQuery.extend({
 		 */
 		addCountdown: function(title, remainingTime)
 		{
-			var countdownDiv = $('<div class="countdown" />');
-			var countdownTitleDiv = $('<span class="countdownTitle" />').html(title+': ');
-			var countdownTimeDiv = $('<span class="countdownTime" />');
+			var countdownTr = $('<tr class="countdown" />');
 
-			countdownDiv.append(countdownTitleDiv);
-			countdownDiv.append(countdownTimeDiv);
 
-			$('#countdownDialog').append(countdownDiv);
+			var titleTd = $('<td class="countdownTitle" />').html(title)
+				.css({
+					'font-weight' : 'bold',
+					'width' : '90%'
+				});
 
-			this.countdown(countdownTimeDiv, remainingTime);
+			var timeTd = $('<td class="countdownTime" />')
+				.css({
+					'text-align' : 'right',
+
+				});
+
+			countdownTr.append(titleTd);
+			countdownTr.append(timeTd);
+
+			$('#countdownDialog').append(countdownTr);
+
+			this.countdown(timeTd, remainingTime);
 		},
 
 		/**
@@ -73,7 +84,15 @@ jQuery.extend({
 		 * @return void
 		 */
 		cleanDialog: function(){
-			$('#countdownDialog').html('');
+			$('#countdownDialog').html('<table id="countdownTable">');
+		},
+
+		/**
+		 * Adds </table> tag
+		 * @return void
+		 */
+		closeTable: function(){
+			$('#countdownDialog').append('</table>');
 		},
 
 		/**
