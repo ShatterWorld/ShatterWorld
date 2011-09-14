@@ -30,38 +30,42 @@ jQuery.extend({
 				/**
 				 * finds the center and calculate dX and dY
 				 */
-				$.each(data['fields'], function(key, field) {
-					if(field['owner'] != null){
-						if (data['clanId'] == field['owner']['id']){
-							if(field['facility'] != null){
-								if (field['facility'] == 'headquarters'){
-									var posX = jQuery.gameMap.calculateXPos(field);
-									var posY = jQuery.gameMap.calculateYPos(field);
-									jQuery.gameMap.dX = posX - jQuery.gameMap.getMapContainerWidth()/2 + jQuery.gameMap.fieldWidth/2;
-									jQuery.gameMap.dY = posY - jQuery.gameMap.getMapContainerHeight()/2 + 2*jQuery.gameMap.fieldHeight;
+				$.each(data['fields'], function(rowKey, row) {
+					$.each(row, function(key, field) {
+						if(field['owner'] != null){
+							if (data['clanId'] == field['owner']['id']){
+								if(field['facility'] != null){
+									if (field['facility'] == 'headquarters'){
+										var posX = jQuery.gameMap.calculateXPos(field);
+										var posY = jQuery.gameMap.calculateYPos(field);
+										jQuery.gameMap.dX = posX - jQuery.gameMap.getMapContainerWidth()/2 + jQuery.gameMap.fieldWidth/2;
+										jQuery.gameMap.dY = posY - jQuery.gameMap.getMapContainerHeight()/2 + 2*jQuery.gameMap.fieldHeight;
 
-									return false;
+										return false;
+									}
 								}
+
 							}
-
 						}
-					}
 
+					});
 				});
 
 				/**
 				 * checks negative coords. of fields, slides them and sets scrollX and scrollY
 				 */
-				$.each(data['fields'], function(key, field) {
-					if(jQuery.gameMap.calculateXPos(field) - jQuery.gameMap.dX < 0){
-						jQuery.gameMap.dX -= jQuery.gameMap.fieldWidth;
-						jQuery.gameMap.scrollX += jQuery.gameMap.fieldWidth;
-					}
-					if(jQuery.gameMap.calculateYPos(field) - jQuery.gameMap.dY < 0){
-						jQuery.gameMap.dY -= jQuery.gameMap.fieldHeight;
-						jQuery.gameMap.scrollY += jQuery.gameMap.fieldHeight;
-					}
+				$.each(data['fields'], function(rowKey, row) {
+					$.each(row, function(key, field) {
+						if(jQuery.gameMap.calculateXPos(field) - jQuery.gameMap.dX < 0){
+							jQuery.gameMap.dX -= jQuery.gameMap.fieldWidth;
+							jQuery.gameMap.scrollX += jQuery.gameMap.fieldWidth;
+						}
+						if(jQuery.gameMap.calculateYPos(field) - jQuery.gameMap.dY < 0){
+							jQuery.gameMap.dY -= jQuery.gameMap.fieldHeight;
+							jQuery.gameMap.scrollY += jQuery.gameMap.fieldHeight;
+						}
 
+					});
 				});
 
 
@@ -70,153 +74,155 @@ jQuery.extend({
 				/**
 				 * renders fields and adds event-listeners to them
 				 */
-				$.each(data['fields'], function(key, field) {
+				$.each(data['fields'], function(rowKey, row) {
+					$.each(row, function(key, field) {
 
-					var posX = jQuery.gameMap.calculateXPos(field) - jQuery.gameMap.dX;
-					var posY = jQuery.gameMap.calculateYPos(field) - jQuery.gameMap.dY;
+						var posX = jQuery.gameMap.calculateXPos(field) - jQuery.gameMap.dX;
+						var posY = jQuery.gameMap.calculateYPos(field) - jQuery.gameMap.dY;
 
-					var borderType = 'neutral';
-					if(field['owner'] != null){
-						if (data['clanId'] == field['owner']['id']) {
-							borderType = 'player';
-						} else if (field['owner']['alliance'] != null) {
-							borderType = 'ally';
-						} else {
-							borderType = 'enemy';
-						}
-					}
-
-					var background = "url('"+jQuery.gameMap.getBasepath()+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
-					var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
-					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['coordX']*field['coordY']+'; background: '+background+';';
-					div.attr('style', divStyle);
-					div.attr('data-id', field['id']);
-
-					$('#map').append(div);
-
-
-
-					/**
-					 * Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
-					 * @return void
-					 */
-					div.mouseenter(function(e){
-						if (jQuery.gameMap.contextMenuShown){
-							return;
-						}
-
-						$('#fieldInfo').show();
-
-						var secret = '???';
-						var none = '---';
-
-						var coords = '['+field['coordX']+';'+field['coordY']+']';
-						var type = field['type'];
-						var owner = none;
-						var alliance = none;
-						var facility = none;
-						var level = none;
-
-
-						var ownerId = null;
-						var allianceId = null;
-
-						if (field['owner'] != null){
-							owner = field['owner']['name'];
-							ownerId = field['owner']['id'];
-
-							if (field['owner']['alliance'] != null){
-								alliance = field['owner']['alliance']['name'];
-								allianceId = field['owner']['alliance']['id'];
+						var borderType = 'neutral';
+						if(field['owner'] != null){
+							if (data['clanId'] == field['owner']['id']) {
+								borderType = 'player';
+							} else if (field['owner']['alliance'] != null) {
+								borderType = 'ally';
+							} else {
+								borderType = 'enemy';
 							}
 						}
 
+						var background = "url('"+jQuery.gameMap.getBasepath()+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
+						var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
+						var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['coordX']*field['coordY']+'; background: '+background+';';
+						div.attr('style', divStyle);
+						div.attr('data-id', field['id']);
 
-						if ((ownerId !== null && ownerId == data['clanId']) || (allianceId !== null && allianceId == data['allianceId'])){
-							if (field['facility'] != null){
-								facility = field['facility'];
+						$('#map').append(div);
+
+
+
+						/**
+						 * Shows and fills #fieldInfo and #fieldActions when user gets mouse over a field
+						 * @return void
+						 */
+						div.mouseenter(function(e){
+							if (jQuery.gameMap.contextMenuShown){
+								return;
 							}
 
-							if (field['level'] !== null && field['facility'] !== null && field['facility'] != 'headquarters'){
-								level = field['level'];
+							$('#fieldInfo').show();
+
+							var secret = '???';
+							var none = '---';
+
+							var coords = '['+field['coordX']+';'+field['coordY']+']';
+							var type = field['type'];
+							var owner = none;
+							var alliance = none;
+							var facility = none;
+							var level = none;
+
+
+							var ownerId = null;
+							var allianceId = null;
+
+							if (field['owner'] != null){
+								owner = field['owner']['name'];
+								ownerId = field['owner']['id'];
+
+								if (field['owner']['alliance'] != null){
+									alliance = field['owner']['alliance']['name'];
+									allianceId = field['owner']['alliance']['id'];
+								}
 							}
 
-						}
-						else if ((ownerId !== null && ownerId != data['clanId']) || (allianceId !== null && allianceId != data['allianceId'])){
-							facility = secret;
-							level = secret;
 
-						}
+							if ((ownerId !== null && ownerId == data['clanId']) || (allianceId !== null && allianceId == data['allianceId'])){
+								if (field['facility'] != null){
+									facility = field['facility'];
+								}
 
-						$("#fieldInfo #coords").html(coords);
-						$("#fieldInfo #type").html(type);
-						$("#fieldInfo #owner").html(owner);
-						$("#fieldInfo #alliance").html(alliance);
-						$("#fieldInfo #facility").html(facility);
-						$("#fieldInfo #level").html(level);
+								if (field['level'] !== null && field['facility'] !== null && field['facility'] != 'headquarters'){
+									level = field['level'];
+								}
+
+							}
+							else if ((ownerId !== null && ownerId != data['clanId']) || (allianceId !== null && allianceId != data['allianceId'])){
+								facility = secret;
+								level = secret;
+
+							}
+
+							$("#fieldInfo #coords").html(coords);
+							$("#fieldInfo #type").html(type);
+							$("#fieldInfo #owner").html(owner);
+							$("#fieldInfo #alliance").html(alliance);
+							$("#fieldInfo #facility").html(facility);
+							$("#fieldInfo #level").html(level);
+
+						});
+
+
+						/**
+						 * Hides #fieldInfo
+						 * @return void
+						 */
+						div.mouseleave(function(){
+							$('#fieldInfo').hide();
+						});
+
+
+						/**
+						 * Moves with #infoBox
+						 * @return void
+						 */
+						div.mousemove(function(e) {
+							var localCoordinates = jQuery.utils.globalToLocal(
+								div.parent(),
+								e.pageX,
+								e.pageY
+							);
+
+							$('#fieldInfo').css("left", localCoordinates.x + 30 - $('#mapContainer').scrollLeft() + 'px');
+							$('#fieldInfo').css("top", localCoordinates.y + 30 - $('#mapContainer').scrollTop() + 'px');
+						});
+
+						/**
+						 * Runs when user click some field and increment markedFields by one
+						 * @return void
+						 */
+						div.click(function(e){
+
+							if(jQuery.contextMenu.contextMenuShown){
+								jQuery.contextMenu.hide();
+								jQuery.gameMap.unmarkAll();
+								return;
+							}
+
+							jQuery.gameMap.mark(div);
+							if(jQuery.contextMenu.initialField === null || jQuery.contextMenu.action === null){
+								jQuery.contextMenu.initialField = field;
+								jQuery.contextMenu.show(div, e, field, data);
+							}
+							else{
+								jQuery.contextMenu.action(jQuery.contextMenu.initialField, field);
+								jQuery.contextMenu.hide();
+								jQuery.gameMap.unmarkAll();
+							}
+						});
+
+
 
 					});
-
 
 					/**
-					 * Hides #fieldInfo
-					 * @return void
+					 * slides the sliders
 					 */
-					div.mouseleave(function(){
-						$('#fieldInfo').hide();
-					});
+					$('#mapContainer').scrollLeft(scrollX);
+					$('#mapContainer').scrollTop(scrollY);
 
-
-					/**
-					 * Moves with #infoBox
-					 * @return void
-					 */
-					div.mousemove(function(e) {
-						var localCoordinates = jQuery.utils.globalToLocal(
-							div.parent(),
-							e.pageX,
-							e.pageY
-						);
-
-						$('#fieldInfo').css("left", localCoordinates.x + 30 - $('#mapContainer').scrollLeft() + 'px');
-						$('#fieldInfo').css("top", localCoordinates.y + 30 - $('#mapContainer').scrollTop() + 'px');
-					});
-
-					/**
-					 * Runs when user click some field and increment markedFields by one
-					 * @return void
-					 */
-					div.click(function(e){
-
-						if(jQuery.contextMenu.contextMenuShown){
-							jQuery.contextMenu.hide();
-							jQuery.gameMap.unmarkAll();
-							return;
-						}
-
-						jQuery.gameMap.mark(div);
-						if(jQuery.contextMenu.initialField === null || jQuery.contextMenu.action === null){
-							jQuery.contextMenu.initialField = field;
-							jQuery.contextMenu.show(div, e, field, data);
-						}
-						else{
-							jQuery.contextMenu.action(jQuery.contextMenu.initialField, field);
-							jQuery.contextMenu.hide();
-							jQuery.gameMap.unmarkAll();
-						}
-					});
-
-
-
+					jQuery.spinner.hide();
 				});
-
-				/**
-				 * slides the sliders
-				 */
-				$('#mapContainer').scrollLeft(scrollX);
-				$('#mapContainer').scrollTop(scrollY);
-
-				jQuery.spinner.hide();
 			});
 		},
 		/**
