@@ -260,7 +260,16 @@ class Field extends BaseRepository {
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
 		$qb->where($qb->expr()->in('f.id', $ids));
-		return $qb->getQuery()->getArrayResult();
+		$result = array();
+		foreach ($qb->getQuery()->getArrayResult() as $row) {
+			$x = $row['coordX'];
+			$y = $row['coordY'];
+			if (!isset($result[$x])) {
+				$result[$x] = array();
+			}
+			$result[$x][$y] = $row;
+		}
+		return $result;
 	}
 
 	/**
