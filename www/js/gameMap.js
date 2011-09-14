@@ -40,7 +40,6 @@ jQuery.extend({
 										var posY = jQuery.gameMap.calculateYPos(field);
 										jQuery.gameMap.dX = posX - jQuery.gameMap.getMapContainerWidth()/2 + jQuery.gameMap.fieldWidth/2;
 										jQuery.gameMap.dY = posY - jQuery.gameMap.getMapContainerHeight()/2 + 2*jQuery.gameMap.fieldHeight;
-
 										return false;
 									}
 								}
@@ -218,8 +217,8 @@ jQuery.extend({
 					/**
 					 * slides the sliders
 					 */
-					$('#mapContainer').scrollLeft(scrollX);
-					$('#mapContainer').scrollTop(scrollY);
+					$('#mapContainer').scrollLeft(jQuery.gameMap.scrollX);
+					$('#mapContainer').scrollTop(jQuery.gameMap.scrollY);
 
 					jQuery.spinner.hide();
 				});
