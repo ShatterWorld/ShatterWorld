@@ -123,8 +123,9 @@ jQuery.extend({
 			}
 			//other neutral
 			else {
-				this.contextMenuShown = false;
 				jQuery.gameMap.unmarkAll();
+				this.hide();
+				return;
 			}
 
 			this.addCancelAction();
@@ -305,12 +306,6 @@ jQuery.extend({
 									jQuery.contextMenu.hide();
 								}
 							);
-
-
-						/*	jQuery.events.fetchEvents();
-							jQuery.resources.fetchResources();
-							jQuery.contextMenu.hide();
-							jQuery.gameMap.unmarkAll();*/
 						});
 					}
 					else{
@@ -391,7 +386,6 @@ jQuery.extend({
 		{
 			var x = field['coordX'];
 			var y = field['coordY'];
-			alert(jQuery.gameMap.map[x-1][y+1]['owner']['id']);
 
 			if (jQuery.gameMap.map !== null){
 				if (

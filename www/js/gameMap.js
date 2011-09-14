@@ -31,7 +31,7 @@ jQuery.extend({
 			  * ajax that gets JSON data of visibleFields
 			  */
 			$.getJSON('?do=fetchMap', function(data) {
-				jQuery.gameMap.map = data;
+				jQuery.gameMap.map = data['fields'];
 
 				/**
 				 * finds the center and calculate dX and dY
