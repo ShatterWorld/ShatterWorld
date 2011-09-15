@@ -22,7 +22,7 @@ jQuery.extend({
 
 			countdownTr.mouseenter(function(){
 				$('#field_' + x + '_' + y).css('border', 'solid 3px yellow');
-				alert($('#field_' + x + '_' + y).css('border'));
+				//alert($('#field_' + x + '_' + y).css('border'));
 			});
 
 			countdownTr.mouseleave(function(){
