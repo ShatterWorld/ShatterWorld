@@ -29,9 +29,11 @@ jQuery.extend({
 						x = event['info']['target']['coordX'];
 						y = event['info']['target']['coordY'];
 					}
-				/*	else if (type == 'facilityConstruction'){
-						label = event['info']['constructionType']+' (lvl '+event['info']['level']+') [' + event['info']['field']['coordX'] + ';'+event['info']['field']['coordX'] + ']';
-					}*/
+					else if (type == 'facilityConstruction'){
+						label = event['info']['constructionType'] + ' (lvl ' + event['info']['level'] + ')';
+						x = event['info']['field']['coordX'];
+						y = event['info']['field']['coordY'];
+					}
 
 					jQuery.countdown.addCountdown(label, x, y, event['countdown']);
 					count++
