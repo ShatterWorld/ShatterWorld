@@ -21,8 +21,7 @@ jQuery.extend({
 			var countdownTr = $('<tr class="countdown" />');
 
 			countdownTr.mouseenter(function(){
-				$('#field_' + x + '_' + y).css('border', 'solid 3px yellow');
-				//alert($('#field_' + x + '_' + y).css('border'));
+				$('#field_' + x + '_' + y).css('border', 'solid 1px yellow');
 			});
 
 			countdownTr.mouseleave(function(){
