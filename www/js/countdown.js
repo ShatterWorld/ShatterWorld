@@ -11,15 +11,27 @@ jQuery.extend({
 		/**
 		 * Adds countdown
 		 * @param string
+		 * @param integer
+		 * @param integer
 		 * @param integer [s]
 		 * @return void
 		 */
-		addCountdown: function(title, remainingTime)
+		addCountdown: function(title, x, y, remainingTime)
 		{
 			var countdownTr = $('<tr class="countdown" />');
 
+			countdownTr.mouseenter(function(){
+				$('#field_' + x + '_' + y).css('border', 'solid 3px yellow');
+				alert($('#field_' + x + '_' + y).css('border'));
+			});
 
-			var titleTd = $('<td class="countdownTitle" />').html(title)
+			countdownTr.mouseleave(function(){
+				$('#field_' + x + '_' + y).css('border', 'none');
+
+
+			});
+
+			var titleTd = $('<td class="countdownTitle" />').html(title + ' [' + x + ';' + y + ']')
 				.css({
 					'font-weight' : 'bold',
 					'width' : '90%'
