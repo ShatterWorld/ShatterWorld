@@ -14,4 +14,9 @@ class Clan extends BaseRepository
 			return NULL;
 		}
 	}
+	
+	public function getPlayerClan ()
+	{
+		return $this->findOneByUser($this->context->user->id);
+	}
 }

@@ -1,8 +1,9 @@
 <?php
 namespace Rules\Events;
 use Rules\AbstractRule;
+use Entities;
 
-class FacilityConstruction extends AbstractRule implements IEvent
+class FacilityConstruction extends AbstractRule implements IConstruction
 {
 	public function process ($id)
 	{
@@ -17,5 +18,12 @@ class FacilityConstruction extends AbstractRule implements IEvent
 	public function getInfo ($eventId)
 	{
 		return $this->getContext()->model->getConstructionRepository()->getEventInfo($eventId);
+	}
+	
+	public function isValid ($type, $level, Entities\Field $field = NULL)
+	{
+		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
+		return $field->owner == $clan && 
+			(($field->facility === $type || ($field->facility === NULL && $level === 1)) && $field->level === ($level - 1));
 	}
 }

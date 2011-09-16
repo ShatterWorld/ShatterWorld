@@ -41,35 +41,12 @@ class MapPresenter extends BasePresenter
 
 	public function handleSendColonisation ($targetId)
 	{
-		$target = $this->context->model->getFieldRepository()->find($targetId);
-		$clan = $this->getPlayerClan();
-//		if ($origin->owner->id === $clan->id && $target->owner === NULL) {
-
-		$colonisate = false;
-		$neighbours = $this->context->model->getFieldRepository()->getFieldNeighbours($target);
-
-		foreach ($neighbours as $neighbour){
-			if ($neighbour->owner !== null && $neighbour->owner->id == $clan->id){
-				$colonisate = true;
-				break;
-			}
-		}
-
-
-		if ($colonisate){
-			$this->context->model->getMoveService()->create(array(
-				'origin' => $clan->getHeadquarters(),
-				'target' => $target,
-				'clan' => $clan,
-				'type' => 'colonisation'
-			));
+		try {
+			$this->context->model->getMoveService()->startColonisation($this->context->model->getFieldRepository()->find($targetId), $this->getPlayerClan());
 			$this->flashMessage('Kolonizace zahájena');
-		}
-		else{
+		} catch (Exception $e) {
 			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
 		}
-
-
 	}
 
 	public function handleLeaveField ($targetId)

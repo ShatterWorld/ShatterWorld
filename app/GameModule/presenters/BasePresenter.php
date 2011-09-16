@@ -30,7 +30,7 @@ abstract class BasePresenter extends \BasePresenter
 
 	public function getPlayerClan ()
 	{
-		return $this->getClanRepository()->findOneByUser($this->getUser()->getId());
+		return $this->getClanRepository()->getPlayerClan();
 	}
 
 	public function flashMessage ($message, $type = 'info')

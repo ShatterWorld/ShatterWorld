@@ -1,8 +1,9 @@
 <?php
 namespace Rules\Events;
 use Rules\AbstractRule;
+use Entities;
 
-class Colonisation extends AbstractRule implements IEvent
+class Colonisation extends AbstractRule implements IMove
 {
 	public function process ($id)
 	{
@@ -16,5 +17,20 @@ class Colonisation extends AbstractRule implements IEvent
 	public function getInfo ($eventId)
 	{
 		return $this->getContext()->model->getMoveRepository()->getEventInfo($eventId);
+	}
+	
+	public function isValid (Entities\Field $origin, Entities\Field $target)
+	{
+		if ($target->owner === NULL) {
+			$valid = FALSE;
+			foreach ($this->getContext()->model->getFieldRepository()->getFieldNeighbours($target) as $neighbour) {
+				if ($neighbour->owner == $origin->owner) {
+					$valid = TRUE;
+					break;
+				}
+			}
+			return $valid;
+		}
+		return FALSE;
 	}
 }
