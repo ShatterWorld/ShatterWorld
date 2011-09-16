@@ -165,7 +165,7 @@ jQuery.extend({
 						}
 
 						var background = "url('"+jQuery.gameMap.getBasepath()+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
-						var div = $('<div class="field" />').attr('id', 'field_'+posX+'_'+posY);
+						var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
 						var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['coordX']*field['coordY']+'; background: '+background+';';
 						div.attr('style', divStyle);
 						div.attr('data-id', field['id']);
