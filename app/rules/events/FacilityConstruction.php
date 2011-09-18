@@ -10,7 +10,7 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 		$construction = $this->getContext()->model->getConstructionRepository()->findOneByEvent($id);
 		$this->getContext()->model->getFieldService()->update($construction->field, array(
 			'facility' => $construction->constructionType,
-			'level' => 1
+			'level' => $construction->level
 		));
 		$this->getContext()->model->getResourceService()->recalculateProduction($construction->event->owner, $construction->event->term);
 	}

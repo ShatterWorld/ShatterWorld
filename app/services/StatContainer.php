@@ -38,7 +38,7 @@ class StatContainer extends Nette\Object
 	{
 		$base = $this->context->params['game']['stats']['baseColonisationTime'];
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
-		$count = $this->context->model->getFieldRepository()->getTerritorySize($clan);
+		$count = $this->context->model->getFieldRepository()->getTerritorySize($clan) + $this->context->model->getMoveRepository()->getColonisationCount($clan);
 		return $base * $distance * $count;
 	}
 	
