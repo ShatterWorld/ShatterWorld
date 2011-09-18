@@ -45,7 +45,8 @@ abstract class BasePresenter extends \BasePresenter
 	 */
 	public function handleFetchResources ()
 	{
-		$this->payload->resources = $this->getResourceRepository()->getResourcesArray($this->getPlayerClan());
+		$clan = $this->getPlayerClan();
+		$this->payload->resources = $clan ? $this->getResourceRepository()->getResourcesArray($clan) : NULL;
 		$this->sendPayload();
 	}
 	
@@ -55,7 +56,8 @@ abstract class BasePresenter extends \BasePresenter
 	 */
 	public function handleFetchEvents ()
 	{
-		$this->payload->events = $this->getEventRepository()->getUpcomingEventsArray($this->getPlayerClan());
+		$clan = $this->getPlayerClan();
+		$this->payload->events = $clan ? $this->getEventRepository()->getUpcomingEventsArray($clan) : NULL;
 		$this->sendPayload();
 	}
 
