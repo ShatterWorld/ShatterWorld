@@ -25,7 +25,7 @@ class Construction extends BaseService
 	public function startFacilityConstruction (Entities\Field $field, $facility, $level = 1)
 	{
 		$rule = $this->context->rules->get('facility', $facility);
-		if ($rule->isValid($facility, $level, $field)) {
+		if ($this->context->rules->get('event', 'facilityConstruction')->isValid($facility, $level, $field)) {
 			$this->context->model->getResourceService()->pay($field->owner, $rule->getConstructionCost($level));
 			$this->create(array(
 				'field' => $field,

@@ -23,7 +23,7 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 	public function isValid ($type, $level, Entities\Field $field = NULL)
 	{
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
-		return $field->owner == $clan && $level <= $this->getContext()->params['stats']['facilityLevelCap'] &&
+		return $field->owner == $clan && $level <= $this->getContext()->params['game']['stats']['facilityLevelCap'] &&
 			(($field->facility === $type || ($field->facility === NULL && $level === 1)) && $field->level === max(($level - 1), 1));
 	}
 }
