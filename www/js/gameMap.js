@@ -170,9 +170,24 @@ jQuery.extend({
 						div.attr('style', divStyle);
 						div.attr('data-id', field['id']);
 
+						var text = $('<div class="text" />');
+						text.css({
+							'font-size' : '75%',
+							'text-align' : 'center',
+							'color' : 'white'
+							//'line-height' : jQuery.gameMap.fieldHeight+'px'
+						});
+
+						if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
+							if (field['facility'] !== null){
+								text.append(field['facility']);
+								if(field['facility'] !== 'headquarters'){
+									text.append(' ('+field['level']+')');
+								}
+							}
+						}
+						div.append(text);
 						$('#map').append(div);
-
-
 
 						/**
 						 * Shows and fills fieldInfo when user gets mouse over a field
