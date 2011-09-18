@@ -30,7 +30,7 @@ jQuery.extend({
 						y = event['info']['target']['coordY'];
 					}
 					else if (type == 'facilityConstruction'){
-						label = event['info']['constructionType'] + ' (lvl ' + event['info']['level'] + ')';
+						label = event['info']['constructionType'] + ' (' + event['info']['level'] + ')';
 						x = event['info']['field']['coordX'];
 						y = event['info']['field']['coordY'];
 					}
