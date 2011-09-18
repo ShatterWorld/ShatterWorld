@@ -9,7 +9,7 @@ namespace Entities;
 class Construction extends BaseEntity
 {
 	/**
-	 * @OneToOne(targetEntity = "Entities\Field")
+	 * @ManyToOne(targetEntity = "Entities\Field")
 	 * @var Entities\Field
 	 */
 	private $field;
