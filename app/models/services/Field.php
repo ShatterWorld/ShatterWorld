@@ -14,26 +14,6 @@ class Field extends BaseService {
 		$this->options = $context->params['game']['map'];
 	}
 	
-	/**
-	 * Start building given facility on given field
-	 * @param Entities\Field
-	 * @param string
-	 * @throws InsufficientResourcesException
-	 * @return void
-	 */
-	public function buildFacility (Entities\Field $field, $facility)
-	{
-		$rule = $this->context->rules->get('facility', $facility);
-		$this->context->model->getResourceService()->pay($field->owner, $rule->getConstructionCost(1));
-		$this->context->model->getConstructionService()->create(array(
-			'field' => $field,
-			'type' => 'facilityConstruction',
-			'constructionType' => $facility,
-			'level' => 1,
-			'timeout' => $rule->getConstructionTime(1)
-		));
-	}
-	
 	public function invalidateVisibleFields ($clanId)
 	{
 		$this->getRepository()->getVisibleFieldsCache()->save($clanId, NULL);

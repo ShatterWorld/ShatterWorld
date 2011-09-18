@@ -21,7 +21,7 @@ common:
 		stats:
 			baseLOS: 4
 			baseColonisationTime: 30
-			maxFacilityLevel: 10
+			facilityLevelCap: 10
 
 		ruleAliases:
 			unit: Rules\Units

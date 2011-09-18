@@ -72,21 +72,13 @@ class MapPresenter extends BasePresenter
 	public function handleBuildFacility ($targetId, $facility)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
-		$clan = $this->getPlayerClan();
-
-/*resources check etc*/
-		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility === null){
-			try {
-				$this->context->model->getFieldService()->buildFacility($target, $facility);
-				$this->flashMessage('Stavba zahájena');
-			} catch (InsufficientResourcesException $e) {
-				$this->flashMessage('Nemáte dostatek surovin');
-			}
-		}
-		else{
+		try {
+			$this->context->model->getConstructionService()->startFacilityConstruction($target, $facility);
+		} catch (InsufficientResourcesException $e) {
+			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		} catch (Exception $e) {
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		}
-
 	}
 
 	public function handleDestroyFacility ($targetId)
@@ -112,32 +104,13 @@ class MapPresenter extends BasePresenter
 	public function handleUpgradeFacility ($targetId)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
-		$clan = $this->getPlayerClan();
-
-/*resources check etc*/
-		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null){
-			if ($target->facility !== null){
-				if($target->facility !== 'headquarters'){
-					$this->context->model->getFieldService()->update($target, array(
-						'level' => $target->level + 1,
-					));
-					$this->flashMessage('Upgrade zahájen');
-					$this->redirect('Map:');
-				}
-				else{
-					$this->flashMessage('Nelze upgradovat velitelství', 'error');
-				}
-
-			}
-			else{
-				$this->flashMessage('Nelze upgradovat budovu, která neexistuje', 'error');
-			}
-
+		try {
+			$this->context->model->getConstructionService()->startFacilityConstruction($target, $target->facility, $target->level + 1);
+		} catch (InsufficientResourcesException $e) {
+			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		} catch (Exception $e) {
+			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		}
-		else{
-			$this->flashMessage('Nelze upgradovat budovu na cizím, nebo nezastaveném poli', 'error');
-		}
-
 	}
 
 	public function handleDowngradeFacility ($targetId)
