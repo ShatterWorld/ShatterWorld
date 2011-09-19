@@ -1,6 +1,7 @@
 <?php
 namespace Services;
 use Entities;
+use Exception;
 
 class Construction extends BaseService
 {
@@ -48,8 +49,8 @@ class Construction extends BaseService
 	 */
 	public function startFacilityDemolition (Entities\Field $field, $level = 0)
 	{
-		$rule = $this->context->rules->get('facility', $facility);
-		if ($this->context->rules->get('event', 'facilityDemolition')->isValid($level, $field)) {
+		$rule = $this->context->rules->get('facility', $field->facility);
+		if ($this->context->rules->get('event', 'facilityDemolition')->isValid($field->facility, $level, $field)) {
 			$this->context->model->getResourceService()->pay($field->owner, $rule->getDemolitionCost($field->level, $level));
 			$this->create(array(
 				'field' => $field,

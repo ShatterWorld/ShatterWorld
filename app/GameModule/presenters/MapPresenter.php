@@ -3,6 +3,7 @@ namespace GameModule;
 use Nette;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
+use Exception;
 
 class MapPresenter extends BasePresenter
 {

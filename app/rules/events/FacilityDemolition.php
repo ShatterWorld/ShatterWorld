@@ -1,5 +1,6 @@
 <?php
 namespace Rules\Events;
+use Entities;
 use Rules\AbstractRule;
 
 class FacilityDemolition extends AbstractRule implements IConstruction
@@ -20,7 +21,7 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 		return $this->getContext()->model->getConstructionRepository()->getEventInfo($eventId);
 	}
 	
-	public function isValid ($level, Entities\Field $field = NULL)
+	public function isValid ($type, $level, Entities\Field $field = NULL)
 	{
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
 		return $field->owner == $clan && ($level === 0 || ($field->level - 1 === $level));
