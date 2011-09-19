@@ -296,7 +296,6 @@ jQuery.extend({
 								'facility': name
 								}),
 								function(data){
-									alert('building started');
 									jQuery.events.fetchEvents();
 									jQuery.resources.fetchResources();
 									jQuery.gameMap.unmarkAll();

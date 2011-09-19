@@ -9,42 +9,28 @@
 jQuery.extend({
 	gameMap: {
 		/**
-		 * @var string - Basepath
+		 * Basepath
+		 * @var string
 		 */
 		getBasepath : function () {return $('#map').data()['basepath'];},
 
 		/**
-		 * The size of the marker
-		 * @var integer
-		 */
-		markerSize : 5,
-
-		/**
-		 * @var JSON - indexed map
+		 * Indexed map
+		 * @var JSON
 		 */
 		map : null,
 
 		/**
-		 * @var integer - width of field
+		 * The width of field
+		 * @var integer
 		 */
 		fieldWidth : 60,
 
 		/**
-		 * @var integer - height of field
+		 * The height of field
+		 * @var integer
 		 */
 		fieldHeight : 40,
-
-		/**
-		 * @var integer - Number of marked fields
-		 */
-		markedFields : 0,
-
-
-		/**
-		 * Returns object representing the marker
-		 * @return object
-		 */
-		getMarkerImage : function () {return $('<img class="marker" />').attr('src', this.getBasepath() + '/images/fields/marker.png');},
 
 		/**
 		 * Returns the width of #mapContainer
@@ -70,22 +56,26 @@ jQuery.extend({
 		selectTarget : false,
 
 		/**
-		 * @var integer represents x-offset between real and calculated coord. of fields
+		 * Represents x-offset between real and calculated coord. of fields
+		 * @var integer
 		 */
 		dX : 0,
 
 		/**
-		 * @var integer represents y-offset between real and calculated coord. of fields
+		 * Represents y-offset between real and calculated coord. of fields
+		 * @var integer
 		 */
 		dY : 0,
 
 		/**
-		 * @var integer represents how much the scroll bar must move to the left
+		 * Represents how much the scroll bar must move to the left
+		 * @var integer
 		 */
 		scrollX : 0,
 
 		/**
-		 * @var integer represents how much the scroll bar must move to the bottom
+		 * Represents how much the scroll bar must move to the bottom
+		 * @var integer
 		 */
 		scrollY : 0,
 
@@ -297,11 +287,11 @@ jQuery.extend({
 
 							if(jQuery.contextMenu.contextMenuShown){
 								jQuery.contextMenu.hide();
-								jQuery.gameMap.unmarkAll();
+								jQuery.marker.unmarkAll();
 								return;
 							}
 
-							jQuery.gameMap.mark(div);
+							jQuery.marker.mark(div);
 							if(jQuery.contextMenu.initialField === null || jQuery.contextMenu.action === null){
 								jQuery.contextMenu.initialField = field;
 								jQuery.contextMenu.show(div, e, field, data);
@@ -309,7 +299,7 @@ jQuery.extend({
 							else{
 								jQuery.contextMenu.action(jQuery.contextMenu.initialField, field);
 								jQuery.contextMenu.hide();
-								jQuery.gameMap.unmarkAll();
+								jQuery.marker.unmarkAll();
 							}
 						});
 
