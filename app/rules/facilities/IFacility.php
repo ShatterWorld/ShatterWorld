@@ -25,6 +25,22 @@ interface IFacility extends IRule
 	public function getConstructionTime ($level = 1);
 	
 	/**
+	 * Get the demolition cost of this building or its downgrade to given level
+	 * @param int
+	 * @param int
+	 * @return array of $resource => $cost
+	 */
+	public function getDemolitionCost ($from, $level = 0);
+	
+	/**
+	 * Get the demolition time of this building or its downgrade to given level
+	 * @param int
+	 * @param int
+	 * @return int
+	 */
+	public function getDemolitionTime ($from, $level = 0);
+	
+	/**
 	 * Get the raw production of the building (before applying any bonuses)
 	 * @param int
 	 * @return array of $resource => $production

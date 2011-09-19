@@ -49,7 +49,7 @@ class Field extends BaseEntity {
 	 */
 	public function __construct ()
 	{
-		$this->level = 1;
+		$this->level = 0;
 	}
 
 	/**

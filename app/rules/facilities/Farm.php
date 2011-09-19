@@ -22,6 +22,16 @@ class Farm extends AbstractRule implements IFacility
 		return pow($level, 2) * 90;
 	}
 	
+	public function getDemolitionCost ($from, $level = 0)
+	{
+		return array();
+	}
+	
+	public function getDemolitionTime ($from, $level = 0)
+	{
+		return pow($level, 2) * 90;
+	}
+	
 	public function getProduction ($level = 1)
 	{
 		return array(

@@ -1,15 +1,16 @@
 <?php
 namespace Rules\Events;
-use Rules\AbstractRule;
 use Entities;
+use Rules\AbstractRule;
 
-class FacilityConstruction extends AbstractRule implements IConstruction
+class FacilityDemolition extends AbstractRule implements IConstruction
 {
 	public function process ($id)
 	{
 		$construction = $this->getContext()->model->getConstructionRepository()->findOneByEvent($id);
+		$facility = $construction->level > 0 ? $construction->constructionType : NULL;
 		$this->getContext()->model->getFieldService()->update($construction->field, array(
-			'facility' => $construction->constructionType,
+			'facility' => $facility,
 			'level' => $construction->level
 		));
 		$this->getContext()->model->getResourceService()->recalculateProduction($construction->event->owner, $construction->event->term);
@@ -23,7 +24,6 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 	public function isValid ($type, $level, Entities\Field $field = NULL)
 	{
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
-		return $field->owner == $clan && $level <= $this->getContext()->params['game']['stats']['facilityLevelCap'] &&
-			(($field->facility === $type || ($field->facility === NULL && $level === 1)) && $field->level === ($level - 1));
+		return $field->owner == $clan && ($level === 0 || ($field->level - 1 === $level));
 	}
 }
