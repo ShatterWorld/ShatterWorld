@@ -245,16 +245,21 @@ class Field extends BaseRepository {
 		return $visibleFields;
 	}
 
-	public function getVisibleFieldsArray ($clanId, $depth)
+	public function getVisibleFieldsIds ($clanId, $depth)
 	{
 		$cache = $this->getVisibleFieldsCache();
 		$ids = $cache->load($clanId);
 		if ($ids === NULL) {
 			$cache->save($clanId, $ids = $this->getVisibleFields($clanId, $depth));
 		}
+		return $ids;
+	}
+	
+	public function getVisibleFieldsArray ($clanId, $depth)
+	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
-		$qb->where($qb->expr()->in('f.id', $ids));
+		$qb->where($qb->expr()->in('f.id', $this->getVisibleFieldsIds($clanId, $depth)));
 		$result = array();
 		foreach ($qb->getQuery()->getArrayResult() as $row) {
 			$x = $row['coordX'];
