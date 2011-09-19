@@ -157,8 +157,9 @@ jQuery.extend({
 						'do': 'sendColonisation',
 						'targetId': target['id']
 					}),
-					function(data){
+					function(){
 						jQuery.events.fetchEvents();
+						jQuery.events.fetchResources();
 						jQuery.gameMap.unmarkAll();
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
@@ -204,7 +205,7 @@ jQuery.extend({
 						'do': 'upgradeFacility',
 						'targetId': target['id']
 					}),
-					function(data){
+					function(){
 						jQuery.events.fetchEvents();
 						jQuery.gameMap.unmarkAll();
 						jQuery.spinner.hide();
@@ -231,7 +232,7 @@ jQuery.extend({
 						'do': 'downgradeFacility',
 						'targetId': target['id']
 					}),
-					function(data){
+					function(){
 						jQuery.events.fetchEvents();
 						jQuery.gameMap.unmarkAll();
 						jQuery.spinner.hide();
@@ -259,7 +260,7 @@ jQuery.extend({
 						'do': 'destroyFacility',
 						'targetId': target['id']
 					}),
-					function(data){
+					function(){
 						jQuery.events.fetchEvents();
 						jQuery.gameMap.unmarkAll();
 						jQuery.spinner.hide();
@@ -295,12 +296,9 @@ jQuery.extend({
 								'facility': name
 								}),
 								function(data){
-									jQuery.resources.resources['metal'] -= facility['cost']['metal'];
-									jQuery.resources.resources['stone'] -= facility['cost']['stone'];
-									jQuery.resources.resources['food'] -= facility['cost']['food'];
-									jQuery.resources.resources['fuel'] -= facility['cost']['fuel'];
-
+									alert('building started');
 									jQuery.events.fetchEvents();
+									jQuery.events.fetchResources();
 									jQuery.gameMap.unmarkAll();
 									jQuery.spinner.hide();
 									jQuery.contextMenu.hide();
@@ -337,7 +335,7 @@ jQuery.extend({
 						'do': 'leaveField',
 						'targetId': target['id']
 					}),
-					function(data){
+					function(){
 						jQuery.events.fetchEvents();
 						jQuery.gameMap.unmarkAll();
 						jQuery.spinner.hide();

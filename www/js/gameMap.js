@@ -317,8 +317,8 @@ jQuery.extend({
 					$('#mapContainer').scrollLeft(jQuery.gameMap.scrollX);
 					$('#mapContainer').scrollTop(jQuery.gameMap.scrollY);
 
-					jQuery.spinner.hide();
 				});
+				jQuery.spinner.hide();
 			});
 		},
 		/**

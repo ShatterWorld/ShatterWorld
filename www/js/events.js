@@ -28,7 +28,6 @@ jQuery.extend({
 					var y = -1;
 
 					if (type == 'colonisation'){
-						//label = 'Kolonizace [' + event['info']['target']['coordX'] + ';'+event['info']['target']['coordX'] + ']';
 						label = 'Kolonizace';
 						x = event['info']['target']['coordX'];
 						y = event['info']['target']['coordY'];
