@@ -14,6 +14,12 @@ jQuery.extend({
 		getBasepath : function () {return $('#map').data()['basepath'];},
 
 		/**
+		 * The size of the marker
+		 * @var integer
+		 */
+		markerSize : 5,
+
+		/**
 		 * @var JSON - indexed map
 		 */
 		map : null,
@@ -326,7 +332,8 @@ jQuery.extend({
 		 * @return void
 		 */
 		mark : function (field) {
-			$(field).append(this.getMarkerImage().clone());
+			$(field).drawEllipse(this.markerSize, this.markerSize, this.fieldWidth-2*this.markerSize, this.fieldHeight-2*this.markerSize, {color: 'red', stroke: this.markerSize});
+			$(field).attr('class', 'markedField');
 		},
 
 		/**
@@ -334,7 +341,8 @@ jQuery.extend({
 		* @return void
 		*/
 		unmarkAll : function(){
-			$('.marker').remove();
+			$('.markedField canvas').remove();
+			$('.markedField').attr('class', 'field');
 			this.markedFields = 0;
 			this.initialField = null;
 		},
