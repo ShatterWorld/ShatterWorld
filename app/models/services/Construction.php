@@ -38,4 +38,28 @@ class Construction extends BaseService
 			throw new Exception;
 		}
 	}
+	
+	/**
+	 * Start demolition on given field
+	 * @param Entities\Field
+	 * @param int
+	 * @throws InsufficientResourcesException
+	 * @return void
+	 */
+	public function startFacilityDemolition (Entities\Field $field, $level = 0)
+	{
+		$rule = $this->context->rules->get('facility', $facility);
+		if ($this->context->rules->get('event', 'facilityDemolition')->isValid($level, $field)) {
+			$this->context->model->getResourceService()->pay($field->owner, $rule->getDemolitionCost($field->level, $level));
+			$this->create(array(
+				'field' => $field,
+				'type' => 'facilityDemolition',
+				'constructionType' => $level > 0 ? 'downgrade' : 'demolition',
+				'level' => $level,
+				'timeout' => $rule->getDemolitionTime($field->level, $level)
+			));
+		} else {
+			throw new Exception;
+		}
+	}
 }

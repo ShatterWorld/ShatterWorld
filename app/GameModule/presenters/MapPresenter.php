@@ -74,6 +74,7 @@ class MapPresenter extends BasePresenter
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
 			$this->context->model->getConstructionService()->startFacilityConstruction($target, $facility);
+			$this->flashMessage('Stavba zahájena');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (Exception $e) {
@@ -84,27 +85,21 @@ class MapPresenter extends BasePresenter
 	public function handleDestroyFacility ($targetId)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
-		$clan = $this->getPlayerClan();
-
-/*resources check etc*/
-		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null){
-			$this->context->model->getFieldService()->update($target, array(
-				'facility' => null,
-				'level' => 1,
-			));
-			$this->flashMessage('Stržení zahájeno');
-			$this->redirect('Map:');
+		try {
+			$this->context->model->getConstructionService()->startFacilityDemolition($target, 0);
+			$this->flashMessage('Demolice zahájena');
+		} catch (InsufficientResourcesException $e) {
+			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		} catch (Exception $e) {
+			$this->flashMessage('Nelze bourat na cizím, nebo nezastaveném poli', 'error');
 		}
-		else{
-			$this->flashMessage('Nelze bourat budovu na cizím, nebo nezastaveném poli', 'error');
-		}
-
 	}
 
 	public function handleUpgradeFacility ($targetId)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
+			$this->flashMessage('Stavba zahájena');
 			$this->context->model->getConstructionService()->startFacilityConstruction($target, $target->facility, $target->level + 1);
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
@@ -116,34 +111,13 @@ class MapPresenter extends BasePresenter
 	public function handleDowngradeFacility ($targetId)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
-		$clan = $this->getPlayerClan();
-
-/*resources check etc*/
-		if ($target->owner !== null && $target->owner->id == $clan->id && $target->facility !== null && $target->level > 1){
-			if ($target->facility !== null){
-				if($target->facility !== 'headquarters'){
-					$this->context->model->getFieldService()->update($target, array(
-						'level' => $target->level + 1,
-					));
-					$this->flashMessage('Downgrade zahájen');
-					$this->redirect('Map:');
-				}
-				else{
-					$this->flashMessage('Nelze downgradovat velitelství', 'error');
-				}
-
-			}
-			else{
-				$this->flashMessage('Nelze downgradovat budovu, která neexistuje', 'error');
-			}
-
+		try {
+			$this->context->model->getConstructionService()->startFacilityDemolition($target, $target->level - 1);
+			$this->flashMessage('Demolice zahájena');
+		} catch (InsufficientResourcesException $e) {
+			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		} catch (Exception $e) {
+			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		}
-		else{
-			$this->flashMessage('Nelze downgradovat budovu na cizím, nebo nezastaveném poli', 'error');
-		}
-
 	}
-
-
-
 }
