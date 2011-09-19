@@ -159,7 +159,7 @@ jQuery.extend({
 					}),
 					function(){
 						jQuery.events.fetchEvents();
-						jQuery.events.fetchResources();
+						jQuery.resources.fetchResources();
 						jQuery.gameMap.unmarkAll();
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
@@ -298,7 +298,7 @@ jQuery.extend({
 								function(data){
 									alert('building started');
 									jQuery.events.fetchEvents();
-									jQuery.events.fetchResources();
+									jQuery.resources.fetchResources();
 									jQuery.gameMap.unmarkAll();
 									jQuery.spinner.hide();
 									jQuery.contextMenu.hide();

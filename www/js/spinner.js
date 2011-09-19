@@ -49,7 +49,6 @@ jQuery.extend({
 		 */
 		hide : function ()
 		{
-			alert('spinner removed');
 			$('.spinner').remove();
 		},
 
