@@ -170,11 +170,17 @@ jQuery.extend({
 						div.attr('style', divStyle);
 						div.attr('data-id', field['id']);
 
+
+						div.css({
+							'vertical-align' : 'middle'
+						});
+
 						var text = $('<div class="text" />');
 						text.css({
 							'font-size' : '75%',
 							'text-align' : 'center',
-							'color' : 'white'
+							'color' : 'white',
+							'vertical-align' : 'middle',
 							//'line-height' : jQuery.gameMap.fieldHeight+'px'
 						});
 

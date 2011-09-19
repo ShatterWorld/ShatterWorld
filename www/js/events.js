@@ -14,6 +14,10 @@ jQuery.extend({
 		fetchEvents: function (){
 			$.getJSON('?do=fetchEvents', function(data) {
 
+				if (data === null || data['events'] === null){
+					return;
+				}
+
 				jQuery.countdown.cleanDialog();
 				var count = 0;
 				$.each(data['events'], function(key, event) {

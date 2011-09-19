@@ -9,7 +9,7 @@ use Nette\Application\UI\Form;
  * @author Petr Bělohlávek
  */
 class ClanPresenter extends BasePresenter {
-	
+
 	/**
 	* Redirects if user has no clan, otherwise displays his clan
 	* @return void
@@ -18,7 +18,7 @@ class ClanPresenter extends BasePresenter {
 	{
 		$this->template->clan = $this->getPlayerClan();
 	}
-	
+
 	/**
 	* Action for new clan
 	* @return void
@@ -29,12 +29,12 @@ class ClanPresenter extends BasePresenter {
 			$this->redirect('Clan:');
 		}
 	}
-	
+
 	/**
 	* Creates the New form
 	* @return Nette\Application\UI\Form
 	*/
-	protected function createComponentNewClanForm () 
+	protected function createComponentNewClanForm ()
 	{
 		$form = new Form();
 		$form->addText('name', 'Jméno klanu')
@@ -43,7 +43,7 @@ class ClanPresenter extends BasePresenter {
 		$form->onSuccess[] = callback($this, 'submitNewClanForm');
 		return $form;
 	}
-	
+
 	/**
 	* New clan slot
 	* @param Nette\Application\UI\Form
@@ -56,23 +56,23 @@ class ClanPresenter extends BasePresenter {
 			$data['user'] = $this->getUserRepository()->find($this->getUser()->getId());
 			$this->getService('clanService')->create($data);
 			$this->flashMessage(sprintf('Klan %s byl založen.', $data['name']));
-			
+
 		}
-		//$this->redirect('Clan:');
+		$this->redirect('Clan:');
 	}
 
 	/**
 	* Creates the Delete form
 	* @return Nette\Application\UI\Form
 	*/
-	protected function createComponentDeleteClanForm () 
+	protected function createComponentDeleteClanForm ()
 	{
 		$form = new Form();
 		$form->addSubmit('submit', 'Smazat klan');
 		$form->onSuccess[] = callback($this, 'submitDeleteClanForm');
 		return $form;
 	}
-	
+
 	/**
 	* Delete clan slot
 	* @param Nette\Application\UI\Form
@@ -85,13 +85,13 @@ class ClanPresenter extends BasePresenter {
 			$this->flashMessage('Klan byl smazán.');
 		}
 		$this->redirect('Clan:new');
-		
-	}
-	
 
-	
-	
-	
-	
-	
+	}
+
+
+
+
+
+
+
 }

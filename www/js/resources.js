@@ -26,6 +26,7 @@ jQuery.extend({
 			this.resources['stone'] = 0;
 			this.resources['metal'] = 0;
 			this.resources['fuel'] = 0;
+
 			this.production['food'] = 0;
 			this.production['stone'] = 0;
 			this.production['metal'] = 0;
@@ -38,6 +39,9 @@ jQuery.extend({
 		fetchResources: function ()
 		{
 			$.getJSON('?do=fetchResources', function(data) {
+				if (data === null || data['resources'] === null){
+					return;
+				}
 				jQuery.resources.resources['food'] = data['resources']['food']['balance'];
 				jQuery.resources.production['food'] = data['resources']['food']['production'];
 
