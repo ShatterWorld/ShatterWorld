@@ -92,39 +92,40 @@
 					</ul>
 				</div>
 
-				<div class="submenu">
-					<h3>Novinky</h3>
+				{if $presenter->getPlayerClan()}
+					<div class="submenu">
+						<h3>Novinky</h3>
 
-					<ul>
-						<li><a href="{link Dashboard:}">Aktuality</a></li>
-					</ul>
-				</div>
+						<ul>
+							<li><a href="{link Dashboard:}">Aktuality</a></li>
+						</ul>
+					</div>
 
-				<div class="submenu">
-					<h3>Mapa</h3>
-					<ul class="tmp">
-						<li><a href="{link Map:}">Zobrazit</a></li>
-					</ul>
-				</div>
-				<div class="submenu">
-					<h3>Aliance</h3>
-					<ul>
-						<li><a n:href="Alliance:">Přehled</a></li>
-					</ul>
-				</div>
-				<div class="submenu">
-					<h3>Profil</h3>
-					<ul>
-						{if !$presenter->getPlayerProfile()}
-							<li><a href="{link Profile:new}">Nový</a></li>
-						{else}
-							<li><a href="{link Profile:}">Přehled</a></li>
-							<li><a href="{link Profile:edit}">Upravit</a></li>
-							<li><a href="{link Profile:delete}">Smazat</a></li>
-						{/if}
-					</ul>
-				</div>
-
+					<div class="submenu">
+						<h3>Mapa</h3>
+						<ul class="tmp">
+							<li><a href="{link Map:}">Zobrazit</a></li>
+						</ul>
+					</div>
+					<div class="submenu">
+						<h3>Aliance</h3>
+						<ul>
+							<li><a n:href="Alliance:">Přehled</a></li>
+						</ul>
+					</div>
+					<div class="submenu">
+						<h3>Profil</h3>
+						<ul>
+							{if !$presenter->getPlayerProfile()}
+								<li><a href="{link Profile:new}">Nový</a></li>
+							{else}
+								<li><a href="{link Profile:}">Přehled</a></li>
+								<li><a href="{link Profile:edit}">Upravit</a></li>
+								<li><a href="{link Profile:delete}">Smazat</a></li>
+							{/if}
+						</ul>
+					</div>
+				{/if}
 			</div>
 
 			<div id="container">
