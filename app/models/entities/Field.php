@@ -155,7 +155,7 @@ class Field extends BaseEntity {
 	public function setFacility ($facility)
 	{
 		$this->facility = $facility;
-		$this->setLevel(1);
+		$this->setLevel(0);
 	}
 
 	/**

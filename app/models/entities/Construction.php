@@ -15,7 +15,7 @@ class Construction extends Event
 	private $target;
 	
 	/**
-	 * @Column(type = "string")
+	 * @Column(type = "string", nullable = true)
 	 * @var string
 	 */
 	private $construction;
@@ -34,7 +34,7 @@ class Construction extends Event
 	 * @param string
 	 * @param int
 	 */
-	public function __construct ($type, Clan $owner, Field $target, $construction, $level)
+	public function __construct ($type, Clan $owner, Field $target, $construction = NULL, $level = NULL)
 	{
 		parent::__construct($type, $owner);
 		$this->target = $target;

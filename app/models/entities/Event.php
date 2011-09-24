@@ -64,6 +64,7 @@ abstract class Event extends BaseEntity {
 		$this->type = $type;
 		$this->owner = $owner;
 		$this->processed = FALSE;
+		$this->failed = FALSE;
 	}
 	
 	/**

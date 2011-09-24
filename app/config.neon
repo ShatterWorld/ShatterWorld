@@ -21,6 +21,7 @@ common:
 		stats:
 			baseLOS: 4
 			baseColonisationTime: 30
+			baseAbandonmentTime: 60
 			facilityLevelCap: 10
 
 		ruleAliases:

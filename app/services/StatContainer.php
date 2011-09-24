@@ -42,6 +42,11 @@ class StatContainer extends Nette\Object
 		return $base * $distance * $count;
 	}
 	
+	public function getAbandonmentTime ($level)
+	{
+		return $level * $this->context->params['game']['stats']['baseAbandonmentTime'];
+	}
+	
 	/**
 	 * Get given clan's production of given resource
 	 * @param Entities\Clan

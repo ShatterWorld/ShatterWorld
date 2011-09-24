@@ -53,29 +53,19 @@ class MapPresenter extends BasePresenter
 	public function handleLeaveField ($targetId)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
-		$clan = $this->getPlayerClan();
-
-		if ($target->owner !== null && $target->owner->id == $clan->id){
-			$this->context->model->getFieldService()->update($target, array(
-				'owner' => null,
-				'facility' => null,
-				'level' => 1,
-			));
-			$this->flashMessage('Opuštěno');
-			$this->redirect('Map:');
+		try {
+			$this->context->model->getConstructionService()->startAbandonment($target);
+			$this->flashMessage('Opuštení zahájeno');
+		} catch (Exception $e) {
+			$this->flashMessage('Nelze opustit pole, které vám nepatří.', 'error');
 		}
-		else{
-			$this->flashMessage('Nelze opustit pole, které není vaše', 'error');
-		}
-
 	}
 
 	public function handleBuildFacility ($targetId, $facility)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
-			$this->context->model->getConstructionService()->startFacilityConstruction($target, $facility);
-			$this->flashMessage('Stavba zahájena');
+			
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (Exception $e) {

@@ -58,4 +58,19 @@ class Construction extends Event
 			throw new InsufficientResourcesException;
 		}
 	}
+	
+	/**
+	 * Start abandonment of given field
+	 * @param Entities\Field
+	 * @return void
+	 */
+	public function startAbandonment (Entities\Field $field)
+	{
+		$this->create(array(
+			'target' => $field,
+			'owner' => $field->owner,
+			'type' => 'abandonment',
+			'timeout' => $this->context->stats->getAbandonmentTime($field->level)
+		));
+	}
 }
