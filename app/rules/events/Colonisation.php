@@ -7,9 +7,7 @@ class Colonisation extends AbstractRule implements IEvent
 {
 	public function process (Entities\Event $event)
 	{
-		if ($event->target->owner === NULL) {
-			$event->target->setOwner($event->owner);
-		}
+		$event->target->setOwner($event->owner);
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
 	}
 	
