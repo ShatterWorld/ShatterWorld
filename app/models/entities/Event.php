@@ -5,9 +5,12 @@ namespace Entities;
  * A pending event entity
  * @Entity(repositoryClass = "Repositories\Event")
  * @Table(indexes = {@Index(name = "idx_lock", columns = {"term", "processed", "lockUserId", "lockTimeout"})})
+ * @InheritanceType("SINGLE_TABLE")
+ * @DicriminatorColumn(name = "class", type = "string")
+ * @DiscriminatorMap({"Move" = "Move", "Construction" = "Construction"})
  * @author Jan "Teyras" Buchar
  */
-class Event extends BaseEntity {
+abstract class Event extends BaseEntity {
 	
 	/**
 	 * @Column(type = "string")
@@ -44,6 +47,12 @@ class Event extends BaseEntity {
 	 * @var bool
 	 */
 	private $processed;
+	
+	/**
+	 * @Column(type = "boolean")
+	 * @var bool
+	 */
+	private $failed;
 	
 	/**
 	 * Constructor
@@ -86,6 +95,16 @@ class Event extends BaseEntity {
 	}
 	
 	/**
+	 * Timeout setter
+	 * @param int
+	 * @return void
+	 */
+	public function setTimeout ($timeout)
+	{
+		$this->term = new \DateTime('@' . (date('U') + $timeout));
+	}
+	
+	/**
 	 * Owner getter
 	 * @return Entities\Clan
 	 */
@@ -111,5 +130,24 @@ class Event extends BaseEntity {
 	public function setProcessed ($processed = TRUE)
 	{
 		$this->processed = $processed;
+	}
+	
+	/**
+	 * Has the event failed?
+	 * @return bool
+	 */
+	public function isFailed ()
+	{
+		return $this->failed;
+	}
+	
+	/**
+	 * Dailed setter
+	 * @param bool
+	 * @return void
+	 */
+	public function setFailed ($failed = TRUE)
+	{
+		$this->failed = $failed;
 	}
 }

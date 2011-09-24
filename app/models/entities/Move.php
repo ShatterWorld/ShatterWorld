@@ -6,14 +6,8 @@ namespace Entities;
  * @Entity(repositoryClass = "Repositories\Move")
  * @author Jan "Teyras" Buchar
  */
-class Move extends BaseEntity
+class Move extends Event
 {
-	/**
-	 * @ManyToOne(targetEntity = "Entities\Clan")
-	 * @var Entities\Clan
-	 */
-	private $clan;
-	
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Field")
 	 * @var Entities\Field
@@ -27,32 +21,17 @@ class Move extends BaseEntity
 	private $target;
 	
 	/**
-	 * @OneToOne(targetEntity = "Entities\Event")
-	 * @var Entities\Event
-	 */
-	private $event;
-	
-	/**
 	 * Constructor
+	 * @param string
 	 * @param Entities\Clan
 	 * @param Entities\Field
-	 * @param Entities\Event
+	 * @param Entities\Field
 	 */
-	public function __construct (Clan $clan, Field $origin, Field $target, Event $event)
+	public function __construct ($type, Clan $owner, Field $origin, Field $target)
 	{
-		$this->clan = $clan;
+		parent::__construct($type, $owner);
 		$this->origin = $origin;
 		$this->target = $target;
-		$this->event = $event;
-	}
-	
-	/**
-	 * Clan getter
-	 * @return Entities\Clan
-	 */
-	public function getClan ()
-	{
-		return $this->clan;
 	}
 	
 	/**
@@ -71,14 +50,5 @@ class Move extends BaseEntity
 	public function getTarget ()
 	{
 		return $this->target;
-	}
-	
-	/**
-	 * Event getter
-	 * @return Entities\Event
-	 */
-	public function getEvent ()
-	{
-		return $this->event;
 	}
 }

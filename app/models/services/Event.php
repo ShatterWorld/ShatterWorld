@@ -1,5 +1,6 @@
 <?php
 namespace Services;
+use Exception;
 
 class Event extends BaseService
 {
@@ -32,7 +33,11 @@ class Event extends BaseService
 		if ($qb->getQuery()->execute() !== 0) {
 			foreach ($this->getRepository()->findPendingEvents($userId, $timeout) as $event) {
 				$eventRule = $this->context->rules->get('event', $event->type);
-				$eventRule->process($event->id);
+				if ($eventRule->isValid($event)) {
+					$eventRule->process($event);
+				} else {
+					$this->update($event, array('failed' => TRUE), FALSE);
+				}
 				$this->update($event, array('processed' => TRUE), FALSE);
 			}
 		}
@@ -41,7 +46,15 @@ class Event extends BaseService
 	
 	public function create ($values, $flush = TRUE)
 	{
-		$values['term'] = new \DateTime('@' . (date('U') + $values['term']));
-		return parent::create($values, $flush);
+		$event = parent::create($values, FALSE);
+		$this->entityManager->detach($event);
+		if ($this->context->rules->get('event', $event->type)->isValid($event)) {
+			$this->entityManager->persist($event);
+			if ($flush) {
+				$this->entityManager->flush();
+			}
+		} else {
+			throw new Exception;
+		}
 	}
 }

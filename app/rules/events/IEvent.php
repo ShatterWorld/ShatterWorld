@@ -1,5 +1,6 @@
 <?php
 namespace Rules\Events;
+use Entities;
 
 /**
  * A game event
@@ -8,16 +9,16 @@ namespace Rules\Events;
 interface IEvent extends \Rules\IRule {
 	
 	/**
-	 * Process the event with given event ID
-	 * @param int
+	 * Process the event
+	 * @param Entities\Event
 	 * @return void
 	 */
-	public function process ($id);
+	public function process (Entities\Event $event);
 	
 	/**
-	 * Get information about event with given event id
-	 * @param int
-	 * @return array
+	 * Is the event valid?
+	 * @param Entities\Event
+	 * @return bool
 	 */
-	public function getInfo ($eventId);
+	public function isValid (Entities\Event $event);
 }

@@ -3,28 +3,22 @@ namespace Rules\Events;
 use Rules\AbstractRule;
 use Entities;
 
-class Colonisation extends AbstractRule implements IMove
+class Colonisation extends AbstractRule implements IEvent
 {
-	public function process ($id)
+	public function process (Entities\Event $event)
 	{
-		$move = $this->getContext()->model->getMoveRepository()->findOneByEvent($id);
-		if ($move->target->owner === NULL) {
-			$move->target->setOwner($move->clan);
+		if ($event->target->owner === NULL) {
+			$event->target->setOwner($event->owner);
 		}
-		$this->getContext()->model->getFieldService()->invalidateVisibleFields($move->clan->id);
+		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
 	}
 	
-	public function getInfo ($eventId)
+	public function isValid (Entities\Event $event)
 	{
-		return $this->getContext()->model->getMoveRepository()->getEventInfo($eventId);
-	}
-	
-	public function isValid (Entities\Field $origin, Entities\Field $target)
-	{
-		if ($target->owner === NULL) {
+		if ($event->target->owner === NULL) {
 			$valid = FALSE;
-			foreach ($this->getContext()->model->getFieldRepository()->getFieldNeighbours($target) as $neighbour) {
-				if ($neighbour->owner == $origin->owner) {
+			foreach ($this->getContext()->model->getFieldRepository()->getFieldNeighbours($event->target) as $neighbour) {
+				if ($neighbour->owner == $event->origin->owner) {
 					$valid = TRUE;
 					break;
 				}

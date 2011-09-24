@@ -3,27 +3,21 @@ namespace Rules\Events;
 use Rules\AbstractRule;
 use Entities;
 
-class FacilityConstruction extends AbstractRule implements IConstruction
+class FacilityConstruction extends AbstractRule implements IEvent
 {
-	public function process ($id)
+	public function process (Entities\Event $event)
 	{
-		$construction = $this->getContext()->model->getConstructionRepository()->findOneByEvent($id);
-		$this->getContext()->model->getFieldService()->update($construction->field, array(
-			'facility' => $construction->constructionType,
-			'level' => $construction->level
+		$this->getContext()->model->getFieldService()->update($event->target, array(
+			'facility' => $event->construction,
+			'level' => $event->level
 		));
-		$this->getContext()->model->getResourceService()->recalculateProduction($construction->event->owner, $construction->event->term);
+		$this->getContext()->model->getResourceService()->recalculateProduction($event->owner, $event->term);
 	}
 	
-	public function getInfo ($eventId)
-	{
-		return $this->getContext()->model->getConstructionRepository()->getEventInfo($eventId);
-	}
-	
-	public function isValid ($type, $level, Entities\Field $field = NULL)
+	public function isValid (Entities\Event $event)
 	{
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
-		return $field->owner == $clan && $level <= $this->getContext()->params['game']['stats']['facilityLevelCap'] &&
-			(($field->facility === $type || ($field->facility === NULL && $level === 1)) && $field->level === ($level - 1));
+		return $event->target->owner == $clan && $event->level <= $this->getContext()->params['game']['stats']['facilityLevelCap'] &&
+			(($event->target->facility === $event->construction || ($event->target->facility === NULL && $event->level === 1)) && $event->target->level === ($event->level - 1));
 	}
 }

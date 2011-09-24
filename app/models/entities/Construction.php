@@ -3,93 +3,61 @@ namespace Entities;
 
 /**
  * A building/research/training progress representation
- * @Entity(repositoryClass = "Repositories\Construction")
+ * @Entity
  * @author Jan "Teyras" Buchar
  */
-class Construction extends BaseEntity
+class Construction extends Event
 {
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Field")
 	 * @var Entities\Field
 	 */
-	private $field;
-	
-	/**
-	 * @OneToOne(targetEntity = "Entities\Event")
-	 * @var Entities\Event
-	 */
-	private $event;
+	private $target;
 	
 	/**
 	 * @Column(type = "string")
 	 * @var string
 	 */
-	private $type;
+	private $construction;
 	
 	/**
-	 * @Column(type = "string")
-	 * @var string
-	 */
-	private $constructionType;
-	
-	/**
-	 * @Column(type = "integer")
+	 * @Column(type = "integer", nullable = true)
 	 * @var int
 	 */
 	private $level;
 	
 	/**
 	 * Constructor
-	 * @param Entities\Field
-	 * @param Entities\Event
 	 * @param string
+	 * @param Entities\Clan
+	 * @param Entities\Field
 	 * @param string
 	 * @param int
 	 */
-	public function __construct (Field $field, Event $event, $type, $constructionType, $level)
+	public function __construct ($type, Clan $owner, Field $target, $construction, $level)
 	{
-		$this->field = $field;
-		$this->event = $event;
-		$this->type = $type;
-		$this->constructionType = $constructionType;
+		parent::__construct($type, $owner);
+		$this->target = $target;
+		$this->construction = $construction;
 		$this->level = $level;
 	}
 	
 	/**
-	 * Field getter
+	 * Target getter
 	 * @return Entities\Field
 	 */
-	public function getField ()
+	public function getTarget ()
 	{
-		return $this->field;
-	}
-	
-	
-	/**
-	 * Event getter
-	 * @return Entities\Event
-	 */
-	public function getEvent ()
-	{
-		return $this->event;
+		return $this->target;
 	}
 	
 	/**
-	 * Type getter
+	 * Construction getter
 	 * @return string
 	 */
-	public function getType ()
+	public function getConstruction ()
 	{
-		return $this->type;
-	}
-	
-	/**
-	 * Construction type getter
-	 * @return string
-	 */
-	public function getConstructionType ()
-	{
-		return $this->constructionType;
+		return $this->construction;
 	}
 	
 	/**

@@ -29,13 +29,13 @@ jQuery.extend({
 
 					if (type == 'colonisation'){
 						label = 'Kolonizace';
-						x = event['info']['target']['coordX'];
-						y = event['info']['target']['coordY'];
+						x = event['target']['x'];
+						y = event['target']['y'];
 					}
 					else if (type == 'facilityConstruction'){
-						label = event['info']['constructionType'] + ' (' + event['info']['level'] + ')';
-						x = event['info']['field']['coordX'];
-						y = event['info']['field']['coordY'];
+						label = event['construction'] + ' (' + event['level'] + ')';
+						x = event['target']['x'];
+						y = event['target']['y'];
 					}
 
 					jQuery.countdown.addCountdown(label, x, y, event['countdown']);

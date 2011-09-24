@@ -29,18 +29,13 @@ abstract class BaseEntity extends Nette\Object {
 	 * Get the visible values of the entity as an associative array
 	 * @return array
 	 */
-	public function toArray (&$visited = array())
+	public function toArray ()
 	{
 		$result = array();
 		foreach (get_class_methods($this) as $method) {
 			if (Nette\Utils\Strings::startsWith($method, 'get')) {
 				if (!is_object($value = $this->{$method}())) {
 					$result[lcfirst(substr($method, 3))] = $value;
-				} elseif (method_exists($value, 'toArray')) {
-					if (!in_array($value, $visited, TRUE)) {
-						$visited[] = $value;
-						$result[lcfirst(substr($method, 3))] = $value->toArray($visited);
-					}
 				}
 			}
 		}

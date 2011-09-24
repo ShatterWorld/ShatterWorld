@@ -3,27 +3,21 @@ namespace Rules\Events;
 use Entities;
 use Rules\AbstractRule;
 
-class FacilityDemolition extends AbstractRule implements IConstruction
+class FacilityDemolition extends AbstractRule implements IEvent
 {
-	public function process ($id)
+	public function process (Entities\Event $event)
 	{
-		$construction = $this->getContext()->model->getConstructionRepository()->findOneByEvent($id);
-		$facility = $construction->level > 0 ? $construction->constructionType : NULL;
-		$this->getContext()->model->getFieldService()->update($construction->field, array(
+		$facility = $event->level > 0 ? $event->construction : NULL;
+		$this->getContext()->model->getFieldService()->update($event->target, array(
 			'facility' => $facility,
-			'level' => $construction->level
+			'level' => $event->level
 		));
-		$this->getContext()->model->getResourceService()->recalculateProduction($construction->event->owner, $construction->event->term);
+		$this->getContext()->model->getResourceService()->recalculateProduction($event->owner, $event->term);
 	}
 	
-	public function getInfo ($eventId)
-	{
-		return $this->getContext()->model->getConstructionRepository()->getEventInfo($eventId);
-	}
-	
-	public function isValid ($type, $level, Entities\Field $field = NULL)
+	public function isValid (Entities\Event $event)
 	{
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
-		return $field->owner == $clan && ($level === 0 || ($field->level - 1 === $level));
+		return $event->target->owner == $clan && ($event->level === 0 || ($event->target->level - 1 === $event->level));
 	}
 }

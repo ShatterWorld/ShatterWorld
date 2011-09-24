@@ -27,17 +27,23 @@ class Event extends BaseRepository {
 	public function getUpcomingEventsArray (Entities\Clan $clan)
 	{
 		$now = new \DateTime;
-		$qb = $this->createQueryBuilder('e');
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('e');
+		$qb->from($this->getEntityName(), 'e');
 		$qb->where($qb->expr()->andX(
 			$qb->expr()->gte('e.owner', '?1'),
 			$qb->expr()->eq('e.processed', '?2')
 		))->orderBy('e.term');
 		$qb->setParameter(1, $clan->id);
 		$qb->setParameter(2, FALSE);
-		$result = $qb->getQuery()->getArrayResult();
-		foreach ($result as $key => $event) {
-			$result[$key]['countdown'] = max($event['term']->format('U') - date('U'), 0);
-			$result[$key]['info'] = $this->context->rules->get('event', $event['type'])->getInfo($event['id']);
+		$query = $qb->getQuery();
+		$result = array();
+		foreach ($query->getResult() as $key => $event) {
+			$result[$key] = $event->toArray();
+			$result[$key]['countdown'] = max($event->term->format('U') - date('U'), 0);
+			if ($event->target) {
+				$result[$key]['target'] = $event->target->toArray();
+			}
 		}
 		return $result;
 	}
