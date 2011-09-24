@@ -29,4 +29,15 @@ class Resource extends BaseRepository
 		}
 		return $result;
 	}
+	
+	public function checkResources (Entities\Clan $clan, $price)
+	{
+		$resources = $this->findResourcesByClan($clan);
+		foreach ($price as $resource => $cost) {
+			if (!$resources[$resource]->has($cost)) {
+				return FALSE;
+			}
+		}
+		return TRUE;
+	}
 }

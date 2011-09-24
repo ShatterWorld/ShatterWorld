@@ -2,6 +2,7 @@
 namespace Services;
 use Entities;
 use Exception;
+use InsufficientResourcesException;
 
 class Construction extends Event
 {
@@ -16,15 +17,20 @@ class Construction extends Event
 	public function startFacilityConstruction (Entities\Field $field, $facility, $level = 1)
 	{
 		$rule = $this->context->rules->get('facility', $facility);
-		$this->create(array(
-			'target' => $field,
-			'owner' => $field->owner,
-			'type' => 'facilityConstruction',
-			'construction' => $facility,
-			'level' => $level,
-			'timeout' => $rule->getConstructionTime($level)
-		));
-		$this->context->model->getResourceService()->pay($field->owner, $rule->getConstructionCost($level));
+		$price = $rule->getConstructionCost($level);
+		if ($this->context->model->getResourceRepository()->checkResources($field->owner, $price)) {
+			$this->create(array(
+				'target' => $field,
+				'owner' => $field->owner,
+				'type' => 'facilityConstruction',
+				'construction' => $facility,
+				'level' => $level,
+				'timeout' => $rule->getConstructionTime($level)
+			));
+			$this->context->model->getResourceService()->pay($field->owner, $price);
+		} else {
+			throw new InsufficientResourcesException;
+		}
 	}
 	
 	/**
@@ -37,14 +43,19 @@ class Construction extends Event
 	public function startFacilityDemolition (Entities\Field $field, $level = 0)
 	{
 		$rule = $this->context->rules->get('facility', $field->facility);
-		$this->create(array(
-			'target' => $field,
-			'owner' => $field->owner,
-			'type' => 'facilityDemolition',
-			'construction' => $level > 0 ? 'downgrade' : 'demolition',
-			'level' => $level,
-			'timeout' => $rule->getDemolitionTime($field->level, $level)
-		));
-		$this->context->model->getResourceService()->pay($field->owner, $rule->getDemolitionCost($field->level, $level));
+		$price = $rule->getDemolitionCost($field->level, $level);
+		if ($this->context->model->getResourceRepository()->checkResources($field->owner, $price)) {
+			$this->create(array(
+				'target' => $field,
+				'owner' => $field->owner,
+				'type' => 'facilityDemolition',
+				'construction' => $level > 0 ? 'downgrade' : 'demolition',
+				'level' => $level,
+				'timeout' => $rule->getDemolitionTime($field->level, $level)
+			));
+			$this->context->model->getResourceService()->pay($field->owner, $price);
+		} else {
+			throw new InsufficientResourcesException;
+		}
 	}
 }

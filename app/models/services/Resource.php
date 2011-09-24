@@ -13,11 +13,8 @@ class Resource extends BaseService
 	 */
 	public function pay (Entities\Clan $clan, $price)
 	{
-		$resources = $this->getRepository()->findResourcesByClan($clan);
-		foreach ($price as $resource => $cost) {
-			if (!$resources[$resource]->has($cost)) {
-				throw new \InsufficientResourcesException;
-			}
+		if (!$this->getRepository()->checkResources($clan, $price)) {
+			throw new \InsufficientResourcesException;
 		}
 		foreach ($price as $resource => $cost) {
 			$resources[$resource]->pay($cost);
