@@ -78,9 +78,9 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Stavba zahájena');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
-		} /*catch (Exception $e) {
+		} catch (Exception $e) {
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
-		}*/
+		}
 	}
 
 	public function handleDestroyFacility ($targetId)
