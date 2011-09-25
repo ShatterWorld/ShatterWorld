@@ -1,6 +1,6 @@
 <?php
 namespace Services;
-use Exception;
+use RuleViolationException;
 
 class Event extends BaseService
 {
@@ -54,7 +54,7 @@ class Event extends BaseService
 				$this->entityManager->flush();
 			}
 		} else {
-			throw new Exception;
+			throw new RuleViolationException;
 		}
 	}
 }

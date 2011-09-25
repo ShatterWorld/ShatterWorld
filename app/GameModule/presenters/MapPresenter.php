@@ -3,7 +3,7 @@ namespace GameModule;
 use Nette;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
-use Exception;
+use RuleViolationException;
 
 class MapPresenter extends BasePresenter
 {
@@ -45,7 +45,7 @@ class MapPresenter extends BasePresenter
 		try {
 			$this->context->model->getMoveService()->startColonisation($this->context->model->getFieldRepository()->find($targetId), $this->getPlayerClan());
 			$this->flashMessage('Kolonizace zahájena');
-		} catch (Exception $e) {
+		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
 		}
 	}
@@ -56,7 +56,7 @@ class MapPresenter extends BasePresenter
 		try {
 			$this->context->model->getConstructionService()->startAbandonment($target);
 			$this->flashMessage('Opuštení zahájeno');
-		} catch (Exception $e) {
+		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze opustit pole, které vám nepatří.', 'error');
 		}
 	}
@@ -68,7 +68,7 @@ class MapPresenter extends BasePresenter
 			
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
-		} catch (Exception $e) {
+		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		}
 	}
@@ -81,7 +81,7 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Demolice zahájena');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
-		} catch (Exception $e) {
+		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze bourat na cizím, nebo nezastaveném poli', 'error');
 		}
 	}
@@ -94,7 +94,7 @@ class MapPresenter extends BasePresenter
 			$this->context->model->getConstructionService()->startFacilityConstruction($target, $target->facility, $target->level + 1);
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
-		} catch (Exception $e) {
+		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		}
 	}
@@ -107,7 +107,7 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Demolice zahájena');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
-		} catch (Exception $e) {
+		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		}
 	}
