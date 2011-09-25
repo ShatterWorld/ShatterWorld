@@ -37,4 +37,16 @@ interface IUnit extends IRule
 	 * @return array of $resource => $cost
 	 */
 	public function getUpkeep ();
+	
+	/**
+	 * Get the time required to train the unit
+	 * @return int
+	 */
+	public function getTrainingTime ();
+	
+	/**
+	 * Determines how difficult it is to produce the unit (how many slots it takes)
+	 * @return array of $slot => $amount
+	 */
+	public function getDifficulty ();
 }

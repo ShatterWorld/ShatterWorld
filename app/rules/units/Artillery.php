@@ -31,4 +31,17 @@ class Artillery extends AbstractRule implements IUnit
 	{
 		return array();
 	}
+	
+	public function getTrainingTime ()
+	{
+		return 3600;
+	}
+	
+	public function getDifficulty ()
+	{
+		return array(
+			'barracks' => 1,
+			'workshop' => 1
+		);
+	}
 }

@@ -6,12 +6,12 @@ class LightVehicle extends AbstractRule implements IUnit
 {
 	public function getAttack ()
 	{
-		return 3;
+		return 4;
 	}
 	
 	public function getDefense ()
 	{
-		return 2;
+		return 3;
 	}
 	
 	public function getSpeed ()
@@ -32,6 +32,19 @@ class LightVehicle extends AbstractRule implements IUnit
 		return array(
 			'food' => 0.01,
 			'fuel' => 0.01
+		);
+	}
+	
+	public function getTrainingTime ()
+	{
+		return 3600;
+	}
+	
+	public function getDifficulty ()
+	{
+		return array(
+			'barracks' => 2,
+			'workshop' => 2
 		);
 	}
 }

@@ -33,4 +33,16 @@ class Militia extends AbstractRule implements IUnit
 			'food' => 0.005
 		);
 	}
+	
+	public function getTrainingTime ()
+	{
+		return 1200;
+	}
+	
+	public function getDifficulty ()
+	{
+		return array(
+			'barracks' => 1
+		);
+	}
 }
