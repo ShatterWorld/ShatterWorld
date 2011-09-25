@@ -18,4 +18,19 @@ class Militia extends AbstractRule implements IUnit
 	{
 		return 120;
 	}
+	
+	public function getCost ()
+	{
+		return array(
+			'food' => 30,
+			'metal' => 5
+		);
+	}
+	
+	public function getUpkeep ()
+	{
+		return array(
+			'food' => 0.005
+		);
+	}
 }

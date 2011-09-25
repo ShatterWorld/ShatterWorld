@@ -25,4 +25,16 @@ interface IUnit extends IRule
 	 * @return int
 	 */
 	public function getSpeed ();
+	
+	/**
+	 * Get the training cost of the unit
+	 * @return array of $resource => $cost
+	 */
+	public function getCost ();
+	
+	/**
+	 * Get the upkeep cost of the unit per second
+	 * @return array of $resource => $cost
+	 */
+	public function getUpkeep ();
 }

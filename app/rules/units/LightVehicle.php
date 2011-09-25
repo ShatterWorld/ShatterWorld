@@ -18,4 +18,20 @@ class LightVehicle extends AbstractRule implements IUnit
 	{
 		return 90;
 	}
+	
+	public function getCost ()
+	{
+		return array(
+			'food' => 30,
+			'metal' => 50
+		);
+	}
+	
+	public function getUpkeep ()
+	{
+		return array(
+			'food' => 0.01,
+			'fuel' => 0.01
+		);
+	}
 }
