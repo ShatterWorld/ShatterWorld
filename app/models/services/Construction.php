@@ -73,4 +73,15 @@ class Construction extends Event
 			'timeout' => $this->context->stats->getAbandonmentTime($field->level)
 		));
 	}
+	
+	/** 
+	 * Start training specified number of units
+	 * @param Entities\Clan
+	 * @param string
+	 * @param int
+	 */
+	public function startUnitTraining (Entities\Clan $clan, $type, $count)
+	{
+		
+	}
 }
