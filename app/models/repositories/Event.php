@@ -31,7 +31,7 @@ class Event extends BaseRepository {
 		$qb->select('e');
 		$qb->from($this->getEntityName(), 'e');
 		$qb->where($qb->expr()->andX(
-			$qb->expr()->gte('e.owner', '?1'),
+			$qb->expr()->eq('e.owner', '?1'),
 			$qb->expr()->eq('e.processed', '?2')
 		))->orderBy('e.term');
 		$qb->setParameter(1, $clan->id);
