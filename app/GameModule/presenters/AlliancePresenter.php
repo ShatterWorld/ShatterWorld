@@ -17,6 +17,11 @@ class AlliancePresenter extends BasePresenter
 		$this->template->alliance = $this->getPlayerClan()->getAlliance();
 	}
 	
+	public function renderNeutral ()
+	{
+		$this->template->visibleAlliances = $this->getAllianceRepository()->getVisibleAlliances($this->getPlayerClan());
+	}
+	
 	protected function createComponentNewAllianceForm ()
 	{
 		$form = new Form();

@@ -4,7 +4,7 @@ use Doctrine;
 
 /**
  * An alliance of clans
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Alliance")
  * @author Jan "Teyras" Buchar
  */
 class Alliance extends BaseEntity

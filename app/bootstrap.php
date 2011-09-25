@@ -40,4 +40,3 @@ $application = $container->application;
 //$application->catchExceptions = TRUE;
 $application->errorPresenter = 'Error';
 $application->run();
-// dump($container->model->getEventRepository()->getUpcomingEventsArray($container->model->getClanRepository()->find(110)));
