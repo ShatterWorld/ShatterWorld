@@ -11,6 +11,8 @@ common:
 		# zlib.output_compression: yes
 
 	game:
+		start: 2011-09-25 18:00:00
+
 		map:
 			size: 50
 			diversityMinimum: 2
@@ -22,6 +24,8 @@ common:
 			baseLOS: 4
 			baseColonisationTime: 30
 			baseAbandonmentTime: 60
+			orderTime: 3600
+			orderCap: 30
 			facilityLevelCap: 10
 
 		ruleAliases:

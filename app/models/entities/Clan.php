@@ -40,6 +40,18 @@ class Clan extends BaseEntity {
 	private $alliance;
 	
 	/**
+	 * @Column(type = "integer")
+	 * @var int
+	 */
+	private $issuedOrders;
+	
+	/**
+	 * @Column(type = "integer")
+	 * @var int
+	 */
+	private $expiredOrders;
+	
+	/**
 	 * Constructor
 	 * @param Entities\User
 	 */
@@ -47,6 +59,7 @@ class Clan extends BaseEntity {
 	{
 		$this->fields = new Doctrine\Common\Collections\ArrayCollection();
 		$this->user = $user;
+		$this->actions = 0;
 	}
 	
 	/**
@@ -138,5 +151,43 @@ class Clan extends BaseEntity {
 		if ($alliance) {
 			$alliance->getMembers()->add($this);
 		}
+	}
+	
+	/**
+	 * Issued orders getter
+	 * @return int
+	 */
+	public function getIssuedOrders ()
+	{
+		return $this->issuedOrders;
+	}
+	
+	/**
+	 * Issued orders setter
+	 * @param int
+	 * @return void
+	 */
+	public function setIssuedOrders ($issuedOrders)
+	{
+		$this->issuedOrders = $issuedOrders;
+	}
+	
+	/**
+	 * Expired orders getter
+	 * @return int
+	 */
+	public function getExpiredOrders ()
+	{
+		return $this->issuedOrders;
+	}
+	
+	/**
+	 * Expired orders setter
+	 * @param int
+	 * @return void
+	 */
+	public function setExpiredOrders ($expiredOrders)
+	{
+		$this->expiredOrders = $expiredOrders;
 	}
 }
