@@ -2,6 +2,10 @@
 namespace Rules\Facilities;
 use Rules\IRule;
 
+/**
+ * A constructable facility
+ * @author Jan "Teyras" Buchar
+ */
 interface IFacility extends IRule
 {
 	/**

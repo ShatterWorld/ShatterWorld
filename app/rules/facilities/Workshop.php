@@ -2,7 +2,7 @@
 namespace Rules\Facilities;
 use Rules\AbstractRule;
 
-class Barracks extends AbstractRule implements IConstructionFacility
+class Workshop extends AbstractRule implements IConstructionFacility
 {
 	public function getDependencies ()
 	{
@@ -39,6 +39,6 @@ class Barracks extends AbstractRule implements IConstructionFacility
 	
 	public function getCapacity ($level = 1)
 	{
-		return floor(pow($level + 1, 2) / 4);
+		return floor(pow($level + 2, 2) / 7);
 	}
 }
