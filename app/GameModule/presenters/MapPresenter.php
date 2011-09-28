@@ -65,7 +65,8 @@ class MapPresenter extends BasePresenter
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
-			
+			$this->context->model->getConstructionService()->startFacilityConstruction($target, $facility);
+			$this->flashMessage('Stavba zahájena');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {

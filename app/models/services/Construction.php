@@ -1,8 +1,10 @@
 <?php
 namespace Services;
+use Nette\Utils\Neon;
 use Entities;
-use Exception;
+use Rules\Facilities\IConstructionFacility;
 use InsufficientResourcesException;
+use InsufficientCapacityException;
 
 class Construction extends Event
 {
@@ -77,11 +79,73 @@ class Construction extends Event
 	/** 
 	 * Start training specified number of units
 	 * @param Entities\Clan
-	 * @param string
-	 * @param int
+	 * @param ENtities\Field
+	 * @param array of $type => $count
+	 * @return void
 	 */
-	public function startUnitTraining (Entities\Clan $clan, $type, $count)
+	public function startUnitTraining (Entities\Clan $clan, Entities\Field $field, $list)
 	{
-		
+		$price = array();
+		$difficulty = array();
+		$timeout = 0;
+		foreach ($list as $type => $count) {
+			$rule = $this->context->rules->get('unit', $type);
+			foreach ($rule->getCost() as $resource => $cost) {
+				if (array_key_exists($resource, $price)) {
+					$price[$resource] = $price[$resource] + $cost;
+				} else {
+					$price[$resource] = $cost;
+				}
+			}
+			foreach ($rule->getDifficulty() as $slot => $amount) {
+				if (array_key_exists($slot, $difficulty)) {
+					$difficulty[$slot] = $difficulty[$slot] + $amount;
+				} else {
+					$difficulty[$slot] = $amount;
+				}
+			}
+			if (($time = $rule->getTrainingTime()) > $timeout) {
+				$timeout = $time;
+			}
+		}
+		if (!$this->context->model->getResourceRepository()->checkResources($clan, $price)) {
+			throw new InsufficientResourcesException;
+		}
+		$usedSlots = $this->context->model->getConstructionRepository()->getUsedUnitSlots($clan);
+		$availableSlots = array();
+		foreach ($this->context->model->getFieldRepository()->findByOwner($clan->id) as $clanField) {
+			$facility = $clanField->facility;
+			if ($facility !== NULL) {
+				$rule = $this->context->rules->get('facility', $facility);
+				if ($rule instanceof IConstructionFacility) {
+					if (array_key_exists($facility, $availableSlots)) {
+						$availableSlots[$facility] = $availableSlots[$facility] + $rule->getCapacity($clanField->level);
+					} else {
+						$availableSlots[$facility] = $rule->getCapacity($clanField->level);
+					}
+				}
+			}
+		}
+		foreach ($difficulty as $slot => $amount) {
+			if ($slot === $field->facility) {
+				$usedFieldSlots = $this->context->model->getConstructionRepository()->getUsedUnitSlotsByField($field);
+				$availableFieldSlots = $this->context->rules->get('facility', $field->facility)->getCapacity($field->level);
+				if (($usedFieldSlots + $amount) > $availableFieldSlots) {
+					throw new InsufficientCapacityException;
+				}
+			} else {
+				if (($usedSlots[$slot] + $amount) > $availableSlots[$slot]) {
+					throw new InsufficientCapacityException;
+				}
+			}
+		}
+		$this->create(array(
+			'target' => $field,
+			'owner' => $clan,
+			'type' => 'unitTraining',
+			'construction' => Neon::encode($list, Neon::BLOCK),
+			'timeout' => $timeout
+		));
+		$this->context->model->getResourceService()->pay($clan, $price);
 	}
 }

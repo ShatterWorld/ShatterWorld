@@ -9,7 +9,7 @@ class Resource extends BaseRepository
 		$qb = $this->createQueryBuilder('r');
 		$qb->where($qb->expr()->eq('r.clan', $clan->id));
 		$result = array();
-		foreach ($qb->getQuery()->getResult() as $resource) {
+		foreach ($qb->getQuery()->useResultCache(TRUE)->getResult() as $resource) {
 			$result[$resource->type] = $resource;
 		}
 		return $result;

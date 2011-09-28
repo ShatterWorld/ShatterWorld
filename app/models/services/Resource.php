@@ -16,6 +16,7 @@ class Resource extends BaseService
 		if (!$this->getRepository()->checkResources($clan, $price)) {
 			throw new \InsufficientResourcesException;
 		}
+		$resources = $this->getRepository()->findResourcesByClan($clan);
 		foreach ($price as $resource => $cost) {
 			$resources[$resource]->pay($cost);
 		}

@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * A building/research/training progress representation
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Construction")
  * @author Jan "Teyras" Buchar
  */
 class Construction extends Event
