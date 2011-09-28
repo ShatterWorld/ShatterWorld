@@ -21,13 +21,11 @@ jQuery.extend({
 			var countdownTr = $('<tr class="countdown" />');
 
 			countdownTr.mouseenter(function(){
-				$('#field_' + x + '_' + y).css('border', 'solid 1px yellow');
+				jQuery.marker.mark('#field_' + x + '_' + y, 'blue');
 			});
 
 			countdownTr.mouseleave(function(){
-				$('#field_' + x + '_' + y).css('border', 'none');
-
-
+				jQuery.marker.unmarkAll('blue');
 			});
 
 			var titleTd = $('<td class="countdownTitle" />').html(title + ' [' + x + ';' + y + ']')

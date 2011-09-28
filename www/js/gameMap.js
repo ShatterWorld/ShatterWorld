@@ -287,11 +287,11 @@ jQuery.extend({
 
 							if(jQuery.contextMenu.contextMenuShown){
 								jQuery.contextMenu.hide();
-								jQuery.marker.unmarkAll();
+								jQuery.marker.unmarkAll('red');
 								return;
 							}
 
-							jQuery.marker.mark(div);
+							jQuery.marker.mark(div, 'red');
 							if(jQuery.contextMenu.initialField === null || jQuery.contextMenu.action === null){
 								jQuery.contextMenu.initialField = field;
 								jQuery.contextMenu.show(div, e, field, data);
@@ -299,7 +299,7 @@ jQuery.extend({
 							else{
 								jQuery.contextMenu.action(jQuery.contextMenu.initialField, field);
 								jQuery.contextMenu.hide();
-								jQuery.marker.unmarkAll();
+								jQuery.marker.unmarkAll('red');
 							}
 						});
 
@@ -316,25 +316,6 @@ jQuery.extend({
 				});
 				jQuery.spinner.hide();
 			});
-		},
-		/**
-		 * Marks the specified field
-		 * @return void
-		 */
-		mark : function (field) {
-			$(field).drawEllipse(this.markerSize, this.markerSize, this.fieldWidth-2*this.markerSize, this.fieldHeight-2*this.markerSize, {color: 'red', stroke: this.markerSize});
-			$(field).attr('class', 'markedField');
-		},
-
-		/**
-		* Unmarks all fields and sets click to zero
-		* @return void
-		*/
-		unmarkAll : function(){
-			$('.markedField canvas').remove();
-			$('.markedField').attr('class', 'field');
-			this.markedFields = 0;
-			this.initialField = null;
 		},
 
 		/**
