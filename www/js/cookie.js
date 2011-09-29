@@ -15,7 +15,7 @@ jQuery.extend({
 		 * @param string
 		 * @return void
 		 */
-		add : function (name, value, days) {
+		set : function (name, value, days) {
 			if (days) {
 				var date = new Date();
 				date.setTime(date.getTime() + (days*24*60*60*1000));
@@ -33,7 +33,7 @@ jQuery.extend({
 		 * @param string
 		 * @return string
 		 */
-		read : function (name) {
+		get : function (name) {
 			var nameEQ = name + "=";
 			var ca = document.cookie.split(';');
 			for(var i=0; i < ca.length; i++) {
@@ -49,8 +49,8 @@ jQuery.extend({
 		 * @param string
 		 * @return void
 		 */
-		delete : function (name) {
-			this.add(name, "", -1);
+		free : function (name) {
+			this.set(name, "", -1);
 		}
 
 	}

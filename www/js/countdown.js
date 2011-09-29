@@ -119,8 +119,38 @@ jQuery.extend({
 $(document).ready(function(){
 	$('#countdownBar').click(function(){
 		if (!jQuery.countdown.dialogShown){
+
+			var tmp;
+
+			tmp = jQuery.cookie.get('#countdownDialogWidth');
+			var w = (tmp !== null) ? tmp : 300;
+
+			tmp = jQuery.cookie.get('#countdownDialogHeight');
+			var h = (tmp !== null) ? tmp : 120;
+
+			var pos = new Array();
+			tmp = jQuery.cookie.get('#countdownDialogPosX');
+			pos[0] = (tmp !== null) ? tmp : 'center';
+
+			tmp = jQuery.cookie.get('#countdownDialogPosY');
+			pos[1] = (tmp !== null) ? tmp : 'center';
+
 			$('#countdownDialog').dialog({
-				title: "Odpočítávání"
+				title: 'Odpočítávání',
+				width: w,
+				height: h,
+				position: pos, // doesnt work
+				dragStop: function(event, ui){
+					//alert($("#countdownDialog").dialog("option", "position")[0]);
+					jQuery.cookie.set('#countdownDialogPosX', $("#countdownDialog").dialog("option", "position")[0], 7);
+					jQuery.cookie.set('#countdownDialogPosY', $("#countdownDialog").dialog("option", "position")[1], 7);
+				},
+				resizeStop: function(event, ui) {
+					jQuery.cookie.set('#countdownDialogWidth', $("#countdownDialog").dialog("option", "width"), 7);
+					jQuery.cookie.set('#countdownDialogHeight', $("#countdownDialog").dialog("option", "height"), 7);
+					alert('resizeStop');
+
+				}
 			});
 			jQuery.countdown.dialogShown = true;
 		}
