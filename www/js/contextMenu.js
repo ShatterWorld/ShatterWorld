@@ -123,7 +123,7 @@ jQuery.extend({
 			}
 			//other neutral
 			else {
-				jQuery.gameMap.unmarkAll();
+				jQuery.marker.unmarkAll('red');
 				this.hide();
 				return;
 			}
@@ -160,7 +160,7 @@ jQuery.extend({
 					function(){
 						jQuery.events.fetchEvents();
 						jQuery.resources.fetchResources();
-						jQuery.gameMap.unmarkAll();
+						jQuery.marker.unmarkAll('red');
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
 					}
@@ -207,7 +207,7 @@ jQuery.extend({
 					}),
 					function(){
 						jQuery.events.fetchEvents();
-						jQuery.gameMap.unmarkAll();
+						jQuery.marker.unmarkAll('red');
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
 					}
@@ -234,7 +234,7 @@ jQuery.extend({
 					}),
 					function(){
 						jQuery.events.fetchEvents();
-						jQuery.gameMap.unmarkAll();
+						jQuery.marker.unmarkAll('red');
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
 					}
@@ -262,7 +262,7 @@ jQuery.extend({
 					}),
 					function(){
 						jQuery.events.fetchEvents();
-						jQuery.gameMap.unmarkAll();
+						jQuery.marker.unmarkAll('red');
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
 					}
@@ -298,7 +298,7 @@ jQuery.extend({
 								function(data){
 									jQuery.events.fetchEvents();
 									jQuery.resources.fetchResources();
-									jQuery.gameMap.unmarkAll();
+									jQuery.marker.unmarkAll('red');
 									jQuery.spinner.hide();
 									jQuery.contextMenu.hide();
 								}
@@ -336,7 +336,7 @@ jQuery.extend({
 					}),
 					function(){
 						jQuery.events.fetchEvents();
-						jQuery.gameMap.unmarkAll();
+						jQuery.marker.unmarkAll('red');
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
 					}
@@ -354,7 +354,7 @@ jQuery.extend({
 		addCancelAction: function (){
 			var actionDiv = this.basicActionDiv.clone().html('Zrušit');
 			actionDiv.click(function(){
-				jQuery.gameMap.unmarkAll();
+				jQuery.marker.unmarkAll('red');
 				jQuery.contextMenu.hide();
 			});
 

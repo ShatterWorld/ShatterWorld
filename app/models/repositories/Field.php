@@ -40,7 +40,7 @@ class Field extends BaseRepository {
 		}
 		return $result;
 	}
-	
+
 	public function findIdByCoords ($x, $y, &$map = array())
 	{
 		$mapSize = $this->context->params['game']['map']['size'];
@@ -59,7 +59,7 @@ class Field extends BaseRepository {
 
 		return $qb->getQuery()->getSingleScalarResult();
 	}
-	
+
 	/**
 	 * Get the count of fields owned by given clan
 	 * @param Entities\Clan
@@ -89,7 +89,7 @@ class Field extends BaseRepository {
 		}
 		return $result;
 	}
-	
+
 	/**
 	* Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
 	* @param Entities\Field
@@ -216,20 +216,26 @@ class Field extends BaseRepository {
 	{
 		return new Nette\Caching\Cache($this->context->cacheStorage, 'VisibleFields');
 	}
-	
+
 	/**
 	 * Finds fields which are visible for the player
-	 * @param integer
+	 * @param Entities\Clan
 	 * @param integer
 	 * @return array of Entities\Field
 	 */
-	public function getVisibleFields ($clanId, $depth)
+	public function getVisibleFields ($clan, $depth)
 	{
-		$qb = $this->createQueryBuilder('f');
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')->innerJoin('o.alliance', 'a');
 		$qb->where(
-			$qb->expr()->eq('f.owner', $clanId)
+			$qb->expr()->orX(
+				$qb->expr()->eq('o.id', $clan->id),
+				$qb->expr()->eq('a.id', $clan->alliance->id)
+			)
 		);
+
 		$ownerFields = $qb->getQuery()->getResult();
+
 		$map = $this->getIndexedMapIds();
 		$visibleFields = array();
 		foreach($ownerFields as $ownerField){
@@ -245,21 +251,33 @@ class Field extends BaseRepository {
 		return $visibleFields;
 	}
 
-	public function getVisibleFieldsIds ($clanId, $depth)
+	/**
+	 * Finds visible fields' id's
+	 * @param Entities\Clan
+	 * @param integer
+	 * @return array of integers
+	 */
+	public function getVisibleFieldsIds ($clan, $depth)
 	{
 		$cache = $this->getVisibleFieldsCache();
-		$ids = $cache->load($clanId);
+		$ids = $cache->load($clan->id);
 		if ($ids === NULL) {
-			$cache->save($clanId, $ids = $this->getVisibleFields($clanId, $depth));
+			$cache->save($clan->id, $ids = $this->getVisibleFields($clan, $depth));
 		}
 		return $ids;
 	}
-	
-	public function getVisibleFieldsArray ($clanId, $depth)
+
+	/**
+	 * Finds visible fields and returns them as the 2d array of integers (their coords)
+	 * @param Entities\Clan
+	 * @param integer
+	 * @return 2d array of integers
+	 */
+	public function getVisibleFieldsArray ($clan, $depth)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
-		$qb->where($qb->expr()->in('f.id', $this->getVisibleFieldsIds($clanId, $depth)));
+		$qb->where($qb->expr()->in('f.id', $this->getVisibleFieldsIds($clan, $depth)));
 		$result = array();
 		foreach ($qb->getQuery()->getArrayResult() as $row) {
 			$x = $row['coordX'];
@@ -267,7 +285,7 @@ class Field extends BaseRepository {
 			if (!isset($result[$x])) {
 				$result[$x] = array();
 			}
-			if ($row['owner'] != null && $row['owner']['id'] != $clanId){
+			if ($row['owner'] != null && $row['owner']['id'] != $clan->id){
 				$row['facility'] = null;
 				$row['level'] = null;
 			}
@@ -376,7 +394,7 @@ class Field extends BaseRepository {
 			array('origin' => 'south-west', 'target' => 'north-west', 'direction' => array(1, -1)),
 			array('origin' => 'north-west', 'target' => 'north', 'direction' => array(1, 0)),
 		);
-		
+
 		foreach ($vectors as $vector) {
 			$tmpX = $coords[$vector['origin']]['x'];
 			$tmpY = $coords[$vector['origin']]['y'];
@@ -384,7 +402,7 @@ class Field extends BaseRepository {
 			$targetY = $coords[$vector['target']]['y'];
 			$dirX = $vector['direction'][0];
 			$dirY = $vector['direction'][1];
-			while (($dirX === 0 or $dirX * ($targetX - $tmpX) > 0) and 
+			while (($dirX === 0 or $dirX * ($targetX - $tmpX) > 0) and
 				($dirY === 0 or $dirY * ($targetY - $tmpY) > 0)) {
 				try {
 					$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
