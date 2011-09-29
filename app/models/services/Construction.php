@@ -79,11 +79,11 @@ class Construction extends Event
 	/** 
 	 * Start training specified number of units
 	 * @param Entities\Clan
-	 * @param ENtities\Field
+	 * @param Entities\Field
 	 * @param array of $type => $count
 	 * @return void
 	 */
-	public function startUnitTraining (Entities\Clan $clan, Entities\Field $field, $list)
+	public function startUnitTraining (Entities\Clan $clan, $list)
 	{
 		$price = array();
 		$difficulty = array();
@@ -92,16 +92,16 @@ class Construction extends Event
 			$rule = $this->context->rules->get('unit', $type);
 			foreach ($rule->getCost() as $resource => $cost) {
 				if (array_key_exists($resource, $price)) {
-					$price[$resource] = $price[$resource] + $cost;
+					$price[$resource] = $price[$resource] + ($cost * $count);
 				} else {
-					$price[$resource] = $cost;
+					$price[$resource] = ($cost * $count);
 				}
 			}
 			foreach ($rule->getDifficulty() as $slot => $amount) {
 				if (array_key_exists($slot, $difficulty)) {
-					$difficulty[$slot] = $difficulty[$slot] + $amount;
+					$difficulty[$slot] = $difficulty[$slot] + ($amount * $count);
 				} else {
-					$difficulty[$slot] = $amount;
+					$difficulty[$slot] = ($amount * $count);
 				}
 			}
 			if (($time = $rule->getTrainingTime()) > $timeout) {
@@ -127,20 +127,12 @@ class Construction extends Event
 			}
 		}
 		foreach ($difficulty as $slot => $amount) {
-			if ($slot === $field->facility) {
-				$usedFieldSlots = $this->context->model->getConstructionRepository()->getUsedUnitSlotsByField($field);
-				$availableFieldSlots = $this->context->rules->get('facility', $field->facility)->getCapacity($field->level);
-				if (($usedFieldSlots + $amount) > $availableFieldSlots) {
-					throw new InsufficientCapacityException;
-				}
-			} else {
-				if (($usedSlots[$slot] + $amount) > $availableSlots[$slot]) {
-					throw new InsufficientCapacityException;
-				}
+			if (((isset($usedSlots[$slot]) ? $usedSlots[$slot] : 0) + $amount) > $availableSlots[$slot]) {
+				throw new InsufficientCapacityException;
 			}
 		}
 		$this->create(array(
-			'target' => $field,
+			'target' => $clan->getHeadquarters(),
 			'owner' => $clan,
 			'type' => 'unitTraining',
 			'construction' => Neon::encode($list, Neon::BLOCK),
