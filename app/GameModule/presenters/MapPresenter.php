@@ -19,7 +19,7 @@ class MapPresenter extends BasePresenter
 	public function handleFetchMap ()
 	{
 		$clan = $this->getPlayerClan();
-		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan->id, $this->context->stats->getVisibilityRadius($clan));
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan, $this->context->stats->getVisibilityRadius($clan));
 		$this->payload->clanId = $this->getPlayerClan()->id;
 		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
 		$this->sendPayload();

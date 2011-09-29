@@ -26,9 +26,9 @@ jQuery.extend({
 		 */
 		size : 5,
 
-		mark : function (field) {
-			$(field).drawEllipse(this.size, this.size, jQuery.gameMap.fieldWidth-2*this.size, jQuery.gameMap.fieldHeight-2*this.size, {color: 'red', stroke: this.size});
-			$(field).attr('class', 'markedField');
+		mark : function (field, color) {
+			$(field).drawEllipse(this.size, this.size, jQuery.gameMap.fieldWidth-2*this.size, jQuery.gameMap.fieldHeight-2*this.size, {color: color, stroke: this.size});
+			$(field).attr('class', 'markedField'+color);
 			/*todo:
 			 * rozdělit dle barev
 			 * */
@@ -38,9 +38,9 @@ jQuery.extend({
 		* Unmarks all fields and sets click to zero
 		* @return void
 		*/
-		unmarkAll : function(){
-			$('.markedField canvas').remove();
-			$('.markedField').attr('class', 'field');
+		unmarkAll : function(color){
+			$('.markedField'+color+' canvas').remove();
+			$('.markedField'+color).attr('class', 'field');
 			this.markedFields = 0;
 			this.initialField = null;
 		},
