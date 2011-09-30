@@ -120,10 +120,10 @@ jQuery.extend({
 
 			var pos = new Array();
 			tmp = jQuery.cookie.get('#countdownDialogPosX');
-			pos[0] = (tmp !== null) ? tmp : 'center';
+			pos[0] = (tmp !== null) ? parseInt(tmp) : 'center';
 
 			tmp = jQuery.cookie.get('#countdownDialogPosY');
-			pos[1] = (tmp !== null) ? tmp : 'center';
+			pos[1] = (tmp !== null) ? parseInt(tmp) : 'center';
 
 			$('#countdownDialog').dialog({
 				title: 'Odpočítávání',
