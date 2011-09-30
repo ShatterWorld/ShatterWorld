@@ -2,6 +2,8 @@
 namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
+
 class UnitPresenter extends BasePresenter
 {
 
@@ -13,7 +15,7 @@ class UnitPresenter extends BasePresenter
 		$units = $this->context->rules->getAll('unit');
 
 		foreach ($units as $name => $unit){
-			$form->addText($name, $name);
+			$form->addText($name, $name . ' (' . $unit->getAttack() . '/' . $unit->getDefense() . ')');
 
 		}
 
@@ -29,13 +31,29 @@ class UnitPresenter extends BasePresenter
 
 	public function submitTrainUnitForm ($form)
 	{
-		/*$data = $form->getValues();
-		$data['role'] = 'player';
-		$this->getService('userService')->create($data);
 
-		$this->flashMessage("Vaše registrace proběhla úspěšně");
+		$data = $form->getValues();
+		//Debugger::barDump($data);
 
-		$this->redirect('Homepage:');*/
+		$service = $this->getService('constructionService');
+		$clan = $this->getPlayerClan();
+
+		try{
+			$service->startUnitTraining($clan, $data);
+			$this->flashMessage("Trénování zahájeno");
+		}
+		catch (InsufficientResourcesException $e){
+			$this->flashMessage("Nedostatek surovin", 'error');
+
+		}
+		catch (InsufficientCapacityException $e){
+			$this->flashMessage("Nedostatek slotů", 'error');
+
+		}
+
+
+
+		$this->redirect('Unit:');
 
 	}
 
