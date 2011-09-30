@@ -27,6 +27,7 @@ jQuery.extend({
 
 				countdownTr.mouseleave(function(){
 					jQuery.marker.unmarkAll('blue');
+					jQuery.marker.mark('#field_' + x + '_' + y, 'brown'); //if was marked brown even before blue
 				});
 			}
 
@@ -59,6 +60,7 @@ jQuery.extend({
 		countdown: function(countdownTimeDiv, remainingTime)
 		{
 			if (remainingTime < 0){
+
 				if (typeof(jQuery.gameMap) != 'undefined'){
 					jQuery.gameMap.render();
 				}

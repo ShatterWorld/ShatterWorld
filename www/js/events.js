@@ -8,6 +8,7 @@
  */
 jQuery.extend({
 	events: {
+
 		/**
 		  * Fetches and displays countdowns of events
 		  */
@@ -19,6 +20,11 @@ jQuery.extend({
 				}
 
 				jQuery.countdown.cleanDialog();
+				var isMap = typeof(jQuery.gameMap) != 'undefined';
+				if (isMap){
+					jQuery.gameMap.nullDisabledFields();
+				}
+
 				var count = 0;
 				$.each(data['events'], function(key, event) {
 
@@ -31,11 +37,17 @@ jQuery.extend({
 						label = 'Kolonizace';
 						x = event['target']['x'];
 						y = event['target']['y'];
+						if (isMap){
+							jQuery.gameMap.addDisabledField(event['target']);
+						}
 					}
 					else if (type == 'facilityConstruction'){
 						label = event['construction'] + ' (' + event['level'] + ')';
 						x = event['target']['x'];
 						y = event['target']['y'];
+						if (isMap){
+							jQuery.gameMap.addDisabledField(event['target']);
+						}
 					}
 					else if (type == 'unitTraining'){
 						label = 'Výcvik ' + event['construction'] + ' (' + '' + ')';

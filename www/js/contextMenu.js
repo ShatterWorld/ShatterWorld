@@ -161,6 +161,7 @@ jQuery.extend({
 						jQuery.events.fetchEvents();
 						jQuery.resources.fetchResources();
 						jQuery.marker.unmarkAll('red');
+						jQuery.gameMap.addDisabledField(target);
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
 					}
@@ -299,6 +300,7 @@ jQuery.extend({
 									jQuery.events.fetchEvents();
 									jQuery.resources.fetchResources();
 									jQuery.marker.unmarkAll('red');
+									jQuery.gameMap.addDisabledField(target);
 									jQuery.spinner.hide();
 									jQuery.contextMenu.hide();
 								}

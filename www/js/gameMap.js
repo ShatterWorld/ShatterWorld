@@ -80,6 +80,33 @@ jQuery.extend({
 		scrollY : 0,
 
 		/**
+		 * Represents the list of fields which are disabled right now
+		 * @var array of Field
+		 */
+		disabledFields : new Array(),
+
+		/**
+		  * Sets the this.disabledFields to null
+		  * @return void
+		  */
+		nullDisabledFields : function(){
+			this.disabledFields = new Array();
+			jQuery.marker.unmarkAll('brown');
+		},
+
+		/**
+		  * Sets the this.disabledFields to null
+		  * @return void
+		  */
+		addDisabledField : function(disField){
+			this.disabledFields.push(disField);
+			div = $('#field_'+disField['x']+'_'+disField['y']);
+			div.attr('class', div.attr('class')+' disabled');
+			jQuery.marker.mark(div, 'brown');
+
+		},
+
+		/**
 		  * Cleans the #map and rerender the map (using db-data)
 		  * @return void
 		  */
@@ -314,6 +341,15 @@ jQuery.extend({
 					$('#mapContainer').scrollTop(jQuery.gameMap.scrollY);
 
 				});
+
+				/*$.each(jQuery.gameMap.disabledFields, function(key, disField) {
+
+					//alert('#field_'+disField['x']+'_'+disField['y']);
+					//alert(disField);
+					div = $('#field_'+disField['x']+'_'+disField['y']);
+					jQuery.marker.mark(div, 'brown');
+				});*/
+
 				jQuery.spinner.hide();
 			});
 		},
