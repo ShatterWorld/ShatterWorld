@@ -21,4 +21,18 @@ class Unit extends BaseService
 		}
 		$this->entityManager->flush();
 	}
+	
+	public function moveUnits ($units, Entities\Field $target)
+	{
+		foreach ($units as $unit) {
+			if ($base = $this->getRepository()->findOneBy(array('location' => $target, 'type' => $unit->type, 'move' => NULL))) {
+				$base->count = $base->count + $unit->count;
+				$this->remove($unit, FALSE);
+			} else {
+				$unit->move = NULL;
+				$unit->location = $target;
+			}
+		}
+		$this->entityManager->flush();
+	}
 }

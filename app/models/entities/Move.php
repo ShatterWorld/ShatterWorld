@@ -1,5 +1,6 @@
 <?php
 namespace Entities;
+use Doctrine;
 
 /**
  * A unit movement representation
@@ -21,6 +22,12 @@ class Move extends Event
 	private $target;
 	
 	/**
+	 * @OneToMany(targetEntity = "Entities\Unit", mappedBy = "move")
+	 * @var Doctrine\Common\Collections\ArrayCollection
+	 */
+	private $units;
+	
+	/**
 	 * Constructor
 	 * @param string
 	 * @param Entities\Clan
@@ -30,6 +37,7 @@ class Move extends Event
 	public function __construct ($type, Clan $owner, Field $origin, Field $target)
 	{
 		parent::__construct($type, $owner);
+		$this->units = new Doctrine\Common\Collections\ArrayCollection;
 		$this->origin = $origin;
 		$this->target = $target;
 	}
@@ -50,5 +58,24 @@ class Move extends Event
 	public function getTarget ()
 	{
 		return $this->target;
+	}
+	
+	/**
+	 * Units getter
+	 * @return Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function getUnits ()
+	{
+		return $this->units;
+	}
+	
+	/**
+	 * Add a unit to the move
+	 * @param Entities\Unit
+	 * @return void
+	 */
+	public function addUnit (Unit $unit)
+	{
+		$unit->setMove($this);
 	}
 }

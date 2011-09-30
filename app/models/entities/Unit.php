@@ -34,7 +34,7 @@ class Unit extends BaseEntity
 	private $location;
 	
 	/**
-	 * @ManyToOne(targetEntity = "Entities\Move")
+	 * @ManyToOne(targetEntity = "Entities\Move", inversedBy = "units")
 	 * @var Entities\Move
 	 */
 	private $move;
