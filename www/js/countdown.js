@@ -20,13 +20,15 @@ jQuery.extend({
 		{
 			var countdownTr = $('<tr class="countdown" />');
 
-			countdownTr.mouseenter(function(){
-				jQuery.marker.mark('#field_' + x + '_' + y, 'blue');
-			});
+			if (typeof(jQuery.gameMap) != 'undefined'){
+				countdownTr.mouseenter(function(){
+					jQuery.marker.mark('#field_' + x + '_' + y, 'blue');
+				});
 
-			countdownTr.mouseleave(function(){
-				jQuery.marker.unmarkAll('blue');
-			});
+				countdownTr.mouseleave(function(){
+					jQuery.marker.unmarkAll('blue');
+				});
+			}
 
 			var titleTd = $('<td class="countdownTitle" />').html(title + ' [' + x + ';' + y + ']')
 				.css({
