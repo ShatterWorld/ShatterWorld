@@ -7,6 +7,10 @@ class Unit extends BaseService
 	public function addUnits (Entities\Field $field, $list)
 	{
 		foreach ($list as $type => $count) {
+			if ($unit = $this->getRepository()->findOneBy(array('location' => $field, 'type' => $type))) {
+				$unit->count = $unit->count + $count;
+				$this->entityManager->persist($unit);
+			}
 			$this->create(array(
 				'type' => $type,
 				'owner' => $field->owner,
