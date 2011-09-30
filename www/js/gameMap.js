@@ -181,7 +181,7 @@ jQuery.extend({
 						if(field['owner'] != null){
 							if (data['clanId'] == field['owner']['id']) {
 								borderType = 'player';
-							} else if (field['owner']['alliance'] != null) {
+							} else if (field['owner']['alliance'] != null && field['owner']['alliance']['id'] == data['allianceId']) {
 								borderType = 'ally';
 							} else {
 								borderType = 'enemy';
