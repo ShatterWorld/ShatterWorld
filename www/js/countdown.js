@@ -106,6 +106,10 @@ jQuery.extend({
 			$('#countdownDialog').append('</table>');
 		},
 
+		/**
+		 * Shows the dialog
+		 * @return void
+		 */
 		showDialog: function(){
 			var tmp;
 			tmp = jQuery.cookie.get('#countdownDialogWidth');
@@ -126,6 +130,8 @@ jQuery.extend({
 				width: w,
 				height: h,
 				position: pos, // doesnt work
+				//position: [pos[0], pos[1]], // doesnt work
+				//position: [7,50], //works
 				dragStop: function(event, ui){
 					//alert($("#countdownDialog").dialog("option", "position")[0]);
 					jQuery.cookie.set('#countdownDialogPosX', $("#countdownDialog").dialog("option", "position")[0], 7);
@@ -144,10 +150,19 @@ jQuery.extend({
 			this.setDialogShown(true);
 		},
 
+		/**
+		 * Hides the dialog
+		 * @return void
+		 */
 		hideDialog: function(){
 			$('#countdownDialog').dialog("close");
 		},
 
+		/**
+		 * Sets the cookie and this.dialogShown
+		 * @param boolean
+		 * @return void
+		 */
 		setDialogShown: function(val){
 			this.dialogShown = val;
 			jQuery.cookie.set('#countdownDialogShown', val, 7);
