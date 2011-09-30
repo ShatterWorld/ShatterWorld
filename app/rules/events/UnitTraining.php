@@ -8,7 +8,7 @@ class UnitTraining extends AbstractRule implements IEvent
 {
 	public function process (Entities\Event $event)
 	{
-		$this->getContext()->model->getUnitService()->addUnits($event->target, Json::decode($event->construction));
+		$this->getContext()->model->getUnitService()->addUnits($event->target, Json::decode($event->construction, Json::FORCE_ARRAY));
 	}
 	
 	public function isValid (Entities\Event $event)

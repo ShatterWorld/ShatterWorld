@@ -7,7 +7,7 @@ class Unit extends BaseService
 	public function addUnits (Entities\Field $field, $list)
 	{
 		foreach ($list as $type => $count) {
-			if ($unit = $this->getRepository()->findOneBy(array('location' => $field, 'type' => $type, 'move' => NULL))) {
+			if ($unit = $this->getRepository()->findOneBy(array('location' => $field->id, 'type' => $type, 'move' => NULL))) {
 				$unit->count = $unit->count + $count;
 				$this->entityManager->persist($unit);
 			} else {
@@ -25,7 +25,7 @@ class Unit extends BaseService
 	public function moveUnits ($units, Entities\Field $target)
 	{
 		foreach ($units as $unit) {
-			if ($base = $this->getRepository()->findOneBy(array('location' => $target, 'type' => $unit->type, 'move' => NULL))) {
+			if ($base = $this->getRepository()->findOneBy(array('location' => $target->id, 'type' => $unit->type, 'move' => NULL))) {
 				$base->count = $base->count + $unit->count;
 				$this->remove($unit, FALSE);
 			} else {

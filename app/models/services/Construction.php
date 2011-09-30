@@ -88,6 +88,10 @@ class Construction extends Event
 		$price = array();
 		$difficulty = array();
 		$timeout = 0;
+		if (!is_array($list)) {
+			$list = (array) $list;
+		}
+		$list = array_filter($list);
 		foreach ($list as $type => $count) {
 			$rule = $this->context->rules->get('unit', $type);
 			foreach ($rule->getCost() as $resource => $cost) {

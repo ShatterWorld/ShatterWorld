@@ -3,6 +3,8 @@ namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
+use InsufficientCapacityException;
+use InsufficientResourcesException;
 
 class UnitPresenter extends BasePresenter
 {
