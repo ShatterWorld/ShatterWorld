@@ -86,7 +86,7 @@ jQuery.extend({
 		disabledFields : new Array(),
 
 		/**
-		  * Sets the this.disabledFields to null
+		  * Sets the this.disabledFields to new Array
 		  * @return void
 		  */
 		nullDisabledFields : function(){
@@ -95,7 +95,8 @@ jQuery.extend({
 		},
 
 		/**
-		  * Sets the this.disabledFields to null
+		  * Pushes new field to this.disabledFields and markes it and changes its class
+		  * @param Field
 		  * @return void
 		  */
 		addDisabledField : function(disField){
@@ -341,14 +342,6 @@ jQuery.extend({
 					$('#mapContainer').scrollTop(jQuery.gameMap.scrollY);
 
 				});
-
-				/*$.each(jQuery.gameMap.disabledFields, function(key, disField) {
-
-					//alert('#field_'+disField['x']+'_'+disField['y']);
-					//alert(disField);
-					div = $('#field_'+disField['x']+'_'+disField['y']);
-					jQuery.marker.mark(div, 'brown');
-				});*/
 
 				jQuery.spinner.hide();
 			});
