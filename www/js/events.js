@@ -37,6 +37,11 @@ jQuery.extend({
 						x = event['target']['x'];
 						y = event['target']['y'];
 					}
+					else if (type == 'unitTraining'){
+						label = 'Výcvik ' + event['construction'] + ' (' + '' + ')';
+						x = event['target']['x'];
+						y = event['target']['y'];
+					}
 
 					jQuery.countdown.addCountdown(label, x, y, event['countdown']);
 					count++
