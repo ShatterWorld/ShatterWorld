@@ -104,24 +104,8 @@ jQuery.extend({
 			$('#countdownDialog').append('</table>');
 		},
 
-		/**
-		 * @var boolean, true if dialog is shown, otherwise false
-		 */
-		dialogShown : false
-
-	}
-});
-
-/**
- * Manages countdownDialog
- */
-
-$(document).ready(function(){
-	$('#countdownBar').click(function(){
-		if (!jQuery.countdown.dialogShown){
-
+		showDialog: function(){
 			var tmp;
-
 			tmp = jQuery.cookie.get('#countdownDialogWidth');
 			var w = (tmp !== null) ? tmp : 300;
 
@@ -148,15 +132,45 @@ $(document).ready(function(){
 				resizeStop: function(event, ui) {
 					jQuery.cookie.set('#countdownDialogWidth', $("#countdownDialog").dialog("option", "width"), 7);
 					jQuery.cookie.set('#countdownDialogHeight', $("#countdownDialog").dialog("option", "height"), 7);
-					alert('resizeStop');
 
+				},
+				beforeClose: function(event, ui) {
+					jQuery.countdown.setDialogShown(false);
 				}
 			});
-			jQuery.countdown.dialogShown = true;
+
+			this.setDialogShown(true);
+		},
+
+		hideDialog: function(){
+			$('#countdownDialog').dialog("close");
+		},
+
+		setDialogShown: function(val){
+			this.dialogShown = val;
+			jQuery.cookie.set('#countdownDialogShown', val, 7);
+		},
+
+		/**
+		 * @var boolean, true if dialog is shown, otherwise false
+		 */
+		dialogShown : false
+
+	}
+});
+
+/**
+ * Manages countdownDialog click
+ */
+
+$(document).ready(function(){
+	$('#countdownBar').click(function(){
+
+		if (!jQuery.countdown.dialogShown){
+			jQuery.countdown.showDialog();
 		}
 		else{
-			$('#countdownDialog').dialog("close");
-			jQuery.countdown.dialogShown = false;
+			jQuery.countdown.hideDialog();
 		}
 
 	});

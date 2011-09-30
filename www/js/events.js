@@ -47,10 +47,13 @@ jQuery.extend({
 				if (count > 0){
 					$('#countdownBar').show();
 					$('#countdownCount').html(count);
+					if (jQuery.cookie.get('#countdownDialogShown') == 'true'){
+						jQuery.countdown.showDialog();
+					}
 				}
 				else{
 					$('#countdownBar').hide();
-					$('#countdownDialog').dialog("close");
+					jQuery.countdown.hideDialog();
 				}
 
 			});
