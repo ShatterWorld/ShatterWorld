@@ -50,6 +50,9 @@ jQuery.extend({
 					if (jQuery.cookie.get('#countdownDialogShown') == 'true'){
 						jQuery.countdown.showDialog();
 					}
+					else{
+						jQuery.countdown.hideDialog();
+					}
 				}
 				else{
 					$('#countdownBar').hide();

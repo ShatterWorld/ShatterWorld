@@ -7,16 +7,7 @@ class SignupPresenter extends BasePresenter
 
 	protected function createComponentSignupForm ()
 	{
-	
-		/*TODO: add somewhere..?
-		
-		<script src="netteForms.js"></script>
-		<style>
-			.required label { color: maroon }
-		</style>
-		*/
 
-		
 		$form = new Form;
 
 		$form->addText('nickname', 'Login')
@@ -44,10 +35,10 @@ class SignupPresenter extends BasePresenter
 		$form->addSubmit('send', 'Registrovat');
 
 		//$form->setTranslator($translator);
-		
-		
+
+
 		$form->onSuccess[] = callback($this, 'submitSignupForm');
-		
+
 		return $form;
 	}
 
@@ -62,6 +53,6 @@ class SignupPresenter extends BasePresenter
 		$this->redirect('Homepage:');
 
 	}
-	
-	
+
+
 }

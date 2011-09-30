@@ -129,18 +129,14 @@ jQuery.extend({
 				title: 'Odpočítávání',
 				width: w,
 				height: h,
-				position: pos, // doesnt work
-				//position: [pos[0], pos[1]], // doesnt work
-				//position: [7,50], //works
+				position: pos,
 				dragStop: function(event, ui){
-					//alert($("#countdownDialog").dialog("option", "position")[0]);
 					jQuery.cookie.set('#countdownDialogPosX', $("#countdownDialog").dialog("option", "position")[0], 7);
 					jQuery.cookie.set('#countdownDialogPosY', $("#countdownDialog").dialog("option", "position")[1], 7);
 				},
 				resizeStop: function(event, ui) {
 					jQuery.cookie.set('#countdownDialogWidth', $("#countdownDialog").dialog("option", "width"), 7);
 					jQuery.cookie.set('#countdownDialogHeight', $("#countdownDialog").dialog("option", "height"), 7);
-
 				},
 				beforeClose: function(event, ui) {
 					jQuery.countdown.setDialogShown(false);
