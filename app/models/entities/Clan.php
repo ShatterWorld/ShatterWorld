@@ -59,7 +59,8 @@ class Clan extends BaseEntity {
 	{
 		$this->fields = new Doctrine\Common\Collections\ArrayCollection();
 		$this->user = $user;
-		$this->actions = 0;
+		$this->issuedOrders = 0;
+		$this->expiredOrders = 0;
 	}
 	
 	/**
