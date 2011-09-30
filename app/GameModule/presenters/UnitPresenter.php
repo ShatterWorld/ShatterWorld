@@ -1,5 +1,5 @@
 <?php
-namespace FrontModule;
+namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
 class UnitPresenter extends BasePresenter
