@@ -127,7 +127,7 @@ class Construction extends Event
 			}
 		}
 		foreach ($difficulty as $slot => $amount) {
-			if (((isset($usedSlots[$slot]) ? $usedSlots[$slot] : 0) + $amount) > $availableSlots[$slot]) {
+			if (!isset($availableSlots[$slot]) || ((isset($usedSlots[$slot]) ? $usedSlots[$slot] : 0) + $amount) > $availableSlots[$slot]) {
 				throw new InsufficientCapacityException;
 			}
 		}
