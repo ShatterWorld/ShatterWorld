@@ -1,6 +1,6 @@
 <?php
 namespace Services;
-use Nette\Utils\Neon;
+use Nette\Utils\Json;
 use Entities;
 use Rules\Facilities\IConstructionFacility;
 use InsufficientResourcesException;
@@ -135,7 +135,7 @@ class Construction extends Event
 			'target' => $clan->getHeadquarters(),
 			'owner' => $clan,
 			'type' => 'unitTraining',
-			'construction' => Neon::encode($list, Neon::BLOCK),
+			'construction' => Json::encode($list),
 			'timeout' => $timeout
 		));
 		$this->context->model->getResourceService()->pay($clan, $price);
