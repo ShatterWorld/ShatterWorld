@@ -28,18 +28,34 @@ class StatContainer extends Nette\Object
 		return $this->context->params['game']['stats']['baseLOS'];
 	}
 	
+	protected function getColonisationCoefficient (Entities\Field $target, Entities\Clan $clan)
+	{
+		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
+		$count = $this->context->model->getFieldRepository()->getTerritorySize($clan) + $this->context->model->getMoveRepository()->getColonisationCount($clan);
+		return $distance * $count;
+	}
+	
 	/**
 	 * Calculate the time needed to colonise a field
 	 * @param Entities\Field
 	 * @param Entities\Clan
 	 * @return int
 	 */
-	public function getColonisationTime ($target, $clan)
+	public function getColonisationTime (Entities\Field $target, Entities\Clan $clan)
 	{
 		$base = $this->context->params['game']['stats']['baseColonisationTime'];
-		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
-		$count = $this->context->model->getFieldRepository()->getTerritorySize($clan) + $this->context->model->getMoveRepository()->getColonisationCount($clan);
-		return $base * $distance * $count;
+		$coefficient = $this->getColonisationCoefficient($target, $clan);
+		return $base * $coefficient;
+	}
+	
+	public function getColonisationCost (Entities\Field $target, Entities\Clan $clan)
+	{
+		$coefficient = $this->getColonisationCoefficient($target, $clan);
+		return array(
+			'food' => 10 * $coefficient,
+			'stone' => 30 * $coefficient,
+			'metal' => 20 * $coefficient
+		);
 	}
 	
 	public function getAbandonmentTime ($level)

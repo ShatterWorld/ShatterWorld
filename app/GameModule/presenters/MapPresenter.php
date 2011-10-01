@@ -40,6 +40,15 @@ class MapPresenter extends BasePresenter
 		$this->sendPayload();
 	}
 
+	public function handleFetchColonisationCost ($targetId)
+	{
+		$target = $this->getFieldRepository()->find($targetId);
+		$clan = $this->getPlayerClan();
+		$this->payload->cost = $this->context->stats->getColonisationCost($target, $clan);
+		$this->payload->time = $this->context->stats->getColonisationTime($target, $clan);
+		$this->sendPayload();
+	}
+
 	public function handleSendColonisation ($targetId)
 	{
 		try {
@@ -47,6 +56,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Kolonizace zahájena');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
+		} catch (InsufficientResourcesException $e) {
+			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		}
 	}
 

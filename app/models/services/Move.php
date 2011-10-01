@@ -6,6 +6,7 @@ class Move extends Event
 {
 	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
 	{
+		$this->context->model->getResourceService()->pay($clan, $this->context->stats->getColonisationCost($target, $clan));
 		$this->create(array(
 			'owner' => $clan,
 			'target' => $target,
