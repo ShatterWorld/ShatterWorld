@@ -37,6 +37,10 @@ class MapPresenter extends BasePresenter
 			$facilities[$facility]['time'] = $rule->getConstructionTime(1);
 		}
 		$this->payload->facilities = $facilities;
+		$changes = $this->getFieldRepository()->getAvailableFacilityChanges($this->getPlayerClan());
+		$this->payload->upgrades = $changes['upgrades'];
+		$this->payload->downgrades = $changes['downgrades'];
+		$this->payload->demolitions = $changes['demolitions'];
 		$this->sendPayload();
 	}
 
