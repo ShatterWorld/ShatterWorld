@@ -309,23 +309,33 @@ jQuery.extend({
 		 * @return void
 		 */
 		addDestroyFacilityAction: function (target){
-			var actionDiv = this.basicActionDiv.clone().html('Strhnout budovu*');
-			actionDiv.click(function(){
+			var actionDiv = this.basicActionDiv.clone().html('Strhnout budovu');
+			var destroy = this.demolitions[target['facility']][target['level']-1];
+			if(destroy !== null){
+				if (jQuery.resources.hasSufficientResources(destroy['cost']['stone'], destroy['cost']['metal'], destroy['cost']['food'], destroy['cost']['fuel'] )){
+					actionDiv.click(function(){
+						jQuery.spinner.show(jQuery.contextMenu.contextMenu);
+						$.get('?' + $.param({
+								'do': 'destroyFacility',
+								'targetId': target['id']
+							}),
+							function(){
+								jQuery.events.fetchEvents();
+								jQuery.resources.fetchResources();
+								jQuery.marker.unmarkAll('red');
+								jQuery.gameMap.addDisabledField(target);
+								jQuery.spinner.hide();
+								jQuery.contextMenu.hide();
+							}
+						);
 
-				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
-				jQuery.contextMenu.hide();
-				$.get('?' + $.param({
-						'do': 'destroyFacility',
-						'targetId': target['id']
-					}),
-					function(){
-						jQuery.events.fetchEvents();
-						jQuery.marker.unmarkAll('red');
-						jQuery.spinner.hide();
-						jQuery.contextMenu.hide();
-					}
-				);
-			});
+					});
+
+				}
+				else{
+					actionDiv.css('text-decoration', 'line-through');
+				}
+			}
 
 			this.action = null;
 			this.contextMenu.append(actionDiv);

@@ -135,7 +135,7 @@ class Field extends BaseRepository {
 		}
 		return $result;
 	}
-	
+
 	/**
 	* Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
 	* @param Entities\Field
@@ -272,13 +272,18 @@ class Field extends BaseRepository {
 	public function getVisibleFields ($clan, $depth)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')->innerJoin('o.alliance', 'a');
-		$qb->where(
-			$qb->expr()->orX(
-				$qb->expr()->eq('o.id', $clan->id),
-				$qb->expr()->eq('a.id', $clan->alliance->id)
-			)
-		);
+		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
+		if ($clan->alliance !== null){
+			$qb->where(
+				$qb->expr()->orX(
+					$qb->expr()->eq('o.id', $clan->id),
+					$qb->expr()->eq('a.id', $clan->alliance->id)
+				)
+			);
+		}
+		else{
+			$qb->where($qb->expr()->eq('o.id', $clan->id));
+		}
 
 		$ownerFields = $qb->getQuery()->getResult();
 
