@@ -55,6 +55,12 @@ jQuery.extend({
 				jQuery.resources.resources['fuel'] = data['resources']['fuel']['balance'];
 				jQuery.resources.production['fuel'] = data['resources']['fuel']['production'];
 
+				$('#infoBar #resourceBar #foodProduction').html(((jQuery.resources.production['food']>=0)?'+':'-')+jQuery.resources.production['food']*3600);
+				$('#infoBar #resourceBar #stoneProduction').html(((jQuery.resources.production['stone']>=0)?'+':'-')+jQuery.resources.production['stone']*3600);
+				$('#infoBar #resourceBar #metalProduction').html(((jQuery.resources.production['metal']>=0)?'+':'-')+jQuery.resources.production['metal']*3600);
+				$('#infoBar #resourceBar #fuelProduction').html(((jQuery.resources.production['fuel']>=0)?'+':'-')+jQuery.resources.production['fuel']*3600);
+
+
 				jQuery.resources.incrementResource('food', '#infoBar #resourceBar #food');
 				jQuery.resources.incrementResource('stone', '#infoBar #resourceBar #stone');
 				jQuery.resources.incrementResource('metal', '#infoBar #resourceBar #metal');
