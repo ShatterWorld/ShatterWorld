@@ -9,14 +9,34 @@
 jQuery.extend({
 	contextMenu: {
 		/**
+		 * true if the context menu is shown, otherwise false
 		 * @var boolean
 		 */
 		contextMenuShown : false,
 
 		/**
-		 * @var JSON represents facilities
+		 * Represents facilities
+		 * @var JSON
 		 */
 		facilities : null,
+
+		/**
+		 * Availible upngrades
+		 * @var JSON
+		 */
+		upgrades : null,
+
+		/**
+		 * Availible upngrades
+		 * @var JSON
+		 */
+		downgrades : null,
+
+		/**
+		 * Availible upngrades
+		 * @var JSON
+		 */
+		demolitions : null,
 
 		/**
 		 * @var function - action that runs when the target is selected
@@ -27,12 +47,14 @@ jQuery.extend({
 		action : null,
 
 		/**
-		 * @var Field - first clicked field (init. the action)
+		 * First clicked field (init. the action)
+		 * @var Field
 		 */
 		initialField : null,
 
 		/**
-		 * @var representing the context menu
+		 * Representing the context menu
+		 * @var String/Object
 		 */
 		contextMenu : $('<div id="contextMenu" />')
 			.html('<h3>Akce:</h3>')
@@ -49,14 +71,9 @@ jQuery.extend({
 				'opacity' : "0.9"
 			}),
 
-/*
-		contextMenu : $('<div id="contextMenu" />').dialog({
-			title : 'Kontextová nabídka',
-			width : 150,
-		}),*/
-
 		/**
-		 * @var representing a div used in #contextMenu
+		 * Representing a div used in #contextMenu
+		 * @var String/Object
 		 */
 		basicActionDiv : $('<div class="action" />')
 			.css({
@@ -90,6 +107,7 @@ jQuery.extend({
 
 			//my
 			if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
+
 				this.addAttackAction();
 				if (field['facility'] !== null){
 					if(field['facility'] !== 'headquarters'){
@@ -214,22 +232,34 @@ jQuery.extend({
 		 * @return void
 		 */
 		addUpgradeFacilityAction: function (target){
-			var actionDiv = this.basicActionDiv.clone().html('Upgradovat budovu*');
-			actionDiv.click(function(){
+			var actionDiv = this.basicActionDiv.clone().html('Upgradovat budovu');
 
-				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
-				$.get('?' + $.param({
-						'do': 'upgradeFacility',
-						'targetId': target['id']
-					}),
-					function(){
-						jQuery.events.fetchEvents();
-						jQuery.marker.unmarkAll('red');
-						jQuery.spinner.hide();
-						jQuery.contextMenu.hide();
-					}
-				);
-			});
+			var upgrade = this.upgrades[target['facility']][target['level']+1];
+			if(upgrade !== null){
+				if (jQuery.resources.hasSufficientResources(upgrade['cost']['stone'], upgrade['cost']['metal'], upgrade['cost']['food'], upgrade['cost']['fuel'] )){
+					actionDiv.click(function(){
+						jQuery.spinner.show(jQuery.contextMenu.contextMenu);
+						$.get('?' + $.param({
+								'do': 'upgradeFacility',
+								'targetId': target['id']
+							}),
+							function(){
+								jQuery.events.fetchEvents();
+								jQuery.resources.fetchResources();
+								jQuery.marker.unmarkAll('red');
+								jQuery.gameMap.addDisabledField(target);
+								jQuery.spinner.hide();
+								jQuery.contextMenu.hide();
+							}
+						);
+
+					});
+
+				}
+				else{
+					actionDiv.css('text-decoration', 'line-through');
+				}
+			}
 
 			this.action = null;
 			this.contextMenu.append(actionDiv);
@@ -241,22 +271,33 @@ jQuery.extend({
 		 * @return void
 		 */
 		addDowngradeFacilityAction: function (target){
-			var actionDiv = this.basicActionDiv.clone().html('Downgradovat budovu*');
-			actionDiv.click(function(){
+			var actionDiv = this.basicActionDiv.clone().html('Downgradovat budovu');
+			var downgrade = this.downgrades[target['facility']][target['level']-1];
+			if(downgrade !== null){
+				if (jQuery.resources.hasSufficientResources(downgrade['cost']['stone'], downgrade['cost']['metal'], downgrade['cost']['food'], downgrade['cost']['fuel'] )){
+					actionDiv.click(function(){
+						jQuery.spinner.show(jQuery.contextMenu.contextMenu);
+						$.get('?' + $.param({
+								'do': 'downgradeFacility',
+								'targetId': target['id']
+							}),
+							function(){
+								jQuery.events.fetchEvents();
+								jQuery.resources.fetchResources();
+								jQuery.marker.unmarkAll('red');
+								jQuery.gameMap.addDisabledField(target);
+								jQuery.spinner.hide();
+								jQuery.contextMenu.hide();
+							}
+						);
 
-				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
-				$.get('?' + $.param({
-						'do': 'downgradeFacility',
-						'targetId': target['id']
-					}),
-					function(){
-						jQuery.events.fetchEvents();
-						jQuery.marker.unmarkAll('red');
-						jQuery.spinner.hide();
-						jQuery.contextMenu.hide();
-					}
-				);
-			});
+					});
+
+				}
+				else{
+					actionDiv.css('text-decoration', 'line-through');
+				}
+			}
 
 			this.action = null;
 			this.contextMenu.append(actionDiv);
@@ -387,6 +428,9 @@ jQuery.extend({
 		fetchFacilities: function (){
 			$.getJSON('?do=fetchFacilities', function(data) {
 				jQuery.contextMenu.facilities = data['facilities'];
+				jQuery.contextMenu.upgrades = data['upgrades'];
+				jQuery.contextMenu.downgrades = data['downgrades'];
+				jQuery.contextMenu.demolitions = data['demolitions'];
 			});
 
 		},
