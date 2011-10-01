@@ -27,8 +27,10 @@ jQuery.extend({
 
 				countdownTr.mouseleave(function(){
 					jQuery.marker.unmarkAll('blue');
-					jQuery.marker.mark('#field_' + x + '_' + y, 'brown'); //if was marked brown even before blue
+					jQuery.gameMap.markDisabledField('#field_' + x + '_' + y);
+
 				});
+
 			}
 
 			var titleTd = $('<td class="countdownTitle" />').html(title + ' [' + x + ';' + y + ']')

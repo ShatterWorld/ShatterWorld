@@ -95,15 +95,37 @@ jQuery.extend({
 		},
 
 		/**
-		  * Pushes new field to this.disabledFields and markes it and changes its class
+		  * Pushes new field to this.disabledFields, markes it, prevent the native click action, displays type
 		  * @param Field
+		  * @param String
 		  * @return void
 		  */
-		addDisabledField : function(disField){
+		addDisabledField : function(disField, type){
 			this.disabledFields.push(disField);
+
 			div = $('#field_'+disField['x']+'_'+disField['y']);
-			div.attr('class', div.attr('class')+' disabled');
+			div.attr('data-disabled', type);
+			this.markDisabledField(div);
+
+			div.unbind('click');
+			div.click(function(e){
+				alert(type); //tmp
+			});
+
+		},
+
+		/**
+		  * Marks the disabled field influenced by
+		  * @param Object/String
+		  * @return void
+		  */
+		markDisabledField : function(div) {
+			/*
+			 * case (div.data-disabled) -> mark/label/img //==type
+			 *
+			 * */
 			jQuery.marker.mark(div, 'brown');
+
 
 		},
 
