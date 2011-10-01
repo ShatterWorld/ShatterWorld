@@ -10,14 +10,14 @@ jQuery.extend({
 	resources: {
 
 		/**
-		  * @var int
 		  * asoc array representing the balance of each resource
+		  * @var int
 		  */
 		resources : new Array(),
 
 		/**
-		  * @var int
 		  * asoc array representing the productin of each resource
+		  * @var int
 		  */
 		production : new Array(),
 
@@ -35,6 +35,7 @@ jQuery.extend({
 
 		/**
 		  * Fetches clans resources
+		  * @return void
 		  */
 		fetchResources: function ()
 		{
@@ -63,6 +64,9 @@ jQuery.extend({
 
 		/**
 		  * Increments resource
+		  * @param String
+		  * @param String/Object
+		  * @return void
 		  */
 		incrementResource: function(resource, span)
 		{
@@ -84,6 +88,41 @@ jQuery.extend({
 			setTimeout(function(){
 				jQuery.resources.incrementResource(resource, span);
 			}, period);
+		},
+
+		/**
+		  * Checks if player has enought resources
+		  * @param integer
+		  * @param integer
+		  * @param integer
+		  * @param integer
+		  * @return boolean
+		  */
+		hasSufficientResources : function(stone, metal, food, fuel){
+			if(stone !== null){
+				if(stone > this.resources['stone']){
+					return false;
+				}
+			}
+			if(metal !== null){
+				if(metal > this.resources['metal']){
+					return false;
+				}
+			}
+			if(food !== null){
+				if(food > this.resources['food']){
+					return false;
+				}
+			}
+			if(fuel !== null){
+				if(fuel > this.resources['fuel']){
+					return false;
+				}
+			}
+
+
+			return true;
+
 		}
 
 

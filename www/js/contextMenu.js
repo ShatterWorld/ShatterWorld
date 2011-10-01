@@ -150,24 +150,40 @@ jQuery.extend({
 		 */
 		addColonisationAction: function(target) {
 			var actionDiv = this.basicActionDiv.clone().html('Kolonizace');
-			actionDiv.click(function(){
 
-				jQuery.spinner.show(jQuery.contextMenu.contextMenu);
-				$.get('?' + $.param({
-						'do': 'sendColonisation',
-						'targetId': target['id']
-					}),
-					function(){
-						jQuery.events.fetchEvents();
-						jQuery.resources.fetchResources();
-						jQuery.marker.unmarkAll('red');
-						jQuery.gameMap.addDisabledField(target);
-						jQuery.spinner.hide();
-						jQuery.contextMenu.hide();
+			jQuery.spinner.show(jQuery.contextMenu.contextMenu);
+			$.getJSON('?' + $.param({
+							'do': 'fetchColonisationCost',
+							'targetId': target['id']
+						}),
+				function(data) {
+					jQuery.spinner.hide();
+					if (jQuery.resources.hasSufficientResources(data['cost']['stone'], data['cost']['metal'], data['cost']['food'], data['cost']['fuel'] )){
+						actionDiv.click(function(){
+								jQuery.spinner.show(jQuery.contextMenu.contextMenu);
+								$.get('?' + $.param({
+										'do': 'sendColonisation',
+										'targetId': target['id']
+									}),
+									function(){
+										jQuery.events.fetchEvents();
+										jQuery.resources.fetchResources();
+										jQuery.marker.unmarkAll('red');
+										jQuery.gameMap.addDisabledField(target);
+										jQuery.spinner.hide();
+										jQuery.contextMenu.hide();
+									}
+								);
+
+						});
+
 					}
-				);
+					else{
+						actionDiv.css('text-decoration', 'line-through');
+					}
+				}
+			);
 
-			});
 
 			this.action = null;
 			this.contextMenu.append(actionDiv);
@@ -286,7 +302,7 @@ jQuery.extend({
 
 				$.each(jQuery.contextMenu.facilities, function(name, facility) {
 					var facilityDiv = jQuery.contextMenu.basicActionDiv.clone().html(name)
-					if (jQuery.resources.resources['metal'] >= facility['cost']['metal'] && jQuery.resources.resources['stone'] >= facility['cost']['stone'] && jQuery.resources.resources['food'] >= facility['cost']['food'] && jQuery.resources.resources['fuel'] >= facility['cost']['fuel']){
+					if (jQuery.resources.hasSufficientResources(facility['cost']['stone'], facility['cost']['metal'], facility['cost']['food'], facility['cost']['fuel'] )){
 
 						facilityDiv.click(function(){
 
