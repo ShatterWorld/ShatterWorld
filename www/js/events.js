@@ -25,6 +25,8 @@ jQuery.extend({
 					jQuery.gameMap.nullDisabledFields();
 				}
 
+				jQuery.countdown.nullCountdowns();
+
 				var count = 0;
 				$.each(data['events'], function(key, event) {
 
@@ -46,7 +48,7 @@ jQuery.extend({
 						x = event['target']['x'];
 						y = event['target']['y'];
 						if (isMap){
-							jQuery.gameMap.addDisabledField(event['target'], 'facilityConstruction');
+							jQuery.gameMap.addDisabledField(event['target'], 'facilityConstruction0');
 						}
 					}
 					else if (type == 'unitTraining'){

@@ -8,6 +8,23 @@
  */
 jQuery.extend({
 	countdown: {
+
+		/**
+		 * Countdown function pointer
+		 * @var array of function
+		 */
+		countdowns : new Array(),
+
+		/**
+		 * Nulls all the countdown-function pointers
+		 * @return void
+		 */
+		nullCountdowns : function(){
+			$.each(jQuery.countdown.countdowns, function(key, ctd){
+				jQuery.countdown.countdowns[key] = null;
+			});
+		},
+
 		/**
 		 * Adds countdown
 		 * @param string
@@ -50,7 +67,9 @@ jQuery.extend({
 
 			$('#countdownDialog').append(countdownTr);
 
-			this.countdown(timeTd, remainingTime);
+			var id = this.countdowns.push(this.countdown);
+			id--;
+			this.countdowns[id](timeTd, remainingTime, id);
 		},
 
 		/**
@@ -59,10 +78,9 @@ jQuery.extend({
 		 * @param integer [s]
 		 * @return void
 		 */
-		countdown: function(countdownTimeDiv, remainingTime)
+		countdown: function(countdownTimeDiv, remainingTime, id)
 		{
 			if (remainingTime < 0){
-
 				if (typeof(jQuery.gameMap) != 'undefined'){
 					jQuery.gameMap.render();
 				}
@@ -88,7 +106,9 @@ jQuery.extend({
 
 			$(countdownTimeDiv).html(time);
 			setTimeout(function(){
-				jQuery.countdown.countdown(countdownTimeDiv, remainingTime - 1);
+				if(jQuery.countdown.countdowns[id] !== null){
+					jQuery.countdown.countdown(countdownTimeDiv, remainingTime - 1, id);
+				}
 			}, 1000);
 
 
