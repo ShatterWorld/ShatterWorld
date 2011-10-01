@@ -90,6 +90,52 @@ class Field extends BaseRepository {
 		return $result;
 	}
 
+	public function getAvailableFacilityChanges (Entities\Clan $clan)
+	{
+		$qb = $this->createQueryBuilder('f');
+		$qb->where($qb->expr()->andX(
+			$qb->expr()->eq('f.owner', $clan->id),
+			$qb->expr()->isNotNull('f.facility')
+		));
+		$qb->groupBy('f.facility, f.level');
+		$result = array(
+			'upgrades' => array(),
+			'downgrades' => array(),
+			'demolitions' => array()
+		);
+		foreach ($qb->getQuery()->getResult() as $field) {
+			$rule = $this->context->rules->get('facility', $field->facility);
+			if ($field->level < $this->context->params['game']['stats']['facilityLevelCap']) {
+				if (!isset($result['upgrades'][$field->facility])) {
+					$result['upgrades'][$field->facility] = array();
+				}
+				$level = $field->level + 1;
+				$info = array();
+				$info['cost'] = $rule->getConstructionCost($level);
+				$info['time'] = $rule->getConstructionTime($level);
+				$result['upgrades'][$field->facility][$level] = $info;
+			}
+			if ($field->level > 1) {
+				if (!isset($result['downgrades'][$field->facility])) {
+					$result['downgrades'][$field->facility] = array();
+				}
+				$level = $field->level - 1;
+				$info = array();
+				$info['cost'] = $rule->getDemolitionCost($field->level, $level);
+				$info['time'] = $rule->getDemolitionTime($field->level, $level);
+				$result['downgrades'][$field->facility][$level] = $info;
+			}
+			if (!isset($result['demolitions'][$field->facility])) {
+				$result['demolitions'][$field->facility] = array();
+			}
+			$info = array();
+			$info['cost'] = $rule->getDemolitionCost($field->level, 0);
+			$info['time'] = $rule->getDemolitionTime($field->level, 0);
+			$result['demolitions'][$field->facility][$field->level] = $info;
+		}
+		return $result;
+	}
+	
 	/**
 	* Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
 	* @param Entities\Field
