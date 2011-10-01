@@ -76,7 +76,7 @@
 			</div>
 
 			<div id="menu">
-				<div class="submenu">
+				<div class="submenu{ifCurrent Clan:*} active{/ifCurrent}">
 					<h3>Klan</h3>
 					<ul>
 						{if !$presenter->getPlayerClan()}
@@ -94,7 +94,7 @@
 				</div>
 
 				{if $presenter->getPlayerClan()}
-					<div class="submenu">
+					<div class="submenu{ifCurrent Dashboard:*} active{/ifCurrent}">
 						<h3>Novinky</h3>
 
 						<ul>
@@ -102,14 +102,14 @@
 						</ul>
 					</div>
 
-					<div class="submenu">
+					<div class="submenu{ifCurrent Map:*} active{/ifCurrent}">
 						<h3>Mapa</h3>
 						<ul class="tmp">
 							<li><a href="{link Map:}">Zobrazit</a></li>
 						</ul>
 					</div>
 
-					<div class="submenu">
+					<div class="submenu{ifCurrent Unit:*} active{/ifCurrent}">
 						<h3>Jednotky</h3>
 						<ul class="tmp">
 							<li><a href="{link Unit:}">Přehled</a></li>
@@ -117,14 +117,14 @@
 						</ul>
 					</div>
 
-					<div class="submenu">
+					<div class="submenu{ifCurrent Alliance:*} active{/ifCurrent}">
 						<h3>Aliance</h3>
 						<ul>
 							<li><a n:href="Alliance:">Přehled</a></li>
 						</ul>
 					</div>
 
-					<div class="submenu">
+					<div class="submenu{ifCurrent Profile:*} active{/ifCurrent}">
 						<h3>Profil</h3>
 						<ul>
 							{if !$presenter->getPlayerProfile()}
