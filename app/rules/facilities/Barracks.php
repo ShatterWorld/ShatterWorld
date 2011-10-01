@@ -29,7 +29,7 @@ class Barracks extends AbstractRule implements IConstructionFacility
 	
 	public function getDemolitionTime ($from, $level = 0)
 	{
-		return pow($level, 2) * 90;
+		return($from - $level) * 90;
 	}
 	
 	public function getProduction ($level = 1)
