@@ -7,11 +7,11 @@ class FacilityDemolition extends AbstractRule implements IEvent
 {
 	public function process (Entities\Event $event)
 	{
-		$facility = $event->level > 0 ? $event->construction : NULL;
-		$this->getContext()->model->getFieldService()->update($event->target, array(
-			'facility' => $facility,
-			'level' => $event->level
-		));
+		$changes = array('level' => $event->level);
+		if ($event->level === 0) {
+			$changes['facility'] = NULL;
+		}
+		$this->getContext()->model->getFieldService()->update($event->target, $changes);
 		$this->getContext()->model->getResourceService()->recalculateProduction($event->owner, $event->term);
 	}
 	
