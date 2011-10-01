@@ -48,7 +48,7 @@ jQuery.extend({
 						x = event['target']['x'];
 						y = event['target']['y'];
 						if (isMap){
-							jQuery.gameMap.addDisabledField(event['target'], 'facilityConstruction0');
+							jQuery.gameMap.addDisabledField(event['target'], 'facilityConstruction');
 						}
 					}
 					else if (type == 'unitTraining'){
