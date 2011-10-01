@@ -33,12 +33,17 @@ abstract class BasePresenter extends \BasePresenter
 		return $this->getClanRepository()->getPlayerClan();
 	}
 
+	public function getClanUnits ()
+	{
+		return $this->getUnitRepository()->findByOwner($this->getPlayerClan()->getId());
+	}
+
 	public function flashMessage ($message, $type = 'info')
 	{
 		$this->invalidateControl('flashes');
 		parent::flashMessage($message, $type);
 	}
-	
+
 	/**
 	 * Send resources list via ajax
 	 * @return void
@@ -49,7 +54,7 @@ abstract class BasePresenter extends \BasePresenter
 		$this->payload->resources = $clan ? $this->getResourceRepository()->getResourcesArray($clan) : NULL;
 		$this->sendPayload();
 	}
-	
+
 	/**
 	 * Send upcoming events via ajax
 	 * @return void

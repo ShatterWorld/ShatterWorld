@@ -9,6 +9,12 @@ use InsufficientResourcesException;
 class UnitPresenter extends BasePresenter
 {
 
+
+	public function renderDefault ()
+	{
+		$this->template->units = $this->getClanUnits();
+	}
+
 	protected function createComponentTrainUnitForm ()
 	{
 

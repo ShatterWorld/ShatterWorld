@@ -1,4 +1,20 @@
+{block #header}
+	Přehled
+{/block}
+
 {block #content}
-	{control trainUnitForm}
+
+	<table>
+		<tr>
+			<th>Jednotka</th>
+			<th>Množství</th>
+		</tr>
+		{foreach $units as $unit}
+			<tr>
+				<td>{$unit->type}</td>
+				<td>{$unit->count}</td>
+			</tr>
+		{/foreach}
+	</table>
 {/block}
 
