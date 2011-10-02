@@ -311,8 +311,14 @@ jQuery.extend({
 		addDestroyFacilityAction: function (target){
 			var actionDiv = this.basicActionDiv.clone().html('Strhnout budovu');
 			var destroy = this.demolitions[target['facility']][target['level']-1];
+
+			//alert(target['facility']+'/'+target['level']-1+'/'+this.demolitions[target['facility']][target['level']-1]);
+			//if (destroy == 'undefined') alert(null);
+			//else alert(destroy['cost']['stone']);
+
 			if(destroy !== null){
 				if (jQuery.resources.hasSufficientResources(destroy['cost']['stone'], destroy['cost']['metal'], destroy['cost']['food'], destroy['cost']['fuel'] )){
+					alert('muzes');
 					actionDiv.click(function(){
 						jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 						$.get('?' + $.param({
@@ -333,9 +339,11 @@ jQuery.extend({
 
 				}
 				else{
+					alert('nemuzes');
 					actionDiv.css('text-decoration', 'line-through');
 				}
 			}
+			else{alert('destroy is undefined');}
 
 			this.action = null;
 			this.contextMenu.append(actionDiv);
