@@ -6,14 +6,19 @@ class Move extends Event
 {
 	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
 	{
-		$this->context->model->getResourceService()->pay($clan, $this->context->stats->getColonisationCost($target, $clan));
-		$this->create(array(
-			'owner' => $clan,
-			'target' => $target,
-			'origin' => $clan->getHeadquarters(),
-			'type' => 'colonisation',
-			'timeout' => $this->context->stats->getColonisationTime($target, $clan)
-		));
+		if ($this->model->getResourceRepository()->checkResources()) {
+			$this->create(array(
+				'owner' => $clan,
+				'target' => $target,
+				'origin' => $clan->getHeadquarters(),
+				'type' => 'colonisation',
+				'timeout' => $this->context->stats->getColonisationTime($target, $clan)
+			), FALSE);
+			$this->context->model->getResourceService()->pay($clan, $this->context->stats->getColonisationCost($target, $clan), FALSE);
+			$this->entityManager->flush();
+		} else {
+			throw new \InsufficientResourcesException;
+		}
 	}
 	
 	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, $units)
@@ -40,7 +45,6 @@ class Move extends Event
 				} else {
 					$unit->move = $move;
 				}
-				$this->entityManager->persist($unit);
 				if (($unitSpeed = $this->context->rules->get('unit', $type)->getSpeed()) > $speed) {
 					$speed = $unitSpeed;
 				}

@@ -11,7 +11,7 @@ class Resource extends BaseService
 	 * @throws InsufficientResourcesException
 	 * @return void
 	 */
-	public function pay (Entities\Clan $clan, $price)
+	public function pay (Entities\Clan $clan, $price, $flush = TRUE)
 	{
 		if (!$this->getRepository()->checkResources($clan, $price)) {
 			throw new \InsufficientResourcesException;
@@ -19,6 +19,9 @@ class Resource extends BaseService
 		$resources = $this->getRepository()->findResourcesByClan($clan);
 		foreach ($price as $resource => $cost) {
 			$resources[$resource]->pay($cost);
+		}
+		if ($flush) {
+			$this->entityManager->flush();
 		}
 	}
 	
