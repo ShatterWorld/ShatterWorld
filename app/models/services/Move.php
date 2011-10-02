@@ -6,7 +6,7 @@ class Move extends Event
 {
 	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
 	{
-		if ($this->model->getResourceRepository()->checkResources()) {
+		if ($this->context->model->getResourceRepository()->checkResources()) {
 			$this->create(array(
 				'owner' => $clan,
 				'target' => $target,
