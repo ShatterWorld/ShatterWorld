@@ -40,6 +40,12 @@ class Clan extends BaseEntity {
 	private $alliance;
 	
 	/**
+	 * @ManyToOne(targetEntity = "Entities\Alliance")
+	 * @var Entities\Alliance
+	 */
+	private $allianceApplication;
+	
+	/**
 	 * @Column(type = "integer")
 	 * @var int
 	 */
@@ -152,6 +158,25 @@ class Clan extends BaseEntity {
 		if ($alliance) {
 			$alliance->getMembers()->add($this);
 		}
+	}
+	
+	/**
+	 * Alliance application getter
+	 * @return Entities\Alliance
+	 */
+	public function getAllianceApplication ()
+	{
+		return $this->allianceApplication;
+	}
+	
+	/**
+	 * Alliance setter
+	 * @param Entities\Alliance
+	 * @return void
+	 */
+	public function setAllianceApplication (Alliance $alliance = NULL)
+	{
+		$this->allianceApplication = $alliance;
 	}
 	
 	/**

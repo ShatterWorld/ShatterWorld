@@ -3,10 +3,16 @@
 <p>Tvůj klan ještě není v žádné alianci</p>
 <h2>Známé aliance</h2>
 <table>
+<tr>
+<th>Jméno</th>
+<th>Vůdce</th>
+<th>Akce</th>
+</tr>
 {foreach $visibleAlliances as $alliance}
 <tr>
 <td>{$alliance->name}</td>
 <td>{$alliance->leader->name}</td>
+<td>{if $clan->allianceApplication === $alliance}Ucházíte se o vstup{else}<a n:href="apply! $alliance->id">Požádat o vstup</a>{/if}</td>
 </tr>
 {/foreach}
 </table>
