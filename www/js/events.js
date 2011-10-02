@@ -37,25 +37,53 @@ jQuery.extend({
 
 					if (type == 'colonisation'){
 						label = 'Kolonizace';
+
 						x = event['target']['x'];
 						y = event['target']['y'];
+
 						if (isMap){
 							jQuery.gameMap.addDisabledField(event['target'], 'colonisation');
 						}
+
 					}
 					else if (type == 'facilityConstruction'){
-						label = event['construction'] + ' (' + event['level'] + ')';
+						if(event['level'] > 1){
+							label = 'Upgrade '+event['construction'] + ' (' + event['level'] + ')';
+						}
+						else{
+							label = 'Stavba '+event['construction'];
+						}
+
 						x = event['target']['x'];
 						y = event['target']['y'];
+
 						if (isMap){
 							jQuery.gameMap.addDisabledField(event['target'], 'facilityConstruction');
 						}
+
+					}
+					else if (type == 'facilityDemolition'){
+						if(event['construction'] == 'downgrade'){
+							label = 'Downgrade '+event['target']['facility'] + ' (' + event['level'] + ')';
+						}
+						else{
+							label = 'Demolice budovy';
+						}
+
+						x = event['target']['x'];
+						y = event['target']['y'];
+
+						if (isMap){
+							jQuery.gameMap.addDisabledField(event['target'], 'facilityConstruction');
+						}
+
 					}
 					else if (type == 'unitTraining'){
 						label = 'Výcvik ' + event['construction'] + ' (' + '' + ')';
 						x = event['target']['x'];
 						y = event['target']['y'];
 					}
+
 
 					jQuery.countdown.addCountdown(label, x, y, event['countdown']);
 					count++
