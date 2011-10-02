@@ -178,20 +178,20 @@ jQuery.extend({
 					jQuery.spinner.hide();
 					if (jQuery.resources.hasSufficientResources(data['cost']['stone'], data['cost']['metal'], data['cost']['food'], data['cost']['fuel'] )){
 						actionDiv.click(function(){
-								jQuery.spinner.show(jQuery.contextMenu.contextMenu);
-								$.get('?' + $.param({
-										'do': 'sendColonisation',
-										'targetId': target['id']
-									}),
-									function(){
-										jQuery.events.fetchEvents();
-										jQuery.resources.fetchResources();
-										jQuery.marker.unmarkAll('red');
-										jQuery.gameMap.addDisabledField(target);
-										jQuery.spinner.hide();
-										jQuery.contextMenu.hide();
-									}
-								);
+							jQuery.spinner.show(jQuery.contextMenu.contextMenu);
+							$.get('?' + $.param({
+									'do': 'sendColonisation',
+									'targetId': target['id']
+								}),
+								function(){
+									jQuery.events.fetchEvents();
+									jQuery.resources.fetchResources();
+									jQuery.marker.unmarkAll('red');
+									jQuery.gameMap.addDisabledField(target);
+									jQuery.spinner.hide();
+									jQuery.contextMenu.hide();
+								}
+							);
 
 						});
 
@@ -310,15 +310,10 @@ jQuery.extend({
 		 */
 		addDestroyFacilityAction: function (target){
 			var actionDiv = this.basicActionDiv.clone().html('Strhnout budovu');
-			var destroy = this.demolitions[target['facility']][target['level']-1];
-
-			//alert(target['facility']+'/'+target['level']-1+'/'+this.demolitions[target['facility']][target['level']-1]);
-			//if (destroy == 'undefined') alert(null);
-			//else alert(destroy['cost']['stone']);
+			var destroy = this.demolitions[target['facility']][target['level']];
 
 			if(destroy !== null){
 				if (jQuery.resources.hasSufficientResources(destroy['cost']['stone'], destroy['cost']['metal'], destroy['cost']['food'], destroy['cost']['fuel'] )){
-					alert('muzes');
 					actionDiv.click(function(){
 						jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 						$.get('?' + $.param({
@@ -339,7 +334,6 @@ jQuery.extend({
 
 				}
 				else{
-					alert('nemuzes');
 					actionDiv.css('text-decoration', 'line-through');
 				}
 			}

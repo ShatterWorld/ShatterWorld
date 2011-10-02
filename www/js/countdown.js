@@ -85,6 +85,7 @@ jQuery.extend({
 					jQuery.gameMap.render();
 				}
 				jQuery.events.fetchEvents();
+
 				return;
 			}
 			var t = remainingTime;
