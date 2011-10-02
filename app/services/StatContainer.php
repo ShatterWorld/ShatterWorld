@@ -31,7 +31,7 @@ class StatContainer extends Nette\Object
 	protected function getColonisationCoefficient (Entities\Field $target, Entities\Clan $clan)
 	{
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
-		$count = $this->context->model->getFieldRepository()->getTerritorySize($clan) + $this->context->model->getMoveRepository()->getColonisationCount($clan);
+		$count = $this->context->model->getFieldRepository()->getTerritorySize($clan) + $this->context->model->getConstructionRepository()->getColonisationCount($clan);
 		return $distance * $count;
 	}
 	

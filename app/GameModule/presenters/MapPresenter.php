@@ -4,6 +4,7 @@ use Nette;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
 use RuleViolationException;
+use MultipleConstructionsException;
 
 class MapPresenter extends BasePresenter
 {
@@ -54,8 +55,10 @@ class MapPresenter extends BasePresenter
 	public function handleSendColonisation ($targetId)
 	{
 		try {
-			$this->context->model->getMoveService()->startColonisation($this->context->model->getFieldRepository()->find($targetId), $this->getPlayerClan());
+			$this->context->model->getConstructionService()->startColonisation($this->context->model->getFieldRepository()->find($targetId), $this->getPlayerClan());
 			$this->flashMessage('Kolonizace zahájena');
+		} catch (MultipleConstructionsException $e) {
+			$this->flashMessage('Toto pole už kolonizujete.', 'error');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
 		} catch (InsufficientResourcesException $e) {
@@ -69,6 +72,8 @@ class MapPresenter extends BasePresenter
 		try {
 			$this->context->model->getConstructionService()->startAbandonment($target);
 			$this->flashMessage('Opuštení zahájeno');
+		} catch (MultipleConstructionsException $e) { 
+			$this->flashMessage('Nelze opustit pole, na kterém právě probíhá stavba', 'error');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze opustit pole, které vám nepatří.', 'error');
 		}
@@ -80,6 +85,8 @@ class MapPresenter extends BasePresenter
 		try {
 			$this->context->model->getConstructionService()->startFacilityConstruction($target, $facility);
 			$this->flashMessage('Stavba zahájena');
+		} catch (MultipleConstructionsException $e) {
+			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {
@@ -93,6 +100,8 @@ class MapPresenter extends BasePresenter
 		try {
 			$this->context->model->getConstructionService()->startFacilityDemolition($target, 0);
 			$this->flashMessage('Demolice zahájena');
+		} catch (MultipleConstructionsException $e) {
+			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {
@@ -106,6 +115,8 @@ class MapPresenter extends BasePresenter
 		try {
 			$this->flashMessage('Stavba zahájena');
 			$this->context->model->getConstructionService()->startFacilityConstruction($target, $target->facility, $target->level + 1);
+		} catch (MultipleConstructionsException $e) {
+			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {
@@ -119,6 +130,8 @@ class MapPresenter extends BasePresenter
 		try {
 			$this->context->model->getConstructionService()->startFacilityDemolition($target, $target->level - 1);
 			$this->flashMessage('Demolice zahájena');
+		} catch (MultipleConstructionsException $e) {
+			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {
