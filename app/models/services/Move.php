@@ -6,7 +6,8 @@ class Move extends Event
 {
 	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
 	{
-		if ($this->context->model->getResourceRepository()->checkResources()) {
+		$cost = $this->context->stats->getColonisationCost($target, $clan);
+		if ($this->context->model->getResourceRepository()->checkResources($clan, $cost)) {
 			$this->create(array(
 				'owner' => $clan,
 				'target' => $target,
@@ -14,7 +15,7 @@ class Move extends Event
 				'type' => 'colonisation',
 				'timeout' => $this->context->stats->getColonisationTime($target, $clan)
 			), FALSE);
-			$this->context->model->getResourceService()->pay($clan, $this->context->stats->getColonisationCost($target, $clan), FALSE);
+			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
 			$this->entityManager->flush();
 		} else {
 			throw new \InsufficientResourcesException;
