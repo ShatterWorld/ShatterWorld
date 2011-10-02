@@ -28,8 +28,9 @@ class Construction extends Event
 				'construction' => $facility,
 				'level' => $level,
 				'timeout' => $rule->getConstructionTime($level)
-			));
-			$this->context->model->getResourceService()->pay($field->owner, $price);
+			), FALSE);
+			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
+			$this->entityManager->flush();
 		} else {
 			throw new InsufficientResourcesException;
 		}
@@ -54,8 +55,9 @@ class Construction extends Event
 				'construction' => $level > 0 ? 'downgrade' : 'demolition',
 				'level' => $level,
 				'timeout' => $rule->getDemolitionTime($field->level, $level)
-			));
-			$this->context->model->getResourceService()->pay($field->owner, $price);
+			), FALSE);
+			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
+			$this->entityManager->flush();
 		} else {
 			throw new InsufficientResourcesException;
 		}
@@ -141,7 +143,8 @@ class Construction extends Event
 			'type' => 'unitTraining',
 			'construction' => Json::encode($list),
 			'timeout' => $timeout
-		));
-		$this->context->model->getResourceService()->pay($clan, $price);
+		), FALSE);
+		$this->context->model->getResourceService()->pay($clan, $price, FALSE);
+		$this->entityManager->flush();
 	}
 }
