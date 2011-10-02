@@ -90,9 +90,17 @@ jQuery.extend({
 
 					}
 					else if (type == 'unitTraining'){
-						label = 'Výcvik ' + event['construction'] + ' (' + '' + ')';
-						x = event['target']['x'];
-						y = event['target']['y'];
+
+						var data = jQuery.parseJSON(event['construction']);
+
+						label = "<div style='float:left;font-weight:bold'>Výcvik</div><div style='float:right; width:70%'><table style='text-align:left;border:1px solid white'>";
+						$.each(data, function(unit, quantity){
+							label += '<tr><td>' + unit + '</td><td>' + quantity + '</td></tr>';
+						});
+						label += "</table></div>";
+
+						x = -1;
+						y = -1;
 					}
 
 

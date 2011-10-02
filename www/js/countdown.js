@@ -37,23 +37,28 @@ jQuery.extend({
 		{
 			var countdownTr = $('<tr class="countdown" />');
 
-			if (typeof(jQuery.gameMap) != 'undefined'){
-				countdownTr.mouseenter(function(){
-					jQuery.marker.mark('#field_' + x + '_' + y, 'blue');
-				});
+			var coord = '';
+			if (x >= 0 && y >= 0){
+				if (typeof(jQuery.gameMap) != 'undefined'){
+					countdownTr.mouseenter(function(){
+						jQuery.marker.mark('#field_' + x + '_' + y, 'blue');
+					});
 
-				countdownTr.mouseleave(function(){
-					jQuery.marker.unmarkAll('blue');
-					jQuery.gameMap.markDisabledField('#field_' + x + '_' + y);
+					countdownTr.mouseleave(function(){
+						jQuery.marker.unmarkAll('blue');
+						jQuery.gameMap.markDisabledField('#field_' + x + '_' + y);
 
-				});
+					});
 
+				}
+				coord = ' [' + x + ';' + y + ']';
 			}
 
-			var titleTd = $('<td class="countdownTitle" />').html(title + ' [' + x + ';' + y + ']')
+			var titleTd = $('<td class="countdownTitle" />').html(title + coord)
 				.css({
 					'font-weight' : 'bold',
-					'width' : '90%'
+					'width' : '90%',
+					'vertical-align' : 'top'
 				});
 
 			var timeTd = $('<td class="countdownTime" />')
