@@ -42,9 +42,9 @@ class Resource extends BaseService
 	
 	public function recalculateProduction (Entities\Clan $clan, $term)
 	{
-		foreach ($this->context->rules->getAll('resource') as $resource => $rule) {
-			$account = $this->getRepository()->findOneBy(array('clan' => $clan->id, 'type' => lcfirst($resource)));
-			$account->setProduction($this->context->stats->getResourceProduction($clan, lcfirst($resource)), $term);
+		$production = $this->context->stats->getResourcesProduction($clan);
+		foreach ($this->getRepository()->findByOwner($clan->id) as $account) {
+			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0);
 		}
 		$this->entityManager->flush();
 	}

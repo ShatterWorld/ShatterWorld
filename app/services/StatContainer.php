@@ -64,24 +64,37 @@ class StatContainer extends Nette\Object
 	}
 	
 	/**
-	 * Get given clan's production of given resource
+	 * Get given clan's production of resources
 	 * @param Entities\Clan
-	 * @param string
-	 * @return int
+	 * @return array of float
 	 */
-	public function getResourceProduction (Entities\Clan $clan, $resource)
+	public function getResourcesProduction (Entities\Clan $clan)
 	{
-		$result = 0;
+		$result = array();
 		foreach ($this->context->model->getFieldRepository()->findByOwner($clan->id) as $field) {
 			if ($field->facility) {
 				$production = $this->context->rules->get('facility', $field->facility)->getProduction($field->level);
 				$fieldBonus = $this->context->rules->get('field', $field->type)->getProductionBonuses();
 				$modifier = 1;
-				if (array_key_exists($resource, $fieldBonus)) {
-					$modifier = $modifier + $fieldBonus[$resource] / 100;
+				foreach ($production as $resource => $value) {
+					if (array_key_exists($resource, $fieldBonus)) {
+						$modifier = $modifier + $fieldBonus[$resource] / 100;
+					}
+					if (array_key_exists($resource, $result)) {
+						$result[$resource] = $result[$resource] + $modifier * $value;
+					} else {
+						$result[$resource] = $modifier * $value;
+					}
 				}
-				if (array_key_exists($resource, $production)) {
-					$result = $result + $modifier * $production[$resource];
+			}
+		}
+		foreach ($this->context->model->getUnitRepository()->findByOwner($clan->id) as $unit) {
+			$rule = $this->context->rules->get('unit', $unit->type);
+			foreach ($rule->getUpkeep() as $resource => $amount) {
+				if (array_key_exists($resource, $result)) {
+					$result[$resource] = $result[$resource] - $amount * $unit->count;
+				} else {
+					$result[$resource] = (-1) * $amount * $unit->count;
 				}
 			}
 		}

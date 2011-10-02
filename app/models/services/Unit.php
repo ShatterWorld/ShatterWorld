@@ -20,6 +20,7 @@ class Unit extends BaseService
 			}
 		}
 		$this->entityManager->flush();
+		$this->context->model->getResourceService()->recalculateProduction($field->owner);
 	}
 	
 	public function moveUnits ($units, Entities\Field $target)
