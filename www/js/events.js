@@ -46,6 +46,17 @@ jQuery.extend({
 						}
 
 					}
+					if (type == 'abandonment'){
+						label = 'Opuštění pole';
+
+						x = event['target']['x'];
+						y = event['target']['y'];
+
+						if (isMap){
+							jQuery.gameMap.addDisabledField(event['target'], 'abandonment');
+						}
+
+					}
 					else if (type == 'facilityConstruction'){
 						if(event['level'] > 1){
 							label = 'Upgrade '+event['construction'] + ' (' + event['level'] + ')';

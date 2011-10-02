@@ -349,7 +349,7 @@ jQuery.extend({
 		 * @return void
 		 */
 		addBuildFacilityAction: function (target){
-			var actionDiv = this.basicActionDiv.clone().html('Postavit budovu*');
+			var actionDiv = this.basicActionDiv.clone().html('Postavit budovu');
 			actionDiv.click(function(){
 				$('#contextMenu').html('Budovy:');
 
@@ -408,6 +408,7 @@ jQuery.extend({
 					function(){
 						jQuery.events.fetchEvents();
 						jQuery.marker.unmarkAll('red');
+						jQuery.gameMap.addDisabledField(target);
 						jQuery.spinner.hide();
 						jQuery.contextMenu.hide();
 					}
