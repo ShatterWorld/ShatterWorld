@@ -38,7 +38,6 @@ jQuery.extend({
 			var countdownTr = $('<tr class="countdown" />');
 
 			var coord = '';
-			alert(x+'/'+y);
 			if (x >= 0 && y >= 0){
 				if (typeof(jQuery.gameMap) != 'undefined'){
 					countdownTr.mouseenter(function(){
