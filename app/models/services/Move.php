@@ -4,24 +4,6 @@ use Entities;
 
 class Move extends Event
 {
-	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
-	{
-		$cost = $this->context->stats->getColonisationCost($target, $clan);
-		if ($this->context->model->getResourceRepository()->checkResources($clan, $cost)) {
-			$this->create(array(
-				'owner' => $clan,
-				'target' => $target,
-				'origin' => $clan->getHeadquarters(),
-				'type' => 'colonisation',
-				'timeout' => $this->context->stats->getColonisationTime($target, $clan)
-			), FALSE);
-			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
-			$this->entityManager->flush();
-		} else {
-			throw new \InsufficientResourcesException;
-		}
-	}
-	
 	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, $units)
 	{
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($origin, $target);

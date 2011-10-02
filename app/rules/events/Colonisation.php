@@ -16,7 +16,7 @@ class Colonisation extends AbstractRule implements IEvent
 		if ($event->target->owner === NULL) {
 			$valid = FALSE;
 			foreach ($this->getContext()->model->getFieldRepository()->getFieldNeighbours($event->target) as $neighbour) {
-				if ($neighbour->owner == $event->origin->owner) {
+				if ($neighbour->owner == $event->owner) {
 					$valid = TRUE;
 					break;
 				}

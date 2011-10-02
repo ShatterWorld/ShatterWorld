@@ -5,9 +5,36 @@ use Entities;
 use Rules\Facilities\IConstructionFacility;
 use InsufficientResourcesException;
 use InsufficientCapacityException;
+use MultipleConstructionsException;
 
 class Construction extends Event
 {
+	public function create ($values, $flush = TRUE)
+	{
+		if ($this->getRepository()->findPendingConstructions($values['owner'], $values['target'])) {
+			throw new MultipleConstructionsException;
+		}
+		parent::create($values, $flush);
+	}
+	
+	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
+	{
+		$cost = $this->context->stats->getColonisationCost($target, $clan);
+		if ($this->context->model->getResourceRepository()->checkResources($clan, $cost)) {
+			$this->create(array(
+				'owner' => $clan,
+				'target' => $target,
+				'origin' => $clan->getHeadquarters(),
+				'type' => 'colonisation',
+				'timeout' => $this->context->stats->getColonisationTime($target, $clan)
+			), FALSE);
+			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
+			$this->entityManager->flush();
+		} else {
+			throw new \InsufficientResourcesException;
+		}
+	}
+	
 	/**
 	 * Start building given facility on given field
 	 * @param Entities\Field
