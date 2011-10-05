@@ -24,6 +24,7 @@ common:
 			baseLOS: 4
 			baseColonisationTime: 30
 			baseAbandonmentTime: 60
+			baseStorage: 1200
 			orderTime: 3600
 			orderCap: 30
 			facilityLevelCap: 10

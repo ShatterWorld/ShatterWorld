@@ -40,6 +40,10 @@ a:hover {
 	border-bottom: 1px solid #000;
 }
 
+.resourceFull {
+	color: #ff0000;
+}
+
 #userBar, #footer {
 	line-height: 25px;
 	padding: 0px 5px;

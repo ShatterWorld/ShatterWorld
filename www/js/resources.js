@@ -9,29 +9,7 @@
 jQuery.extend({
 	resources: {
 
-		/**
-		  * asoc array representing the balance of each resource
-		  * @var int
-		  */
-		resources : new Array(),
-
-		/**
-		  * asoc array representing the productin of each resource
-		  * @var int
-		  */
-		production : new Array(),
-
-		init: function(){
-			this.resources['food'] = 0;
-			this.resources['stone'] = 0;
-			this.resources['metal'] = 0;
-			this.resources['fuel'] = 0;
-
-			this.production['food'] = 0;
-			this.production['stone'] = 0;
-			this.production['metal'] = 0;
-			this.production['fuel'] = 0;
-		},
+		data: null,
 
 		/**
 		  * Fetches clans resources
@@ -43,28 +21,19 @@ jQuery.extend({
 				if (data === null || data['resources'] === null){
 					return;
 				}
-				jQuery.resources.resources['food'] = data['resources']['food']['balance'];
-				jQuery.resources.production['food'] = data['resources']['food']['production'];
 
-				jQuery.resources.resources['stone'] = data['resources']['stone']['balance'];
-				jQuery.resources.production['stone'] = data['resources']['stone']['production'];
-
-				jQuery.resources.resources['metal'] = data['resources']['metal']['balance'];
-				jQuery.resources.production['metal'] = data['resources']['metal']['production'];
-
-				jQuery.resources.resources['fuel'] = data['resources']['fuel']['balance'];
-				jQuery.resources.production['fuel'] = data['resources']['fuel']['production'];
-
-				$('#infoBar #resourceBar #foodProduction').html(((jQuery.resources.production['food']>=0)?'+':'-')+jQuery.resources.production['food']*3600);
-				$('#infoBar #resourceBar #stoneProduction').html(((jQuery.resources.production['stone']>=0)?'+':'-')+jQuery.resources.production['stone']*3600);
-				$('#infoBar #resourceBar #metalProduction').html(((jQuery.resources.production['metal']>=0)?'+':'-')+jQuery.resources.production['metal']*3600);
-				$('#infoBar #resourceBar #fuelProduction').html(((jQuery.resources.production['fuel']>=0)?'+':'-')+jQuery.resources.production['fuel']*3600);
-
-
-				jQuery.resources.incrementResource('food', '#infoBar #resourceBar #food');
-				jQuery.resources.incrementResource('stone', '#infoBar #resourceBar #stone');
-				jQuery.resources.incrementResource('metal', '#infoBar #resourceBar #metal');
-				jQuery.resources.incrementResource('fuel', '#infoBar #resourceBar #fuel');
+				jQuery.resources.data = data['resources'];
+				var first = true;
+				$.each(data['resources'], function (key, value) {
+					if ($('#resourceBar #' + key).length > 0) {
+						var element = $('#resourceBar #' + key);
+					} else {
+						var element = $('<span>').attr('id', key).html((!first ? '| ' : '') + key + ': <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
+					}
+					$('#resourceBar').append(element);
+					first = false;
+					jQuery.resources.incrementResource(key, element);
+				});
 			});
 		},
 
@@ -76,21 +45,27 @@ jQuery.extend({
 		  */
 		incrementResource: function(resource, span)
 		{
-			$(span).html(Math.floor(this.resources[resource]));
-
-			period = 0;
-			if (this.production[resource] == 0){
+			var production = this.data[resource].production;
+			var balance = this.data[resource].balance;
+			var storage = this.data[resource].storage;
+			$(span).children('.balance').html(Math.floor(balance));
+			$(span).children('.storage').html(storage);
+			$(span).children('.production').html((production >= 0 ? '+' : '-') + Math.floor(production * 3600));
+			if (balance >= storage) {
+				$(span).children('.balance').addClass('resourceFull');
 				return;
+			} else {
+				$(span).children('.balance').removeClass('resourceFull');
 			}
-			else if (this.production[resource] < 0){
-				this.resources[resource]--;
-				period = -1000/this.production[resource];
+			if (production == 0) {
+				return;
+			} 
+			if (production < 0) {
+				this.data[resource]['balance']--;
+			} else {
+				this.data[resource]['balance']++;
 			}
-			else{
-				this.resources[resource]++;
-				period = 1000/this.production[resource];
-			}
-
+			period = 1000/Math.abs(production);
 			setTimeout(function(){
 				jQuery.resources.incrementResource(resource, span);
 			}, period);
@@ -98,47 +73,23 @@ jQuery.extend({
 
 		/**
 		  * Checks if player has enought resources
-		  * @param integer
-		  * @param integer
-		  * @param integer
-		  * @param integer
+		  * @param array
 		  * @return boolean
 		  */
-		hasSufficientResources : function(stone, metal, food, fuel){
-			if(stone !== null){
-				if(stone > this.resources['stone']){
+		hasSufficientResources : function (price) {
+			var valid = true;
+			$.each(price, function (resource, cost) {
+				if (cost > jQuery.resources.data[resource].balance) {
+					valid = false;
 					return false;
 				}
-			}
-			if(metal !== null){
-				if(metal > this.resources['metal']){
-					return false;
-				}
-			}
-			if(food !== null){
-				if(food > this.resources['food']){
-					return false;
-				}
-			}
-			if(fuel !== null){
-				if(fuel > this.resources['fuel']){
-					return false;
-				}
-			}
-
-
-			return true;
-
+			})
+			return valid;
 		}
-
-
-
-
 	}
 });
 
 
 $(document).ready(function(){
-	jQuery.resources.init();
 	jQuery.resources.fetchResources();
 });

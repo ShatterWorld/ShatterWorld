@@ -176,7 +176,7 @@ jQuery.extend({
 						}),
 				function(data) {
 					jQuery.spinner.hide();
-					if (jQuery.resources.hasSufficientResources(data['cost']['stone'], data['cost']['metal'], data['cost']['food'], data['cost']['fuel'] )){
+					if (jQuery.resources.hasSufficientResources(data['cost'])){
 						actionDiv.click(function(){
 							jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 							$.get('?' + $.param({
@@ -236,7 +236,7 @@ jQuery.extend({
 
 			var upgrade = this.upgrades[target['facility']][target['level']+1];
 			if(upgrade !== null){
-				if (jQuery.resources.hasSufficientResources(upgrade['cost']['stone'], upgrade['cost']['metal'], upgrade['cost']['food'], upgrade['cost']['fuel'] )){
+				if (jQuery.resources.hasSufficientResources(upgrade['cost'])){
 					actionDiv.click(function(){
 						jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 						$.get('?' + $.param({
@@ -274,7 +274,7 @@ jQuery.extend({
 			var actionDiv = this.basicActionDiv.clone().html('Downgradovat budovu');
 			var downgrade = this.downgrades[target['facility']][target['level']-1];
 			if(downgrade !== null){
-				if (jQuery.resources.hasSufficientResources(downgrade['cost']['stone'], downgrade['cost']['metal'], downgrade['cost']['food'], downgrade['cost']['fuel'] )){
+				if (jQuery.resources.hasSufficientResources(downgrade['cost'])){
 					actionDiv.click(function(){
 						jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 						$.get('?' + $.param({
@@ -313,7 +313,7 @@ jQuery.extend({
 			var destroy = this.demolitions[target['facility']][target['level']];
 
 			if(destroy !== null){
-				if (jQuery.resources.hasSufficientResources(destroy['cost']['stone'], destroy['cost']['metal'], destroy['cost']['food'], destroy['cost']['fuel'] )){
+				if (jQuery.resources.hasSufficientResources(destroy['cost'])){
 					actionDiv.click(function(){
 						jQuery.spinner.show(jQuery.contextMenu.contextMenu);
 						$.get('?' + $.param({
@@ -355,7 +355,7 @@ jQuery.extend({
 
 				$.each(jQuery.contextMenu.facilities, function(name, facility) {
 					var facilityDiv = jQuery.contextMenu.basicActionDiv.clone().html(name)
-					if (jQuery.resources.hasSufficientResources(facility['cost']['stone'], facility['cost']['metal'], facility['cost']['food'], facility['cost']['fuel'] )){
+					if (jQuery.resources.hasSufficientResources(facility['cost'])){
 
 						facilityDiv.click(function(){
 

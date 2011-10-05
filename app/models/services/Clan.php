@@ -129,11 +129,11 @@ class Clan extends BaseService {
 				'clan' => $clan,
 				'type' => lcfirst($type),
 				'balance' => $rule->getInitialAmount(),
+				'storage' => $this->context->params['game']['stats']['baseStorage'],
 				'clearance' => $now
 			), FALSE);
-			$this->entityManager->flush();
 		}
-		
+		$this->entityManager->flush();
 		return $clan;
 	}
 

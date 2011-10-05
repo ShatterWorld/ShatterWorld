@@ -18,7 +18,7 @@ class Resource extends BaseEntity
 	
 	/**
 	 * @Column(type = "float")
-	 * @var int
+	 * @var float
 	 */
 	private $balance;
 	
@@ -30,9 +30,15 @@ class Resource extends BaseEntity
 	
 	/**
 	 * @Column(type = "float", nullable = true)
-	 * @var int
+	 * @var float
 	 */
 	private $production;
+	
+	/**
+	 * @Column(type = "integer")
+	 * @var int
+	 */
+	private $storage;
 	
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan")
@@ -44,14 +50,14 @@ class Resource extends BaseEntity
 	 * Constructor
 	 * @param Entites\Clan
 	 * @param string
-	 * @param float
 	 */
-	public function __construct (Clan $clan, $type, $balance = 0)
+	public function __construct (Clan $clan, $type)
 	{
 		$this->clan = $clan;
 		$this->type = $type;
-		$this->balance = $balance;
+		$this->balance = 0;
 		$this->production = 0;
+		$this->storage = 0;
 	}
 	
 	/**
@@ -65,7 +71,7 @@ class Resource extends BaseEntity
 			$time = new \DateTime();
 		}
 		$diff = $time->format('U') - $this->clearance->format('U');
-		$this->balance = $this->balance + $diff * $this->production;
+		$this->setBalance($this->balance + $diff * $this->production);
 		$this->clearance = $time;
 	}
 	
@@ -85,6 +91,16 @@ class Resource extends BaseEntity
 	public function getBalance ()
 	{
 		return $this->balance;
+	}
+	
+	/**
+	 * Balance setter
+	 * @param float
+	 * @return void
+	 */
+	protected function setBalance ($balance)
+	{
+		$this->balance = min($balance, $this->storage);
 	}
 	
 	/**
@@ -121,7 +137,7 @@ class Resource extends BaseEntity
 	 */
 	public function increase ($value)
 	{
-		$this->balance = $this->balance + $value;
+		$this->setBalance($this->balance + $value);
 	}
 	
 	/**
@@ -161,6 +177,25 @@ class Resource extends BaseEntity
 	{
 		$this->settleBalance($time);
 		$this->production = $production;
+	}
+	
+	/**
+	 * Storage getter
+	 * @return int
+	 */
+	public function getStorage ()
+	{
+		return $this->storage;
+	}
+	
+	/**
+	 * Storage setter
+	 * @param int
+	 * @return void
+	 */
+	public function setStorage ($storage)
+	{
+		$this->storage = $storage;
 	}
 	
 	/**
