@@ -15,6 +15,13 @@ class UnitPresenter extends BasePresenter
 		$this->template->units = $this->getClanUnits();
 	}
 
+	public function actionTrain ()
+	{
+		$this->template->units = $this->getClanUnits();
+//		Debugger::barDump($this->template->units);
+	}
+
+
 	protected function createComponentTrainUnitForm ()
 	{
 
@@ -23,8 +30,9 @@ class UnitPresenter extends BasePresenter
 		$units = $this->context->rules->getAll('unit');
 
 		foreach ($units as $name => $unit){
-			$form->addText($name, $name . ' (' . $unit->getAttack() . '/' . $unit->getDefense() . ')');
-
+			$form->addText($name, $name . ' (' . $unit->getAttack() . '/' . $unit->getDefense() . ')')
+				->addRule(Form::INTEGER, 'Počet jednotek musí být celé číslo')
+				->addRule(Form::RANGE, 'Počet jednotek musí být kladné číslo', array(0, 999999999));
 		}
 
 		$form->addSubmit('send', 'Trénovat');
