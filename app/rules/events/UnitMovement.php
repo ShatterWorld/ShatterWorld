@@ -5,6 +5,11 @@ use Entities;
 
 class UnitMovement extends AbstractRule implements IEvent
 {
+	public function getDescription ()
+	{
+		return 'Přesun jednotek';
+	}
+
 	public function process (Entities\Event $event)
 	{
 		$this->context->model->getUnitService()->moveUnits($event->units, $event->target);

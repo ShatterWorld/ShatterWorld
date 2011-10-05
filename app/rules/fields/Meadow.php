@@ -5,6 +5,11 @@ use Nette;
 
 class Meadow extends AbstractRule implements IField
 {
+	public function getDescription ()
+	{
+		return 'Louka';
+	}
+
 	public function getProbability ()
 	{
 		return 5;

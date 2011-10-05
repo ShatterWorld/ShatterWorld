@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class Barracks extends AbstractRule implements IConstructionFacility
 {
+	public function getDescription ()
+	{
+		return 'Kasárny';
+	}
+
 	public function getDependencies ()
 	{
 		return array();

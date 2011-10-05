@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class Headquarters extends AbstractRule implements IFacility
 {
+	public function getDescription ()
+	{
+		return 'Velitelství';
+	}
+
 	public function getDependencies ()
 	{
 		return array();

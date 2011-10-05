@@ -232,7 +232,7 @@ jQuery.extend({
 
 						if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 							if (field['facility'] !== null){
-								text.append(field['facility']);
+								text.append(jQuery.descriptions.get('facility', field['facility']));
 								if(field['facility'] !== 'headquarters'){
 									text.append(' ('+field['level']+')');
 								}
@@ -294,10 +294,10 @@ jQuery.extend({
 							}
 
 							$("#fieldInfo #coords").html(coords);
-							$("#fieldInfo #type").html(type);
+							$("#fieldInfo #type").html(jQuery.descriptions.get('field', type));
 							$("#fieldInfo #owner").html(owner);
 							$("#fieldInfo #alliance").html(alliance);
-							$("#fieldInfo #facility").html(facility);
+							$("#fieldInfo #facility").html(jQuery.descriptions.get('facility', facility));
 							$("#fieldInfo #level").html(level);
 
 						});

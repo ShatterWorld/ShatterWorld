@@ -66,6 +66,12 @@ abstract class BasePresenter extends \BasePresenter
 		$this->sendPayload();
 	}
 
+	public function handleFetchDescriptions ()
+	{
+		$this->payload->descriptions = $this->context->rules->getDescriptions();
+		$this->sendPayload();
+	}
+	
 	/**
 	* Test !!!
 	* TODO: remove

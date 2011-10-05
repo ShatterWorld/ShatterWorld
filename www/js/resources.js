@@ -28,7 +28,7 @@ jQuery.extend({
 					if ($('#resourceBar #' + key).length > 0) {
 						var element = $('#resourceBar #' + key);
 					} else {
-						var element = $('<span>').attr('id', key).html((!first ? '| ' : '') + key + ': <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
+						var element = $('<span>').attr('id', key).html((!first ? '| ' : '') + jQuery.descriptions.get('resource', key) + ': <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
 					}
 					$('#resourceBar').append(element);
 					first = false;

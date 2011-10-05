@@ -5,6 +5,11 @@ use Entities;
 
 class FacilityConstruction extends AbstractRule implements IEvent
 {
+	public function getDescription ()
+	{
+		return 'Stavba budovy';
+	}
+
 	public function process (Entities\Event $event)
 	{
 		$this->getContext()->model->getFieldService()->update($event->target, array(

@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class Militia extends AbstractRule implements IUnit
 {
+	public function getDescription ()
+	{
+		return 'Domobrana';
+	}
+
 	public function getAttack ()
 	{
 		return 1;

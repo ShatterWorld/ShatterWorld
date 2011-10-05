@@ -5,6 +5,11 @@ use Nette;
 
 class Lake extends AbstractRule implements IField
 {
+	public function getDescription ()
+	{
+		return 'Jezero';
+	}
+
 	public function getProbability ()
 	{
 		return 3;

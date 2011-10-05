@@ -5,6 +5,11 @@ use Nette;
 
 class Mountain extends AbstractRule implements IField 
 {
+	public function getDescription ()
+	{
+		return 'Hora';
+	}
+
 	public function getProbability ()
 	{
 		return 3;

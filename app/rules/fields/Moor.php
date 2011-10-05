@@ -5,6 +5,11 @@ use Nette;
 
 class Moor extends AbstractRule implements IField
 {
+	public function getDescription ()
+	{
+		return 'Močál';
+	}
+
 	public function getProbability ()
 	{
 		return 4;

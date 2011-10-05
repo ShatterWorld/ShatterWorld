@@ -5,6 +5,11 @@ use Nette;
 
 class Plain extends AbstractRule implements IField
 {
+	public function getDescription ()
+	{
+		return 'Pláň';
+	}
+
 	public function getProbability ()
 	{
 		return 4;

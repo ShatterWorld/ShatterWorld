@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class LightVehicle extends AbstractRule implements IUnit
 {
+	public function getDescription ()
+	{
+		return 'Lehké vozidlo';
+	}
+
 	public function getAttack ()
 	{
 		return 4;

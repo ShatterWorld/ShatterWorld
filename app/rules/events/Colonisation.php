@@ -5,6 +5,11 @@ use Entities;
 
 class Colonisation extends AbstractRule implements IEvent
 {
+	public function getDescription ()
+	{
+		return 'Kolonizace';
+	}
+
 	public function process (Entities\Event $event)
 	{
 		$event->target->setOwner($event->owner);

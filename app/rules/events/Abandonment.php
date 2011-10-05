@@ -5,6 +5,11 @@ use Entities;
 
 class Abandonment extends AbstractRule implements IEvent
 {
+	public function getDescription ()
+	{
+		return 'Opuštění území';
+	}
+
 	public function process (Entities\Event $event)
 	{
 		$event->target->setOwner(NULL);

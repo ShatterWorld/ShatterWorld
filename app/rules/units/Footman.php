@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class Footman extends AbstractRule implements IUnit
 {
+	public function getDescription ()
+	{
+		return 'Pěšák';
+	}
+	
 	public function getAttack ()
 	{
 		return 2;

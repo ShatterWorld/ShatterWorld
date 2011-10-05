@@ -5,6 +5,11 @@ use Nette;
 
 class Barren extends AbstractRule implements IField
 {
+	public function getDescription ()
+	{
+		return 'Pustina';
+	}
+
 	public function getProbability ()
 	{
 		return 7;

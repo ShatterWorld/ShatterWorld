@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class Workshop extends AbstractRule implements IConstructionFacility
 {
+	public function getDescription ()
+	{
+		return 'Dílna';
+	}
+
 	public function getDependencies ()
 	{
 		return array();

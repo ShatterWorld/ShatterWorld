@@ -5,6 +5,11 @@ use Rules\AbstractRule;
 
 class FacilityDemolition extends AbstractRule implements IEvent
 {
+	public function getDescription ()
+	{
+		return 'Bourání budovy';
+	}
+	
 	public function process (Entities\Event $event)
 	{
 		$changes = array('level' => $event->level);

@@ -5,6 +5,11 @@ use Nette;
 
 class Forest extends AbstractRule implements IField
 {
+	public function getDescription ()
+	{
+		return 'Les';
+	}
+
 	public function getProbability ()
 	{
 		return 5;

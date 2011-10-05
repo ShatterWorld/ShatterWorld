@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class Artillery extends AbstractRule implements IUnit
 {
+	public function getDescription ()
+	{
+		return 'Artilérie';
+	}
+	
 	public function getAttack ()
 	{
 		return 5;

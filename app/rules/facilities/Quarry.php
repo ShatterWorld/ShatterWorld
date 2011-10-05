@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class Quarry extends AbstractRule implements IFacility
 {
+	public function getDescription ()
+	{
+		return 'Kamenolom';
+	}
+
 	public function getDependencies ()
 	{
 		return array();

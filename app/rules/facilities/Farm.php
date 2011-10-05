@@ -4,6 +4,11 @@ use Rules\AbstractRule;
 
 class Farm extends AbstractRule implements IFacility
 {
+	public function getDescription ()
+	{
+		return 'Farma';
+	}
+
 	public function getDependencies ()
 	{
 		return array();
