@@ -25,6 +25,7 @@ class Resource extends BaseRepository
 			$resource->settleBalance();
 			$row['balance'] = $resource->balance;
 			$row['production'] = $resource->production;
+			$row['storage'] = $resource->storage;
 			$result[$resource->type] = $row;
 		}
 		return $result;
