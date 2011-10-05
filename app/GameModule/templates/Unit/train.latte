@@ -21,17 +21,21 @@
 				<td>Max</td>
 			</tr>
 			{foreach $form->getControls() as $name => $field}
+				{if $name !== 'send'}
 				<tr>
 					<th class="name">{label $name /}</th>
 					<td class="force">
-						{dump $units}
-						{ifset $units[$name]}$units[$name]->getAttack(){/ifset}
-
+					{$units[$name]->getAttack()}/{$units[$name]->getDefense()}
 					</td>
 					<td class="costs">x</td>
 					<td class="amount">{input $name}</td>
 					<td class="max">z</td>
 				</tr>
+				{else}
+				<tr>
+					<td colspan="5">{input $name}</td>
+				</tr>
+				{/if}
 			{/foreach}
 		</table>
 

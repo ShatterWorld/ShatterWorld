@@ -17,8 +17,7 @@ class UnitPresenter extends BasePresenter
 
 	public function actionTrain ()
 	{
-		$this->template->units = $this->getClanUnits();
-//		Debugger::barDump($this->template->units);
+		$this->template->units = $this->context->rules->getAll('unit');
 	}
 
 
@@ -31,8 +30,9 @@ class UnitPresenter extends BasePresenter
 
 		foreach ($units as $name => $unit){
 			$form->addText($name, $name . ' (' . $unit->getAttack() . '/' . $unit->getDefense() . ')')
+				->addCondition(Form::FILLED)
 				->addRule(Form::INTEGER, 'Počet jednotek musí být celé číslo')
-				->addRule(Form::RANGE, 'Počet jednotek musí být kladné číslo', array(0, 999999999));
+				->addRule(Form::RANGE, 'Počet jednotek musí být kladné číslo', array(0, NULL));
 		}
 
 		$form->addSubmit('send', 'Trénovat');
@@ -49,7 +49,6 @@ class UnitPresenter extends BasePresenter
 	{
 
 		$data = $form->getValues();
-		//Debugger::barDump($data);
 
 		$service = $this->getService('constructionService');
 		$clan = $this->getPlayerClan();
