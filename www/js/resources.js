@@ -59,7 +59,7 @@ jQuery.extend({
 			}
 			if (production == 0) {
 				return;
-			} 
+			}
 			if (production < 0) {
 				this.data[resource]['balance']--;
 			} else {
@@ -85,6 +85,42 @@ jQuery.extend({
 				}
 			})
 			return valid;
+		},
+
+		/**
+		  * Returns maximal amount of the unit specified by costs
+		  * @param int
+		  * @param int
+		  * @param int
+		  * @param int
+		  * @return int
+		  */
+		getAvailibleUnits : function(metal, stone, food, fuel){
+			var tmp;
+			var min = 999999999999;
+
+			tmp = Math.floor(this.data['resources']['metal'] / metal);
+			if (tmp > min){
+				min = tmp;
+			}
+
+			tmp = Math.floor(this.data['resources']['stone'] / stone);
+			if (tmp > min){
+				min = tmp;
+			}
+
+			tmp = Math.floor(this.data['resources']['food'] / food);
+			if (tmp > min){
+				min = tmp;
+			}
+
+			tmp = Math.floor(this.data['resources']['fuel'] / fuel);
+			if (tmp > min){
+				min = tmp;
+			}
+
+			return min;
+
 		}
 	}
 });

@@ -29,7 +29,7 @@ class UnitPresenter extends BasePresenter
 		$units = $this->context->rules->getAll('unit');
 
 		foreach ($units as $name => $unit){
-			$form->addText($name, $name . ' (' . $unit->getAttack() . '/' . $unit->getDefense() . ')')
+			$form->addText($name, $name)
 				->addCondition(Form::FILLED)
 				->addRule(Form::INTEGER, 'Počet jednotek musí být celé číslo')
 				->addRule(Form::RANGE, 'Počet jednotek musí být kladné číslo', array(0, NULL));

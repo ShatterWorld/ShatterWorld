@@ -1,3 +1,7 @@
+{block #map-head-include-after}
+	<script type="text/javascript" src="{$basePath}/js/units.js"></script>
+{/block}
+
 {block #header}
 	Trénink
 {/block}
@@ -12,7 +16,7 @@
 				<li n:foreach="$form->errors as $error">{$error}</li>
 		</ul>
 
-		<table>
+		<table id="trainUnitTable">
 			<tr>
 				<th>Jméno</th>
 				<td>Síla</td>
@@ -22,19 +26,31 @@
 			</tr>
 			{foreach $form->getControls() as $name => $field}
 				{if $name !== 'send'}
-				<tr>
-					<th class="name">{label $name /}</th>
-					<td class="force">
-					{$units[$name]->getAttack()}/{$units[$name]->getDefense()}
-					</td>
-					<td class="costs">x</td>
-					<td class="amount">{input $name}</td>
-					<td class="max">z</td>
-				</tr>
-				{else}
-				<tr>
-					<td colspan="5">{input $name}</td>
-				</tr>
+					{?$cost = $units[$name]->getCost()}
+					{?$metal = 0}
+					{?$stone = 0}
+					{?$food = 0}
+					{?$fuel = 0}
+
+					{ifset $cost['metal']}{?$metal = $cost['metal']}{/ifset}
+					{ifset $cost['stone']}{?$stone = $cost['stone']}{/ifset}
+					{ifset $cost['food']}{?$food = $cost['food']}{/ifset}
+					{ifset $cost['fuel']}{?$fuel = $cost['fuel']}{/ifset}
+
+					{dump $cost}
+					<tr data-costs= "[{$metal}, {$stone}, {$food}, {$fuel}]">
+						<th class="name">{label $name /}</th>
+						<td class="force">
+						{$units[$name]->getAttack()}/{$units[$name]->getDefense()}
+						</td>
+						<td class="costs">M:{$metal}/M:{$stone}/M:{$food}/M:{$fuel}</td>
+						<td class="amount">{input $name}</td>
+						<td class="max">(n+1)</td>
+					</tr>
+					{else}
+					<tr>
+						<td></td><td></td><td></td><td colspan="5">{input $name}</td>
+					</tr>
 				{/if}
 			{/foreach}
 		</table>
