@@ -9,11 +9,8 @@
 jQuery.extend({
 	units: {
 		/**
-		 * Calculates relative position
-		 * @param object
-		 * @param integer
-		 * @param integer
-		 * @return array of integer
+		 * Sets the clickable maximal amounts of each unit
+		 * @return void
 		 */
 		setMaximumAmount: function (){
 			var maxTds = $('#trainUnitTable .max');
