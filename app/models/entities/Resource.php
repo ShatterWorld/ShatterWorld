@@ -51,11 +51,11 @@ class Resource extends BaseEntity
 	 * @param Entites\Clan
 	 * @param string
 	 */
-	public function __construct (Clan $clan, $type)
+	public function __construct (Clan $clan, $type, $balance = 0)
 	{
 		$this->clan = $clan;
 		$this->type = $type;
-		$this->balance = 0;
+		$this->balance = $balance;
 		$this->production = 0;
 		$this->storage = 0;
 	}

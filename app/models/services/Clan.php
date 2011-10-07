@@ -145,10 +145,12 @@ class Clan extends BaseService {
 	 */
 	public function delete ($object, $flush = TRUE)
 	{
-		foreach ($object->getFields() as $field)
-		{
+		foreach ($object->getFields() as $field) {
+			$object->setAllianceApplication(NULL);
+			if ($object->alliance && $object->alliance->leader === $object) {
+				$this->context->model->getAllianceService()->delete($object->alliance);
+			}
 			$field->setOwner(NULL);
-			$this->entityManager->persist($field);
 		}
 		parent::delete($object, $flush);
 	}

@@ -11,6 +11,6 @@ class Stone extends AbstractRule implements IResource
 
 	public function getInitialAmount ()
 	{
-		return 30;
+		return 150;
 	}
 }

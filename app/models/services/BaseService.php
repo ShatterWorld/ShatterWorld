@@ -55,7 +55,9 @@ class BaseService extends Nette\Object {
 	{
 		foreach ($values as $attribute => $value) {
 			if (method_exists($object, $method = 'set' . ucfirst($attribute))) {
-				$object->$method($value);
+				if (Nette\Reflection\Method::from($object, $method)->isPublic()) {
+					$object->$method($value);
+				}
 			}
 		}
 	}
