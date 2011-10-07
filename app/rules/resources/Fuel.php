@@ -11,6 +11,6 @@ class Fuel extends AbstractRule implements IResource
 
 	public function getInitialAmount ()
 	{
-		return 10;
+		return 100;
 	}
 }

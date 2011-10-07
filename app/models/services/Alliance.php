@@ -8,6 +8,9 @@ class Alliance extends BaseService
 	{
 		foreach ($object->getMembers() as $member) {
 			$member->setAlliance(NULL);
+			foreach ($this->context->model->getClanRepository()->findByAllianceApplication($object->id) as $applicant) {
+				$applicant->allianceApplication = NULL;
+			}
 		}
 		parent::delete($object, $flush);
 	}
