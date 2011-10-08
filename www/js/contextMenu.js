@@ -108,7 +108,7 @@ jQuery.extend({
 			//my
 			if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 
-				this.addAttackAction();
+				this.addAttackAction(field);
 				if (field['facility'] !== null){
 					if(field['facility'] !== 'headquarters'){
 						this.addUpgradeFacilityAction(field);
@@ -209,18 +209,41 @@ jQuery.extend({
 
 		/**
 		 * Adds the attack action
+		 * @param field
 		 * @return void
 		 */
-		addAttackAction: function (){
+		addAttackAction: function (from){
 			var actionDiv = this.basicActionDiv.clone().html('Útok*');
 
 			actionDiv.click(function(){
-				jQuery.contextMenu.hide();
-				alert('vyberte cíl');
-				jQuery.contextMenu.action = function(from, target){
-					alert('posílám jednotky');
-				};
-			});
+				var attackDialog = $('<div />').attr('id', 'attackDialog')
+					.append('<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div>');
+					/*append unit dialogs (need to get from field)*/
+
+				$(attackDialog).dialog({
+					title: 'Útok',
+					width: 300,
+					height: 300,
+					/*position: pos,
+					dragStop: function(event, ui){
+						jQuery.cookie.set('#countdownDialogPosX', $("#countdownDialog").dialog("option", "position")[0], 7);
+						jQuery.cookie.set('#countdownDialogPosY', $("#countdownDialog").dialog("option", "position")[1], 7);
+					},
+					resizeStop: function(event, ui) {
+						jQuery.cookie.set('#countdownDialogWidth', $("#countdownDialog").dialog("option", "width"), 7);
+						jQuery.cookie.set('#countdownDialogHeight', $("#countdownDialog").dialog("option", "height"), 7);
+					},
+					beforeClose: function(event, ui) {
+						jQuery.countdown.setDialogShown(false);
+					}*/
+				});
+
+					jQuery.contextMenu.hide();
+					/*edit gameMap (second click)*/
+					jQuery.contextMenu.action = function(from, target){
+						alert('posílám jednotky');
+					};
+				});
 
 			this.action = null;
 			this.contextMenu.append(actionDiv);
