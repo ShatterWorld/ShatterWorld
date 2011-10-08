@@ -238,15 +238,32 @@ jQuery.extend({
 					}*/
 				});
 
-					jQuery.contextMenu.hide();
+				jQuery.contextMenu.hide();
 					/*edit gameMap (second click)*/
-					jQuery.contextMenu.action = function(from, target){
-						alert('posílám jednotky');
-					};
-				});
+				jQuery.contextMenu.action = "select2nd";
+				/*jQuery.contextMenu.action = function(from, target){
+					alert('posílám jednotky');
+				};*/
+			});
 
 			this.action = null;
 			this.contextMenu.append(actionDiv);
+		},
+
+		/**
+		 * Marks the target and sets coords to attackDialog
+		 * @param field
+		 * @param object/string
+		 * @return void
+		 */
+		select2nd : function(field, div){
+			var targetX = $('#attackDialog #targetX');
+			var targetY = $('#attackDialog #targetY');
+
+			jQuery.marker.unmarkAll('yellow');
+			jQuery.marker.mark(div, 'yellow');
+			targetX.html(field['coordX']);
+			targetY.html(field['coordY']);
 		},
 
 		/**
