@@ -19,14 +19,61 @@ jQuery.extend({
 				this.wait();
 			}*/
 
-			if (this.data !== null && typeof(this.data[type][key]) !== 'undefined') {
-				return this.data[type][key];
+/*
+			var res = this.delayedExecution(
+				this.period,
+				function (){
+					return jQuery.descriptions.data != null ? true : false;
+				},*/
+				/*
+				function (type, key) {
+					//alert('data '+jQuery.descriptions.data+'; type '+type+'; key '+key);
+					if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
+						return jQuery.descriptions.data[type][key];
+					} else {
+						return key;
+					}
+				},*/
+				/*
+				jQuery.descriptions.innerGet,
+				type,
+				key
+				);
+
+			alert(res);
+			return res;*/
+
+
+			if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
+				return jQuery.descriptions.data[type][key];
 			} else {
 				return key;
 			}
 
 		},
 
+		delayedExecution : function(delay, condition, fnc, type, key)
+		{
+			var interval = setInterval(function () {
+				//alert('delay');
+				if(condition()) {
+					clearInterval(interval);
+					return fnc(type, key);
+				}
+			}, delay);
+		},
+
+
+
+		innerGet: function (type, key) {
+			if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
+				return jQuery.descriptions.data[type][key];
+			} else {
+				return key;
+			}
+
+		},
+/*
 		wait : function(time, type){
 			time = time || 1000;
 			type = type || "fx";
@@ -36,27 +83,10 @@ jQuery.extend({
 					$(self).dequeue();
 				}, time);
 			});
-		}
 
 
-/*    $.fn.wait = function(time, type) {
-        time = time || 1000;
-        type = type || "fx";
-        return this.queue(type, function() {
-            var self = this;
-            setTimeout(function() {
-                $(self).dequeue();
-            }, time);
-        });
-    };
-    function runIt() {
-      $("div").wait()
-              .animate({left:'+=200'},2000)
-              .wait()
-              .animate({left:'-=200'},1500,runIt);
-    }
-    runIt();*/
 
+		}*/
 
 
 	}
