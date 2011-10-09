@@ -326,9 +326,22 @@ class Field extends BaseRepository {
 	 */
 	public function getVisibleFieldsArray ($clan, $depth)
 	{
+		$ids = $this->getVisibleFieldsIds($clan, $depth);
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
-		$qb->where($qb->expr()->in('f.id', $this->getVisibleFieldsIds($clan, $depth)));
+		$qb->where($qb->expr()->in('f.id', $ids));
+		$unitsQb = $this->getEntityManager()->createQueryBuilder();
+		$unitsQb->select('u', 'l')->from('Entities\Unit', 'u')->innerJoin('u.location', 'l')->where($unitsQb->expr()->andX(
+			$unitsQb->expr()->in('u.location', $ids),
+			$unitsQb->expr()->eq('u.owner', $clan->id)
+		));
+		$units = array();
+		foreach ($unitsQb->getQuery()->getArrayResult() as $row) {
+			if (!isset($units[$row['location']['id']])) {
+				$units[$row['location']['id']] = array();
+			}
+			$units[$row['location']['id']][$row['type']] = $row;
+		}
 		$result = array();
 		foreach ($qb->getQuery()->getArrayResult() as $row) {
 			$x = $row['coordX'];
@@ -340,6 +353,7 @@ class Field extends BaseRepository {
 				$row['facility'] = null;
 				$row['level'] = null;
 			}
+			$row['units'] = isset($units[$row['id']]) ? $units[$row['id']] : array();
 			$result[$x][$y] = $row;
 		}
 		return $result;
