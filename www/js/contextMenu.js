@@ -108,7 +108,7 @@ jQuery.extend({
 			//my
 			if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 
-				if (typeof(field['units']) !== "undefined" || typeof(field['units']) != "undefined"){
+				if (field['units'] !== null || field['units'] != null){
 					this.addAttackAction(field);
 				}
 				if (field['facility'] !== null){
