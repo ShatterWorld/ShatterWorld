@@ -221,54 +221,66 @@ jQuery.extend({
 				var attackDialog = $('<div />').attr('id', 'attackDialog')
 					.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div><br/>');
 
-					var table = $('<table id="units" />');
-					table.append('<tr><th>Jméno</th><th>Počet</th><th>Max</th></tr>');
-					attackDialog.append(table);
-					$.each(from['units'], function(key, unit){
+				var table = $('<table id="units" />');
+				table.append('<tr><th>Jméno</th><th>Počet</th><th>Max</th></tr>');
+				attackDialog.append(table);
+				$.each(from['units'], function(key, unit){
 
-						var tr = $('<tr />');
-						tr.append('<td class="name">'+key+'</td><td class="count"><input type="text" name="'+key+'" /></td><td class="max">('+unit['count']+')</td>');
-						table.append(tr);
-						tr.children('.max').click(function(){
-							tr.children('.count').children('input').val(unit['count']);
-						})
-						.css({
-							'cursor' : 'pointer'
-						});
-
-
+					var tr = $('<tr />');
+					tr.append('<td class="name">'+key+'</td><td class="count"><input type="text" name="'+key+'" /></td><td class="max">('+unit['count']+')</td>');
+					table.append(tr);
+					tr.children('.max').click(function(){
+						tr.children('.count').children('input').val(unit['count']);
+					})
+					.css({
+						'cursor' : 'pointer'
 					});
 
 
+				});
+
+				var tmp;
+				tmp = jQuery.cookie.get('#attackDialogWidth');
+				var w = (tmp !== null) ? tmp : 300;
+
+				tmp = jQuery.cookie.get('#attackDialogHeight');
+				var h = (tmp !== null) ? tmp : 120;
+
+				var pos = new Array();
+				tmp = jQuery.cookie.get('#attackDialogPosX');
+				pos[0] = (tmp !== null) ? parseInt(tmp) : 'center';
+
+				tmp = jQuery.cookie.get('#attackDialogPosY');
+				pos[1] = (tmp !== null) ? parseInt(tmp) : 'center';
+
 				$(attackDialog).dialog({
 					title: 'Útok',
-					width: 300,
-					height: 300,
+					width: w,
+					height: h,
 
 					buttons: [
 						{
 							text: "Zrušit",
 							click: function() {
-								jQuery.marker.unmarkAll('yellow');
-								jQuery.marker.unmarkAll('red');
-								jQuery.contextMenu.action = null;
 								$(this).dialog("close");
 							}
 						}
 					],
 
-					/*position: pos,
+					position: pos,
 					dragStop: function(event, ui){
-						jQuery.cookie.set('#countdownDialogPosX', $("#countdownDialog").dialog("option", "position")[0], 7);
-						jQuery.cookie.set('#countdownDialogPosY', $("#countdownDialog").dialog("option", "position")[1], 7);
+						jQuery.cookie.set('#attackDialogPosX', $(attackDialog).dialog("option", "position")[0], 7);
+						jQuery.cookie.set('#attackDialogPosY', $(attackDialog).dialog("option", "position")[1], 7);
 					},
 					resizeStop: function(event, ui) {
-						jQuery.cookie.set('#countdownDialogWidth', $("#countdownDialog").dialog("option", "width"), 7);
-						jQuery.cookie.set('#countdownDialogHeight', $("#countdownDialog").dialog("option", "height"), 7);
+						jQuery.cookie.set('#attackDialogWidth', $(attackDialog).dialog("option", "width"), 7);
+						jQuery.cookie.set('#attackDialogHeight', $(attackDialog).dialog("option", "height"), 7);
 					},
 					beforeClose: function(event, ui) {
-						jQuery.countdown.setDialogShown(false);
-					}*/
+						jQuery.marker.unmarkAll('yellow');
+						jQuery.marker.unmarkAll('red');
+						jQuery.contextMenu.action = null;
+					}
 				});
 
 				jQuery.contextMenu.hide();
@@ -309,9 +321,6 @@ jQuery.extend({
 							{
 								text: "Zaútočit",
 								click: function() {
-									jQuery.marker.unmarkAll('yellow');
-									jQuery.marker.unmarkAll('red');
-									jQuery.contextMenu.action = null;
 									alert('utocim!');
 									$(this).dialog("close");
 
@@ -321,9 +330,6 @@ jQuery.extend({
 							{
 								text: "Zrušit",
 								click: function() {
-									jQuery.marker.unmarkAll('yellow');
-									jQuery.marker.unmarkAll('red');
-									jQuery.contextMenu.action = null;
 									$(this).dialog("close");
 								}
 							}
