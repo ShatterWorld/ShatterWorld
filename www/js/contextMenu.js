@@ -219,13 +219,24 @@ jQuery.extend({
 
 			actionDiv.click(function(){
 				var attackDialog = $('<div />').attr('id', 'attackDialog')
-					.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div>');
+					.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div><br/>');
 
 					var table = $('<table id="units" />');
 					table.append('<tr><th>Jméno</th><th>Počet</th><th>Max</th></tr>');
 					attackDialog.append(table);
 					$.each(from['units'], function(key, unit){
-						table.append('<tr><td>'+key+'</td><td><input type="text" name="'+key+'" /></td><td>('+unit['count']+')</td></tr>');
+
+						var tr = $('<tr />');
+						tr.append('<td class="name">'+key+'</td><td class="count"><input type="text" name="'+key+'" /></td><td class="max">('+unit['count']+')</td>');
+						table.append(tr);
+						tr.children('.max').click(function(){
+							tr.children('.count').children('input').val(unit['count']);
+						})
+						.css({
+							'cursor' : 'pointer'
+						});
+
+
 					});
 
 
