@@ -272,47 +272,53 @@ jQuery.extend({
 		 * Marks the target and sets coords to attackDialog
 		 * @param field
 		 * @param object/string
+		 * @param JSON
 		 * @return void
 		 */
-		attackSelect2nd : function(field, div){
-			var attackDialog = $('#attackDialog');
-			var targetX = $('#attackDialog #targetX');
-			var targetY = $('#attackDialog #targetY');
+		attackSelect2nd : function(field, div, data){
 
-			jQuery.marker.unmarkAll('yellow');
-			jQuery.marker.mark(div, 'yellow');
-			targetX.html(field['coordX']);
-			targetY.html(field['coordY']);
+			if (!(field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']) && !(field['owner'] !== null && field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId'])){
 
 
+				var attackDialog = $('#attackDialog');
+				var targetX = $('#attackDialog #targetX');
+				var targetY = $('#attackDialog #targetY');
 
-			$(attackDialog).dialog(
-				"option",
-					"buttons",
-					[
-						{
-							text: "Zaútočit",
-							click: function() {
-								jQuery.marker.unmarkAll('yellow');
-								jQuery.marker.unmarkAll('red');
-								jQuery.contextMenu.action = null;
-								alert('utocim!');
-								$(this).dialog("close");
+				jQuery.marker.unmarkAll('yellow');
+				jQuery.marker.mark(div, 'yellow');
+				targetX.html(field['coordX']);
+				targetY.html(field['coordY']);
 
-								/*ajax*/
+
+
+				$(attackDialog).dialog(
+					"option",
+						"buttons",
+						[
+							{
+								text: "Zaútočit",
+								click: function() {
+									jQuery.marker.unmarkAll('yellow');
+									jQuery.marker.unmarkAll('red');
+									jQuery.contextMenu.action = null;
+									alert('utocim!');
+									$(this).dialog("close");
+
+									/*ajax*/
+								}
+							},
+							{
+								text: "Zrušit",
+								click: function() {
+									jQuery.marker.unmarkAll('yellow');
+									jQuery.marker.unmarkAll('red');
+									jQuery.contextMenu.action = null;
+									$(this).dialog("close");
+								}
 							}
-						},
-						{
-							text: "Zrušit",
-							click: function() {
-								jQuery.marker.unmarkAll('yellow');
-								jQuery.marker.unmarkAll('red');
-								jQuery.contextMenu.action = null;
-								$(this).dialog("close");
-							}
-						}
-					]
-			);
+						]
+				);
+			}
 
 		},
 
