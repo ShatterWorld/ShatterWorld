@@ -353,7 +353,7 @@ class Field extends BaseRepository {
 				$row['facility'] = null;
 				$row['level'] = null;
 			}
-			$row['units'] = isset($units[$row['id']]) ? $units[$row['id']] : array();
+			$row['units'] = isset($units[$row['id']]) ? $units[$row['id']] : null;
 			$result[$x][$y] = $row;
 		}
 		return $result;

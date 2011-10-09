@@ -222,12 +222,12 @@ jQuery.extend({
 					.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div>');
 
 					var table = $('<table id="units" />');
+					table.append('<tr><th>Jméno</th><th>Počet</th><th>Max</th></tr>');
 					attackDialog.append(table);
 					$.each(from['units'], function(key, unit){
-						table.append('<tr><td>'+key+'</td><td><input type="text" name="'+unit['name']+'"></td><td>('+count+')</td></tr>');
+						table.append('<tr><td>'+key+'</td><td><input type="text" name="'+key+'" /></td><td>('+unit['count']+')</td></tr>');
 					});
 
-					/*append unit dialogs (need to get from field)*/
 
 				$(attackDialog).dialog({
 					title: 'Útok',
@@ -298,6 +298,8 @@ jQuery.extend({
 								jQuery.contextMenu.action = null;
 								alert('utocim!');
 								$(this).dialog("close");
+
+								/*ajax*/
 							}
 						},
 						{
