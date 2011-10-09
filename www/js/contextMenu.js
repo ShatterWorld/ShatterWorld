@@ -108,7 +108,9 @@ jQuery.extend({
 			//my
 			if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 
-				this.addAttackAction(field);
+				if (typeof(field['units']) !== "undefined" || typeof(field['units']) != "undefined"){
+					this.addAttackAction(field);
+				}
 				if (field['facility'] !== null){
 					if(field['facility'] !== 'headquarters'){
 						this.addUpgradeFacilityAction(field);
@@ -218,6 +220,13 @@ jQuery.extend({
 			actionDiv.click(function(){
 				var attackDialog = $('<div />').attr('id', 'attackDialog')
 					.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div>');
+
+					var table = $('<table id="units" />');
+					attackDialog.append(table);
+					$.each(from['units'], function(key, unit){
+						table.append('<tr><td>'+key+'</td><td><input type="text" name="'+unit['name']+'"></td><td>('+count+')</td></tr>');
+					});
+
 					/*append unit dialogs (need to get from field)*/
 
 				$(attackDialog).dialog({
