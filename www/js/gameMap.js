@@ -346,8 +346,8 @@ jQuery.extend({
 								jQuery.contextMenu.initialField = field;
 								jQuery.contextMenu.show(div, e, field, data);
 							}
-							else if(jQuery.contextMenu.action == "select2nd"){
-								jQuery.contextMenu.select2nd(field, div)
+							else if(jQuery.contextMenu.action == "attackSelect2nd"){
+								jQuery.contextMenu.attackSelect2nd(field, div)
 							}
 							else{
 								jQuery.contextMenu.action(jQuery.contextMenu.initialField, field);
