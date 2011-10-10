@@ -226,7 +226,7 @@ jQuery.extend({
 				attackDialog.append(table);
 				$.each(from['units'], function(key, unit){
 
-					var tr = $('<tr />');
+					var tr = $('<tr id="'+unit['id']+'" />');
 					tr.append('<td class="name">'+key+'</td><td class="count"><input type="text" name="'+key+'" /></td><td class="max">('+unit['count']+')</td>');
 					table.append(tr);
 					tr.children('.max').click(function(){
@@ -294,13 +294,14 @@ jQuery.extend({
 		/**
 		 * Marks the target and sets coords to attackDialog
 		 * @param field
+		 * @param field
 		 * @param object/string
 		 * @param JSON
 		 * @return void
 		 */
-		attackSelect2nd : function(field, div, data){
+		attackSelect2nd : function(from, target, div, data){
 
-			if (!(field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']) && !(field['owner'] !== null && field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId'])){
+			if (!(target['owner'] !== null && data['clanId'] !== null && target['owner']['id'] == data['clanId']) && !(target['owner'] !== null && target['owner']['alliance'] !== null && data['allianceId'] !== null && target['owner']['alliance']['id'] == data['allianceId'])){
 
 
 				var attackDialog = $('#attackDialog');
@@ -309,8 +310,8 @@ jQuery.extend({
 
 				jQuery.marker.unmarkAll('yellow');
 				jQuery.marker.mark(div, 'yellow');
-				targetX.html(field['coordX']);
-				targetY.html(field['coordY']);
+				targetX.html(target['coordX']);
+				targetY.html(target['coordY']);
 
 
 
@@ -321,10 +322,38 @@ jQuery.extend({
 							{
 								text: "Zaútočit",
 								click: function() {
-									alert('utocim!');
-									$(this).dialog("close");
+									jQuery.spinner.show(attackDialog);
+									var inputs = $('#units .count input');
+									var trs = $('#units tr');
 
-									/*ajax*/
+									var params = '?' + $.param({
+											'do': 'attack',
+											'fromId': from['id'],
+											'targetId': target['id']
+										});
+
+									var counts = new Array();
+									var ids = new Array();
+
+									$.each(inputs, function(key, input){
+										var unitCount = $(input).val();
+										var unitId = $(trs[key+1]).attr('id');
+
+										counts.push(unitCount);
+										ids.push(unitId);
+
+										params += '&' + unitId + '=' + unitCount;
+
+									});
+
+
+									$.get(params,
+										function(){
+											jQuery.events.fetchEvents();
+											jQuery.spinner.hide();
+											$(this).dialog("close");
+										}
+									);
 								}
 							},
 							{
