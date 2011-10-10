@@ -99,22 +99,22 @@ jQuery.extend({
 			var tmp;
 			var min = 999999999999;
 
-			tmp = Math.floor(this.data['resources']['metal'] / metal);
+			tmp = Math.floor(this.data['metal'].balance / metal);
 			if (tmp > min){
 				min = tmp;
 			}
 
-			tmp = Math.floor(this.data['resources']['stone'] / stone);
+			tmp = Math.floor(this.data['stone'].balance / stone);
 			if (tmp > min){
 				min = tmp;
 			}
 
-			tmp = Math.floor(this.data['resources']['food'] / food);
+			tmp = Math.floor(this.data['food'].balance / food);
 			if (tmp > min){
 				min = tmp;
 			}
 
-			tmp = Math.floor(this.data['resources']['fuel'] / fuel);
+			tmp = Math.floor(this.data['fuel'].balance / fuel);
 			if (tmp > min){
 				min = tmp;
 			}
