@@ -328,7 +328,7 @@ jQuery.extend({
 
 									var params = '?' + $.param({
 											'do': 'attack',
-											'fromId': from['id'],
+											'originId': from['id'],
 											'targetId': target['id']
 										});
 
