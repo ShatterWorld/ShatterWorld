@@ -9,18 +9,18 @@ class HomepagePresenter extends BasePresenter {
 	{
 		$form = new Form;
 
-		$form->addText('login', 'Login')
+		$form->addText('login', 'Login', 13)
 			->setRequired('Zadejte prosím přihlašovací jméno');
 
-		$form->addPassword('password', 'Heslo')
+		$form->addPassword('password', 'Heslo', 13)
 			->setRequired('Zadejte prosím heslo');
-		
+
 		$form->addSubmit('send', 'Přihlásit');
 
 		//$form->setTranslator($translator);
-		
+
 		$form->onSuccess[] = callback($this, 'submitLoginForm');
-		
+
 		return $form;
 	}
 
@@ -29,7 +29,7 @@ class HomepagePresenter extends BasePresenter {
 		$data = $form->getValues();
 		try {
 			$this->getUser()->login($data["login"], $data["password"]);
-		} 
+		}
 		catch (Nette\Security\AuthenticationException $e) {
 			if ($e->getCode() === IAuthenticator::INVALID_CREDENTIAL) {
 				$this->flashMessage("Špatné heslo", "error");

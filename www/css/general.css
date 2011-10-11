@@ -1,0 +1,148 @@
+* {
+	padding: 0px;
+	margin: 0px auto;
+	border: 0px;
+	font: 10pt Georgia serif;
+}
+
+.clearer {
+	clear: both;
+}
+
+body {
+	background: url('../images/bg.png') #333 repeat-y center;
+}
+
+a {
+	color: #fff;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.caption {
+	font-weight: bold;
+}
+
+#frame {
+	width: 900px;
+	background: #5D6555;
+	position: relative;
+}
+
+#infoBar {
+	background: #31362D;
+	width: 100%;
+	line-height: 23px;
+	margin-bottom:15px;
+	border-bottom: 1px solid #000;
+}
+
+.resourceFull {
+	color: #ff0000;
+}
+
+#userBar, #footer {
+	line-height: 25px;
+	padding: 0px 5px;
+	height: 25px;
+	color: #ccc;
+}
+
+#userBar {
+	background: url('../images/bar-top.png');
+	text-align: right;
+	position: relative;
+}
+
+#footer {
+	background: url('../images/bar-bottom.png');
+	margin-top: 15px;
+	text-align: center;
+	border-top: 1px solid #000;
+	position: relative;
+}
+
+#footer img {
+	vertical-align: middle;
+}
+
+#menu {
+	width: 200px;
+	float: left;
+	position: relative;
+}
+
+.submenu a {
+	color: #000;
+}
+
+.submenu {
+	background: #cdcdcd;
+	margin-bottom: 15px;
+	width: 170px;
+	border: 1px solid #000;
+}
+
+.submenu ul {
+	list-style-type: none;
+	/*margin-left: 12px;*/
+}
+
+.submenu h3 {
+	color: white;
+	padding-left: 5px;
+	font-weight: bold;
+	line-height: 20px;
+	background: url('../images/bar-small-bottom.png') repeat-x center;
+	cursor: pointer;
+}
+
+.submenu li {
+	padding-left: 12px;
+	cursor: pointer;
+}
+
+.submenu li:hover {
+	background: #A8A8A8;
+}
+
+.submenu li a{
+	display: block;
+}
+
+#header {
+	color: white;
+	padding: 0px 5px;
+	line-height: 20px;
+	background: url('../images/bar-small-bottom.png') repeat-x center;
+	position: relative;
+}
+
+#banner {
+	background: url('../images/banner.png');
+	border: solid #000;
+	border-width: 1px 0px;
+	height: 120px;
+	position: relative;
+}
+
+#banner a {
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
+
+}
+
+#container {
+	width: 680px;
+	border: 1px solid #000;
+	background: #cdcdcd;
+	float: right;
+	margin-right: 12px;
+	position: relative;
+}
+
+
