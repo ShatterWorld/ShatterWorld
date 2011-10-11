@@ -4,36 +4,37 @@ use Entities;
 
 class Move extends Event
 {
-	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, $units)
+	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, $type, $units)
 	{
-		$distance = $this->context->model->getFieldRepository()->calculateDistance($origin, $target);
-		$speed = 0;
+		$time = 0;
 		$move = $this->create(array(
-			'type' => 'unitMovement',
+			'type' => $type,
 			'owner' => $origin->owner,
 			'origin' => $origin,
 			'target' => $target
 		), FALSE);
-		foreach ($units as $type => $count) {
-			if ($unit = $this->context->model->getUnitRepository()->findOneBy(array('location' => $origin, 'type' => $type, 'move' => NULL))) {
+		foreach ($units as $id => $count) {
+			if ($unit = $this->context->model->getUnitRepository()->find($id)) {
 				if ($unit->count > $count) {
 					$unit->count = $unit->count - $count;
 					$unit = $this->context->model->getUnitService()->create(array(
-						'type' => $type,
-						'owner' => $origin->owner,
-						'location' => $origin,
+						'type' => $unit->type,
+						'owner' => $unit->owner,
+						'location' => $unit->location,
 						'count' => $count,
 						'move' => $move
 					), FALSE);
 				} else {
 					$unit->move = $move;
 				}
-				if (($unitSpeed = $this->context->rules->get('unit', $type)->getSpeed()) > $speed) {
-					$speed = $unitSpeed;
+				$distance = $this->context->model->getFieldRepository()->calculateDistance($unit->location, $target);
+				$speed = $this->context->rules->get('unit', $unit->type)->getSpeed();
+				if ($distance * $speed > $time) {
+					$time = $distance * $speed;
 				}
 			}
 		}
-		$move->timeout = $speed * $distance;
+		$move->timeout = $time;
 		$this->entityManager->flush();
 	}
 }

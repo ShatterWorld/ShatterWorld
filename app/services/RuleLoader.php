@@ -102,7 +102,7 @@ class RuleLoader extends Nette\Object
 					if (!isset($index[$type])) {
 						$index[$type] = array();
 					}
-					if (!interface_exists($class)) {
+					if (!interface_exists($class) && !Nette\Reflection\ClassType::from($class)->isAbstract()) {
 						$index[$type][] = substr($class, $pos + 1);
 					}
 				}

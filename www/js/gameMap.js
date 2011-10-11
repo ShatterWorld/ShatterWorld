@@ -341,13 +341,13 @@ jQuery.extend({
 								return;
 							}
 
-							jQuery.marker.mark(div, 'red');
 							if(jQuery.contextMenu.initialField === null || jQuery.contextMenu.action === null){
 								jQuery.contextMenu.initialField = field;
+								jQuery.marker.mark(div, 'red');
 								jQuery.contextMenu.show(div, e, field, data);
 							}
 							else if(jQuery.contextMenu.action == "attackSelect2nd"){
-								jQuery.contextMenu.attackSelect2nd(field, div)
+								jQuery.contextMenu.attackSelect2nd(jQuery.contextMenu.initialField, field, div, data)
 							}
 							else{
 								jQuery.contextMenu.action(jQuery.contextMenu.initialField, field);

@@ -68,7 +68,7 @@ class UnitPresenter extends BasePresenter
 
 
 
-		$this->redirect('Unit:');
+		$this->redirect('Unit:Train');
 
 	}
 

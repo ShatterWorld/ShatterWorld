@@ -43,6 +43,25 @@ class MapPresenter extends BasePresenter
 		$this->sendPayload();
 	}
 
+	public function handleAttack ($originId, $targetId)
+	{
+		$args = $this->request->params;
+		$units = array();
+		foreach ($args as $key => $arg) {
+			if (is_numeric($key)) {
+				$units[$key] = $arg;
+			}
+		}
+		$origin = $this->getFieldRepository()->find($originId);
+		$target = $this->getFieldRepository()->find($targetId);
+		try {
+			$this->getMoveService()->startUnitMovement($origin, $target, 'pillaging', $units);
+			$this->flashMessage('Útok zahájen');
+		} catch (RuleViolationException $e) {
+			$this->flashMessage('Takový útok není možný', 'error');
+		}
+	}
+	
 	public function handleFetchColonisationCost ($targetId)
 	{
 		$target = $this->getFieldRepository()->find($targetId);

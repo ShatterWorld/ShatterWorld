@@ -56,5 +56,6 @@ class Event extends BaseService
 		} else {
 			throw new RuleViolationException;
 		}
+		return $event;
 	}
 }

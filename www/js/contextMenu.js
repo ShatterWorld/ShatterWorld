@@ -219,45 +219,68 @@ jQuery.extend({
 
 			actionDiv.click(function(){
 				var attackDialog = $('<div />').attr('id', 'attackDialog')
-					.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div>');
+					.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div><br/>');
 
-					var table = $('<table id="units" />');
-					table.append('<tr><th>Jméno</th><th>Počet</th><th>Max</th></tr>');
-					attackDialog.append(table);
-					$.each(from['units'], function(key, unit){
-						table.append('<tr><td>'+key+'</td><td><input type="text" name="'+key+'" /></td><td>('+unit['count']+')</td></tr>');
+				var table = $('<table id="units" />');
+				table.append('<tr><th>Jméno</th><th>Počet</th><th>Max</th></tr>');
+				attackDialog.append(table);
+				$.each(from['units'], function(key, unit){
+
+					var tr = $('<tr id="'+unit['id']+'" />');
+					tr.append('<td class="name">'+key+'</td><td class="count"><input type="text" name="'+key+'" /></td><td class="max">('+unit['count']+')</td>');
+					table.append(tr);
+					tr.children('.max').click(function(){
+						tr.children('.count').children('input').val(unit['count']);
+					})
+					.css({
+						'cursor' : 'pointer'
 					});
 
 
+				});
+
+				var tmp;
+				tmp = jQuery.cookie.get('#attackDialogWidth');
+				var w = (tmp !== null) ? tmp : 300;
+
+				tmp = jQuery.cookie.get('#attackDialogHeight');
+				var h = (tmp !== null) ? tmp : 120;
+
+				var pos = new Array();
+				tmp = jQuery.cookie.get('#attackDialogPosX');
+				pos[0] = (tmp !== null) ? parseInt(tmp) : 'center';
+
+				tmp = jQuery.cookie.get('#attackDialogPosY');
+				pos[1] = (tmp !== null) ? parseInt(tmp) : 'center';
+
 				$(attackDialog).dialog({
 					title: 'Útok',
-					width: 300,
-					height: 300,
+					width: w,
+					height: h,
 
 					buttons: [
 						{
 							text: "Zrušit",
 							click: function() {
-								jQuery.marker.unmarkAll('yellow');
-								jQuery.marker.unmarkAll('red');
-								jQuery.contextMenu.action = null;
 								$(this).dialog("close");
 							}
 						}
 					],
 
-					/*position: pos,
+					position: pos,
 					dragStop: function(event, ui){
-						jQuery.cookie.set('#countdownDialogPosX', $("#countdownDialog").dialog("option", "position")[0], 7);
-						jQuery.cookie.set('#countdownDialogPosY', $("#countdownDialog").dialog("option", "position")[1], 7);
+						jQuery.cookie.set('#attackDialogPosX', $(attackDialog).dialog("option", "position")[0], 7);
+						jQuery.cookie.set('#attackDialogPosY', $(attackDialog).dialog("option", "position")[1], 7);
 					},
 					resizeStop: function(event, ui) {
-						jQuery.cookie.set('#countdownDialogWidth', $("#countdownDialog").dialog("option", "width"), 7);
-						jQuery.cookie.set('#countdownDialogHeight', $("#countdownDialog").dialog("option", "height"), 7);
+						jQuery.cookie.set('#attackDialogWidth', $(attackDialog).dialog("option", "width"), 7);
+						jQuery.cookie.set('#attackDialogHeight', $(attackDialog).dialog("option", "height"), 7);
 					},
 					beforeClose: function(event, ui) {
-						jQuery.countdown.setDialogShown(false);
-					}*/
+						jQuery.marker.unmarkAll('yellow');
+						jQuery.marker.unmarkAll('red');
+						jQuery.contextMenu.action = null;
+					}
 				});
 
 				jQuery.contextMenu.hide();
@@ -271,48 +294,77 @@ jQuery.extend({
 		/**
 		 * Marks the target and sets coords to attackDialog
 		 * @param field
+		 * @param field
 		 * @param object/string
+		 * @param JSON
 		 * @return void
 		 */
-		attackSelect2nd : function(field, div){
-			var attackDialog = $('#attackDialog');
-			var targetX = $('#attackDialog #targetX');
-			var targetY = $('#attackDialog #targetY');
+		attackSelect2nd : function(from, target, div, data){
 
-			jQuery.marker.unmarkAll('yellow');
-			jQuery.marker.mark(div, 'yellow');
-			targetX.html(field['coordX']);
-			targetY.html(field['coordY']);
+			if (!(target['owner'] !== null && data['clanId'] !== null && target['owner']['id'] == data['clanId']) && !(target['owner'] !== null && target['owner']['alliance'] !== null && data['allianceId'] !== null && target['owner']['alliance']['id'] == data['allianceId'])){
 
 
+				var attackDialog = $('#attackDialog');
+				var targetX = $('#attackDialog #targetX');
+				var targetY = $('#attackDialog #targetY');
 
-			$(attackDialog).dialog(
-				"option",
-					"buttons",
-					[
-						{
-							text: "Zaútočit",
-							click: function() {
-								jQuery.marker.unmarkAll('yellow');
-								jQuery.marker.unmarkAll('red');
-								jQuery.contextMenu.action = null;
-								alert('utocim!');
-								$(this).dialog("close");
+				jQuery.marker.unmarkAll('yellow');
+				jQuery.marker.mark(div, 'yellow');
+				targetX.html(target['coordX']);
+				targetY.html(target['coordY']);
 
-								/*ajax*/
+
+
+				$(attackDialog).dialog(
+					"option",
+						"buttons",
+						[
+							{
+								text: "Zaútočit",
+								click: function() {
+									jQuery.spinner.show(attackDialog);
+									var inputs = $('#units .count input');
+									var trs = $('#units tr');
+
+									var params = '?' + $.param({
+											'do': 'attack',
+											'originId': from['id'],
+											'targetId': target['id']
+										});
+
+									var counts = new Array();
+									var ids = new Array();
+
+									$.each(inputs, function(key, input){
+										var unitCount = $(input).val();
+										var unitId = $(trs[key+1]).attr('id');
+
+										counts.push(unitCount);
+										ids.push(unitId);
+
+										params += '&' + unitId + '=' + unitCount;
+
+									});
+
+
+									$.get(params,
+										function(){
+											jQuery.events.fetchEvents();
+											jQuery.spinner.hide();
+											$(attackDialog).dialog("close");
+										}
+									);
+								}
+							},
+							{
+								text: "Zrušit",
+								click: function() {
+									$(this).dialog("close");
+								}
 							}
-						},
-						{
-							text: "Zrušit",
-							click: function() {
-								jQuery.marker.unmarkAll('yellow');
-								jQuery.marker.unmarkAll('red');
-								jQuery.contextMenu.action = null;
-								$(this).dialog("close");
-							}
-						}
-					]
-			);
+						]
+				);
+			}
 
 		},
 
