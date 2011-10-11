@@ -351,7 +351,7 @@ jQuery.extend({
 										function(){
 											jQuery.events.fetchEvents();
 											jQuery.spinner.hide();
-											$(this).dialog("close");
+											$(attackDialog).dialog("close");
 										}
 									);
 								}
