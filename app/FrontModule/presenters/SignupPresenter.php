@@ -21,7 +21,7 @@ class SignupPresenter extends BasePresenter
 			->setRequired('Zadejte prosím heslo')
 			->addRule(Form::MIN_LENGTH, 'Heslo musí mít alespoň %d znaků', 5);
 
-		$form->addPassword('passwordVerify', 'Heslo (pro kontrolu)')
+		$form->addPassword('passwordVerify', 'Heslo (pro kontrolu).')
 			->setRequired('Zadejte prosím heslo ještě jednou pro kontrolu')
 			->addRule(Form::EQUAL, 'Hesla se neshodují', $form['password']);
 
