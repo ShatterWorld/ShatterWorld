@@ -12,17 +12,15 @@
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8">
 		<meta http-equiv="content-language" content="cs">
 
+		<link rel="stylesheet" type="text/css" href="{$basePath}/css/general.css" />
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/front.css" />
+
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/flashes.css" />
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui.css" />
-
-
 
 	</head>
 
 	<body>
-
-
 
 		{snippet flashes}
 		{if $flashes}
@@ -35,6 +33,7 @@
 			</div>
 		{/if}
 		{/snippet}
+
 		<div id="frame">
 			<div id="userBar">
 			</div>
@@ -42,31 +41,19 @@
 			<div id="banner">
 			</div>
 
-			<div id="infoBar">
-				<div id="resourceBar">
-				</div>
-				<div id="countdownBar">
-					Odpočítávání (<span id="countdownCount"></span>)
-				</div>
-				<div class="clearer"><span></span></div>
-			</div>
-
-			<div id="countdownDialog">
-			</div>
-
 			<div id="leftcenter">
 
 				<div id="menu">
 					<div class="submenu">
 						<h3>O hře</h3>
-	
+
 						<ul>
 							<li><a href="{link Dashboard:}">...</a></li>
 						</ul>
 					</div>
 					<div class="submenu">
 						<h3>Účet</h3>
-	
+
 						<ul>
 							<li><a href="{link Homepage:}">Login</a></li>
 							<li><a href="{link Signup:}">Registrace</a></li>
@@ -74,17 +61,26 @@
 					</div>
 
 				</div>
-	
+
 				<div id="container">
-	
+
 					<div id="header">{block #header}&nbsp;{/block}</div>
 					{block #signup}{/block}
 				</div>
 			</div>
 
 			<div id="right">
-				<div id="content">
-					{block #login}{/block}
+				<div class="submenu">
+					<h3>Login</h3>
+						{block #login}{/block}
+				</div>
+
+				<div class="submenu">
+					<h3>Registrace</h3>
+						<ul>
+							<li><a href="{link Signup:}">Registrace</a></li>
+						</ul>
+
 				</div>
 
 

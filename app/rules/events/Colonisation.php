@@ -3,7 +3,7 @@ namespace Rules\Events;
 use Rules\AbstractRule;
 use Entities;
 
-class Colonisation extends AbstractRule implements IEvent
+class Colonisation extends AbstractRule implements IConstruction
 {
 	public function getDescription ()
 	{
@@ -29,5 +29,10 @@ class Colonisation extends AbstractRule implements IEvent
 			return $valid;
 		}
 		return FALSE;
+	}
+	
+	public function isExclusive ()
+	{
+		return TRUE;
 	}
 }

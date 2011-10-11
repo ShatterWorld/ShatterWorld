@@ -11,8 +11,12 @@ class Construction extends Event
 {
 	public function create ($values, $flush = TRUE)
 	{
-		if ($this->getRepository()->findPendingConstructions($values['owner'], $values['target'])) {
-			throw new MultipleConstructionsException;
+		if ($this->context->rules->get('event', $values['type'])->isExclusive()) {
+			foreach ($this->getRepository()->findPendingConstructions($values['owner'], $values['target']) as $construction) {
+				if ($this->context->rules->get('event', $construction->type)->isExclusive()) {
+					throw new MultipleConstructionsException;
+				}
+			}
 		}
 		parent::create($values, $flush);
 	}

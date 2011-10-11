@@ -221,13 +221,13 @@ jQuery.extend({
 				var attackDialog = $('<div />').attr('id', 'attackDialog')
 					.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div><br/>');
 
-				var table = $('<table id="units" />');
-				table.append('<tr><th>Jméno</th><th>Počet</th><th>Max</th></tr>');
+				var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
+				table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
 				attackDialog.append(table);
 				$.each(from['units'], function(key, unit){
 
 					var tr = $('<tr id="'+unit['id']+'" />');
-					tr.append('<td class="name">'+key+'</td><td class="count"><input type="text" name="'+key+'" /></td><td class="max">('+unit['count']+')</td>');
+					tr.append('<td class="name" style="width:100px">'+key+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
 					table.append(tr);
 					tr.children('.max').click(function(){
 						tr.children('.count').children('input').val(unit['count']);
@@ -241,7 +241,7 @@ jQuery.extend({
 
 				var tmp;
 				tmp = jQuery.cookie.get('#attackDialogWidth');
-				var w = (tmp !== null) ? tmp : 300;
+				var w = (tmp !== null) ? tmp : 200;
 
 				tmp = jQuery.cookie.get('#attackDialogHeight');
 				var h = (tmp !== null) ? tmp : 120;
@@ -332,20 +332,13 @@ jQuery.extend({
 											'targetId': target['id']
 										});
 
-									var counts = new Array();
-									var ids = new Array();
-
 									$.each(inputs, function(key, input){
 										var unitCount = $(input).val();
 										var unitId = $(trs[key+1]).attr('id');
 
-										counts.push(unitCount);
-										ids.push(unitId);
-
 										params += '&' + unitId + '=' + unitCount;
 
 									});
-
 
 									$.get(params,
 										function(){
