@@ -3,7 +3,7 @@ namespace Rules\Events;
 use Rules\AbstractRule;
 use Entities;
 
-class FacilityConstruction extends AbstractRule implements IEvent
+class FacilityConstruction extends AbstractRule implements IConstruction
 {
 	public function getDescription ()
 	{
@@ -24,5 +24,10 @@ class FacilityConstruction extends AbstractRule implements IEvent
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
 		return $event->target->owner == $clan && $event->level <= $this->getContext()->params['game']['stats']['facilityLevelCap'] &&
 			(($event->target->facility === $event->construction || ($event->target->facility === NULL && $event->level === 1)) && $event->target->level === ($event->level - 1));
+	}
+	
+	public function isExclusive ()
+	{
+		return TRUE;
 	}
 }

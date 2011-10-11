@@ -3,7 +3,7 @@ namespace Rules\Events;
 use Rules\AbstractRule;
 use Entities;
 
-class Abandonment extends AbstractRule implements IEvent
+class Abandonment extends AbstractRule implements IConstruction
 {
 	public function getDescription ()
 	{
@@ -20,5 +20,10 @@ class Abandonment extends AbstractRule implements IEvent
 	public function isValid (Entities\Event $event)
 	{
 		return $event->target->owner === $event->owner;
+	}
+	
+	public function isExclusive ()
+	{
+		return TRUE;
 	}
 }

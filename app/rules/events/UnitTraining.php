@@ -4,7 +4,7 @@ use Rules\AbstractRule;
 use Nette\Utils\Json;
 use Entities;
 
-class UnitTraining extends AbstractRule implements IEvent
+class UnitTraining extends AbstractRule implements IConstruction
 {
 	public function getDescription ()
 	{
@@ -19,5 +19,10 @@ class UnitTraining extends AbstractRule implements IEvent
 	public function isValid (Entities\Event $event)
 	{
 		return TRUE;
+	}
+	
+	public function isExclusive ()
+	{
+		return FALSE;
 	}
 }
