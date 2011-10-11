@@ -13,7 +13,26 @@ jQuery.extend({
 				jQuery.descriptions.fetching = false;
 			})
 		},
+/*
+	div = $('<div id = "militia" />');
+	get('unit','militia',div);
 
+		get: function (type, key, object) {
+			this.data.addFetchedLstener(function(e){
+
+				var res;
+	
+				if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
+					res = jQuery.descriptions.data[type][key];
+				}
+				else {
+					res =  key;
+				}
+
+				object.html(res);
+			});
+		},
+*/
 		get: function (type, key) {
 			/*while (this.fetching){
 				this.wait();

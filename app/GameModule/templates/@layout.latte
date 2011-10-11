@@ -78,6 +78,22 @@
 			</div>
 
 			<div id="menu">
+
+
+				{if $user->isAllowed('administration')}
+				<div class="submenu active">
+					<h3>Testing</h3>
+					<ul>
+						<li><a href="{link createUser!}">Generuj klan</a></li>
+						<li><a href="{link create10Users!}">Generuj 10 klanů</a></li>
+						<li><a href="{link create100Users!}">Generuj 100 klanů</a></li>
+						<li><a href="{link :Admin:Dashboard:}">Administrace</a></li>
+
+					</ul>
+				</div>
+				
+
+				{/if}
 				<div class="submenu{ifCurrent Clan:*} active{/ifCurrent}">
 					<h3>Klan</h3>
 					<ul>
@@ -87,10 +103,6 @@
 							<li><a href="{link Clan:}">Přehled</a></li>
 							<li><a href="{link Clan:delete}">Smazat</a></li>
 						{/if}
-						<li><a href="{link createUser!}">Generuj klan</a></li>
-						<li><a href="{link create10Users!}">Generuj 10 klanů</a></li>
-						<li><a href="{link create100Users!}">Generuj 100 klanů</a></li>
-
 
 					</ul>
 				</div>
