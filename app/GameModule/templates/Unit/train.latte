@@ -37,7 +37,6 @@
 					{ifset $cost['food']}{?$food = $cost['food']}{/ifset}
 					{ifset $cost['fuel']}{?$fuel = $cost['fuel']}{/ifset}
 
-					{dump $cost}
 					<tr data-costs= "[{$metal}, {$stone}, {$food}, {$fuel}]">
 						<th class="name">{label $name /}</th>
 						<td class="force">

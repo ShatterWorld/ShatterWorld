@@ -8,10 +8,9 @@ use InsufficientResourcesException;
 
 class UnitPresenter extends BasePresenter
 {
-
-
 	public function renderDefault ()
 	{
+		$this->template->registerHelper('getDescription', callback($this, 'getUnitDescription'));
 		$this->template->units = $this->getClanUnits();
 	}
 
@@ -19,7 +18,6 @@ class UnitPresenter extends BasePresenter
 	{
 		$this->template->units = $this->context->rules->getAll('unit');
 	}
-
 
 	protected function createComponentTrainUnitForm ()
 	{
@@ -29,7 +27,7 @@ class UnitPresenter extends BasePresenter
 		$units = $this->context->rules->getAll('unit');
 
 		foreach ($units as $name => $unit){
-			$form->addText($name, $name)
+			$form->addText($name, $unit->getDescription())
 				->addCondition(Form::FILLED)
 				->addRule(Form::INTEGER, 'Počet jednotek musí být celé číslo')
 				->addRule(Form::RANGE, 'Počet jednotek musí být kladné číslo', array(0, NULL));
@@ -66,11 +64,11 @@ class UnitPresenter extends BasePresenter
 
 		}
 
-
-
 		$this->redirect('Unit:Train');
-
 	}
-
-
+	
+	public function getUnitDescription ($type)
+	{
+		return $this->context->rules->get('unit', $type)->getDescription();
+	}
 }

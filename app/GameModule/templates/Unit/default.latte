@@ -11,7 +11,7 @@
 		</tr>
 		{foreach $units as $unit}
 			<tr>
-				<td>{$unit->type}</td>
+				<td>{$unit->type|getDescription}</td>
 				<td>{$unit->count}</td>
 			</tr>
 		{/foreach}
