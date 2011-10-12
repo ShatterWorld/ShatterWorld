@@ -14,9 +14,11 @@
 
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/general.css" />
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/front.css" />
-
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/flashes.css" />
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui.css" />
+
+		<script type="text/javascript" src="{$basePath}/js/flashes.js"></script>
+
 
 	</head>
 
@@ -45,34 +47,27 @@
 
 				<div id="menu">
 					<div class="submenu">
-						<h3>O hře</h3>
+						<h3>Aktuality</h3>
 
 						<ul>
-							<li><a href="{link Dashboard:}">...</a></li>
+							<li><a href="{link Homepage:}">Aktuality</a></li>
 						</ul>
 					</div>
-					<div class="submenu">
-						<h3>Účet</h3>
 
-						<ul>
-							<li><a href="{link Homepage:}">Login</a></li>
-							<li><a href="{link Signup:}">Registrace</a></li>
-						</ul>
-					</div>
 
 				</div>
 
 				<div id="container">
 
 					<div id="header">{block #header}&nbsp;{/block}</div>
-					{block #signup}{/block}
+					{block #content}{/block}
 				</div>
 			</div>
 
 			<div id="right">
 				<div class="submenu">
 					<h3>Login</h3>
-						{block #login}{/block}
+					{control loginForm}
 				</div>
 
 				<div class="submenu">

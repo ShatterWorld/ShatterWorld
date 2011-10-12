@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 * {
 	padding: 0px;
 	margin: 0px auto;
@@ -33,8 +32,6 @@ a:hover {
 	position: relative;
 }
 
-=======
->>>>>>> c561672bf2ec3bf2072eb005c79a8c6724386aa8
 #leftcenter {
 	float : left;
 }
@@ -43,7 +40,6 @@ a:hover {
 	float : right;
 	width : 200px;
 }
-<<<<<<< HEAD
 
 
 #infoBar {
@@ -188,9 +184,9 @@ a:hover {
 	display: none;
 	/*padding-left: 15px;
 	margin-bottom: 10px;*/
-=======
+}
+
 #container {
 	width: 495px;
 	margin-right: 0px;
->>>>>>> c561672bf2ec3bf2072eb005c79a8c6724386aa8
 }
