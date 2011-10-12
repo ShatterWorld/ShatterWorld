@@ -12,5 +12,11 @@ class Pillaging extends Attack
 	public function process (Entities\Event $event)
 	{
 		$result = $this->evaluateBattle($event);
+		return $result;
+	}
+	
+	public function formatReport ($data)
+	{
+		return $data;
 	}
 }

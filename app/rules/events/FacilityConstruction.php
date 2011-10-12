@@ -17,6 +17,7 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 			'level' => $event->level
 		));
 		$this->getContext()->model->getResourceService()->recalculateProduction($event->owner, $event->term);
+		return array();
 	}
 	
 	public function isValid (Entities\Event $event)
@@ -24,6 +25,11 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
 		return $event->target->owner == $clan && $event->level <= $this->getContext()->params['game']['stats']['facilityLevelCap'] &&
 			(($event->target->facility === $event->construction || ($event->target->facility === NULL && $event->level === 1)) && $event->target->level === ($event->level - 1));
+	}
+	
+	public function formatReport ($data)
+	{
+		return $data;
 	}
 	
 	public function isExclusive ()

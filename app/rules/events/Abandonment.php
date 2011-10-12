@@ -15,11 +15,17 @@ class Abandonment extends AbstractRule implements IConstruction
 		$event->target->setOwner(NULL);
 		$event->target->setFacility(NULL);
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
+		return array();
 	}
 	
 	public function isValid (Entities\Event $event)
 	{
 		return $event->target->owner === $event->owner;
+	}
+	
+	public function formatReport ($data)
+	{
+		return $data;
 	}
 	
 	public function isExclusive ()

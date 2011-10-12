@@ -14,6 +14,7 @@ class Colonisation extends AbstractRule implements IConstruction
 	{
 		$event->target->setOwner($event->owner);
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
+		return array();
 	}
 	
 	public function isValid (Entities\Event $event)
@@ -29,6 +30,11 @@ class Colonisation extends AbstractRule implements IConstruction
 			return $valid;
 		}
 		return FALSE;
+	}
+	
+	public function formatReport ($data)
+	{
+		return $data;
 	}
 	
 	public function isExclusive ()

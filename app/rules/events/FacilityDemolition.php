@@ -18,12 +18,18 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 		}
 		$this->getContext()->model->getFieldService()->update($event->target, $changes);
 		$this->getContext()->model->getResourceService()->recalculateProduction($event->owner, $event->term);
+		return array();
 	}
 	
 	public function isValid (Entities\Event $event)
 	{
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
 		return $event->target->owner == $clan && ($event->level === 0 || ($event->target->level - 1 === $event->level));
+	}
+	
+	public function formatReport ($data)
+	{
+		return $data;
 	}
 	
 	public function isExclusive ()

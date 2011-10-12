@@ -9,9 +9,9 @@ use Entities;
 interface IEvent extends \Rules\IRule {
 	
 	/**
-	 * Process the event
+	 * Process the event and return report data
 	 * @param Entities\Event
-	 * @return void
+	 * @return array|object
 	 */
 	public function process (Entities\Event $event);
 	
@@ -21,4 +21,11 @@ interface IEvent extends \Rules\IRule {
 	 * @return bool
 	 */
 	public function isValid (Entities\Event $event);
+	
+	/**
+	 * Formats report data into a whatever TODO: decide about the format
+	 * @param object
+	 * @return string
+	 */
+	public function formatReport ($data);
 }

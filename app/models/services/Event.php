@@ -34,7 +34,11 @@ class Event extends BaseService
 			foreach ($this->getRepository()->findPendingEvents($userId, $timeout) as $event) {
 				$eventRule = $this->context->rules->get('event', $event->type);
 				if ($eventRule->isValid($event)) {
-					$eventRule->process($event);
+					$report = $eventRule->process($event);
+					$this->context->model->getReportService()->create(array(
+						'event' => $event,
+						'data' => $report
+					));
 				} else {
 					$this->update($event, array('failed' => TRUE), FALSE);
 				}
