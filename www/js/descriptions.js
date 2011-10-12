@@ -1,90 +1,83 @@
 jQuery.extend({
 	descriptions: {
+		/**
+		 * Translated descriptions
+		 * @var JSON
+		 */
 		data: null,
 
-		period : 250,
+		/**
+		 * Stack of waiting trans. functions
+		 * @var array of functions
+		 */
+		describeFunctions : new Array(),
 
-		fetching : false,
+		/**
+		 * True if fetching is in progress, false otherwise
+		 * @var boolean
+		 */
+		isFetching : true,
 
-		fetchDescriptions: function () {
-			this.fetching = true;
-			$.get('?do=fetchDescriptions', function (data) {
-				jQuery.descriptions.data = data['descriptions'];
-				jQuery.descriptions.fetching = false;
-			})
-		},
-/*
-	div = $('<div id = "militia" />');
-	get('unit','militia',div);
+		/**
+		 * Fetches descriptions
+		 * @return void
+		 */
+		fetchDescriptions : function () {
+			this.isFetching=true;
+			$.get('?do=fetchDescriptions',
+				function (data) {
+					jQuery.descriptions.data = data['descriptions'];
+					jQuery.descriptions.isFetching = false;
 
-		get: function (type, key, object) {
-			this.data.addFetchedLstener(function(e){
-
-				var res;
-	
-				if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
-					res = jQuery.descriptions.data[type][key];
-				}
-				else {
-					res =  key;
-				}
-
-				object.html(res);
-			});
-		},
-*/
-		get: function (type, key) {
-			/*while (this.fetching){
-				this.wait();
-			}*/
-
-/*
-			var res = this.delayedExecution(
-				this.period,
-				function (){
-					return jQuery.descriptions.data != null ? true : false;
-				},*/
-				/*
-				function (type, key) {
-					//alert('data '+jQuery.descriptions.data+'; type '+type+'; key '+key);
-					if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
-						return jQuery.descriptions.data[type][key];
-					} else {
-						return key;
+					while (fnc = jQuery.descriptions.describeFunctions.pop()){
+						fnc();
 					}
-				},*/
-				/*
-				jQuery.descriptions.innerGet,
-				type,
-				key
-				);
-
-			alert(res);
-			return res;*/
 
 
-			if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
-				return jQuery.descriptions.data[type][key];
-			} else {
-				return key;
-			}
-
+				});
 		},
 
-		delayedExecution : function(delay, condition, fnc, type, key)
-		{
-			var interval = setInterval(function () {
-				//alert('delay');
-				if(condition()) {
-					clearInterval(interval);
-					return fnc(type, key);
+		/**
+		 * Translates key phrase of type type and prints it to the selector
+		 * @param string
+		 * @param string
+		 * @param object/string
+		 * @return void
+		 */
+		translate : function (type, key, selector){
+
+			if (this.isFetching || this.data == null){
+				this.describeFunctions.push(function(){
+					var trans = jQuery.descriptions.data[type][key];
+					if (typeof(trans) !== 'undefined' && trans !== 'undefined') {
+						$(selector).html(trans);
+					} else {
+						$(selector).html(key);
+					}
+				});
+
+			}
+			else{
+				var trans = jQuery.descriptions.data[type][key];
+				if (typeof(trans) !== 'undefined' && trans !== 'undefined') {
+					$(selector).html(trans);
+				} else {
+					$(selector).html(key);
 				}
-			}, delay);
+
+			}
+
+
 		},
 
-
-
-		innerGet: function (type, key) {
+		/**
+		 * Returns the translated key phrase
+		 * @deprecated
+		 * @param string
+		 * @param string
+		 * @return string
+		 */
+		get: function (type, key) {
 			if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
 				return jQuery.descriptions.data[type][key];
 			} else {
@@ -92,20 +85,7 @@ jQuery.extend({
 			}
 
 		},
-/*
-		wait : function(time, type){
-			time = time || 1000;
-			type = type || "fx";
-			return this.queue(type, function() {
-				var self = this;
-				setTimeout(function() {
-					$(self).dequeue();
-				}, time);
-			});
 
-
-
-		}*/
 
 
 	}
