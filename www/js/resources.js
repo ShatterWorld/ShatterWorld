@@ -8,9 +8,38 @@
  */
 jQuery.extend({
 	resources: {
-
 		data: null,
-
+		
+		initialized: false,
+		
+		setup: function ()
+		{
+			var keys = new Array();
+			$.each(this.data, function (key, value) {
+				keys.push(key);
+			});
+			keys.sort();
+			var first = true;
+			$('#resourceBar').html('');
+			$.each(keys, function() {
+				var element = $('<span />').attr('id', this);
+				element.html(first ? '' : '| ');
+				element.append('<span class="label"></span>: <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
+				$('#resourceBar').append(element);
+				jQuery.descriptions.translate('resource', this, '#resourceBar #' + this + ' .label');
+				first = false;
+			})
+			this.update();
+			this.initialized = true;
+		},
+		
+		update: function ()
+		{
+			$.each(this.data, function (resource, value) {
+				jQuery.resources.incrementResource(resource, $('#resourceBar #' + resource));
+			})
+		},
+		
 		/**
 		  * Fetches clans resources
 		  * @return void
@@ -23,22 +52,11 @@ jQuery.extend({
 				}
 
 				jQuery.resources.data = data['resources'];
-				var first = true;
-				$.each(data['resources'], function (key, value) {
-					if ($('#resourceBar #' + key).length > 0) {
-						var element = $('#resourceBar #' + key);
-					} else {
-						//var element = $('<span>').attr('id', key).html((!first ? '| ' : '') +  ': <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
-						var element = $('<span />').attr('id', key);
-						element.html(first ? '' : '| ');
-						element.append('<span id="label'+key+'"></span>: <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
-					}
-
-					jQuery.descriptions.translate('resource', key, '#label'+key);
-					$('#resourceBar').append(element);
-					first = false;
-					jQuery.resources.incrementResource(key, element);
-				});
+				if (!jQuery.resources.initialized) {
+					jQuery.resources.setup();
+				} else {
+					jQuery.resources.update();
+				}
 			});
 		},
 

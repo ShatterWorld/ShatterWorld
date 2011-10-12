@@ -45,7 +45,6 @@ jQuery.extend({
 		 * @return void
 		 */
 		translate : function (type, key, selector){
-
 			if (this.isFetching || this.data == null){
 				this.describeFunctions.push(function(){
 					var trans = jQuery.descriptions.data[type][key];
