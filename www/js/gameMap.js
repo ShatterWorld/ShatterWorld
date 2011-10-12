@@ -222,6 +222,8 @@ jQuery.extend({
 						});
 
 						var text = $('<div class="text" />');
+						var fieldLabel = $('<span />');
+
 						text.css({
 							'font-size' : '75%',
 							'text-align' : 'center',
@@ -232,7 +234,8 @@ jQuery.extend({
 
 						if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
 							if (field['facility'] !== null){
-								text.append(jQuery.descriptions.get('facility', field['facility']));
+								text.append(fieldLabel);
+								jQuery.descriptions.translate('facility', field['facility'], fieldLabel);
 								if(field['facility'] !== 'headquarters'){
 									text.append(' ('+field['level']+')');
 								}
@@ -294,10 +297,10 @@ jQuery.extend({
 							}
 
 							$("#fieldInfo #coords").html(coords);
-							$("#fieldInfo #type").html(jQuery.descriptions.get('field', type));
+							jQuery.descriptions.translate('field', type, "#fieldInfo #type");
 							$("#fieldInfo #owner").html(owner);
 							$("#fieldInfo #alliance").html(alliance);
-							$("#fieldInfo #facility").html(jQuery.descriptions.get('facility', facility));
+							jQuery.descriptions.translate('facility', facility, "#fieldInfo #facility");
 							$("#fieldInfo #level").html(level);
 
 						});

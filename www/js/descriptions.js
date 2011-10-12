@@ -69,24 +69,6 @@ jQuery.extend({
 
 		},
 
-		/**
-		 * Returns the translated key phrase
-		 * @deprecated
-		 * @param string
-		 * @param string
-		 * @return string
-		 */
-		get: function (type, key) {
-			if (jQuery.descriptions.data !== null && typeof(jQuery.descriptions.data[type][key]) !== 'undefined') {
-				return jQuery.descriptions.data[type][key];
-			} else {
-				return key;
-			}
-
-		},
-
-
-
 	}
 });
 
