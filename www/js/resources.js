@@ -28,8 +28,13 @@ jQuery.extend({
 					if ($('#resourceBar #' + key).length > 0) {
 						var element = $('#resourceBar #' + key);
 					} else {
-						var element = $('<span>').attr('id', key).html((!first ? '| ' : '') + jQuery.descriptions.get('resource', key) + ': <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
+						//var element = $('<span>').attr('id', key).html((!first ? '| ' : '') +  ': <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
+						var element = $('<span />').attr('id', key);
+						element.html(first ? '' : '| ');
+						element.append('<span id="label'+key+'"></span>: <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
 					}
+
+					jQuery.descriptions.translate('resource', key, '#label'+key);
 					$('#resourceBar').append(element);
 					first = false;
 					jQuery.resources.incrementResource(key, element);
