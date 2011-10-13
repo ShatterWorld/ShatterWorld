@@ -10,7 +10,7 @@ jQuery.extend({
 		 * Stack of waiting trans. functions
 		 * @var array of functions
 		 */
-		describeFunctions : new Array(),
+		callbackStack : new Array(),
 
 		/**
 		 * True if fetching is in progress, false otherwise
@@ -29,7 +29,7 @@ jQuery.extend({
 					jQuery.descriptions.data = data['descriptions'];
 					jQuery.descriptions.isFetching = false;
 
-					while (fnc = jQuery.descriptions.describeFunctions.pop()){
+					while (fnc = jQuery.descriptions.callbackStack.pop()){
 						fnc();
 					}
 
@@ -46,7 +46,7 @@ jQuery.extend({
 		 */
 		translate : function (type, key, selector){
 			if (this.isFetching || this.data == null){
-				this.describeFunctions.push(function(){
+				this.callbackStack.push(function(){
 					var trans = jQuery.descriptions.data[type][key];
 					if (typeof(trans) !== 'undefined' && trans !== 'undefined') {
 						$(selector).html(trans);

@@ -21,9 +21,22 @@ jQuery.extend({
 				var food = $(td).parent().data()['costs'][2];
 				var fuel = $(td).parent().data()['costs'][3];
 
-				var n = jQuery.resources.getAvailibleUnits(metal, stone, food, fuel);
+				var countSpan = $('<span />').html('');
+				$(td).html('(');
+				$(td).append(countSpan);
+				$(td).append(')');
 
-				alert(n);
+				jQuery.resources.printAvailableUnitCount(metal, stone, food, fuel, countSpan);
+
+				$(td).click(function(){
+					$(td).parent().children('.amount').children('input').val(countSpan.html());
+				});
+
+				$(td).css({
+					'cursor': 'pointer',
+					'text-decoration' : 'underline'
+				});
+
 			});
 		}
 

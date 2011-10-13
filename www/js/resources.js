@@ -8,10 +8,34 @@
  */
 jQuery.extend({
 	resources: {
+		/**
+		 * Data of resources
+		 * @var object
+		 */
 		data: null,
-		
+
+		/**
+		 * True if init., false otherwise
+		 * @var boolean
+		 */
 		initialized: false,
-		
+
+		/**
+		 * Stack of waiting trans. functions
+		 * @var array of functions
+		 */
+		callbackStack : new Array(),
+
+		/**
+		 * True if fetching is in progress, false otherwise
+		 * @var boolean
+		 */
+		isFetching : true,
+
+		/**
+		 * Sets up data attributes etc.
+		 * @return void
+		 */
 		setup: function ()
 		{
 			var keys = new Array();
@@ -32,20 +56,25 @@ jQuery.extend({
 			this.update();
 			this.initialized = true;
 		},
-		
+
+		/**
+		 * Updates data
+		 * @return void
+		 */
 		update: function ()
 		{
 			$.each(this.data, function (resource, value) {
 				jQuery.resources.incrementResource(resource, $('#resourceBar #' + resource));
 			})
 		},
-		
+
 		/**
 		  * Fetches clans resources
 		  * @return void
 		  */
 		fetchResources: function ()
 		{
+			this.isFetching=true;
 			$.getJSON('?do=fetchResources', function(data) {
 				if (data === null || data['resources'] === null){
 					return;
@@ -57,6 +86,13 @@ jQuery.extend({
 				} else {
 					jQuery.resources.update();
 				}
+
+				jQuery.descriptions.isFetching = false;
+
+				while (fnc = jQuery.resources.callbackStack.pop()){
+					fnc();
+				}
+
 			});
 		},
 
@@ -111,40 +147,62 @@ jQuery.extend({
 		},
 
 		/**
-		  * Returns maximal amount of the unit specified by costs
+		  * Prints the count of available units ready to be trained into the selector, depanding on their costs
+		  * @deprecated
 		  * @param int
 		  * @param int
 		  * @param int
 		  * @param int
-		  * @return int
+		  * @param String/Object
+		  * @return void
 		  */
-		getAvailibleUnits : function(metal, stone, food, fuel){
-			var tmp;
-			var min = 999999999999;
+		printAvailableUnitCount : function (metal, stone, food, fuel, selector){
+			if (this.isFetching || this.data == null){
+				this.callbackStack.push(function(){
 
-			tmp = Math.floor(this.data['metal'].balance / metal);
-			if (tmp > min){
-				min = tmp;
+					var metalMin = (metal > 0) ? Math.floor(jQuery.resources.data['metal'].balance / metal) : -1;
+					var stoneMin = (stone > 0) ? Math.floor(jQuery.resources.data['stone'].balance / stone) : -1;
+					var foodMin = (food > 0) ? Math.floor(jQuery.resources.data['food'].balance / food) : -1;
+					var fuelMin = (fuel > 0) ? Math.floor(jQuery.resources.data['fuel'].balance / fuel) : -1;
+
+					var max = Math.max(metalMin, Math.max(stoneMin, Math.max(foodMin, fuelMin)));
+					var min;
+
+					if (max >= 0){
+						min = Math.min((metalMin <= 0) ? max : metalMin, Math.min((stoneMin <= 0) ? max : stoneMin, Math.min((foodMin <= 0) ? max : foodMin, (fuelMin <= 0) ? max : fuelMin)));
+					}
+					else{
+						min = 0;
+					}
+
+					$(selector).html(min);
+				});
+
+			}
+			else{
+				var metalMin = (metal > 0) ? Math.floor(jQuery.resources.data['metal'].balance / metal) : -1;
+				var stoneMin = (stone > 0) ? Math.floor(jQuery.resources.data['stone'].balance / stone) : -1;
+				var foodMin = (food > 0) ? Math.floor(jQuery.resources.data['food'].balance / food) : -1;
+				var fuelMin = (fuel > 0) ? Math.floor(jQuery.resources.data['fuel'].balance / fuel) : -1;
+
+				var max = Math.max(metalMin, Math.max(stoneMin, Math.max(foodMin, fuelMin)));
+				var min;
+
+				if (max >= 0){
+					min = Math.min((metalMin <= 0) ? max : metalMin, Math.min((stoneMin <= 0) ? max : stoneMin, Math.min((foodMin <= 0) ? max : foodMin, (fuelMin <= 0) ? max : fuelMin)));
+				}
+				else{
+					min = 0;
+				}
+
+				$(selector).html(min);
+
 			}
 
-			tmp = Math.floor(this.data['stone'].balance / stone);
-			if (tmp > min){
-				min = tmp;
-			}
 
-			tmp = Math.floor(this.data['food'].balance / food);
-			if (tmp > min){
-				min = tmp;
-			}
+		},
 
-			tmp = Math.floor(this.data['fuel'].balance / fuel);
-			if (tmp > min){
-				min = tmp;
-			}
 
-			return min;
-
-		}
 	}
 });
 
