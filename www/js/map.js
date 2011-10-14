@@ -999,7 +999,7 @@ Game.map.contextMenu = {
 			$('#contextMenu').html('Budovy:');
 
 			$.each(Game.map.contextMenu.facilities, function(name, facility) {
-				var facilityDiv = Game.map.contextMenu.basicActionDiv.clone().html(name)
+				var facilityDiv = Game.map.contextMenu.basicActionDiv.clone();
 				if (Game.resources.hasSufficientResources(facility['cost'])){
 
 					facilityDiv.click(function(){
@@ -1020,11 +1020,11 @@ Game.map.contextMenu = {
 							}
 						);
 					});
-				}
-				else{
+				} else {
 					facilityDiv.css('text-decoration', 'line-through');
 				}
 				Game.map.contextMenu.contextMenu.append(facilityDiv);
+				Game.descriptions.translate('facility', name, facilityDiv);
 
 			});
 
