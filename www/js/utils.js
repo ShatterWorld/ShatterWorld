@@ -23,7 +23,10 @@ Game.utils = {
 			x: Math.floor( globalX - position.left ),
 			y: Math.floor( globalY - position.top )
 		});
+	},
+	
+	isset: function (variable)
+	{
+		return typeof(variable) !== 'undefined';
 	}
-
-
 };
