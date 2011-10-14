@@ -48,7 +48,7 @@ Game.descriptions = {
 		if (this.isFetching || this.data == null){
 			this.callbackStack.push(function(){
 				var trans = Game.descriptions.data[type][key];
-				if (typeof(trans) !== 'undefined' && trans !== 'undefined') {
+				if (Game.utils.isset(trans) && trans !== 'undefined') {
 					$(selector).html(trans);
 				} else {
 					$(selector).html(key);
@@ -58,7 +58,7 @@ Game.descriptions = {
 		}
 		else{
 			var trans = Game.descriptions.data[type][key];
-			if (typeof(trans) !== 'undefined' && trans !== 'undefined') {
+			if (Game.utils.isset(trans) && trans !== 'undefined') {
 				$(selector).html(trans);
 			} else {
 				$(selector).html(key);

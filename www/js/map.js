@@ -91,7 +91,7 @@ Game.map = {
 	 */
 	nullDisabledFields : function(){
 		this.disabledFields = new Array();
-		Game.marker.unmarkAll('brown');
+		Game.map.marker.unmarkAll('brown');
 	},
 
 	/**
@@ -124,7 +124,7 @@ Game.map = {
 		 * case (div.data-disabled) -> mark/label/img //==type
 		 *
 		 * */
-		Game.marker.mark(div, 'brown');
+		Game.map.marker.mark(div, 'brown');
 
 
 	},
@@ -136,7 +136,7 @@ Game.map = {
 	render : function () {
 
 		$('#map').html('');
-		Game.fieldInfo.append('#content');
+		Game.map.tooltip.append('#content');
 
 		Game.spinner.show('#mapContainer');
 		Game.map.contextMenu.fetchFacilities();
@@ -253,7 +253,7 @@ Game.map = {
 							return;
 						}
 
-						Game.fieldInfo.show();
+						Game.map.tooltip.show();
 
 						var secret = '???';
 						var none = '---';
@@ -311,7 +311,7 @@ Game.map = {
 					 * @return void
 					 */
 					div.mouseleave(function(){
-						Game.fieldInfo.hide();
+						Game.map.tooltip.hide();
 					});
 
 
@@ -329,7 +329,7 @@ Game.map = {
 						var leftPos = localCoordinates.x + 30 - $('#mapContainer').scrollLeft();
 						var topPos = localCoordinates.y + 30 - $('#mapContainer').scrollTop();
 
-						Game.fieldInfo.position(leftPos, topPos);
+						Game.map.tooltip.position(leftPos, topPos);
 					});
 
 					/**
@@ -340,13 +340,13 @@ Game.map = {
 
 						if(Game.map.contextMenu.contextMenuShown){
 							Game.map.contextMenu.hide();
-							Game.marker.unmarkAll('red');
+							Game.map.marker.unmarkAll('red');
 							return;
 						}
 
 						if(Game.map.contextMenu.initialField === null || Game.map.contextMenu.action === null){
 							Game.map.contextMenu.initialField = field;
-							Game.marker.mark(div, 'red');
+							Game.map.marker.mark(div, 'red');
 							Game.map.contextMenu.show(div, e, field, data);
 						}
 						else if(Game.map.contextMenu.action == "attackSelect2nd"){
@@ -355,7 +355,7 @@ Game.map = {
 						else{
 							Game.map.contextMenu.action(Game.map.contextMenu.initialField, field);
 							Game.map.contextMenu.hide();
-							Game.marker.unmarkAll('red');
+							Game.map.marker.unmarkAll('red');
 						}
 					});
 
@@ -391,6 +391,129 @@ Game.map = {
 	 */
 	calculateYPos : function (field) {
 		return (field['coordX'] * -20) + (field['coordY'] * 19);
+	}
+};
+
+Game.map.marker = {
+	/**
+	 * Number of marked fields
+	 * @var integer
+	 */
+	markedFields : 0,
+
+	/**
+	 * Returns object representing the marker
+	 * @return object
+	 */
+	getMarkerImage : function () {return $('<img class="marker" />').attr('src', this.getBasepath() + '/images/fields/marker.png');},
+
+	/**
+	 * The size of the marker
+	 * @var integer
+	 */
+	size : 5,
+
+	mark : function (field, color) {
+		$(field).drawEllipse(this.size, this.size, Game.map.fieldWidth-2*this.size, Game.map.fieldHeight-2*this.size, {color: color, stroke: this.size});
+		$(field).attr('class', 'markedField'+color);
+		/*todo:
+		 * rozdělit dle barev
+		 * */
+	},
+
+	/**
+	 * Unmarks all fields and sets click to zero
+	 * @return void
+	 */
+	unmarkAll : function(color){
+		$('.markedField'+color+' canvas').remove();
+		$('.markedField'+color).attr('class', 'field');
+		this.markedFields = 0;
+		this.initialField = null;
+	}
+};
+
+Game.map.tooltip = {
+	/**
+	 * @var object represents field info
+	 */
+	element :  $('<div id="fieldInfo" />')
+		.append('<table>')
+
+		.append('<tr>')
+		.append('<th>Souřadnice</th><td id="coords"></td>')
+		.append('</tr>')
+
+		.append('<tr>')
+		.append('<th>Typ</th><td id="type"></td>')
+		.append('</tr>')
+
+		.append('<tr>')
+		.append('<th>Vlastník</th><td id="owner"></td>')
+		.append('</tr>')
+
+		.append('<tr>')
+		.append('<th>Aliance</th><td id="alliance"></td>')
+		.append('</tr>')
+
+		.append('<tr>')
+		.append('<th>Budova</th><td id="facility"></td>')
+		.append('</tr>')
+
+		.append('<tr>')
+		.append('<th>Úroveň</th><td id="level"></td>')
+		.append('</tr>')
+
+		.append('</table>')
+
+		.css({
+			'background' : '#5D6555',
+			'color' : 'white',
+			'border' : '1px solid white',
+			'padding' : '3px',
+			'min-width' : '180px',
+			'position' : 'absolute',
+			'z-index' : '99999999999999999',
+			'display' : 'none',
+			'-ms-filter' : "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)",
+			'-moz-opacity' : '0.9',
+			'opacity' : '0.9'
+	}),
+
+	/**
+	 * Displays the info
+	 * @return void
+	 */
+	show : function(){
+		this.element.show();
+	},
+
+	/**
+	 * Hides the info
+	 * @return void
+	 */
+	hide : function(){
+		this.element.hide();
+	},
+
+	/**
+	 * Positions the info
+	 * @param integer
+	 * @param integer
+	 * @return void
+	 */
+	position : function(left, top){
+		$('#fieldInfo').css("left", left + 'px');
+		$('#fieldInfo').css("top", top + 'px');
+	},
+
+	/**
+	 * Appends the info to the target
+	 * @param object/strng
+	 * @return void
+	 */
+	append : function(target){
+		$(target).append(this.element);
 	}
 };
 
@@ -530,7 +653,7 @@ Game.map.contextMenu = {
 		}
 		//other neutral
 		else {
-			Game.marker.unmarkAll('red');
+			Game.map.marker.unmarkAll('red');
 			this.hide();
 			return;
 		}
@@ -575,7 +698,7 @@ Game.map.contextMenu = {
 							function(){
 								Game.events.fetchEvents();
 								Game.resources.fetchResources();
-								Game.marker.unmarkAll('red');
+								Game.map.marker.unmarkAll('red');
 								Game.map.addDisabledField(target);
 								Game.spinner.hide();
 								Game.map.contextMenu.hide();
@@ -664,8 +787,8 @@ Game.map.contextMenu = {
 					Game.cookie.set('#attackDialogHeight', $(attackDialog).dialog("option", "height"), 7);
 				},
 				beforeClose: function(event, ui) {
-					Game.marker.unmarkAll('yellow');
-					Game.marker.unmarkAll('red');
+					Game.map.marker.unmarkAll('yellow');
+					Game.map.marker.unmarkAll('red');
 					Game.map.contextMenu.action = null;
 				}
 			});
@@ -695,8 +818,8 @@ Game.map.contextMenu = {
 			var targetX = $('#attackDialog #targetX');
 			var targetY = $('#attackDialog #targetY');
 
-			Game.marker.unmarkAll('yellow');
-			Game.marker.mark(div, 'yellow');
+			Game.map.marker.unmarkAll('yellow');
+			Game.map.marker.mark(div, 'yellow');
 			targetX.html(target['coordX']);
 			targetY.html(target['coordY']);
 
@@ -768,7 +891,7 @@ Game.map.contextMenu = {
 						function(){
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
-							Game.marker.unmarkAll('red');
+							Game.map.marker.unmarkAll('red');
 							Game.map.addDisabledField(target);
 							Game.spinner.hide();
 							Game.map.contextMenu.hide();
@@ -806,7 +929,7 @@ Game.map.contextMenu = {
 						function(){
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
-							Game.marker.unmarkAll('red');
+							Game.map.marker.unmarkAll('red');
 							Game.map.addDisabledField(target);
 							Game.spinner.hide();
 							Game.map.contextMenu.hide();
@@ -845,7 +968,7 @@ Game.map.contextMenu = {
 						function(){
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
-							Game.marker.unmarkAll('red');
+							Game.map.marker.unmarkAll('red');
 							Game.map.addDisabledField(target);
 							Game.spinner.hide();
 							Game.map.contextMenu.hide();
@@ -890,7 +1013,7 @@ Game.map.contextMenu = {
 							function(data){
 								Game.events.fetchEvents();
 								Game.resources.fetchResources();
-								Game.marker.unmarkAll('red');
+								Game.map.marker.unmarkAll('red');
 								Game.map.addDisabledField(target);
 								Game.spinner.hide();
 								Game.map.contextMenu.hide();
@@ -929,7 +1052,7 @@ Game.map.contextMenu = {
 				}),
 				function(){
 					Game.events.fetchEvents();
-					Game.marker.unmarkAll('red');
+					Game.map.marker.unmarkAll('red');
 					Game.map.addDisabledField(target);
 					Game.spinner.hide();
 					Game.map.contextMenu.hide();
@@ -948,7 +1071,7 @@ Game.map.contextMenu = {
 	addCancelAction: function (){
 		var actionDiv = this.basicActionDiv.clone().html('Zrušit');
 		actionDiv.click(function(){
-			Game.marker.unmarkAll('red');
+			Game.map.marker.unmarkAll('red');
 			Game.map.contextMenu.hide();
 		});
 

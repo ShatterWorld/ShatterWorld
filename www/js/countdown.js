@@ -39,13 +39,13 @@ Game.countdown = {
 
 		var coord = '';
 		if (x >= 0 && y >= 0){
-			if (typeof(Game.map) != 'undefined'){
+			if (Game.utils.isset(Game.map)){
 				countdownTr.mouseenter(function(){
-					Game.marker.mark('#field_' + x + '_' + y, 'blue');
+					Game.map.marker.mark('#field_' + x + '_' + y, 'blue');
 				});
 
 				countdownTr.mouseleave(function(){
-					Game.marker.unmarkAll('blue');
+					Game.map.marker.unmarkAll('blue');
 					Game.map.markDisabledField('#field_' + x + '_' + y);
 
 				});
@@ -86,7 +86,7 @@ Game.countdown = {
 	countdown: function(countdownTimeDiv, remainingTime, id)
 	{
 		if (remainingTime < 0){
-			if (typeof(Game.map) != 'undefined'){
+			if (Game.utils.isset(Game.map)){
 				Game.map.render();
 			}
 			Game.events.fetchEvents();

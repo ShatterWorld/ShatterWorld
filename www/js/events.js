@@ -19,8 +19,8 @@ Game.events = {
 			}
 
 			Game.countdown.cleanDialog();
-			var isMap = typeof(Game.map) != 'undefined';
-			if (isMap){
+			var mapDisplayed = Game.utils.isset(Game.map)
+			if (mapDisplayed){
 				Game.map.nullDisabledFields();
 			}
 
@@ -40,7 +40,7 @@ Game.events = {
 					x = event['target']['x'];
 					y = event['target']['y'];
 
-					if (isMap){
+					if (mapDisplayed){
 						Game.map.addDisabledField(event['target'], 'colonisation');
 					}
 
@@ -51,7 +51,7 @@ Game.events = {
 					x = event['target']['x'];
 					y = event['target']['y'];
 
-					if (isMap){
+					if (mapDisplayed){
 						Game.map.addDisabledField(event['target'], 'abandonment');
 					}
 
@@ -67,7 +67,7 @@ Game.events = {
 					x = event['target']['x'];
 					y = event['target']['y'];
 
-					if (isMap){
+					if (mapDisplayed){
 						Game.map.addDisabledField(event['target'], 'facilityConstruction');
 					}
 
@@ -83,7 +83,7 @@ Game.events = {
 					x = event['target']['x'];
 					y = event['target']['y'];
 
-					if (isMap){
+					if (mapDisplayed){
 						Game.map.addDisabledField(event['target'], 'facilityConstruction');
 					}
 
