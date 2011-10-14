@@ -189,7 +189,7 @@ Game.contextMenu = {
 								Game.events.fetchEvents();
 								Game.resources.fetchResources();
 								Game.marker.unmarkAll('red');
-								Game.gameMap.addDisabledField(target);
+								Game.map.addDisabledField(target);
 								Game.spinner.hide();
 								Game.contextMenu.hide();
 							}
@@ -382,7 +382,7 @@ Game.contextMenu = {
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
 							Game.marker.unmarkAll('red');
-							Game.gameMap.addDisabledField(target);
+							Game.map.addDisabledField(target);
 							Game.spinner.hide();
 							Game.contextMenu.hide();
 						}
@@ -420,7 +420,7 @@ Game.contextMenu = {
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
 							Game.marker.unmarkAll('red');
-							Game.gameMap.addDisabledField(target);
+							Game.map.addDisabledField(target);
 							Game.spinner.hide();
 							Game.contextMenu.hide();
 						}
@@ -459,7 +459,7 @@ Game.contextMenu = {
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
 							Game.marker.unmarkAll('red');
-							Game.gameMap.addDisabledField(target);
+							Game.map.addDisabledField(target);
 							Game.spinner.hide();
 							Game.contextMenu.hide();
 						}
@@ -504,7 +504,7 @@ Game.contextMenu = {
 								Game.events.fetchEvents();
 								Game.resources.fetchResources();
 								Game.marker.unmarkAll('red');
-								Game.gameMap.addDisabledField(target);
+								Game.map.addDisabledField(target);
 								Game.spinner.hide();
 								Game.contextMenu.hide();
 							}
@@ -543,7 +543,7 @@ Game.contextMenu = {
 				function(){
 					Game.events.fetchEvents();
 					Game.marker.unmarkAll('red');
-					Game.gameMap.addDisabledField(target);
+					Game.map.addDisabledField(target);
 					Game.spinner.hide();
 					Game.contextMenu.hide();
 				}
@@ -594,19 +594,19 @@ Game.contextMenu = {
 		var x = field['coordX'];
 		var y = field['coordY'];
 
-		if (Game.gameMap.map !== null){
+		if (Game.map.map !== null){
 			if (
-				(typeof(Game.gameMap.map[x-1][y+1]) !== 'undefined' && Game.gameMap.map[x-1][y+1]['owner'] !== null && Game.gameMap.map[x-1][y+1]['owner']['id'] == ownerId)
+				(typeof(Game.map.map[x-1][y+1]) !== 'undefined' && Game.map.map[x-1][y+1]['owner'] !== null && Game.map.map[x-1][y+1]['owner']['id'] == ownerId)
 				||
-				(typeof(Game.gameMap.map[x+1][y-1]) !== 'undefined' && Game.gameMap.map[x+1][y-1]['owner'] !== null && Game.gameMap.map[x+1][y-1]['owner']['id'] == ownerId)
+				(typeof(Game.map.map[x+1][y-1]) !== 'undefined' && Game.map.map[x+1][y-1]['owner'] !== null && Game.map.map[x+1][y-1]['owner']['id'] == ownerId)
 				||
-				(typeof(Game.gameMap.map[x][y-1]) !== 'undefined' && Game.gameMap.map[x][y-1]['owner'] !== null && Game.gameMap.map[x][y-1]['owner']['id'] == ownerId)
+				(typeof(Game.map.map[x][y-1]) !== 'undefined' && Game.map.map[x][y-1]['owner'] !== null && Game.map.map[x][y-1]['owner']['id'] == ownerId)
 				||
-				(typeof(Game.gameMap.map[x-1][y]) !== 'undefined' && Game.gameMap.map[x-1][y]['owner'] !== null && Game.gameMap.map[x-1][y]['owner']['id'] == ownerId)
+				(typeof(Game.map.map[x-1][y]) !== 'undefined' && Game.map.map[x-1][y]['owner'] !== null && Game.map.map[x-1][y]['owner']['id'] == ownerId)
 				||
-				(typeof(Game.gameMap.map[x+1][y]) !== 'undefined' && Game.gameMap.map[x+1][y]['owner'] !== null && Game.gameMap.map[x+1][y]['owner']['id'] == ownerId)
+				(typeof(Game.map.map[x+1][y]) !== 'undefined' && Game.map.map[x+1][y]['owner'] !== null && Game.map.map[x+1][y]['owner']['id'] == ownerId)
 				||
-				(typeof(Game.gameMap.map[x][y+1]) !== 'undefined' && Game.gameMap.map[x][y+1]['owner'] !== null && Game.gameMap.map[x][y+1]['owner']['id'] == ownerId)
+				(typeof(Game.map.map[x][y+1]) !== 'undefined' && Game.map.map[x][y+1]['owner'] !== null && Game.map.map[x][y+1]['owner']['id'] == ownerId)
 			){
 				return true;
 			}

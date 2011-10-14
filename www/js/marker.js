@@ -27,7 +27,7 @@ Game.marker = {
 	size : 5,
 
 	mark : function (field, color) {
-		$(field).drawEllipse(this.size, this.size, Game.gameMap.fieldWidth-2*this.size, Game.gameMap.fieldHeight-2*this.size, {color: color, stroke: this.size});
+		$(field).drawEllipse(this.size, this.size, Game.map.fieldWidth-2*this.size, Game.map.fieldHeight-2*this.size, {color: color, stroke: this.size});
 		$(field).attr('class', 'markedField'+color);
 		/*todo:
 		 * rozdělit dle barev

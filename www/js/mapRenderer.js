@@ -4,7 +4,7 @@
  */
 
 $(document).ready(function(){
-	Game.gameMap.render();
+	Game.map.render();
 });
 
 

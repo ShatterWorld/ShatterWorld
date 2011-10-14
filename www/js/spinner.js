@@ -19,7 +19,7 @@ Game.spinner = {
 	 * @return object
 	 */
 	getSpinner : function () {
-		return $('<img class="spinner" />').attr('src', Game.gameMap.getBasepath() + '/images/spinner.gif').css({
+		return $('<img class="spinner" />').attr('src', Game.map.getBasepath() + '/images/spinner.gif').css({
 		'position' : 'absolute',
 		'z-index' : '999999999999999999999999999999999999999999999999999999999999'});
 	},
