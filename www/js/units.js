@@ -72,12 +72,6 @@ Game.units = {
 		this.totalCosts['food'] = food;
 		this.totalCosts['fuel'] = fuel;
 
-		if (!Game.resources.hasSufficientResources(Game.units.totalCosts)){
-			document.forms['frm-trainUnitForm'].elements['send'].disabled = true;
-		}
-		else{
-			document.forms['frm-trainUnitForm'].elements['send'].disabled = false;
-		}
 	},
 
 	/**
@@ -90,6 +84,19 @@ Game.units = {
 		$('#resSum #food').html(this.totalCosts['food']);
 		$('#resSum #fuel').html(this.totalCosts['fuel']);
 
+	},
+
+	/**
+	 * Disables/enables submit button
+	 * @return void
+	 */
+	handleSubmit : function(){
+		if (!Game.resources.hasSufficientResources(Game.units.totalCosts)){
+			document.forms['frm-trainUnitForm'].elements['send'].disabled = true;
+		}
+		else{
+			document.forms['frm-trainUnitForm'].elements['send'].disabled = false;
+		}
 	}
 };
 
@@ -100,15 +107,15 @@ $(document).ready(function(){
 	$('#trainUnitTable .amount input').change(function() {
 		Game.units.handleTotalCosts();
 		Game.units.printTotalCosts();
+		Game.units.handleSubmit();
 	});
 
-	/*$('#trainUnitTable .amount input').keypress(function(e) {
-		if (e.which < 48 || e.which > 57){
+	$('#trainUnitTable .amount input').keyup(function(e) {
+		if (e.keyCode < 96 || e.keyCode > 105){
 			return;
 		}
-		//alert(e.which);
 		$(this).change();
-	});*/
+	});
 
 
 
