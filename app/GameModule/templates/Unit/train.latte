@@ -44,11 +44,6 @@
 					{ifset $cost['food']}{?$food = $cost['food']}{/ifset}
 					{ifset $cost['fuel']}{?$fuel = $cost['fuel']}{/ifset}
 
-					{?$diff = $units[$name]->getDifficulty()}
-					{?$diffBarracks = $diff['barracks']}
-					{?$diffWorkshop = 0}
-					{ifset $diff['workshop']}{?$diffWorkshop = $diff['workshop']}{/ifset}
-
 					<tr data-costs="{$cost|json}" data-difficulty="{$units[$name]->getDifficulty()|json}">
 						<th class="name">{label $name /}</th>
 						<td class="force">{$units[$name]->getAttack()}/{$units[$name]->getDefense()}</td>
