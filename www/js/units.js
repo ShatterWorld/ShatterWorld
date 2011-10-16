@@ -10,10 +10,22 @@ var Game = Game || {};
 Game.units = {
 
 	/**
-	 * Total costs
+	 * The sum of costs
 	 * @var JSON
 	 */
 	totalCosts : {},
+
+	/**
+	 * The total amount of free slots while init
+	 * @var array of int
+	 */
+	totalAvailableSlots : null,
+
+	/**
+	 * The total amount of free slots right now
+	 * @var array of int
+	 */
+	availableSlots : null,
 
 	/**
 	 * Sets the clickable maximal amounts of each unit
@@ -86,11 +98,31 @@ Game.units = {
 		else{
 			document.forms['frm-trainUnitForm'].elements['send'].disabled = false;
 		}
+	},
+
+	/**
+	 * True if the clan has enough slots, false otherwise
+	 * @return bool
+	 */
+	hasSufficientSlots : function(slots){
+//need to update availableSlots (reading all rows)
+
+
+		$.each(slots, function(key, slot){
+			if(typeof(Game.units.availableSlots[key]) !== "undefined" && Game.units.availableSlots[key] !== null && Game.units.availableSlots[key] >= slot){
+				return true;
+			}
+			return false;
+		});
+
 	}
+
 };
 
 
 $(document).ready(function(){
+	Game.units.totalAvailableSlots = totalSlots;
+	Game.units.availableSlots = totalSlots;
 	Game.units.setMaximumAmount();
 
 	$('#trainUnitTable .amount input').change(function() {
