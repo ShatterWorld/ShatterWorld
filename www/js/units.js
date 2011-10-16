@@ -41,7 +41,7 @@ Game.units = {
 			$(td).append(countSpan);
 			$(td).append(')');
 
-			Game.resources.printAvailableUnitCount(cost, countSpan);
+			Game.resources.printAvailableUnitCount(cost, slot, countSpan);
 
 			$(td).click(function(){
 				$(td).parent().children('.amount').children('input').val(countSpan.html());
@@ -104,9 +104,9 @@ Game.units = {
 	 * True if the clan has enough slots, false otherwise
 	 * @return bool
 	 */
-	hasSufficientSlots : function(slots){
+	hasSufficientSlots : function(tr){
 //need to update availableSlots (reading all rows)
-
+//data-difficulty
 
 		$.each(slots, function(key, slot){
 			if(typeof(Game.units.availableSlots[key]) !== "undefined" && Game.units.availableSlots[key] !== null && Game.units.availableSlots[key] >= slot){

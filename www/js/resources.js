@@ -149,15 +149,12 @@ Game.resources = {
 
 	/**
 	 * Prints the count of available units ready to be trained into the selector, depanding on their costs
-	 * @deprecated
-	 * @param int
-	 * @param int
-	 * @param int
-	 * @param int
+	 * @param array of int
+	 * @param array of int
 	 * @param String/Object
 	 * @return void
 	 */
-	printAvailableUnitCount : function (cost, selector){
+	printAvailableUnitCount : function (cost, slots, selector){
 		var a=2;
 		if (this.isFetching || this.data == null){
 			this.callbackStack.push(function(){
