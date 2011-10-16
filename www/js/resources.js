@@ -30,7 +30,7 @@ Game.resources = {
 	 * True if fetching is in progress, false otherwise
 	 * @var boolean
 	 */
-	isFetching : true,
+	isFetching : false,
 
 	/**
 	 * Sets up data attributes etc.
@@ -157,6 +157,7 @@ Game.resources = {
 	 * @return void
 	 */
 	printAvailableUnitCount : function (metal, stone, food, fuel, selector){
+		var a=2;
 		if (this.isFetching || this.data == null){
 			this.callbackStack.push(function(){
 
