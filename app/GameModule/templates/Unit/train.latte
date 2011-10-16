@@ -18,6 +18,7 @@
 		</ul>
 
 		<script>var totalSlots = {$totalSlots}</script>
+		{dump $totalSlots}
 
 		<table id="trainUnitTable">
 			<tr>
@@ -50,11 +51,18 @@
 
 					<tr data-costs="{$cost|json}" data-difficulty="{$units[$name]->getDifficulty()|json}">
 						<th class="name">{label $name /}</th>
-						<td class="force">
-						{$units[$name]->getAttack()}/{$units[$name]->getDefense()}
-						</td>
+						<td class="force">{$units[$name]->getAttack()}/{$units[$name]->getDefense()}</td>
 						<td class="costs">M:{$metal}/S:{$stone}/Fo:{$food}/Fu:{$fuel}</td>
-						<td class="difficultyBarracks">{$diffBarracks}/{$diffWorkshop}</td>
+						<td class="difficulty">
+							{?$first = true}
+							{foreach $units[$name]->getDifficulty() as $key => $diff}
+								{?$d = 0}
+								{ifset $diff}{?$d = $diff}{/ifset}
+								{if !$first}/{/if}
+								<span class="{$key}">{$d}</span>
+								{?$first = false}
+							{/foreach}
+						</td>
 						<td class="trainingTime">{$units[$name]->getTrainingTime()}</td>
 						<td class="amount">{input $name}</td>
 						<td class="max"></td>
