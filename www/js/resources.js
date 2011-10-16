@@ -48,7 +48,7 @@ Game.resources = {
 		$.each(keys, function() {
 			var element = $('<span />').attr('id', this);
 			element.html(first ? '' : '| ');
-			element.append('<span class="label"><img src="'+basePath+'/images/resources/'+this+'.png"/></span>: <span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>) ');
+			element.append('<img src="'+basePath+'/images/resources/'+this+'.png"/> <span class="text"><span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>)</span> ');
 			$('#resourceBar').append(element);
 			//Game.descriptions.translate('resource', this, '#resourceBar #' + this + ' .label');
 			first = false;
@@ -64,7 +64,7 @@ Game.resources = {
 	update: function ()
 	{
 		$.each(this.data, function (resource, value) {
-			Game.resources.incrementResource(resource, $('#resourceBar #' + resource));
+			Game.resources.incrementResource(resource, $('#resourceBar #' + resource + ' .text'));
 		})
 	},
 
