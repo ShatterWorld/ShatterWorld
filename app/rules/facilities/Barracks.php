@@ -44,6 +44,6 @@ class Barracks extends AbstractRule implements IConstructionFacility
 	
 	public function getCapacity ($level = 1)
 	{
-		return floor(pow($level + 1, 2) / 4);
+		return intval(floor(pow($level + 1, 2) / 4));
 	}
 }

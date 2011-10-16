@@ -10,12 +10,22 @@
 	margin-left: 15px;
 }
 
+#infoBar .text {
+	vertical-align: middle;
+	line-height: 24px;
+}
+
+#infoBar #resourceBar img {
+	vertical-align: middle;
+}
+
 #infoBar #countdownBar{
 	color: white;
 	float: right;
 	margin-right: 15px;
 	cursor: pointer;
 	display: none;
+	vertical-align: middle;
 }
 
 #infoBar #countdownBar:hover{
