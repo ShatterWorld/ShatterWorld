@@ -14,9 +14,10 @@ class UnitPresenter extends BasePresenter
 		$this->template->units = $this->getClanUnits();
 	}
 
-	public function actionTrain ()
+	public function renderTrain ()
 	{
 		$this->template->units = $this->context->rules->getAll('unit');
+		$this->template->totalSlots = $this->context->stats->getTotalUnitSlots($this->getPlayerClan());
 	}
 
 	protected function createComponentTrainUnitForm ()

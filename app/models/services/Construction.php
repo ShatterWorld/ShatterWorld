@@ -148,23 +148,9 @@ class Construction extends Event
 		if (!$this->context->model->getResourceRepository()->checkResources($clan, $price)) {
 			throw new InsufficientResourcesException;
 		}
-		$usedSlots = $this->context->model->getConstructionRepository()->getUsedUnitSlots($clan);
-		$availableSlots = array();
-		foreach ($this->context->model->getFieldRepository()->findByOwner($clan->id) as $clanField) {
-			$facility = $clanField->facility;
-			if ($facility !== NULL) {
-				$rule = $this->context->rules->get('facility', $facility);
-				if ($rule instanceof IConstructionFacility) {
-					if (array_key_exists($facility, $availableSlots)) {
-						$availableSlots[$facility] = $availableSlots[$facility] + $rule->getCapacity($clanField->level);
-					} else {
-						$availableSlots[$facility] = $rule->getCapacity($clanField->level);
-					}
-				}
-			}
-		}
+		$availableSlots = $this->context->stats->getTotalUnitSlots($clan);
 		foreach ($difficulty as $slot => $amount) {
-			if (!isset($availableSlots[$slot]) || ((isset($usedSlots[$slot]) ? $usedSlots[$slot] : 0) + $amount) > $availableSlots[$slot]) {
+			if (!isset($availableSlots[$slot]) || $availableSlots[$slot] < $amount) {
 				throw new InsufficientCapacityException;
 			}
 		}

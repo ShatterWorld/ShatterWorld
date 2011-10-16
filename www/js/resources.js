@@ -157,15 +157,15 @@ Game.resources = {
 	 * @param String/Object
 	 * @return void
 	 */
-	printAvailableUnitCount : function (metal, stone, food, fuel, selector){
+	printAvailableUnitCount : function (cost, selector){
 		var a=2;
 		if (this.isFetching || this.data == null){
 			this.callbackStack.push(function(){
 
-				var metalMin = (metal > 0) ? Math.floor(Game.resources.data['metal'].balance / metal) : -1;
-				var stoneMin = (stone > 0) ? Math.floor(Game.resources.data['stone'].balance / stone) : -1;
-				var foodMin = (food > 0) ? Math.floor(Game.resources.data['food'].balance / food) : -1;
-				var fuelMin = (fuel > 0) ? Math.floor(Game.resources.data['fuel'].balance / fuel) : -1;
+				var metalMin = (cost['metal'] > 0) ? Math.floor(Game.resources.data['metal'].balance / cost['metal']) : -1;
+				var stoneMin = (cost['stone'] > 0) ? Math.floor(Game.resources.data['stone'].balance / cost['stone']) : -1;
+				var foodMin = (cost['food'] > 0) ? Math.floor(Game.resources.data['food'].balance / cost['food']) : -1;
+				var fuelMin = (cost['fuel'] > 0) ? Math.floor(Game.resources.data['fuel'].balance / cost['fuel']) : -1;
 
 				var max = Math.max(metalMin, Math.max(stoneMin, Math.max(foodMin, fuelMin)));
 				var min;
@@ -182,10 +182,10 @@ Game.resources = {
 
 		}
 		else{
-			var metalMin = (metal > 0) ? Math.floor(Game.resources.data['metal'].balance / metal) : -1;
-			var stoneMin = (stone > 0) ? Math.floor(Game.resources.data['stone'].balance / stone) : -1;
-			var foodMin = (food > 0) ? Math.floor(Game.resources.data['food'].balance / food) : -1;
-			var fuelMin = (fuel > 0) ? Math.floor(Game.resources.data['fuel'].balance / fuel) : -1;
+			var metalMin = (cost['metal'] > 0) ? Math.floor(Game.resources.data['metal'].balance / cost['metal']) : -1;
+			var stoneMin = (cost['stone'] > 0) ? Math.floor(Game.resources.data['stone'].balance / cost['stone']) : -1;
+			var foodMin = (cost['food'] > 0) ? Math.floor(Game.resources.data['food'].balance / cost['food']) : -1;
+			var fuelMin = (cost['fuel'] > 0) ? Math.floor(Game.resources.data['fuel'].balance / cost['fuel']) : -1;
 
 			var max = Math.max(metalMin, Math.max(stoneMin, Math.max(foodMin, fuelMin)));
 			var min;

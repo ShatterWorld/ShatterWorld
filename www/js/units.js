@@ -13,7 +13,7 @@ Game.units = {
 	 * Total costs
 	 * @var JSON
 	 */
-	totalCosts : {metal : 0, stone : 0, food : 0, fuel : 0},
+	totalCosts : {},
 
 	/**
 	 * Sets the clickable maximal amounts of each unit
@@ -23,17 +23,13 @@ Game.units = {
 		var maxTds = $('#trainUnitTable .max');
 
 		$.each(maxTds, function(key, td){
-			var metal = $(td).parent().data()['costs'][0];
-			var stone = $(td).parent().data()['costs'][1];
-			var food = $(td).parent().data()['costs'][2];
-			var fuel = $(td).parent().data()['costs'][3];
-
+			var cost = $(td).parent().data()['costs'];
 			var countSpan = $('<span />').html('');
 			$(td).html('(');
 			$(td).append(countSpan);
 			$(td).append(')');
 
-			Game.resources.printAvailableUnitCount(metal, stone, food, fuel, countSpan);
+			Game.resources.printAvailableUnitCount(cost, countSpan);
 
 			$(td).click(function(){
 				$(td).parent().children('.amount').children('input').val(countSpan.html());
@@ -54,23 +50,16 @@ Game.units = {
 	 */
 	handleTotalCosts: function (){
 		var maxTds = $('#trainUnitTable .amount');
-
-		var metal = 0;
-		var stone = 0;
-		var food = 0;
-		var fuel = 0;
+		this.totalCosts = {};
 		$.each(maxTds, function(key, td){
-			metal += $(td).parent().data()['costs'][0] * $(td).children('input').val();
-			stone += $(td).parent().data()['costs'][1] * $(td).children('input').val();
-			food += $(td).parent().data()['costs'][2] * $(td).children('input').val();
-			fuel += $(td).parent().data()['costs'][3] * $(td).children('input').val();
+			$.each($(td).parent().data()['costs'], function (resource, cost) {
+				if (!Game.utils.isset(Game.units.totalCosts[resource])) {
+					Game.units.totalCosts[resource] = 0;
+				}
+				Game.units.totalCosts[resource] += $(td).children('input').val() * cost;
+			});
 
 		});
-
-		this.totalCosts['metal'] = metal;
-		this.totalCosts['stone'] = stone;
-		this.totalCosts['food'] = food;
-		this.totalCosts['fuel'] = fuel;
 
 	},
 
