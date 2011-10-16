@@ -18,6 +18,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		return parent::__call($name, $args);
 	}
 
+	public function beforeRender ()
+	{
+		$this->template->registerHelper('json', callback($this, 'jsonEncode'));
+	}
+	
 	protected function createComponentLoginForm ()
 	{
 		$form = new Form;
@@ -56,6 +61,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$this->flashMessage("Úspěšně přihlášen");
 		$this->redirect(":Game:Dashboard:");
 	}
-
-
+	
+	public function jsonEncode ($value)
+	{
+		return Nette\Utils\Json::encode($value);
+	}
 }
