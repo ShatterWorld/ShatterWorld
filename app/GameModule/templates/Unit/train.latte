@@ -17,16 +17,21 @@
 				<li n:foreach="$form->errors as $error">{$error}</li>
 		</ul>
 
+		<script>var totalSlots = {$totalSlots}</script>
+
 		<table id="trainUnitTable">
 			<tr>
 				<th>Jméno</th>
 				<td>Síla</td>
 				<td>Cena</td>
+				<td>Sloty</td>
+				<td>Čas</td>
 				<td>Množství</td>
 				<td>Max</td>
 			</tr>
 			{foreach $form->getControls() as $name => $field}
 				{if $name !== 'send'}
+
 					{?$cost = $units[$name]->getCost()}
 					{?$metal = 0}
 					{?$stone = 0}
@@ -38,14 +43,21 @@
 					{ifset $cost['food']}{?$food = $cost['food']}{/ifset}
 					{ifset $cost['fuel']}{?$fuel = $cost['fuel']}{/ifset}
 
+					{?$diff = $units[$name]->getDifficulty()}
+					{?$diffBarracks = $diff['barracks']}
+					{?$diffWorkshop = 0}
+					{ifset $diff['workshop']}{?$diffWorkshop = $diff['workshop']}{/ifset}
+
 					<tr data-costs="{$cost|json}" data-difficulty="{$units[$name]->getDifficulty()|json}">
 						<th class="name">{label $name /}</th>
 						<td class="force">
 						{$units[$name]->getAttack()}/{$units[$name]->getDefense()}
 						</td>
 						<td class="costs">M:{$metal}/S:{$stone}/Fo:{$food}/Fu:{$fuel}</td>
+						<td class="difficultyBarracks">{$diffBarracks}/{$diffWorkshop}</td>
+						<td class="trainingTime">{$units[$name]->getTrainingTime()}</td>
 						<td class="amount">{input $name}</td>
-						<td class="max">(n+1)</td>
+						<td class="max"></td>
 					</tr>
 					{else}
 
