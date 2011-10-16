@@ -41,7 +41,8 @@ Game.units = {
 			$(td).append(countSpan);
 			$(td).append(')');
 
-			Game.resources.printAvailableUnitCount(cost, slot, countSpan);
+
+			Game.resources.printAvailableUnitCount(cost, null, countSpan);
 
 			$(td).click(function(){
 				$(td).parent().children('.amount').children('input').val(countSpan.html());
