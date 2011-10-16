@@ -6,34 +6,106 @@
 /**
  * Global functions
  */
-jQuery.extend({
-	units: {
-		/**
-		 * Sets the clickable maximal amounts of each unit
-		 * @return void
-		 */
-		setMaximumAmount: function (){
-			var maxTds = $('#trainUnitTable .max');
+var Game = Game || {};
+Game.units = {
 
-			$.each(maxTds, function(key, td){
-				var metal = $(td).parent().data()['costs'][0];
-				var stone = $(td).parent().data()['costs'][1];
-				var food = $(td).parent().data()['costs'][2];
-				var fuel = $(td).parent().data()['costs'][3];
+	/**
+	 * Total costs
+	 * @var JSON
+	 */
+	totalCosts : {},
 
-				var n = jQuery.resources.getAvailibleUnits(metal, stone, food, fuel);
+	/**
+	 * Sets the clickable maximal amounts of each unit
+	 * @return void
+	 */
+	setMaximumAmount: function (){
+		var maxTds = $('#trainUnitTable .max');
 
-				alert(n);
+		$.each(maxTds, function(key, td){
+			var cost = $(td).parent().data()['costs'];
+			var countSpan = $('<span />').html('');
+			$(td).html('(');
+			$(td).append(countSpan);
+			$(td).append(')');
+
+			Game.resources.printAvailableUnitCount(cost, countSpan);
+
+			$(td).click(function(){
+				$(td).parent().children('.amount').children('input').val(countSpan.html());
+				$(td).parent().children('.amount').children('input').change();
 			});
+
+			$(td).css({
+				'cursor': 'pointer',
+				'text-decoration' : 'underline'
+			});
+
+		});
+	},
+
+	/**
+	 * Calculates total costs
+	 * @return void
+	 */
+	handleTotalCosts: function (){
+		var maxTds = $('#trainUnitTable .amount');
+		this.totalCosts = {};
+		$.each(maxTds, function(key, td){
+			$.each($(td).parent().data()['costs'], function (resource, cost) {
+				if (!Game.utils.isset(Game.units.totalCosts[resource])) {
+					Game.units.totalCosts[resource] = 0;
+				}
+				Game.units.totalCosts[resource] += $(td).children('input').val() * cost;
+			});
+
+		});
+
+	},
+
+	/**
+	 * Prints total costs
+	 * @return void
+	 */
+	printTotalCosts: function (){
+		$('#resSum #metal').html(this.totalCosts['metal']);
+		$('#resSum #stone').html(this.totalCosts['stone']);
+		$('#resSum #food').html(this.totalCosts['food']);
+		$('#resSum #fuel').html(this.totalCosts['fuel']);
+
+	},
+
+	/**
+	 * Disables/enables submit button
+	 * @return void
+	 */
+	handleSubmit : function(){
+		if (!Game.resources.hasSufficientResources(Game.units.totalCosts)){
+			document.forms['frm-trainUnitForm'].elements['send'].disabled = true;
 		}
-
-
+		else{
+			document.forms['frm-trainUnitForm'].elements['send'].disabled = false;
+		}
 	}
-});
+};
 
 
 $(document).ready(function(){
-	jQuery.units.setMaximumAmount();
+	Game.units.setMaximumAmount();
+
+	$('#trainUnitTable .amount input').change(function() {
+		Game.units.handleTotalCosts();
+		Game.units.printTotalCosts();
+		Game.units.handleSubmit();
+	});
+
+	$('#trainUnitTable .amount input').keyup(function(e) {
+		if (e.keyCode < 96 || e.keyCode > 105){
+			return;
+		}
+		$(this).change();
+	});
+
 
 
 });

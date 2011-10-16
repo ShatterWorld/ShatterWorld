@@ -26,9 +26,8 @@
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/general.css" />
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/flashes.css" />
 		<link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui.css" />
-
+		{block #scripts}
 		<script type="text/javascript" src="{$basePath}/js/jquery_min.js"></script>
-		{block #map-head-include}{/block}
 		<script type="text/javascript" src="{$basePath}/js/jquery-ui_min.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/jquery.nette.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/netteForms.js" ></script>
@@ -39,7 +38,8 @@
 		<script type="text/javascript" src="{$basePath}/js/resources.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/events.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/countdown.js"></script>
-		{block #map-head-include-after}{/block}
+		<script type="text/javascript" src="{$basePath}/js/utils.js"></script>
+		{/block}
 
 
 	</head>
@@ -174,7 +174,7 @@
 		</div>
 
 
-
+	<script>var basePath = {$basePath}</script>
 	</body>
 
 </html>
