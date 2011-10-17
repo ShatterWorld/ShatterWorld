@@ -60,7 +60,37 @@ Game.resources = {
 	update: function ()
 	{
 		$.each(this.data, function (resource, value) {
-			Game.resources.incrementResource(resource, $('#resourceBar #' + resource + ' .text'));
+
+			var period;
+			var span = $('#resourceBar #' + resource + ' .text');
+
+			var incrementFunction = function(){
+				var production = Game.resources.data[resource].production;
+				var balance = Game.resources.data[resource].balance;
+				var storage = Game.resources.data[resource].storage;
+				$(span).children('.balance').html(Math.floor(balance));
+				$(span).children('.storage').html(storage);
+
+				$(span).children('.production').html((production >= 0 ? '+' : '-') + Math.floor(production * 3600));
+				if (balance >= storage) {
+					$(span).children('.balance').addClass('resourceFull');
+					return;
+				} else {
+					$(span).children('.balance').removeClass('resourceFull');
+				}
+				if (production == 0) {
+					return;
+				}
+				if (production < 0) {
+					Game.resources.data[resource]['balance']--;
+				} else {
+					Game.resources.data[resource]['balance']++;
+				}
+				period = 1000/Math.abs(production);
+			};
+
+			incrementFunction();
+			var interval = setInterval(incrementFunction, period);
 		})
 	},
 
@@ -90,41 +120,6 @@ Game.resources = {
 			}
 
 		});
-	},
-
-	/**
-	 * Increments resource
-	 * @param String
-	 * @param String/Object
-	 * @return void
-	 */
-	incrementResource: function(resource, span)
-	{
-		var production = this.data[resource].production;
-		var balance = this.data[resource].balance;
-		var storage = this.data[resource].storage;
-		$(span).children('.balance').html(Math.floor(balance));
-		$(span).children('.storage').html(storage);
-
-		$(span).children('.production').html((production >= 0 ? '+' : '-') + Math.floor(production * 3600));
-		if (balance >= storage) {
-			$(span).children('.balance').addClass('resourceFull');
-			return;
-		} else {
-			$(span).children('.balance').removeClass('resourceFull');
-		}
-		if (production == 0) {
-			return;
-		}
-		if (production < 0) {
-			this.data[resource]['balance']--;
-		} else {
-			this.data[resource]['balance']++;
-		}
-		period = 1000/Math.abs(production);
-		setTimeout(function(){
-			Game.resources.incrementResource(resource, span);
-		}, period);
 	},
 
 	/**
