@@ -115,7 +115,6 @@ Game.units = {
 	 * @return void
 	 */
 	printTotalSlots: function (){
-		//$('#slotDiv').html(this.totalCosts['metal']);
 		$.each(this.availableSlots, function(key, res){
 			$('#slotDiv').append('<div>available: '+key+': '+res+'</div>');
 		});
