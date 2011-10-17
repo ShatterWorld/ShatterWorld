@@ -43,15 +43,11 @@ Game.resources = {
 			keys.push(key);
 		});
 		keys.sort();
-		var first = true;
 		$('#resourceBar').html('');
 		$.each(keys, function() {
 			var element = $('<span />').attr('id', this);
-			element.html(first ? '' : '| ');
-			element.append('<img src="'+basePath+'/images/resources/'+this+'.png"/> <span class="text"><span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>)</span> ');
+			element.html('<img src="'+basePath+'/images/resources/'+this+'.png"/> <span class="text"><span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>)</span> ');
 			$('#resourceBar').append(element);
-			//Game.descriptions.translate('resource', this, '#resourceBar #' + this + ' .label');
-			first = false;
 		})
 		this.update();
 		this.initialized = true;
@@ -151,11 +147,31 @@ Game.resources = {
 	 * Prints the count of available units ready to be trained into the selector, depanding on their costs
 	 * @param array of int
 	 * @param array of int
+	 * @param array of int
+	 * @param array of int
 	 * @param String/Object
 	 * @return void
 	 */
-	printAvailableUnitCount : function (cost, slots, selector){
-		var a=2;
+	printAvailableUnitCount : function (cost, totalCost, slots, availableSlots, selector){
+
+/*
+var counts = new Array();
+var min = null;
+$.each(slots, function(key, slot){
+	if(Game.utils.isset(availableSlots[key])){
+		if(Game.utils.isset(min)){
+			var actCount = Math.floor(availableSlots[key]/slot;
+			min = (actCount < min) ? actCount : min;
+		}
+	}
+	else{
+		min = 0;
+		break;
+	}
+
+});
+*/
+
 		if (this.isFetching || this.data == null){
 			this.callbackStack.push(function(){
 

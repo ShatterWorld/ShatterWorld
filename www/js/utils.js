@@ -24,9 +24,9 @@ Game.utils = {
 			y: Math.floor( globalY - position.top )
 		});
 	},
-	
+
 	isset: function (variable)
 	{
-		return typeof(variable) !== 'undefined';
+		return typeof(variable) !== 'undefined' && variable !== null;
 	}
 };
