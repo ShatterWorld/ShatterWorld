@@ -44,7 +44,7 @@
 					{ifset $cost['food']}{?$food = $cost['food']}{/ifset}
 					{ifset $cost['fuel']}{?$fuel = $cost['fuel']}{/ifset}
 
-					<tr data-costs="{$cost|json}" data-difficulty="{$units[$name]->getDifficulty()|json}">
+					<tr class="unit" data-costs="{$cost|json}" data-difficulty="{$units[$name]->getDifficulty()|json}">
 						<th class="name">{label $name /}</th>
 						<td class="force">{$units[$name]->getAttack()}/{$units[$name]->getDefense()}</td>
 						<td class="costs">M:{$metal}/S:{$stone}/Fo:{$food}/Fu:{$fuel}</td>
@@ -71,7 +71,7 @@
 			Celkem
 			<table id="resSum">
 				<tr>
-					<td>M</td><td>S</td><td>Fo</td><td>Fu</td>
+					<td>Metal</td><td>Stone</td><td>Food</td><td>Fuel</td>
 				</tr>
 				<tr>
 					<td id="metal"></td><td id="stone"></td><td id="food"></td><td id="fuel"></td>
@@ -80,6 +80,7 @@
 					<td></td><td></td><td></td><td colspan="5">{input $name}</td>
 				</tr>
 			</table>
+			<div id="slotDiv"></div>
 
 	{/form trainUnitForm}
 

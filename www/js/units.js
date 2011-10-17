@@ -46,7 +46,11 @@ Game.units = {
 
 			$(td).click(function(){
 				$(td).parent().children('.amount').children('input').val(countSpan.html());
-				$(td).parent().children('.amount').children('input').change();
+
+				$('#slotDiv').append('<div>max change</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+				//$(td).parent().children('.amount').children('input').change();
+				Game.units.inputChange();
 			});
 
 			$(td).css({
@@ -77,14 +81,44 @@ Game.units = {
 	},
 
 	/**
+	 * Calculates total used slots
+	 * @return void
+	 */
+	handleTotalSlots: function (){
+
+		Game.units.availableSlots = Game.units.totalAvailableSlots;
+		$.each($('#trainUnitTable .unit'), function(key, tr){
+
+			var difficulty = $(tr).data()['difficulty'];
+			$.each(difficulty, function(key, diff){
+				if (Game.utils.isset(Game.units.availableSlots[key])){
+					Game.units.availableSlots[key] -= $(tr).children('.amount').children('input').val() * diff;
+				}
+			});
+		});
+
+	},
+
+	/**
 	 * Prints total costs
 	 * @return void
 	 */
 	printTotalCosts: function (){
-		$('#resSum #metal').html(this.totalCosts['metal']);
-		$('#resSum #stone').html(this.totalCosts['stone']);
-		$('#resSum #food').html(this.totalCosts['food']);
-		$('#resSum #fuel').html(this.totalCosts['fuel']);
+		$.each(this.totalCosts, function(key, res){
+			$('#resSum #'+key).html(res);
+		});
+	},
+
+	/**
+	 * Prints slots info
+	 * @return void
+	 */
+	printTotalSlots: function (){
+		//$('#slotDiv').html(this.totalCosts['metal']);
+		$.each(this.availableSlots, function(key, res){
+			$('#slotDiv').append('<div>available: '+key+': '+res+'</div>');
+		});
+
 
 	},
 
@@ -93,7 +127,7 @@ Game.units = {
 	 * @return void
 	 */
 	handleSubmit : function(){
-		if (!Game.resources.hasSufficientResources(Game.units.totalCosts)){
+		if (!Game.resources.hasSufficientResources(Game.units.totalCosts) || !this.hasSufficientSlots()){
 			document.forms['frm-trainUnitForm'].elements['send'].disabled = true;
 		}
 		else{
@@ -105,16 +139,28 @@ Game.units = {
 	 * True if the clan has enough slots, false otherwise
 	 * @return bool
 	 */
-	hasSufficientSlots : function(tr){
-//need to update availableSlots (reading all rows)
-//data-difficulty
+	hasSufficientSlots : function(){
+		var ret = true;
 
-		$.each(slots, function(key, slot){
-			if(typeof(Game.units.availableSlots[key]) !== "undefined" && Game.units.availableSlots[key] !== null && Game.units.availableSlots[key] >= slot){
-				return true;
+		$.each(this.availableSlots, function(key, actSlot){
+			if(actSlot < 0){
+				ret = false;
+				return false;
 			}
-			return false;
 		});
+
+		return ret;
+	},
+
+	inputChange : function(){
+		$('#slotDiv').append('<div>own change</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		this.handleTotalCosts();
+		this.handleTotalSlots();
+
+		this.printTotalCosts();
+		this.printTotalSlots();
+
+		this.handleSubmit();
 
 	}
 
@@ -126,17 +172,24 @@ $(document).ready(function(){
 	Game.units.availableSlots = totalSlots;
 	Game.units.setMaximumAmount();
 
-	$('#trainUnitTable .amount input').change(function() {
+	/*$('#trainUnitTable .amount input').change(function() {
+		$('#slotDiv').append('<div>own change</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Game.units.handleTotalCosts();
-		Game.units.printTotalCosts();
-		Game.units.handleSubmit();
-	});
+		Game.units.handleTotalSlots();
 
-	$('#trainUnitTable .amount input').keyup(function(e) {
+		Game.units.printTotalCosts();
+		Game.units.printTotalSlots();
+
+		Game.units.handleSubmit();
+	});*/
+
+	$('#trainUnitTable .amount input').keypress(function(e) {
+		$('#slotDiv').append('<div>keyup</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if (e.keyCode < 96 || e.keyCode > 105){
-			return;
+			//return;
 		}
-		$(this).change();
+		//$(this).change();
+		Game.units.inputChange();
 	});
 
 
