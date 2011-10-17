@@ -86,7 +86,8 @@ Game.units = {
 	 */
 	handleTotalSlots: function (){
 
-		Game.units.availableSlots = Game.units.totalAvailableSlots;
+		this.availableSlots = this.totalAvailableSlots;
+
 		$.each($('#trainUnitTable .unit'), function(key, tr){
 
 			var difficulty = $(tr).data()['difficulty'];
