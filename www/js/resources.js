@@ -15,6 +15,12 @@ Game.resources = {
 	data: null,
 
 	/**
+	 * Countdown intervals
+	 * @var array of interval
+	 */
+	intervals: null,
+
+	/**
 	 * True if init., false otherwise
 	 * @var boolean
 	 */
@@ -59,6 +65,14 @@ Game.resources = {
 	 */
 	update: function ()
 	{
+
+		if(Game.utils.isset(this.intervals)){
+			$.each(this.intervals, function (key, interval) {
+				clearInterval(interval);
+			});
+}
+		this.intervals = new Array();
+
 		$.each(this.data, function (resource, value) {
 
 			var period;
@@ -90,7 +104,7 @@ Game.resources = {
 			};
 
 			incrementFunction();
-			var interval = setInterval(incrementFunction, period);
+			Game.resources.intervals.push(setInterval(incrementFunction, period));
 		})
 	},
 
