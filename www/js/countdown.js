@@ -10,23 +10,7 @@ var Game = Game || {};
 Game.countdown = {
 
 	/**
-	 * Countdown function pointer
-	 * @var array of function
-	 */
-	countdowns : new Array(),
-
-	/**
-	 * Nulls all the countdown-function pointers
-	 * @return void
-	 */
-	nullCountdowns : function(){
-		$.each(Game.countdown.countdowns, function(key, ctd){
-			Game.countdown.countdowns[key] = null;
-		});
-	},
-
-	/**
-	 * Adds countdown
+	 * Adds new countdown, maneges own countdowning etc.
 	 * @param string
 	 * @param integer
 	 * @param integer
@@ -72,51 +56,39 @@ Game.countdown = {
 
 		$('#countdownDialog').append(countdownTr);
 
-		var id = this.countdowns.push(this.countdown);
-		id--;
-		this.countdowns[id](timeTd, remainingTime, id);
-	},
-
-	/**
-	 * Countdowns and display remaining time
-	 * @param object
-	 * @param integer [s]
-	 * @return void
-	 */
-	countdown: function(countdownTimeDiv, remainingTime, id)
-	{
-		if (remainingTime < 0){
-			if (Game.utils.isset(Game.map)){
-				Game.map.render();
+		var countdownFunction = function(){
+			if (remainingTime < 0){
+				if (Game.utils.isset(Game.map)){
+					Game.map.render();
+				}
+				Game.events.fetchEvents();
+				clearInterval(interval);
+				return;
 			}
-			Game.events.fetchEvents();
+			var t = remainingTime;
 
-			return;
-		}
-		var t = remainingTime;
+			var h = Math.floor(t / 3600);
+			t -= h*3600;
+			var m = Math.floor(t / 60);
+			t -= m*60;
+			var s = t;
 
-		var h = Math.floor(t / 3600);
-		t -= h*3600;
-		var m = Math.floor(t / 60);
-		t -= m*60;
-		var s = t;
-
-		if (s < 10){
-			s = '0' + s;
-		}
-		if (m < 10){
-			m = '0' + m;
-		}
-
-		var time = h + ':' + m + ':' + s;
-
-		$(countdownTimeDiv).html(time);
-		setTimeout(function(){
-			if(Game.countdown.countdowns[id] !== null){
-				Game.countdown.countdown(countdownTimeDiv, remainingTime - 1, id);
+			if (s < 10){
+				s = '0' + s;
 			}
-		}, 1000);
+			if (m < 10){
+				m = '0' + m;
+			}
 
+			var time = h + ':' + m + ':' + s;
+
+			$(timeTd).html(time);
+			remainingTime--;
+
+		};
+
+		countdownFunction();
+		var interval = setInterval(countdownFunction, 1000);
 
 	},
 

@@ -24,8 +24,6 @@ Game.events = {
 				Game.map.nullDisabledFields();
 			}
 
-			Game.countdown.nullCountdowns();
-
 			var count = 0;
 			$.each(data['events'], function(key, event) {
 
