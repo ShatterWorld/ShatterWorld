@@ -158,11 +158,10 @@ Game.resources = {
 		if (this.isFetching || !Game.utils.isset(null)){
 			this.callbackStack.push(function(){
 
-/*
 				var min = null;
 				$.each(slots, function(key, slot){
 					if(Game.utils.isset(availableSlots[key])){
-						var actCount = Math.floor(availableSlots[key]/slot;
+						var actCount = Math.floor(availableSlots[key]/slot);
 						if(Game.utils.isset(min)){
 							min = (actCount < min) ? actCount : min;
 						}
@@ -175,7 +174,7 @@ Game.resources = {
 						return false;
 					}
 
-				});*/
+				});
 
 				$.each(costs, function(key, cost){
 
@@ -201,20 +200,42 @@ Game.resources = {
 
 		}
 		else{
-			var metalMin = (cost['metal'] > 0) ? Math.floor(Game.resources.data['metal'].balance / cost['metal']) : -1;
-			var stoneMin = (cost['stone'] > 0) ? Math.floor(Game.resources.data['stone'].balance / cost['stone']) : -1;
-			var foodMin = (cost['food'] > 0) ? Math.floor(Game.resources.data['food'].balance / cost['food']) : -1;
-			var fuelMin = (cost['fuel'] > 0) ? Math.floor(Game.resources.data['fuel'].balance / cost['fuel']) : -1;
+			var min = null;
+			$.each(slots, function(key, slot){
+				if(Game.utils.isset(availableSlots[key])){
+					var actCount = Math.floor(availableSlots[key]/slot);
+					if(Game.utils.isset(min)){
+						min = (actCount < min) ? actCount : min;
+					}
+					else{
+						min = actCount;
+					}
+				}
+				else{
+					min = 0;
+					return false;
+				}
 
-			var max = Math.max(metalMin, Math.max(stoneMin, Math.max(foodMin, fuelMin)));
-			var min;
+			});
 
-			if (max >= 0){
-				min = Math.min((metalMin <= 0) ? max : metalMin, Math.min((stoneMin <= 0) ? max : stoneMin, Math.min((foodMin <= 0) ? max : foodMin, (fuelMin <= 0) ? max : fuelMin)));
-			}
-			else{
-				min = 0;
-			}
+			$.each(costs, function(key, cost){
+
+				if(Game.utils.isset(Game.resources.data[key].balance)){
+					var actCount = Math.floor((Game.resources.data[key].balance - (Game.utils.isset(totalCosts[key]) ? totalCosts[key] : 0)) / cost);
+					if(Game.utils.isset(min)){
+						min = (actCount < min) ? actCount : min;
+					}
+					else{
+						min = actCount;
+					}
+				}
+				else{
+					min = 0;
+					return false;
+				}
+
+			});
+
 
 			$(selector).html(min);
 
