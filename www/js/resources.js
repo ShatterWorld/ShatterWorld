@@ -85,7 +85,7 @@ Game.resources = {
 				$(span).children('.balance').html(Math.floor(balance));
 				$(span).children('.storage').html(storage);
 
-				$(span).children('.production').html((production >= 0 ? '+' : '-') + Math.floor(production * 3600));
+				$(span).children('.production').html((production >= 0 ? '+' : '') + Math.floor(production * 3600));
 				if (balance >= storage) {
 					$(span).children('.balance').addClass('resourceFull');
 					return;
