@@ -17,15 +17,15 @@ Game.units = {
 
 	/**
 	 * The total amount of free slots while init
-	 * @var array of int
+	 * @var JSON
 	 */
-	totalAvailableSlots : null,
+	totalAvailableSlots : {},
 
 	/**
 	 * The total amount of free slots right now
-	 * @var array of int
+	 * @var JSON
 	 */
-	availableSlots : null,
+	availableSlots : {},
 
 	/**
 	 * Sets the clickable maximal amounts of each unit
@@ -86,14 +86,18 @@ Game.units = {
 	 */
 	handleTotalSlots: function (){
 
-		this.availableSlots = this.totalAvailableSlots;
+		this.availableSlots = this.totalAvailableSlots;/*doesnt rewrite the actual value, or changes even totalAS*/
+		$('#slotDiv').append('<div>----- nulling -> barracks: '+this.availableSlots['barracks']+'/'+this.totalAvailableSlots['barracks']+'</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-		$.each($('#trainUnitTable .unit'), function(key, tr){
+		$.each($('#trainUnitTable .unit'), function(unitKey, tr){
 
 			var difficulty = $(tr).data()['difficulty'];
+
 			$.each(difficulty, function(key, diff){
 				if (Game.utils.isset(Game.units.availableSlots[key])){
+					$('#slotDiv').append('<div>' + unitKey + ': ' + key+': '+Game.units.availableSlots[key]);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					Game.units.availableSlots[key] -= $(tr).children('.amount').children('input').val() * diff;
+					$('#slotDiv').append(' -> '+Game.units.availableSlots[key]+'</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				}
 			});
 		});
@@ -172,23 +176,18 @@ $(document).ready(function(){
 	Game.units.availableSlots = totalSlots;
 	Game.units.setMaximumAmount();
 
-	/*$('#trainUnitTable .amount input').change(function() {
-		$('#slotDiv').append('<div>own change</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		Game.units.handleTotalCosts();
-		Game.units.handleTotalSlots();
-
-		Game.units.printTotalCosts();
-		Game.units.printTotalSlots();
-
-		Game.units.handleSubmit();
-	});*/
-
 	$('#trainUnitTable .amount input').keypress(function(e) {
+		e.preventDefault();
+
 		$('#slotDiv').append('<div>keyup</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		if (e.keyCode < 96 || e.keyCode > 105){
-			//return;
+
+		if (e.which < 48 || e.which > 57){ /*need to check num in a better way*/
+			$('#slotDiv').append('<div>->return</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			return;
 		}
-		//$(this).change();
+
+		$(this).val($(this).val() + String.fromCharCode(e.which));
+
 		Game.units.inputChange();
 	});
 
