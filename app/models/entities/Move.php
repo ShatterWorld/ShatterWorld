@@ -69,6 +69,15 @@ class Move extends Event
 		return $this->units;
 	}
 	
+	public function getUnitList ()
+	{
+		$result = array();
+		foreach ($this->getUnits() as $unit) {
+			$result[$unit->id] = $unit->count;
+		}
+		return $result;
+	}
+	
 	/**
 	 * Add a unit to the move
 	 * @param Entities\Unit

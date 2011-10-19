@@ -23,9 +23,24 @@ class Unit extends BaseService
 		$this->context->model->getResourceService()->recalculateProduction($field->owner, new \DateTime);
 	}
 	
-	public function moveUnits ($units, Entities\Field $target)
+	public function removeUnits ($list)
 	{
-		foreach ($units as $unit) {
+		foreach ($list as $id => $count) {
+			if ($unit = $this->getRepository()->find($id)) {
+				$newCount = $unit->count - $count;
+				if ($newCount > 0) {
+					$this->update($unit, array('count' => $newCount), FALSE);
+				} else {
+					$this->delete($unit);
+				}
+			}
+		}
+		$this->entityManager->flush();
+	}
+	
+	public function moveUnits (Entities\Field $target, $list)
+	{
+		foreach ($list as $unit) {
 			if ($base = $this->getRepository()->findOneBy(array('location' => $target->id, 'type' => $unit->type, 'move' => NULL))) {
 				$base->count = $base->count + $unit->count;
 				$this->remove($unit, FALSE);

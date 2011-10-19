@@ -7,12 +7,31 @@ abstract class Attack extends AbstractRule implements IEvent
 {
 	protected function evaluateBattle (Entities\Event $event)
 	{
-		return array(
-			'winner' => $event->owner,
-			'attackerCasualties' => array(),
-			'defenderCasualties' => array(),
-			'loot' => array()
+		$result = array(
+			'successful' => TRUE,
+			'attacker' => array(
+				'units' => array(),
+				'casualties' => array(),
+				'loot' => array()
+			),
+			'defender' => array(
+				'units' => array(),
+				'casualties' => array()
+			)
 		);
+	}
+	
+	public function process (Entities\Event $event)
+	{
+		$model = $this->getContext()->model;
+		$model->getUnitService()->moveUnits($event->target, $event->getUnitList());
+		$result = $this->evaluateBattle($event);
+		if ($casualties = array_merge($result['attacker']['casualties'], $result['defender']['casualties'])) {
+			$model->getUnitService()->removeUnits($casualties);
+		}
+		if ($result['attacker']['loot']) {
+			$model->getResourceService()->increase($event->owner, $result['attacker']['loot']);
+		}
 	}
 	
 	public function isValid (Entities\Event $event)
