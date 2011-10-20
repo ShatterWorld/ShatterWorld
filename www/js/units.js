@@ -86,7 +86,7 @@ Game.units = {
 	 */
 	handleTotalSlots: function (){
 
-		this.availableSlots = this.totalAvailableSlots;/*doesnt rewrite the actual value, or changes even totalAS*/
+		this.availableSlots = this.totalAvailableSlots.copy();/*doesnt rewrite the actual value, or changes even totalAS*/
 		$('#slotDiv').append('<div>----- nulling -> barracks: '+this.availableSlots['barracks']+'/'+this.totalAvailableSlots['barracks']+'</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		$.each($('#trainUnitTable .unit'), function(unitKey, tr){
