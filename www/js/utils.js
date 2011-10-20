@@ -28,18 +28,16 @@ Game.utils = {
 	isset: function (variable)
 	{
 		return (typeof(variable) !== 'undefined' && variable !== null && variable != null);
+	},
+	
+	clone: function (variable) 
+	{
+		if (variable instanceof Array) {
+			return variable.slice();
+		} else if (variable instanceof Object) {
+			return jQuery.extend({}, variable);
+		} else {
+			return variable;
+		}
 	}
-};
-
-Object.prototype.copy = function() {
-  var newObj = (this instanceof Array) ? [] : {};
-  for (i in this) {
-    if (i == 'clone') continue;
-    if (this[i] && typeof this[i] == "object") {
-      newObj[i] = this[i].copy();
-    } else newObj[i] = this[i]
-  } return newObj;
-
-return null;
-
 };
