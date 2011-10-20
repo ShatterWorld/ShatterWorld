@@ -39,4 +39,7 @@ Object.prototype.copy = function() {
       newObj[i] = this[i].copy();
     } else newObj[i] = this[i]
   } return newObj;
+
+return null;
+
 };
