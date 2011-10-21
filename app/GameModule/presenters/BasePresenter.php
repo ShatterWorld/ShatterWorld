@@ -38,6 +38,11 @@ abstract class BasePresenter extends \BasePresenter
 		return $this->getUnitRepository()->findByOwner($this->getPlayerClan()->getId());
 	}
 
+	public function getClanOffers ()
+	{
+		return $this->getOfferRepository()->findByOwner($this->getPlayerClan()->getId());
+	}
+
 	public function flashMessage ($message, $type = 'info')
 	{
 		$this->invalidateControl('flashes');
@@ -71,7 +76,7 @@ abstract class BasePresenter extends \BasePresenter
 		$this->payload->descriptions = $this->context->rules->getDescriptions();
 		$this->sendPayload();
 	}
-	
+
 	/**
 	* Test !!!
 	* TODO: remove
