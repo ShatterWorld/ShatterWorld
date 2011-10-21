@@ -182,6 +182,10 @@ $(document).ready(function(){
 			e.preventDefault();
 		}
 
+		if(e.which == 8){
+			//$(this).val($(this).val().pop());//substring
+		}
+
 		//$('#slotDiv').append('<div>keyup</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		//alert(e.which);
