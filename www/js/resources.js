@@ -73,16 +73,23 @@ Game.resources = {
 }
 		this.intervals = new Array();
 
+		var period;
+
 		$.each(this.data, function (resource, value) {
 
-			var period;
+
 			var span = $('#resourceBar #' + resource + ' .text');
 
 			var incrementFunction = function(){
 				var production = Game.resources.data[resource].production;
 				var balance = Game.resources.data[resource].balance;
 				var storage = Game.resources.data[resource].storage;
-				$(span).children('.balance').html(Math.floor(balance));
+				//$(span).children('.balance').html(Math.floor(balance));
+
+				$(span).children('.balance').slideUp(200, function() {
+					$(this).text(Math.floor(balance)).slideDown(200);
+				});
+
 				$(span).children('.storage').html(storage);
 
 				$(span).children('.production').html((production >= 0 ? '+' : '') + Math.floor(production * 3600));
@@ -92,19 +99,28 @@ Game.resources = {
 				} else {
 					$(span).children('.balance').removeClass('resourceFull');
 				}
-				if (production == 0) {
+
+				if(production == 0){
+					period = 0;
 					return;
 				}
+				else{
+					period = 1000/Math.abs(production);
+				}
+
 				if (production < 0) {
 					Game.resources.data[resource]['balance']--;
 				} else {
 					Game.resources.data[resource]['balance']++;
 				}
-				period = 1000/Math.abs(production);
+
 			};
 
 			incrementFunction();
-			Game.resources.intervals.push(setInterval(incrementFunction, period));
+
+			if(period != 0){
+				Game.resources.intervals.push(setInterval(incrementFunction, period));
+			}
 		})
 	},
 
