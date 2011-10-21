@@ -9,7 +9,6 @@ class Unit extends BaseService
 		foreach ($list as $type => $count) {
 			if ($unit = $this->getRepository()->findUnit($owner, $field, $type)) {
 				$unit->count = $unit->count + $count;
-				$this->entityManager->persist($unit);
 			} else {
 				$this->create(array(
 					'type' => $type,

@@ -19,6 +19,7 @@ abstract class Attack extends AbstractRule implements IEvent
 				'casualties' => array()
 			)
 		);
+		return $result;
 	}
 	
 	public function process (Entities\Event $event)

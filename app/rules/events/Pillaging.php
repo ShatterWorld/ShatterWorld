@@ -12,7 +12,7 @@ class Pillaging extends Attack
 	public function process (Entities\Event $event)
 	{
 		$result = parent::process($event);
-		$this->getContext()->model->getMoveService()->startUnitMovement($event->target, $event->origin, 'pillagingReturn', $event->getUnitList());
+		$this->getContext()->model->getMoveService()->startUnitMovement($event->target, $event->origin, 'unitReturn', $event->getUnitList());
 		return $result;
 	}
 	

@@ -120,7 +120,7 @@ class Unit extends BaseEntity
 	 * @param Entities\Move
 	 * @return void
 	 */
-	public function setMove (Move $move)
+	public function setMove (Move $move = NULL)
 	{
 		$this->move = $move;
 	}
