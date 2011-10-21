@@ -18,7 +18,6 @@
 		</ul>
 
 		<script>var totalSlots = {$totalSlots}</script>
-		{dump $totalSlots}
 
 		<table id="trainUnitTable">
 			<tr>
@@ -38,6 +37,8 @@
 					{?$stone = 0}
 					{?$food = 0}
 					{?$fuel = 0}
+
+					{?$slots}
 
 					{ifset $cost['metal']}{?$metal = $cost['metal']}{/ifset}
 					{ifset $cost['stone']}{?$stone = $cost['stone']}{/ifset}
@@ -68,19 +69,28 @@
 
 				{/if}
 			{/foreach}
-			Celkem
+
+
+			<h2>Celkem</h2>
+
+			{dump $slots}
+
+			<table id="slotSum">
+				{foreach $slots as $key => $slot}
+					<tr id="{$key}"><td>{$key}</td><td>0</td></tr>
+				{/foreach}
+			</table>
 			<table id="resSum">
 				<tr>
 					<td>Metal</td><td>Stone</td><td>Food</td><td>Fuel</td>
 				</tr>
 				<tr>
-					<td id="metal"></td><td id="stone"></td><td id="food"></td><td id="fuel"></td>
+					<td id="metal">0</td><td id="stone">0</td><td id="food">0</td><td id="fuel">0</td>
 				</tr>
 				<tr>
 					<td></td><td></td><td></td><td colspan="5">{input $name}</td>
 				</tr>
 			</table>
-			<div id="slotDiv"></div>
 
 	{/form trainUnitForm}
 

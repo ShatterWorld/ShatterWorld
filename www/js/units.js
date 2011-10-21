@@ -120,7 +120,7 @@ Game.units = {
 	 */
 	printTotalSlots: function (){
 		$.each(this.availableSlots, function(key, res){
-			$('#slotDiv').append('<div>available: '+key+': '+res+'</div>');
+			$('#slotDiv').append('<div>available: '+key+': '+res+'</div>');//!!!!!!!!!!!!!!!!!!!!!!!!
 		});
 
 
@@ -183,7 +183,7 @@ $(document).ready(function(){
 		}
 
 		if(e.which == 8){
-			//$(this).val($(this).val().pop());//substring
+			$(this).val($(this).val().substr(0, $(this).val().length - 1));
 		}
 
 		//$('#slotDiv').append('<div>keyup</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
