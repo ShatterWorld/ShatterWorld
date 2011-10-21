@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * A military unit
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Unit")
  * @Table(indexes = {@Index(name = "idx_location", columns = {"location_id"})})
  * @author Jan "Teyras" Buchar
  */

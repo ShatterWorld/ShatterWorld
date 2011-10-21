@@ -12,7 +12,7 @@ class UnitMovement extends AbstractRule implements IEvent
 
 	public function process (Entities\Event $event)
 	{
-		$this->context->model->getUnitService()->moveUnits($event->units, $event->target);
+		$this->context->model->getUnitService()->moveUnits($event->units, $event->owner, $event->target);
 		return array();
 	}
 	

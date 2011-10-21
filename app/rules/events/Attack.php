@@ -24,7 +24,7 @@ abstract class Attack extends AbstractRule implements IEvent
 	public function process (Entities\Event $event)
 	{
 		$model = $this->getContext()->model;
-		$model->getUnitService()->moveUnits($event->target, $event->getUnitList());
+		$model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
 		$result = $this->evaluateBattle($event);
 		if ($casualties = array_merge($result['attacker']['casualties'], $result['defender']['casualties'])) {
 			$model->getUnitService()->removeUnits($casualties);
