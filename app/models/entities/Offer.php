@@ -16,6 +16,12 @@ class Offer extends BaseEntity {
 	private $owner;
 
 	/**
+	 * @Column(type = "boolean")
+	 * @var boolean
+	 */
+	private $sold;
+
+	/**
 	 * @Column(type = "string")
 	 * @var string
 	 */
@@ -39,7 +45,13 @@ class Offer extends BaseEntity {
 	 */
 	private $demandAmount;
 
-
+	public function __construct ($owner, $offer, $demand)
+	{
+		$this->owner = $owner;
+		$this->offer = $offer;
+		$this->demand = $demand;
+		$this->sold = false;
+	}
 	/**
 	 * Owner getter
 	 * @return Entities\Clan
@@ -50,32 +62,12 @@ class Offer extends BaseEntity {
 	}
 
 	/**
-	 * Owner setter
-	 * @param Entities\Clan
-	 * @return void
-	 */
-	public function setOwner ($owner)
-	{
-		$this->owner = $owner;
-	}
-
-	/**
 	 * Offer getter
 	 * @return string
 	 */
 	public function getOffer ()
 	{
 		return $this->offer;
-	}
-
-	/**
-	 * Name setter
-	 * @param string
-	 * @return void
-	 */
-	public function setOffer ($owner)
-	{
-		$this->owner = $owner;
 	}
 
 	/**
@@ -107,16 +99,6 @@ class Offer extends BaseEntity {
 	}
 
 	/**
-	 * Name setter
-	 * @param string
-	 * @return void
-	 */
-	public function setDemand ($owner)
-	{
-		$this->owner = $owner;
-	}
-
-	/**
 	 * DemandAmount getter
 	 * @return int
 	 */
@@ -133,6 +115,25 @@ class Offer extends BaseEntity {
 	public function setDemandAmount ($demandAmount)
 	{
 		$this->demandAmount = $demandAmount;
+	}
+
+	/**
+	 * Sold getter
+	 * @return boolean
+	 */
+	public function isSold ()
+	{
+		return $this->sold;
+	}
+
+	/**
+	 * Sold setter
+	 * @param boolean
+	 * @return void
+	 */
+	public function setSold ($sold)
+	{
+		$this->sold = $sold;
 	}
 
 }
