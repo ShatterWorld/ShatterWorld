@@ -19,6 +19,19 @@ abstract class Attack extends AbstractRule implements IEvent
 				'casualties' => array()
 			)
 		);
+		$attackPower = 0;
+		$defensePower = 0;
+		foreach ($event->getUnits() as $unit) {
+			$rule = $this->getContext()->rules->get('unit', $unit->type);
+			$result['attacker']['units'][$unit->type] = $unit->count;
+			$attackPower = $attackPower + $unit->count * $rule->getAttack();
+		}
+		foreach ($event->target->getUnits() as $unit) {
+			$rule = $this->getContext()->rules->get('unit', $unit->type);
+			$result['defender']['units'][$unit->type] = $unit->count;
+			$defensePower = $defensePower + $unit->count * $rule->getDefense();
+		}
+		$result['successful'] = $attackPower > $defensePower;
 		return $result;
 	}
 	

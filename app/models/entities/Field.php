@@ -1,5 +1,6 @@
 <?php
 namespace Entities;
+use Doctrine;
 
 /**
  * A game plan field entity
@@ -43,6 +44,12 @@ class Field extends BaseEntity {
 	 * @var int
 	 */
 	private $level;
+	
+	/**
+	 * @OneToMany(targetEntity = "Entities\Unit", mappedBy = "location")
+	 * @var Doctrine\Common\Collections\ArrayCollection
+	 */
+	private $units;
 
 	/**
 	 * Constructor
@@ -50,6 +57,7 @@ class Field extends BaseEntity {
 	public function __construct ()
 	{
 		$this->level = 0;
+		$this->units = new Doctrine\Common\Collections\ArrayCollection;
 	}
 
 	/**
@@ -175,5 +183,14 @@ class Field extends BaseEntity {
 	public function setLevel ($level)
 	{
 		$this->level = $level;
+	}
+	
+	/**
+	 * Units getter
+	 * @return Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function getUnits ()
+	{
+		return $this->units;
 	}
 }
