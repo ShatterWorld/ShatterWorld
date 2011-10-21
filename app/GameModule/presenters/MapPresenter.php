@@ -55,7 +55,7 @@ class MapPresenter extends BasePresenter
 		$origin = $this->getFieldRepository()->find($originId);
 		$target = $this->getFieldRepository()->find($targetId);
 		try {
-			$this->getMoveService()->startUnitMovement($origin, $target, 'pillaging', $units);
+			$this->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), 'pillaging', $units);
 			$this->flashMessage('Útok zahájen');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Takový útok není možný', 'error');

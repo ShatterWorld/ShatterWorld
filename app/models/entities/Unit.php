@@ -122,6 +122,9 @@ class Unit extends BaseEntity
 	 */
 	public function setMove (Move $move = NULL)
 	{
+		if ($this->move) {
+			$this->move->getUnits()->removeElement($this);
+		}
 		$this->move = $move;
 	}
 }

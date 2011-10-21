@@ -42,12 +42,18 @@ class Unit extends BaseService
 		foreach ($list as $unit) {
 			if ($base = $this->getRepository()->findUnit($owner, $target, $unit->type)) {
 				$base->count = $base->count + $unit->count;
-				$this->remove($unit, FALSE);
+				$this->delete($unit, FALSE);
 			} else {
 				$unit->move = NULL;
 				$unit->location = $target;
 			}
 		}
 		$this->entityManager->flush();
+	}
+	
+	public function delete ($object, $flush = TRUE)
+	{
+		$object->move = NULL;
+		parent::delete($object, $flush);
 	}
 }

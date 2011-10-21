@@ -4,14 +4,15 @@ use Entities;
 
 class Move extends Event
 {
-	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, $type, $units)
+	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, Entities\Clan $owner, $type, $units, $cargo = NULL)
 	{
 		$time = 0;
 		$move = $this->create(array(
 			'type' => $type,
-			'owner' => $origin->owner,
+			'owner' => $owner,
 			'origin' => $origin,
-			'target' => $target
+			'target' => $target,
+			'cargo' => $cargo
 		), FALSE);
 		foreach ($units as $id => $count) {
 			if ($unit = $this->context->model->getUnitRepository()->find($id)) {
