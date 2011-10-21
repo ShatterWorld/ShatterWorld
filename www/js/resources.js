@@ -86,8 +86,8 @@ Game.resources = {
 				var storage = Game.resources.data[resource].storage;
 				//$(span).children('.balance').html(Math.floor(balance));
 
-				$(span).children('.balance').slideUp(200, function() {
-					$(this).text(Math.floor(balance)).slideDown(200);
+				$(span).children('.balance').fadeOut(250, function() {
+					$(this).text(Math.floor(balance)).fadeIn(250);
 				});
 
 				$(span).children('.storage').html(storage);

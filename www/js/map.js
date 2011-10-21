@@ -844,9 +844,11 @@ Game.map.contextMenu = {
 
 								$.each(inputs, function(key, input){
 									var unitCount = $(input).val();
-									var unitId = $(trs[key+1]).attr('id');
 
-									params += '&' + unitId + '=' + unitCount;
+									if (unitCount > 0){
+										var unitId = $(trs[key+1]).attr('id');
+										params += '&' + unitId + '=' + unitCount;
+									}
 
 								});
 
