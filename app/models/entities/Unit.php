@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * A military unit
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Unit")
  * @Table(indexes = {@Index(name = "idx_location", columns = {"location_id"})})
  * @author Jan "Teyras" Buchar
  */
@@ -120,8 +120,11 @@ class Unit extends BaseEntity
 	 * @param Entities\Move
 	 * @return void
 	 */
-	public function setMove (Move $move)
+	public function setMove (Move $move = NULL)
 	{
+		if ($this->move) {
+			$this->move->getUnits()->removeElement($this);
+		}
 		$this->move = $move;
 	}
 }

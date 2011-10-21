@@ -1,5 +1,6 @@
 <?php
 namespace Entities;
+use Nette\Utils\Json;
 use Doctrine;
 
 /**
@@ -28,18 +29,25 @@ class Move extends Event
 	private $units;
 	
 	/**
+	 * @Column(type = "string")
+	 * @var string
+	 */
+	private $cargo;
+	
+	/**
 	 * Constructor
 	 * @param string
 	 * @param Entities\Clan
 	 * @param Entities\Field
 	 * @param Entities\Field
 	 */
-	public function __construct ($type, Clan $owner, Field $origin, Field $target)
+	public function __construct ($type, Clan $owner, Field $origin, Field $target, $cargo = array())
 	{
 		parent::__construct($type, $owner);
 		$this->units = new Doctrine\Common\Collections\ArrayCollection;
 		$this->origin = $origin;
 		$this->target = $target;
+		$this->cargo = Json::encode($cargo);
 	}
 	
 	/**
@@ -69,6 +77,10 @@ class Move extends Event
 		return $this->units;
 	}
 	
+	/**
+	 * A getter of unit $id => $count pairs
+	 * @return array
+	 */
 	public function getUnitList ()
 	{
 		$result = array();
@@ -76,6 +88,15 @@ class Move extends Event
 			$result[$unit->id] = $unit->count;
 		}
 		return $result;
+	}
+	
+	/**
+	 * Cargo getter
+	 * @return array
+	 */
+	public function getCargo ()
+	{
+		return Json::decode($this->cargo);
 	}
 	
 	/**

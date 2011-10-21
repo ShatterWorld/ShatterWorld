@@ -32,7 +32,7 @@ class Report extends BaseEntity
 	 * @param Entities\Event
 	 * @param array|object
 	 */
-	public function __construct (Event $event, $data)
+	public function __construct (Event $event, $data = array())
 	{
 		$this->event = $event;
 		$this->data = Json::encode($data);
