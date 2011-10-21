@@ -13,7 +13,7 @@ use Nette\Diagnostics\Debugger;
 class MarketPresenter extends BasePresenter {
 
 	/**
-	* Redirects if user has no clan, otherwise displays his clan
+	* Action for default overview
 	* @return void
 	*/
 	public function renderDefault ()
@@ -22,12 +22,21 @@ class MarketPresenter extends BasePresenter {
 	}
 
 	/**
-	* Action for new clan
+	* Action for sell
 	* @return void
 	*/
 	public function actionSell ()
 	{
 		$this->template->offers = $this->getClanOffers();
+	}
+
+	/**
+	* Action for buy
+	* @return void
+	*/
+	public function actionBuy ()
+	{
+		$this->template->offers = $this->getOfferRepository()->findAll();
 	}
 
 	/**
