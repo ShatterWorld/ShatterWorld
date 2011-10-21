@@ -845,7 +845,7 @@ Game.map.contextMenu = {
 								$.each(inputs, function(key, input){
 									var unitCount = $(input).val();
 
-									if (unitCount > 0){
+									if (unitCount > 0 && unitCount !== "" && Game.utils.isset(unitCount)){
 										var unitId = $(trs[key+1]).attr('id');
 										params += '&' + unitId + '=' + unitCount;
 									}
