@@ -98,11 +98,12 @@ abstract class Event extends BaseEntity {
 	/**
 	 * Timeout setter
 	 * @param int
+	 * @param DateTime
 	 * @return void
 	 */
-	public function setTimeout ($timeout)
+	public function setTimeout ($timeout, $time = NULL)
 	{
-		$this->term = new \DateTime('@' . (date('U') + $timeout));
+		$this->term = $time ? new \DateTime('@' . $time->format('U') + $timeout) : new \DateTime('@' . (date('U') + $timeout));
 	}
 	
 	/**

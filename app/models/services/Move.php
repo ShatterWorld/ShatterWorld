@@ -4,7 +4,7 @@ use Entities;
 
 class Move extends Event
 {
-	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, Entities\Clan $owner, $type, $units, $cargo = NULL)
+	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, Entities\Clan $owner, $type, $units, $cargo = array(), $term = NULL)
 	{
 		$time = 0;
 		$move = $this->create(array(
@@ -35,7 +35,7 @@ class Move extends Event
 				}
 			}
 		}
-		$move->timeout = $time;
+		$move->setTimeout($time, $term);
 		$this->entityManager->flush();
 	}
 }
