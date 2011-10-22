@@ -3,7 +3,7 @@ namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
-
+use InsufficientResourcesException;
 
 
 /**
@@ -13,30 +13,24 @@ use Nette\Diagnostics\Debugger;
 class MarketPresenter extends BasePresenter {
 
 	/**
-	 * Action for sell
-	 * @return void
-	 */
-	public function actionSell ()
-	{
-		$this->template->offers = $this->getClanOffers();
-	}
-
-	/**
 	 * Action for buy
 	 * @return void
 	 */
 	public function actionBuy ()
 	{
 		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 5);
-		$clanHq = $this->getPlayerClan()->getHeadquarters();
+		$clan = $this->getPlayerClan();
+		$clanHq = $clan->getHeadquarters();
 		$time = array();
 		foreach ($offers as $key => $offer){
 			$targetHq = $offer->owner->getHeadquarters();
 			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
+			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
 		}
 
 		$this->template->offers = $offers;
 		$this->template->time = $time;
+		$this->template->hasEnoughRes = $hasEnoughRes;
 	}
 
 	/**
@@ -88,7 +82,7 @@ class MarketPresenter extends BasePresenter {
 
 		$this->getOfferService()->create($data);
 		$this->flashMessage('Nabídnuto');
-		$this->redirect('Market:Sell');
+		$this->redirect('Market:');
 	}
 
 
@@ -120,10 +114,16 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function renderAcceptOffer ($offerId)
 	{
-		$time = array(10, 5);
-		$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan(), $time);
-		$this->flashMessage('Koupeno!');
-		$this->redirect('Market:Buy');
+		try{
+			$time = array(10, 5);
+			$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan(), $time);
+			$this->flashMessage('Koupeno!');
+		}
+		catch(InsufficientResourcesException $e){
+			$this->flashMessage('Nedostatek surovin');
+		}
+
+		$this->redirect('Market:');
 	}
 
 
