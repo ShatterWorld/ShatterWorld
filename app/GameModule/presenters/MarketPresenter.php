@@ -13,15 +13,6 @@ use Nette\Diagnostics\Debugger;
 class MarketPresenter extends BasePresenter {
 
 	/**
-	* Action for default overview
-	* @return void
-	*/
-	public function renderDefault ()
-	{
-		$this->template->offers = $this->getClanOffers();
-	}
-
-	/**
 	* Action for sell
 	* @return void
 	*/
@@ -36,7 +27,38 @@ class MarketPresenter extends BasePresenter {
 	*/
 	public function actionBuy ()
 	{
-		$this->template->offers = $this->getOfferRepository()->findAll();
+		$offers = $this->getOfferRepository()->findAll();
+
+
+//need field. not proxy
+/*
+		foreach ($offers as $offer){
+			$ownerFields = $this->getFieldRepository()->findByOwner($offer->owner->id);
+			$targetField;
+			foreach($ownerFields as $field) {
+				if($field->facility === 'headquarters'){
+					$targetField = $field;
+					break;
+				}
+			}
+			//Debugger::barDump($ownerFields[0]->facility);
+			Debugger::barDump($targetField);
+
+			$clanFields = $this->getFieldRepository()->findByOwner($this->getPlayerClan()->id);
+			$targetField2;
+			foreach($clanFields as $field) {
+				if($field->facility === 'headquarters'){
+					$targetField2 = $field;
+					break;
+				}
+			}
+
+
+
+			//$offer['time'] = $this->getFieldRepository()->calculateDistance($targetField, $targetField2);
+		}*/
+
+		$this->template->offers = $offers;
 	}
 
 	/**
@@ -93,6 +115,15 @@ class MarketPresenter extends BasePresenter {
 
 
 	/**
+	* Displays default overview
+	* @return void
+	*/
+	public function renderDefault ()
+	{
+		$this->template->offers = $this->getClanOffers();
+	}
+
+	/**
 	* Deletes the given offer
 	* @param int
 	* @return void
@@ -103,7 +134,6 @@ class MarketPresenter extends BasePresenter {
 		$this->flashMessage('Staženo z nabídky');
 		$this->redirect('Market:');
 	}
-
 
 	/**
 	* Aceppts the given offer
