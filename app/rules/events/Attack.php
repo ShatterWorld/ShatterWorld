@@ -43,6 +43,7 @@ abstract class Attack extends AbstractRule implements IEvent
 		if ($casualties = array_merge($result['attacker']['casualties'], $result['defender']['casualties'])) {
 			$model->getUnitService()->removeUnits($casualties);
 		}
+		return $result;
 	}
 	
 	public function isValid (Entities\Event $event)

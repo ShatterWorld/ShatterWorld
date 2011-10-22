@@ -7,7 +7,7 @@ namespace Entities;
  * @Table(indexes = {@Index(name = "idx_lock", columns = {"term", "processed", "lockUserId", "lockTimeout"})})
  * @InheritanceType("SINGLE_TABLE")
  * @DicriminatorColumn(name = "class", type = "string")
- * @DiscriminatorMap({"Move" = "Move", "Construction" = "Construction"})
+ * @DiscriminatorMap({"Move" = "Move", "Construction" = "Construction", "Shipment" = "Shipment"})
  * @author Jan "Teyras" Buchar
  */
 abstract class Event extends BaseEntity {
