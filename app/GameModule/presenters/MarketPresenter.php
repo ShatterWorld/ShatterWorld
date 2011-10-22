@@ -92,6 +92,32 @@ class MarketPresenter extends BasePresenter {
 	}
 
 
+	/**
+	* Deletes the given offer
+	* @param int
+	* @return void
+	*/
+	public function renderDeleteOffer ($offerId)
+	{
+		$this->getOfferService()->delete($this->getOfferRepository()->findOneById($offerId));
+		$this->flashMessage('Staženo z nabídky');
+		$this->redirect('Market:');
+	}
+
+
+	/**
+	* Aceppts the given offer
+	* @param int
+	* @return void
+	*/
+	public function renderAcceptOffer ($offerId)
+	{
+		$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId));
+		$this->flashMessage('Koupeno!');
+		$this->redirect('Market:Buy');
+	}
+
+
 
 
 
