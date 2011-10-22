@@ -17,12 +17,9 @@ class Offer extends BaseService {
 	*/
 	public function accept ($offer, $targetClan, $time)
 	{
-		if (
-			$this->context->model->getResourceRepository()->checkResources($targetClan, array($offer->demand => $offer->demandAmount))
-			&&
-			$this->context->model->getResourceRepository()->checkResources($offer->owner, array($offer->offer => $offer->offerAmount))
-		){
+		if ($this->context->model->getResourceRepository()->checkResources($targetClan, array($offer->demand => $offer->demandAmount))){
 
+			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount));
 			$this->update($offer, array('sold' => true));
 			$this->context->model->getShipmentService()->create(array(
 				'type' => 'shipment',
@@ -45,6 +42,37 @@ class Offer extends BaseService {
 		else{
 			throw new InsufficientResourcesException();
 		}
+	}
+
+	/**
+	 * Create a new object
+	 * @param array
+	 * @param bool
+	 * @return object
+	 */
+	public function create ($values, $flush = TRUE)
+	{
+		if($this->context->model->getResourceRepository()->checkResources($values['owner'], array($values['offer'] => $values['offerAmount']))){
+			parent::create($values, $flush);
+			$this->context->model->getResourceService()->pay($values['owner'], array($values['offer'] => $values['offerAmount']));
+		}
+		else{
+			throw new InsufficientResourcesException();
+		}
+
+	}
+
+	/**
+	 * Delete a persisted object
+	 * @param Entities\BaseEntity
+	 * @param bool
+	 * @return void
+	 */
+	public function delete ($object, $flush = TRUE){
+		Debugger::barDump($object);
+		$this->context->model->getResourceService()->increase($object->owner, array($object->offer => $object->offerAmount));
+		parent::delete($object, $flush);
+
 	}
 }
 

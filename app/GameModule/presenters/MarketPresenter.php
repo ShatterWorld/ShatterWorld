@@ -76,12 +76,16 @@ class MarketPresenter extends BasePresenter {
 	public function submitSellForm (Form $form)
 	{
 
-		$data = $form->getValues();
-		$data['owner'] = $this->getPlayerClan();
-		Debugger::barDump($data);
+		try{
+			$data = $form->getValues();
+			$data['owner'] = $this->getPlayerClan();
+			$this->getOfferService()->create($data);
+			$this->flashMessage('Nabídnuto');
+		}
+		catch(InsufficientResourcesException $e){
+			$this->flashMessage('Nedostatek surovin');
+		}
 
-		$this->getOfferService()->create($data);
-		$this->flashMessage('Nabídnuto');
 		$this->redirect('Market:');
 	}
 
@@ -115,7 +119,7 @@ class MarketPresenter extends BasePresenter {
 	public function renderAcceptOffer ($offerId)
 	{
 		try{
-			$time = array(10, 5);
+			$time = array(10, 10);
 			$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan(), $time);
 			$this->flashMessage('Koupeno!');
 		}

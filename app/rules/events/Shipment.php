@@ -2,6 +2,7 @@
 namespace Rules\Events;
 use Entities;
 use Rules\AbstractRule;
+use Nette\Diagnostics\Debugger;
 
 class Shipment extends AbstractRule implements IEvent
 {
@@ -12,6 +13,7 @@ class Shipment extends AbstractRule implements IEvent
 
 	public function process (Entities\Event $event)
 	{
+		$this->getContext()->model->getResourceService()->increase($event->target->owner, $event->cargo);
 		return array();
 	}
 
