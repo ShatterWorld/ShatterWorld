@@ -68,7 +68,10 @@
 
 			<div id="infoBar">
 				<div id="resourceBar">
-					&nbsp;
+					<span class="text">&nbsp;</span>
+				</div>
+				<div id="reportBar" n:if="$reportCount > 0">
+					<a n:href="Report:" class="text">{$reportCount}</a>
 				</div>
 				<div id="countdownBar">
 					<span class="text">Odpočítávání (<span id="countdownCount"></span>)</span>

@@ -19,20 +19,23 @@
 	vertical-align: middle;
 }
 
-#infoBar #countdownBar{
+#infoBar #countdownBar, #infoBar #reportBar {
 	color: white;
 	float: right;
 	margin-right: 15px;
 	cursor: pointer;
-	display: none;
 	vertical-align: middle;
 }
 
-#infoBar #countdownBar:hover{
+#infoBar #countdownBar {
+	display: none;
+}
+
+#infoBar #countdownBar:hover {
 	text-decoration: underline;
 }
 
-#countdownDialog{
+#countdownDialog {
 	/*color: white;*/
 	display: none;
 	/*padding-left: 15px;

@@ -1,0 +1,11 @@
+{block #content}
+{if $reports}
+{foreach $reports as $report}
+<div>
+{$report->event->type}
+</div>
+{/foreach}
+{else}
+Žádné zprávy k zobrazení
+{/if}
+{/block}
