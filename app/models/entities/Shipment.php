@@ -5,7 +5,7 @@ use Nette\Utils\Json;
 /**
  * A shipment of resources
  * @Entity
- *
+ * @author Jan "Teyras" Buchar
  */
 class Shipment extends Event
 {

@@ -13,23 +13,23 @@ use Nette\Diagnostics\Debugger;
 class MarketPresenter extends BasePresenter {
 
 	/**
-	* Action for sell
-	* @return void
-	*/
+	 * Action for sell
+	 * @return void
+	 */
 	public function actionSell ()
 	{
 		$this->template->offers = $this->getClanOffers();
 	}
 
 	/**
-	* Action for buy
-	* @return void
-	*/
+	 * Action for buy
+	 * @return void
+	 */
 	public function actionBuy ()
 	{
 		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 5);
 		$clanHq = $this->getPlayerClan()->getHeadquarters();
-
+		$time = array();
 		foreach ($offers as $key => $offer){
 			$targetHq = $offer->owner->getHeadquarters();
 			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
@@ -40,9 +40,9 @@ class MarketPresenter extends BasePresenter {
 	}
 
 	/**
-	* Creates the sell form
-	* @return Nette\Application\UI\Form
-	*/
+	 * Creates the sell form
+	 * @return Nette\Application\UI\Form
+	 */
 	protected function createComponentSellForm ()
 	{
 		foreach ($this->context->rules->getAll('resource') as $type => $rule){
@@ -75,10 +75,10 @@ class MarketPresenter extends BasePresenter {
 	}
 
 	/**
-	* Sell slot
-	* @param Nette\Application\UI\Form
-	* @return void
-	*/
+	 * Sell slot
+	 * @param Nette\Application\UI\Form
+	 * @return void
+	 */
 	public function submitSellForm (Form $form)
 	{
 
@@ -93,19 +93,19 @@ class MarketPresenter extends BasePresenter {
 
 
 	/**
-	* Displays default overview
-	* @return void
-	*/
+	 * Displays default overview
+	 * @return void
+	 */
 	public function renderDefault ()
 	{
 		$this->template->offers = $this->getClanOffers();
 	}
 
 	/**
-	* Deletes the given offer
-	* @param int
-	* @return void
-	*/
+	 * Deletes the given offer
+	 * @param int
+	 * @return void
+	 */
 	public function renderDeleteOffer ($offerId)
 	{
 		$this->getOfferService()->delete($this->getOfferRepository()->findOneById($offerId));
@@ -114,10 +114,10 @@ class MarketPresenter extends BasePresenter {
 	}
 
 	/**
-	* Aceppts the given offer
-	* @param int
-	* @return void
-	*/
+	 * Aceppts the given offer
+	 * @param int
+	 * @return void
+	 */
 	public function renderAcceptOffer ($offerId)
 	{
 		$time = array(10, 5);

@@ -3,7 +3,7 @@ namespace Rules\Events;
 use Entities;
 use Rules\AbstractRule;
 
-class Shipment extends AbstractRule implements IConstruction
+class Shipment extends AbstractRule implements IEvent
 {
 	public function getDescription ()
 	{
@@ -23,10 +23,5 @@ class Shipment extends AbstractRule implements IConstruction
 	public function formatReport ($data)
 	{
 		return $data;
-	}
-
-	public function isExclusive ()
-	{
-		return false;
 	}
 }
