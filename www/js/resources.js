@@ -84,12 +84,12 @@ Game.resources = {
 				var production = Game.resources.data[resource].production;
 				var balance = Game.resources.data[resource].balance;
 				var storage = Game.resources.data[resource].storage;
-				//$(span).children('.balance').html(Math.floor(balance));
-
+				$(span).children('.balance').html(Math.floor(balance));
+/*
 				$(span).children('.balance').fadeOut(250, function() {
-					$(this).text(Math.floor(balance)).fadeIn(250);
+					$(this).html(Math.floor(balance)).fadeIn(250);
 				});
-
+*/
 				$(span).children('.storage').html(storage);
 
 				$(span).children('.production').html((production >= 0 ? '+' : '') + Math.floor(production * 3600));
