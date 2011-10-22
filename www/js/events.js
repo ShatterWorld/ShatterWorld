@@ -100,6 +100,15 @@ Game.events = {
 					y = -1;
 				}
 
+				else if (type == 'shipment'){
+
+					var data = jQuery.parseJSON(event['construction']);
+
+					label = 'Obchod';
+					x = event['target']['x'];
+					y = event['target']['y'];
+				}
+
 
 				Game.countdown.addCountdown(label, x, y, event['countdown']);
 				count++

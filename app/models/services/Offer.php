@@ -17,11 +17,7 @@ class Offer extends BaseService {
 	*/
 	public function accept ($offer, $targetClan, $time)
 	{
-		if (
-			$this->context->model->getResourceRepository()->checkResources($targetClan, array($offer->demand => $offer->demandAmount))
-			&&
-			$this->context->model->getResourceRepository()->checkResources($offer->owner, array($offer->offer => $offer->offerAmount))
-		){
+		if ($this->context->model->getResourceRepository()->checkResources($targetClan, array($offer->demand => $offer->demandAmount))){
 
 			$this->update($offer, array('sold' => true));
 			$this->context->model->getShipmentService()->create(array(
@@ -46,5 +42,25 @@ class Offer extends BaseService {
 			throw new InsufficientResourcesException();
 		}
 	}
+
+	/**
+	 * Create a new object
+	 * @param array
+	 * @param bool
+	 * @return object
+	 */
+	public function create ($values, $flush = TRUE)
+	{
+		if($this->context->model->getResourceRepository()->checkResources($values['owner'], array($values['offer'] => $values['offerAmount']))){
+			parent::create($values, $flush);
+			$this->context->model->getResourceService()->pay($values['owner'], array($values['offer'] => $values['offerAmount']));
+		}
+		else{
+			throw new InsufficientResourcesException();
+		}
+
+	}
+
+
 }
 
