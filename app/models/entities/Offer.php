@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * A offer profile entity
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Offer")
  * @author Petr Bělohlávek
  */
 class Offer extends BaseEntity {
