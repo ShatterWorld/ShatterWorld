@@ -19,19 +19,38 @@ abstract class Attack extends AbstractRule implements IEvent
 				'casualties' => array()
 			)
 		);
-		$attackPower = 0;
-		$defensePower = 0;
+		$attackerPower = 0;
+		$attackerDefense = 0;
+		$defenderPower = 0;
+		$defenderDefense = 0;
 		foreach ($event->getUnits() as $unit) {
 			$rule = $this->getContext()->rules->get('unit', $unit->type);
 			$result['attacker']['units'][$unit->type] = $unit->count;
-			$attackPower = $attackPower + $unit->count * $rule->getAttack();
+			$attackerPower = $attackerPower + $unit->count * $rule->getAttack();
+			$attackerDefense = $attackerDefense + $unit->count * $rule->getDefense();
 		}
 		foreach ($event->target->getUnits() as $unit) {
 			$rule = $this->getContext()->rules->get('unit', $unit->type);
 			$result['defender']['units'][$unit->type] = $unit->count;
-			$defensePower = $defensePower + $unit->count * $rule->getDefense();
+			$defenderPower = $defenderPower + $unit->count * $rule->getAttack();
+			$defenderDefense = $defenderDefense + $unit->count * $rule->getDefense();
 		}
-		$result['successful'] = $attackPower > $defensePower;
+		$result['successful'] = $attackerPower > $defenderDefense;
+		$attackerCasualtiesCoefficient = 1 - tanh($attackerPower / 5 * $defenderDefense);
+		$defenderCasualtiesCoeffecient = tanh(3 * $attackerPower / $defenderDefense);
+		foreach ($event->getUnits() as $unit) {
+			$result['attacker']['casualties'][$unit->type] = intval(floor($unit->count * $attackerCasualtiesCoefficient));
+		}
+		foreach ($event->target->getUnits() as $unit) {
+			$result['defender']['casualties'][$unit->type] = intval(floor($unit->count * $defenderCasualtiesCoefficient));
+		}
+		if ($result['successful']) {
+			$resources = $this->getContext()->model->getResourceRepository()->findResourcesByClan($event->target->owner);
+			$territorySize = $this->getContext()->model->getFieldRepository()->getTerritorySize($event->target->owner);
+			foreach ($resources as $resource => $amount) {
+				$result['attacker']['loot'][$resource] = intval(floor($amount / $territorySize));
+			}
+		}
 		return $result;
 	}
 	
@@ -43,6 +62,20 @@ abstract class Attack extends AbstractRule implements IEvent
 		if ($casualties = array_merge($result['attacker']['casualties'], $result['defender']['casualties'])) {
 			$model->getUnitService()->removeUnits($casualties);
 		}
+		if ($this->isReturning()) {
+			if ($loot = $result['attacker']['loot']) {
+				$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot);
+			}
+			$this->getContext()->model->getMoveService()->startUnitMovement(
+				$event->target, 
+				$event->origin, 
+				$event->origin->owner, 
+				'unitReturn', 
+				$event->getUnitList(), 
+				$loot, 
+				$event->term
+			);
+		}
 		return $result;
 	}
 	
@@ -51,5 +84,10 @@ abstract class Attack extends AbstractRule implements IEvent
 		return $event->target->owner !== NULL && 
 			$event->target->owner !== $event->owner && 
 			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance);
+	}
+	
+	public function isReturning ()
+	{
+		return TRUE;
 	}
 }
