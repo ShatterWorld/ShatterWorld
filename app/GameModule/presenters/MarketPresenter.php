@@ -28,37 +28,15 @@ class MarketPresenter extends BasePresenter {
 	public function actionBuy ()
 	{
 		$offers = $this->getOfferRepository()->findAll();
+		$clanHq = $this->getPlayerClan()->getHeadquarters();
 
-
-//need field. not proxy
-/*
-		foreach ($offers as $offer){
-			$ownerFields = $this->getFieldRepository()->findByOwner($offer->owner->id);
-			$targetField;
-			foreach($ownerFields as $field) {
-				if($field->facility === 'headquarters'){
-					$targetField = $field;
-					break;
-				}
-			}
-			//Debugger::barDump($ownerFields[0]->facility);
-			Debugger::barDump($targetField);
-
-			$clanFields = $this->getFieldRepository()->findByOwner($this->getPlayerClan()->id);
-			$targetField2;
-			foreach($clanFields as $field) {
-				if($field->facility === 'headquarters'){
-					$targetField2 = $field;
-					break;
-				}
-			}
-
-
-
-			//$offer['time'] = $this->getFieldRepository()->calculateDistance($targetField, $targetField2);
-		}*/
+		foreach ($offers as $key => $offer){
+			$targetHq = $offer->owner->getHeadquarters();
+			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
+		}
 
 		$this->template->offers = $offers;
+		$this->template->time = $time;
 	}
 
 	/**

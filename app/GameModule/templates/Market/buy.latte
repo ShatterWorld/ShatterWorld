@@ -5,10 +5,25 @@
 {block #content}
 <h3>Nabízené zboží</h3>
 	{dump $offers}
+	{dump $time}
 	<table id = "offers">
-		<tr><th>Kdo</th><th>Co</th><th>Kolik</th><th>Za co</th><th>Kolik</th><th>Přijmout nabídku</th></tr>
-		{foreach $offers as $offer}
-			<tr><td>{$offer->owner->name}({$offer->owner->id})</td><td>{$offer->offer}</td><td>{$offer->offerAmount}</td><td>{$offer->demand}</td><td>{$offer->demandAmount}</td><td><a href="{link Market:acceptOffer $offer->id}">Ano</a></td></tr>
+		<tr>
+			<th>Kdo</th>
+			<th>Co</th>
+			<th>Kolik</th>
+			<th>Za co</th>
+			<th>Kolik</th>
+			<th>Čas</th>
+			<th>Přijmout nabídku</th>
+		</tr>
+		{foreach $offers as $key => $offer}
+			<tr>
+				<td>{$offer->owner->name}({$offer->owner->id})</td>
+				<td>{$offer->offer}</td><td>{$offer->offerAmount}</td>
+				<td>{$offer->demand}</td><td>{$offer->demandAmount}</td>
+				<td>{$time[$key]}</td>
+				<td><a href="{link Market:acceptOffer $offer->id}">Ano</a></td>
+			</tr>
 		{/foreach}
 	</table>
 
