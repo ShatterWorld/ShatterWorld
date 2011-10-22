@@ -62,6 +62,17 @@ class Offer extends BaseService {
 
 	}
 
+	/**
+	 * Delete a persisted object
+	 * @param Entities\BaseEntity
+	 * @param bool
+	 * @return void
+	 */
+	public function delete ($object, $flush = TRUE){
+		Debugger::barDump($object);
+		$this->context->model->getResourceService()->increase($object->owner, array($object->offer => $object->offerAmount));
+		parent::delete($object, $flush);
 
+	}
 }
 
