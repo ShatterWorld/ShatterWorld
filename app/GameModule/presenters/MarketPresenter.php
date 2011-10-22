@@ -120,7 +120,8 @@ class MarketPresenter extends BasePresenter {
 	*/
 	public function renderAcceptOffer ($offerId)
 	{
-		$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId));
+		$time = array(10, 5);
+		$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan(), $time);
 		$this->flashMessage('Koupeno!');
 		$this->redirect('Market:Buy');
 	}
