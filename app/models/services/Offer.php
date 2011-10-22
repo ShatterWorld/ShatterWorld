@@ -19,6 +19,7 @@ class Offer extends BaseService {
 	{
 		if ($this->context->model->getResourceRepository()->checkResources($targetClan, array($offer->demand => $offer->demandAmount))){
 
+			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount));
 			$this->update($offer, array('sold' => true));
 			$this->context->model->getShipmentService()->create(array(
 				'type' => 'shipment',
