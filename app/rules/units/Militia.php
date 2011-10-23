@@ -24,6 +24,11 @@ class Militia extends AbstractRule implements IUnit
 		return 120;
 	}
 	
+	public function getCapacity ()
+	{
+		return 20;
+	}
+	
 	public function getCost ()
 	{
 		return array(

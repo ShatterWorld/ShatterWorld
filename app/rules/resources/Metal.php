@@ -11,6 +11,6 @@ class Metal extends AbstractRule implements IResource
 
 	public function getInitialAmount ()
 	{
-		return 100;
+		return 300;
 	}
 }

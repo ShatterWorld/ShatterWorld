@@ -27,6 +27,12 @@ interface IUnit extends IRule
 	public function getSpeed ();
 	
 	/**
+	 * Get the amount of each resource the unit is able to carry
+	 * @return int
+	 */
+	public function getCapacity ();
+	
+	/**
 	 * Get the training cost of the unit
 	 * @return array of $resource => $cost
 	 */

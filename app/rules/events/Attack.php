@@ -47,6 +47,12 @@ abstract class Attack extends AbstractRule implements IEvent
 		if ($result['successful']) {
 			$resources = $this->getContext()->model->getResourceRepository()->getResourcesArray($event->target->owner);
 			$territorySize = $this->getContext()->model->getFieldRepository()->getTerritorySize($event->target->owner);
+			$unitCapacity = 0;
+			foreach ($result['attacker']['units'] as $type => $count) {
+				$rule = $this->getContext()->rules->get('unit', $type);
+				$resultCount = $count - isset($result['attacker']['casualties'][$type]) ? $result['attacker']['casualties'][$type] : 0;
+				$unitCapacity = $unitCapacity + $rule->getCapacity() * $resultCount;
+			}
 			foreach ($resources as $resource => $data) {
 				$result['attacker']['loot'][$resource] = intval(floor($data['balance'] / $territorySize));
 			}

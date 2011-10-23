@@ -24,6 +24,11 @@ class Footman extends AbstractRule implements IUnit
 		return 100;
 	}
 	
+	public function getCapacity ()
+	{
+		return 30;
+	}
+	
 	public function getCost ()
 	{
 		return array(
