@@ -317,7 +317,11 @@ class Field extends BaseRepository {
 		$cache = $this->getVisibleFieldsCache();
 		$ids = $cache->load($clan->id);
 		if ($ids === NULL) {
-			$cache->save($clan->id, $ids = $this->getVisibleFields($clan, $depth));
+			$ids = array();
+			foreach($this->getVisibleFields($clan, $depth) as $field){
+				$ids[] = $field->id;
+			}
+			$cache->save($clan->id, $ids);
 		}
 		return $ids;
 	}
