@@ -19,7 +19,8 @@ abstract class BasePresenter extends \BasePresenter
 	public function beforeRender ()
 	{
 		parent::beforeRender();
-		$this->template->reportCount = $this->getReportRepository()->countUnread($this->getPlayerClan());
+		$clan = $this->getPlayerClan();
+		$this->template->reportCount = $clan ? $this->getReportRepository()->countUnread($clan) : 0;
 	}
 	
 	public function handleLogout ()
