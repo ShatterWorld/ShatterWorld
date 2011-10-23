@@ -2,6 +2,7 @@
 namespace Repositories;
 use Doctrine;
 use Entities;
+use Nette\Diagnostics\Debugger;
 
 /**
  * Offer repository
@@ -25,6 +26,11 @@ class Offer extends BaseRepository
 		));
 		$qb->setParameter(1, $clan->id);
 		$qb->setParameter(2, false);
+
+
+		$visibleClans = $this->context->model->getClanRepository()->getVisibleClans($clan, $depth);
+		Debugger::barDump($visibleClans);
+
 		return $qb->getQuery()->getResult();
 	}
 

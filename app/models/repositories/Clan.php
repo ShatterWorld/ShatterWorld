@@ -2,6 +2,7 @@
 namespace Repositories;
 use Doctrine;
 use Entities;
+use Nette\Diagnostics\Debugger;
 
 class Clan extends BaseRepository
 {
@@ -35,4 +36,35 @@ class Clan extends BaseRepository
 		}
 		return $orders;
 	}
+
+
+	/**
+	 * Finds clans which are visible for the player
+	 * @param Entities\Clan
+	 * @param integer
+	 * @return array of Entities\Field
+	 */
+	public function getVisibleClans ($clan, $depth)
+	{
+		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $depth);
+
+		Debugger::barDump($visibleFields);
+		$visibleClans = array();
+
+		foreach($visibleFields as $visibleField){
+			if(array_search($visibleField->owner, $visibleClans, true) === false){
+				$visibleClans[] = $visibleField->owner;
+			}
+		}
+
+
+
+
+
+
+
+	}
+
+
+
 }

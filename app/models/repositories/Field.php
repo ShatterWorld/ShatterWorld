@@ -258,6 +258,10 @@ class Field extends BaseRepository {
 		return $qb->getQuery()->getResult();
 	}
 
+	/**
+	 * Finds fields which are visible for the player from the cache
+	 * @return Cache
+	 */
 	public function getVisibleFieldsCache ()
 	{
 		return new Nette\Caching\Cache($this->context->cacheStorage, 'VisibleFields');
@@ -287,7 +291,7 @@ class Field extends BaseRepository {
 
 		$ownerFields = $qb->getQuery()->getResult();
 
-		$map = $this->getIndexedMapIds();
+		$map = $this->getIndexedMap();
 		$visibleFields = array();
 		foreach($ownerFields as $ownerField){
 			$neighbours = $this->getFieldNeighbours($ownerField, $depth, $map);
