@@ -11,6 +11,6 @@ class Food extends AbstractRule implements IResource
 
 	public function getInitialAmount ()
 	{
-		return 150;
+		return 500;
 	}
 }
