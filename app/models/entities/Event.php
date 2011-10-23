@@ -103,7 +103,7 @@ abstract class Event extends BaseEntity {
 	 */
 	public function setTimeout ($timeout, $time = NULL)
 	{
-		$this->term = $time ? new \DateTime('@' . $time->format('U') + $timeout) : new \DateTime('@' . (date('U') + $timeout));
+		$this->term = $time ? new \DateTime('@' . (intval($time->format('U')) + $timeout)) : new \DateTime('@' . (date('U') + $timeout));
 	}
 	
 	/**

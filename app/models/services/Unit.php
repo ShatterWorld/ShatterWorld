@@ -4,7 +4,7 @@ use Entities;
 
 class Unit extends BaseService
 {
-	public function addUnits (Entities\Field $field, Entities\Clan $owner, $list)
+	public function addUnits (Entities\Field $field, Entities\Clan $owner, $list, $term = NULL)
 	{
 		foreach ($list as $type => $count) {
 			if ($unit = $this->getRepository()->findUnit($owner, $field, $type)) {
@@ -19,13 +19,13 @@ class Unit extends BaseService
 			}
 		}
 		$this->entityManager->flush();
-		$this->context->model->getResourceService()->recalculateProduction($owner, new \DateTime);
+		$this->context->model->getResourceService()->recalculateProduction($owner, $term);
 	}
 	
-	public function removeUnits ($list)
+	public function removeUnits ($owner, Entities\Field $location, $list, $term = NULL)
 	{
-		foreach ($list as $id => $count) {
-			if ($unit = $this->getRepository()->find($id)) {
+		foreach ($list as $type => $count) {
+			if ($unit = $this->getRepository()->findUnit($owner, $location, $type)) {
 				$newCount = $unit->count - $count;
 				if ($newCount > 0) {
 					$this->update($unit, array('count' => $newCount), FALSE);
@@ -35,6 +35,7 @@ class Unit extends BaseService
 			}
 		}
 		$this->entityManager->flush();
+		$this->context->model->getResourceService()->recalculateProduction($owner, $term);
 	}
 	
 	public function moveUnits (Entities\Field $target, Entities\Clan $owner, $list)
@@ -54,6 +55,7 @@ class Unit extends BaseService
 	public function delete ($object, $flush = TRUE)
 	{
 		$object->move = NULL;
+		$object->location = NULL;
 		parent::delete($object, $flush);
 	}
 }

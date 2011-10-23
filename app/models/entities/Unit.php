@@ -101,8 +101,11 @@ class Unit extends BaseEntity
 	 * @param Entities\Field
 	 * @return void
 	 */
-	public function setLocation (Field $location)
+	public function setLocation (Field $location = NULL)
 	{
+		if ($this->location) {
+			$this->location->getUnits()->removeElement($this);
+		}
 		$this->location = $location;
 	}
 	

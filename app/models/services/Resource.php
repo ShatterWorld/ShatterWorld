@@ -40,11 +40,11 @@ class Resource extends BaseService
 		$this->entityManager->flush();
 	}
 	
-	public function recalculateProduction (Entities\Clan $clan, $term)
+	public function recalculateProduction (Entities\Clan $clan, $term = NULL)
 	{
 		$production = $this->context->stats->getResourcesProduction($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
-			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0, $term);
+			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0, $term ?: new \DateTime());
 		}
 		$this->entityManager->flush();
 	}

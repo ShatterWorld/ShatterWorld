@@ -36,19 +36,19 @@ abstract class Attack extends AbstractRule implements IEvent
 			$defenderDefense = $defenderDefense + $unit->count * $rule->getDefense();
 		}
 		$result['successful'] = $attackerPower > $defenderDefense;
-		$attackerCasualtiesCoefficient = 1 - tanh($attackerPower / 5 * $defenderDefense);
-		$defenderCasualtiesCoeffecient = tanh(3 * $attackerPower / $defenderDefense);
+		$attackerCasualtiesCoefficient = 1 - tanh($attackerPower / (5 * $defenderDefense));
+		$defenderCasualtiesCoefficient = tanh(2 * $attackerPower / $defenderDefense);
 		foreach ($event->getUnits() as $unit) {
-			$result['attacker']['casualties'][$unit->type] = intval(floor($unit->count * $attackerCasualtiesCoefficient));
+			$result['attacker']['casualties'][$unit->type] = intval(round($unit->count * $attackerCasualtiesCoefficient));
 		}
 		foreach ($event->target->getUnits() as $unit) {
-			$result['defender']['casualties'][$unit->type] = intval(floor($unit->count * $defenderCasualtiesCoefficient));
+			$result['defender']['casualties'][$unit->type] = intval(round($unit->count * $defenderCasualtiesCoefficient));
 		}
 		if ($result['successful']) {
 			$resources = $this->getContext()->model->getResourceRepository()->getResourcesArray($event->target->owner);
 			$territorySize = $this->getContext()->model->getFieldRepository()->getTerritorySize($event->target->owner);
-			foreach ($resources as $resource => $amount) {
-				$result['attacker']['loot'][$resource] = intval(floor($amount / $territorySize));
+			foreach ($resources as $resource => $data) {
+				$result['attacker']['loot'][$resource] = intval(floor($data['balance'] / $territorySize));
 			}
 		}
 		return $result;
@@ -57,21 +57,25 @@ abstract class Attack extends AbstractRule implements IEvent
 	public function process (Entities\Event $event)
 	{
 		$model = $this->getContext()->model;
-		$model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
 		$result = $this->evaluateBattle($event);
-		if ($casualties = array_merge($result['attacker']['casualties'], $result['defender']['casualties'])) {
-			$model->getUnitService()->removeUnits($casualties);
+		$attackerUnits = $event->getUnitList();
+		$model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
+		if ($result['attacker']['casualties']) {
+			$model->getUnitService()->removeUnits($event->owner, $event->target, $result['attacker']['casualties'], $event->term);
+		}
+		if ($result['defender']['casualties']) {
+			$model->getUnitService()->removeUnits($event->target->owner, $event->target, $result['defender']['casualties'], $event->term);
 		}
 		if ($this->isReturning()) {
 			if ($loot = $result['attacker']['loot']) {
-				$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot);
+				$model->getResourceService()->pay($event->target->owner, $loot);
 			}
-			$this->getContext()->model->getMoveService()->startUnitMovement(
+			$model->getMoveService()->startUnitMovement(
 				$event->target, 
 				$event->origin, 
 				$event->origin->owner, 
 				'unitReturn', 
-				$event->getUnitList(), 
+				$attackerUnits, 
 				$loot, 
 				$event->term
 			);
