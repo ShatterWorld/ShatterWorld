@@ -51,9 +51,12 @@ class Clan extends BaseRepository
 		 *	no recursion
 		 * 	save function pointers to the stack (arraySet) by current depth
 		 * 	run the methods from the stack (no recusions, just to save another pointers to set[depth-1])
-		 * 	run...
+		 * 	need to check which depth was run, and how many times
+		 * 	olny maxDepth keeps running
+		 * 	rn next depth after the previous is finished
 		 * 	return
 		 * */
+
 
 
 		if ($depth <= 0) return;
