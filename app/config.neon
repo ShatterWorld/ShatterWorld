@@ -21,7 +21,7 @@ common:
 			toleration: 3
 
 		stats:
-			baseLOS: 4
+			baseLOS: 5
 			baseColonisationTime: 30
 			baseAbandonmentTime: 60
 			baseStorage: 1200

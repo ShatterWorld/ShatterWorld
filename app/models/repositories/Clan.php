@@ -42,26 +42,40 @@ class Clan extends BaseRepository
 	 * Finds clans which are visible for the player
 	 * @param Entities\Clan
 	 * @param integer
+	 * @param array of Entities\Clan
 	 * @return array of Entities\Field
 	 */
-	public function getVisibleClans ($clan, $depth)
+	public function getVisibleClans ($clan, $depth, &$visibleClans = array(), &$visitedClans = array(), &$functionStack = array())
 	{
-		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $depth);
+		/*
+		 *	no recursion
+		 * 	save function pointers to the stack (arraySet) by current depth
+		 * 	run the methods from the stack (no recusions, just to save another pointers to set[depth-1])
+		 * 	run...
+		 * 	return
+		 * */
 
-		Debugger::barDump($visibleFields);
-		$visibleClans = array();
 
-		foreach($visibleFields as $visibleField){
+		if ($depth <= 0) return;
+
+		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $this->context->stats->getVisibilityRadius($clan));
+		//Debugger::barDump($visibleFields);
+
+		$newClans = array();
+		foreach ($visibleFields as $visibleField){
 			if(array_search($visibleField->owner, $visibleClans, true) === false){
-				$visibleClans[] = $visibleField->owner;
+				if($visibleField->owner !== null){
+					$visibleClans[] = $visibleField->owner;
+					$newClans[] = $visibleField->owner;
+				}
 			}
 		}
 
+		foreach ($newClans as $newClan){
+			$this->getVisibleClans($newClan, $depth-1, $visibleClans);
+		}
 
-
-
-
-
+		return $visibleClans;
 
 	}
 

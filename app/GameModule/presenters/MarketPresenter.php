@@ -22,12 +22,14 @@ class MarketPresenter extends BasePresenter {
 		$clan = $this->getPlayerClan();
 		$clanHq = $clan->getHeadquarters();
 		$time = array();
+		$hasEnoughRes = array();
 		foreach ($offers as $key => $offer){
 			$targetHq = $offer->owner->getHeadquarters();
 			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
 			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
 		}
 
+		//Debugger::barDump($offers);
 		$this->template->offers = $offers;
 		$this->template->time = $time;
 		$this->template->hasEnoughRes = $hasEnoughRes;

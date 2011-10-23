@@ -17,7 +17,7 @@ class Offer extends BaseRepository
 	 * @param int
 	 * @return void
 	 */
-	public function findReachable ($clan, $depth)
+	public function findReachable ($clan, $depth=1)
 	{
 		$qb = $this->createQueryBuilder('o');
 		$qb->where($qb->expr()->andX(
@@ -29,7 +29,14 @@ class Offer extends BaseRepository
 
 
 		$visibleClans = $this->context->model->getClanRepository()->getVisibleClans($clan, $depth);
+
+		$hqs = array();
+		foreach($visibleClans as $visibleClan){
+			$hqs[] = $visibleClan->headquarters;
+		}
+
 		Debugger::barDump($visibleClans);
+		Debugger::barDump($hqs);
 
 		return $qb->getQuery()->getResult();
 	}
