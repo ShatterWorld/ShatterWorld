@@ -15,8 +15,10 @@ class MapPresenter extends BasePresenter {
 	public function submitGenerateMapForm (Form $form)
 	{
 		$this->getUnitService()->deleteAll();
+		$this->getReportService()->deleteAll();
 		$this->getEventService()->deleteAll();
 		$this->getResourceService()->deleteAll();
+		$this->getOfferService()->deleteAll();
 		$this->getClanService()->deleteAll();
 		$this->getAllianceService()->deleteAll();
 		$this->getFieldService()->deleteAll();

@@ -8,7 +8,8 @@ abstract class Attack extends AbstractRule implements IEvent
 	protected function evaluateBattle (Entities\Event $event)
 	{
 		$result = array(
-			'successful' => TRUE,
+			'successful' => FALSE,
+			'totalVictory' => TRUE,
 			'attacker' => array(
 				'units' => array(),
 				'casualties' => array(),
@@ -35,7 +36,6 @@ abstract class Attack extends AbstractRule implements IEvent
 			$defenderPower = $defenderPower + $unit->count * $rule->getAttack();
 			$defenderDefense = $defenderDefense + $unit->count * $rule->getDefense();
 		}
-		$result['successful'] = $attackerPower > $defenderDefense;
 		$attackerCasualtiesCoefficient = 1 - tanh($attackerPower / (5 * $defenderDefense));
 		$defenderCasualtiesCoefficient = tanh(2 * $attackerPower / $defenderDefense);
 		foreach ($event->getUnits() as $unit) {
@@ -43,7 +43,11 @@ abstract class Attack extends AbstractRule implements IEvent
 		}
 		foreach ($event->target->getUnits() as $unit) {
 			$result['defender']['casualties'][$unit->type] = intval(round($unit->count * $defenderCasualtiesCoefficient));
+			if ($result['defender']['casualties'][$unit->type] < $result['defender']['units'][$unit->type]) {
+				$result['totalVictory'] = FALSE;
+			}
 		}
+		$result['successful'] = $this->needsTotalVictory() ? $result['totalVictory'] : $attackerPower > $defenderDefense;
 		if ($result['successful']) {
 			$resources = $this->getContext()->model->getResourceRepository()->getResourcesArray($event->target->owner);
 			$territorySize = $this->getContext()->model->getFieldRepository()->getTerritorySize($event->target->owner);
@@ -99,5 +103,10 @@ abstract class Attack extends AbstractRule implements IEvent
 	public function isReturning ()
 	{
 		return TRUE;
+	}
+	
+	public function needsTotalVictory ()
+	{
+		return FALSE;
 	}
 }
