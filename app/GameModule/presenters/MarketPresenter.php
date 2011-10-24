@@ -18,16 +18,18 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function actionBuy ()
 	{
-		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 5);
+		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 2);
 		$clan = $this->getPlayerClan();
 		$clanHq = $clan->getHeadquarters();
 		$time = array();
+		$hasEnoughRes = array();
 		foreach ($offers as $key => $offer){
 			$targetHq = $offer->owner->getHeadquarters();
 			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
 			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
 		}
 
+		//Debugger::barDump($offers);
 		$this->template->offers = $offers;
 		$this->template->time = $time;
 		$this->template->hasEnoughRes = $hasEnoughRes;

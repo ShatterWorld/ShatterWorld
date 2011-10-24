@@ -416,9 +416,13 @@ Game.map.marker = {
 	mark : function (field, color) {
 		$(field).drawEllipse(this.size, this.size, Game.map.fieldWidth-2*this.size, Game.map.fieldHeight-2*this.size, {color: color, stroke: this.size});
 		$(field).attr('class', 'markedField'+color);
-		/*todo:
-		 * rozdělit dle barev
-		 * */
+
+/*
+		var global = localToGlobal(field);
+		var paper = new Raphael(global['x'], global['y'], 60, 40);
+		var ellipse = paper.ellipse(30, 20, 30, 20); //left,top,x-axis, y-axis
+*/
+
 	},
 
 	/**

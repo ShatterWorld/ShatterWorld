@@ -3,6 +3,7 @@ namespace Repositories;
 use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
+use ArraySet;
 
 class Clan extends BaseRepository
 {
@@ -42,28 +43,49 @@ class Clan extends BaseRepository
 	 * Finds clans which are visible for the player
 	 * @param Entities\Clan
 	 * @param integer
-	 * @return array of Entities\Field
+	 * @param ArraySet of Entities\Clan
+	 * @param ArraySet of Entities\Clan
+	 * @param array of array of function
+	 * @return ArraySet of Entities\Clan
 	 */
-	public function getVisibleClans ($clan, $depth)
+	public function getVisibleClans ($clan, $depth = 1, &$visibleClans = null, &$visitedClans = null, &$functionStack = array(array()))
 	{
-		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $depth);
 
-		Debugger::barDump($visibleFields);
-		$visibleClans = array();
+		//$this->markClans();
 
-		foreach($visibleFields as $visibleField){
-			if(array_search($visibleField->owner, $visibleClans, true) === false){
-				$visibleClans[] = $visibleField->owner;
+
+		if ($depth <= 0) return $visibleClans;
+
+		if ($visibleClans === null) $visibleClans = new ArraySet();
+		if ($visitedClans === null) $visitedClans = new ArraySet();
+
+
+		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $this->context->stats->getVisibilityRadius($clan));
+		//Debugger::barDump($visibleFields);
+
+		$newClans = new ArraySet();
+		foreach ($visibleFields as $visibleField){
+			if($visibleField->owner !== null){
+				if($visibleClans->addElement($visibleField->owner->id, $visibleField->owner)){
+					$newClans->addElement($visibleField->owner->id, $visibleField->owner);
+				}
 			}
 		}
 
+		foreach ($newClans as $newClan){
+			$this->getVisibleClans($newClan, $depth-1, $visibleClans);
+		}
 
+		return $visibleClans;
 
+	}
 
-
+	protected function markClans($clan, $depth)
+	{
 
 
 	}
+
 
 
 
