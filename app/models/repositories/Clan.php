@@ -66,8 +66,8 @@ class Clan extends BaseRepository
 		$newClans = new ArraySet();
 		foreach ($visibleFields as $visibleField){
 			if($visibleField->owner !== null){
-				if($visibleClans->offsetSet($visibleField->owner->id, $visibleField->owner)){
-					$newClans->offsetSet($visibleField->owner->id, $visibleField->owner);
+				if($visibleClans->addElement($visibleField->owner->id, $visibleField->owner)){
+					$newClans->addElement($visibleField->owner->id, $visibleField->owner);
 				}
 			}
 		}
