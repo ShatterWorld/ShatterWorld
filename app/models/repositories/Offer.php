@@ -27,22 +27,21 @@ class Offer extends BaseRepository
 		$qb->setParameter(1, $clan->id);
 		$qb->setParameter(2, false);
 
-
-		/*
-		 * select * offers, check if their owners are in $visibleClans
-		 * */
+		$offers = $qb->getQuery()->getResult();
+		//Debugger::barDump($offers);
 
 		$visibleClans = $this->context->model->getClanRepository()->getVisibleClans($clan, $depth);
+		//Debugger::barDump($visibleClans);
 
-		$hqs = array();
-		foreach($visibleClans as $visibleClan){
-			$hqs[] = $visibleClan->headquarters;
+		$visibleOffers = array();
+		foreach($offers as $offer){
+			if($visibleClans->offsetExists($offer->owner->id)){
+				$visibleOffers[] = $offer;
+			}
 		}
+		//Debugger::barDump($visibleOffers);
 
-		Debugger::barDump($visibleClans);
-		Debugger::barDump($hqs);
-
-		return $qb->getQuery()->getResult();
+		return $visibleOffers;
 	}
 
 }

@@ -5,7 +5,7 @@
  * Represents a set (i.e. there are no mulitple items)
  * @author Petr Bělohlávek
  */
-class ArraySet extends Nette\ArrayList
+class ArraySet extends Nette\ArrayHash
 {
 	/**
 	 * Adds new item to the set only if the item had not been added before

@@ -45,7 +45,8 @@ class Clan extends BaseRepository
 	 * @param integer
 	 * @param ArraySet of Entities\Clan
 	 * @param ArraySet of Entities\Clan
-	 * @return array of array of function
+	 * @param array of array of function
+	 * @return ArraySet of Entities\Clan
 	 */
 	public function getVisibleClans ($clan, $depth = 1, &$visibleClans = null, &$visitedClans = null, &$functionStack = array(array()))
 	{
@@ -72,15 +73,10 @@ class Clan extends BaseRepository
 
 		$newClans = new ArraySet();
 		foreach ($visibleFields as $visibleField){
-			$visibleClans->offsetSet($visibleField->owner->id, $visibleField->owner);
-			$newClans->offsetSet($visibleField->owner->id, $visibleField->owner);
-			/*
-			if(array_search($visibleField->owner, $visibleClans, true) === false){
-				if($visibleField->owner !== null){
-					$visibleClans[] = $visibleField->owner;
-					$newClans[] = $visibleField->owner;
-				}
-			}*/
+			if($visibleField->owner !== null){
+				$visibleClans->offsetSet($visibleField->owner->id, $visibleField->owner);
+				$newClans->offsetSet($visibleField->owner->id, $visibleField->owner);
+			}
 		}
 
 		foreach ($newClans as $newClan){

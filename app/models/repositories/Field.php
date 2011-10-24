@@ -5,7 +5,7 @@ use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
 use Nette\Caching\Cache;
-
+use ArraySet;
 
 class Field extends BaseRepository {
 
@@ -271,7 +271,7 @@ class Field extends BaseRepository {
 	 * Finds fields which are visible for the player
 	 * @param Entities\Clan
 	 * @param integer
-	 * @return array of Entities\Field
+	 * @return ArraySet of Entities\Field
 	 */
 	public function getVisibleFields ($clan, $depth)
 	{
@@ -292,16 +292,15 @@ class Field extends BaseRepository {
 		$ownerFields = $qb->getQuery()->getResult();
 
 		$map = $this->getIndexedMap();
-		$visibleFields = array();
-		foreach($ownerFields as $ownerField){
-			$neighbours = $this->getFieldNeighbours($ownerField, $depth, $map);
 
+		$visibleFields = new ArraySet();
+		foreach ($ownerFields as $ownerField){
+			$neighbours = $this->getFieldNeighbours($ownerField, $depth, $map);
 			foreach($neighbours as $neighbour){
-				if(array_search($neighbour, $visibleFields, true) === false){
-					$visibleFields[] = $neighbour;
-				}
+				$visibleFields->offsetSet($neighbour->id, $neighbour);
 			}
 		}
+
 
 		return $visibleFields;
 	}
