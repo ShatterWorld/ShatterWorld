@@ -50,22 +50,14 @@ class Clan extends BaseRepository
 	 */
 	public function getVisibleClans ($clan, $depth = 1, &$visibleClans = null, &$visitedClans = null, &$functionStack = array(array()))
 	{
+
+		//$this->markClans();
+
+
 		if ($depth <= 0) return $visibleClans;
 
 		if ($visibleClans === null) $visibleClans = new ArraySet();
 		if ($visitedClans === null) $visitedClans = new ArraySet();
-
-		/*
-		 *	no recursion
-		 * 	save function pointers to the stack (arraySet) by current depth
-		 * 	run the methods from the stack (no recusions, just to save another pointers to set[depth-1])
-		 * 	need to check which depth was run, and how many times
-		 * 	olny maxDepth keeps running
-		 * 	rn next depth after the previous is finished
-		 * 	return
-		 * */
-
-
 
 
 		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $this->context->stats->getVisibilityRadius($clan));
@@ -74,8 +66,9 @@ class Clan extends BaseRepository
 		$newClans = new ArraySet();
 		foreach ($visibleFields as $visibleField){
 			if($visibleField->owner !== null){
-				$visibleClans->offsetSet($visibleField->owner->id, $visibleField->owner);
-				$newClans->offsetSet($visibleField->owner->id, $visibleField->owner);
+				if($visibleClans->offsetSet($visibleField->owner->id, $visibleField->owner)){
+					$newClans->offsetSet($visibleField->owner->id, $visibleField->owner);
+				}
 			}
 		}
 
@@ -86,6 +79,13 @@ class Clan extends BaseRepository
 		return $visibleClans;
 
 	}
+
+	protected function markClans($clan, $depth)
+	{
+
+
+	}
+
 
 
 
