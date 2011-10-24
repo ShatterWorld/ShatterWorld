@@ -17,8 +17,8 @@ class Farm extends AbstractRule implements IFacility
 	public function getConstructionCost ($level = 1)
 	{
 		return array(
-			'food' => $level * 5,
-			'stone' => max($level - 3, 0) * 5
+			'food' => $level * 40,
+			'stone' => max($level - 3, 0) * 20
 		);
 	}
 	
