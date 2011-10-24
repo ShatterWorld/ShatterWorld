@@ -395,17 +395,6 @@ Game.map = {
 };
 
 Game.map.marker = {
-	/**
-	 * Number of marked fields
-	 * @var integer
-	 */
-	markedFields : 0,
-
-	/**
-	 * Returns object representing the marker
-	 * @return object
-	 */
-	getMarkerImage : function () {return $('<img class="marker" />').attr('src', this.getBasepath() + '/images/fields/marker.png');},
 
 	/**
 	 * The size of the marker
