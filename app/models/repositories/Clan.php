@@ -42,11 +42,17 @@ class Clan extends BaseRepository
 	 * Finds clans which are visible for the player
 	 * @param Entities\Clan
 	 * @param integer
-	 * @param array of Entities\Clan
-	 * @return array of Entities\Field
+	 * @param ArraySet of Entities\Clan
+	 * @param ArraySet of Entities\Clan
+	 * @return array of array of function
 	 */
-	public function getVisibleClans ($clan, $depth, &$visibleClans = array(), &$visitedClans = array(), &$functionStack = array())
+	public function getVisibleClans ($clan, $depth = 1, &$visibleClans = null, &$visitedClans = null, &$functionStack = array(array()))
 	{
+		if ($depth <= 0) return $visibleClans;
+
+		if ($visibleClans === null) $visibleClans = new ArraySet();
+		if ($visitedClans === null) $visitedClans = new ArraySet();
+
 		/*
 		 *	no recursion
 		 * 	save function pointers to the stack (arraySet) by current depth
@@ -59,19 +65,21 @@ class Clan extends BaseRepository
 
 
 
-		if ($depth <= 0) return;
 
 		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $this->context->stats->getVisibilityRadius($clan));
 		//Debugger::barDump($visibleFields);
 
-		$newClans = array();
+		$newClans = new ArraySet();
 		foreach ($visibleFields as $visibleField){
+			$visibleClans->offsetSet($visibleField->owner->id, $visibleField->owner);
+			$newClans->offsetSet($visibleField->owner->id, $visibleField->owner);
+			/*
 			if(array_search($visibleField->owner, $visibleClans, true) === false){
 				if($visibleField->owner !== null){
 					$visibleClans[] = $visibleField->owner;
 					$newClans[] = $visibleField->owner;
 				}
-			}
+			}*/
 		}
 
 		foreach ($newClans as $newClan){

@@ -18,7 +18,7 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function actionBuy ()
 	{
-		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 5);
+		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 2);
 		$clan = $this->getPlayerClan();
 		$clanHq = $clan->getHeadquarters();
 		$time = array();

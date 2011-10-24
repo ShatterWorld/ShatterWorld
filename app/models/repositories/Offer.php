@@ -28,6 +28,10 @@ class Offer extends BaseRepository
 		$qb->setParameter(2, false);
 
 
+		/*
+		 * select * offers, check if their owners are in $visibleClans
+		 * */
+
 		$visibleClans = $this->context->model->getClanRepository()->getVisibleClans($clan, $depth);
 
 		$hqs = array();
