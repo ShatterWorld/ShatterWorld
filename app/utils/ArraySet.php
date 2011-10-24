@@ -13,7 +13,7 @@ class ArraySet extends Nette\ArrayList
 	 * @param mixed
 	 * @return void
 	 */
-	public void offsetSet (int $index, mixed $value)
+	public void offsetSet ($index, $value)
 	{
 		if (!$this->offsetExists($index)){
 			parent::offsetSet($index, $value);

@@ -3,6 +3,7 @@ namespace Repositories;
 use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
+use ArraySet;
 
 class Clan extends BaseRepository
 {
