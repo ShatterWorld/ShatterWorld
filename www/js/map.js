@@ -414,24 +414,16 @@ Game.map.marker = {
 	size : 5,
 
 	mark : function (field, color) {
-		//$(field).drawEllipse(this.size, this.size, Game.map.fieldWidth-2*this.size, Game.map.fieldHeight-2*this.size, {color: color, stroke: this.size});
 		$(field).attr('class', 'markedField'+color);
 
 
 		var global = Game.utils.localToGlobal(field, 0, 0);
 
-		var paper = new Raphael(global['x'], global['y'], 60, 40);
-		var ellipse = paper.ellipse(30, 20, 30, 20); //left,top,x-axis, y-axis
-		//$(field).css("z-index");
-		paper.canvas.style.zIndex = $(field).css("z-index") + 10;
+		var paper = new Raphael(global['x']-2, global['y']-2, 66, 46);
+		var ellipse = paper.ellipse(33, 23, 30, 20); //left,top,x-axis, y-axis
 
-
-		ellipse.attr({stroke: "#f00"});
-		//ellipse.attr({stroke-width: "1"});
-
-
-
-
+		paper.canvas.style.zIndex = $(field).css("z-index") + 6;
+		ellipse.attr({stroke: color, "stroke-width": "4"});
 
 	},
 
