@@ -333,7 +333,7 @@ Game.map = {
 					});
 
 					/**
-					 * Runs when user click some field and increment markedFields by one
+					 * Runs when user click some field
 					 * @return void
 					 */
 					div.click(function(e){
@@ -406,13 +406,13 @@ Game.map.marker = {
 	 * The canvas
 	 * @var Paper
 	 */
-	paper : null,
+	papers : {},
 
 	/**
 	 * The stack of ellipses
 	 * @var array
 	 */
-	ellipseStack : new Array(),
+	ellipses : {},
 
 	/**
 	 * Marks the given fields with given valid color
@@ -424,8 +424,11 @@ Game.map.marker = {
 		/*if (this.paper === null){
 			//new Paper
 		}*/
-		if (!Game.utils.isset(this.ellipseStack[color])){ //!!!
-			this.ellipseStack[color] = new Array();
+		if (!Game.utils.isset(this.ellipses[color])){
+			this.ellipses[color] = {};
+		}
+		if (!Game.utils.isset(this.papers)){
+			this.papers = {};
 		}
 		$(field).attr('class', 'markedField'+color);
 
@@ -438,9 +441,10 @@ Game.map.marker = {
 
 		paper.canvas.style.zIndex = $(field).css("z-index") + 7;
 		ellipse.attr({stroke: color, "stroke-width": "4"});
-		this.ellipseStack[color][$(field).attr('id')] = ellipse;
 
-		this.markedFields++;
+		this.papers[$(field).attr('id')] = paper;
+		this.ellipses[color][$(field).attr('id')] = ellipse;
+
 	},
 
 	/**
@@ -448,30 +452,32 @@ Game.map.marker = {
 	 * @param string
 	 * @return void
 	 */
-	/*unmarkById : function (id) {
-		this.paper.getById(id).hide();
-	},*/
+	unmarkById : function (id) {
+		$.each(this.ellipses, function(color, arr){
+			if (Game.utils.isset(arr[id])){
+				arr[id].remove();
+			}
+		});
+	},
 
 	/**
 	 * Unmarks all fields and sets click to zero
+	 * @param string
 	 * @return void
 	 */
 	unmarkAll : function(color){
 		//this.paper.clear();
-		if(Game.utils.isset(this.ellipseStack)){ //!!!
-			$.each(this.ellipseStack[color], function(key, ellipse){
-				alert(ellipse.id);
+		var paper = new Raphael(2,2, 66, 46);
+		paper.remove();
+		if(Game.utils.isset(this.ellipses[color])){
+			$.each(this.ellipses[color], function(key, ellipse){
 				ellipse.remove();
-				ellipse.attr({stroke: "blue"});
+				//Game.map.marker.papers[key].remove();
 			});
-			this.ellipseStack[color] = null;
+			this.ellipses[color] = null;
+			//this.papers[color] = null;
 		}
-/*
-		$('.markedField'+color+' canvas').remove();
-		$('.markedField'+color).attr('class', 'field');*/
 
-
-		this.markedFields = 0;
 		this.initialField = null;
 	}
 };
