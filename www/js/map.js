@@ -409,6 +409,12 @@ Game.map.marker = {
 	paper : null,
 
 	/**
+	 * The stack of ellipses
+	 * @var array
+	 */
+	ellipseStack : new Array(),
+
+	/**
 	 * Marks the given fields with given valid color
 	 * @param object/string
 	 * @param string
@@ -418,6 +424,9 @@ Game.map.marker = {
 		/*if (this.paper === null){
 			//new Paper
 		}*/
+		if (!Game.utils.isset(this.ellipseStack[color])){ //!!!
+			this.ellipseStack[color] = new Array();
+		}
 		$(field).attr('class', 'markedField'+color);
 
 
@@ -426,11 +435,12 @@ Game.map.marker = {
 		var paper = new Raphael(global['x']-2, global['y']-2, 66, 46);
 		var ellipse = paper.ellipse(33, 23, 30, 20); //left,top,x-axis, y-axis
 		ellipse.id = $(field).attr('id');
-		//paper.getById($(field).attr('id'))
 
 		paper.canvas.style.zIndex = $(field).css("z-index") + 7;
 		ellipse.attr({stroke: color, "stroke-width": "4"});
+		this.ellipseStack[color][$(field).attr('id')] = ellipse;
 
+		this.markedFields++;
 	},
 
 	/**
@@ -448,8 +458,19 @@ Game.map.marker = {
 	 */
 	unmarkAll : function(color){
 		//this.paper.clear();
+		if(Game.utils.isset(this.ellipseStack)){ //!!!
+			$.each(this.ellipseStack[color], function(key, ellipse){
+				alert(ellipse.id);
+				ellipse.remove();
+				ellipse.attr({stroke: "blue"});
+			});
+			this.ellipseStack[color] = null;
+		}
+/*
 		$('.markedField'+color+' canvas').remove();
-		$('.markedField'+color).attr('class', 'field');
+		$('.markedField'+color).attr('class', 'field');*/
+
+
 		this.markedFields = 0;
 		this.initialField = null;
 	}
