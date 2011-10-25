@@ -4,6 +4,7 @@ use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
 use ArraySet;
+use Nette;
 
 class Clan extends BaseRepository
 {
@@ -94,19 +95,34 @@ class Clan extends BaseRepository
 	 */
 	public function getVisibleClans ($clan)
 	{
-		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $this->context->stats->getVisibilityRadius($clan));
-
-		$visibleClans = new ArraySet();
-		foreach ($visibleFields as $visibleField){
-			if($visibleField->owner !== null){
-				if($visibleClans->addElement($visibleField->owner->id, $visibleField->owner)){
-				}
-			}
-		}
-		return $visibleClans;
+		$qb = $this->createQueryBuilder('c');
+		$qb->where($qb->expr()->in('c.id', $this->getVisibleClansIds($clan)));
+		return $qb->getQuery()->getResult();
 	}
 
-
-
-
+	protected function getVisibleClansIds ($clan)
+	{
+		$cache = $this->getVisibleClansCache();
+		$ids = $cache->load($clan->id);
+		if ($ids === NULL) {
+			$this->computeVisibleClans($clan);
+			$ids = $cache->load($clan->id);
+		}
+		return $ids;
+	}
+	
+	protected function computeVisibleClans ($clan)
+	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('o.id')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')
+			->where($qb->expr()->in('f.id', $this->context->model->getFieldRepository()->getVisibleFieldsIds($clan, $this->context->stats->getVisibilityRadius($clan))))
+			->groupBy('o.id');
+		$result = array_map(function ($val) {return $val['id'];}, $qb->getQuery()->getArrayResult());
+		$this->getVisibleClansCache()->save($clan->id, $result);
+	}
+	
+	public function getVisibleClansCache ()
+	{
+		return new Nette\Caching\Cache($this->context->cacheStorage, 'VisibleClans');
+	}
 }

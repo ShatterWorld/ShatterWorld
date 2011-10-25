@@ -7,12 +7,12 @@ use Nette\Diagnostics\Debugger;
 use Nette\Caching\Cache;
 use ArraySet;
 
-class Field extends BaseRepository {
-
+class Field extends BaseRepository 
+{
 	/**
-	* Returns the map indexed by coordinates
-	* @return array of arrays of Entities\Field
-	*/
+	 * Returns the map indexed by coordinates
+	 * @return array of arrays of Entities\Field
+	 */
 	public function getIndexedMap ()
 	{
 		$result = array();
@@ -26,7 +26,11 @@ class Field extends BaseRepository {
 		}
 		return $result;
 	}
-
+	
+	/**
+	 * Returns map of field ids indexed by coordinates
+	 * @return array of arrays of integers
+	 */
 	public function getIndexedMapIds ()
 	{
 		$result = array();
@@ -137,11 +141,11 @@ class Field extends BaseRepository {
 	}
 
 	/**
-	* Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
-	* @param Entities\Field
-	* @param array of Entities\Field
-	* @return array of Entities\Field
-	*/
+	 * Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
+	 * @param Entities\Field
+	 * @param array of Entities\Field
+	 * @return array of Entities\Field
+	 */
 	public function getFieldNeighbours (Entities\Field $field, $depth = 1, &$map = array())
 	{
 		$neighbours = array();
@@ -178,8 +182,7 @@ class Field extends BaseRepository {
 				$neighbours[] = $map[$x][$y-1];
 			}
 
-		}
-		else{
+		} else {
 			$x = $field->getX();
 			$y = $field->getY();
 
@@ -217,15 +220,15 @@ class Field extends BaseRepository {
 	}
 
 	/**
-	* Finds a field by its coordinates (If $map is given, iterates through it instand of quering)
-	* @param integer
-	* @param integer
-	* @param array of Entities\Field
-	* @return Entities\Field
-	*
-	* TODO: needs boundaries check
-	*
-	*/
+	 * Finds a field by its coordinates (If $map is given, iterates through it instand of quering)
+	 * @param integer
+	 * @param integer
+	 * @param array of Entities\Field
+	 * @return Entities\Field
+	 *
+	 * TODO: needs boundaries check
+	 *
+	 */
 	public function findByCoords ($x, $y, &$map = array())
 	{
 		$mapSize = $this->context->params['game']['map']['size'];
@@ -273,54 +276,54 @@ class Field extends BaseRepository {
 	 * @param integer
 	 * @return ArraySet of Entities\Field
 	 */
-	public function getVisibleFields ($clan, $depth)
+	public function getVisibleFields (Entities\Clan $clan, $depth)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
-		if ($clan->alliance !== null){
+		$qb->where($qb->expr()->in('f.id', $this->getVisibleFieldsIds($clan, $depth)));
+		return $qb->getQuery()->getResult();
+	}
+
+	protected function computeVisibleFields (Entities\Clan $clan, $depth)
+	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('f')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
+		if ($clan->alliance !== null) {
 			$qb->where(
 				$qb->expr()->orX(
 					$qb->expr()->eq('o.id', $clan->id),
 					$qb->expr()->eq('a.id', $clan->alliance->id)
 				)
 			);
-		}
-		else{
+		} else {
 			$qb->where($qb->expr()->eq('o.id', $clan->id));
 		}
 
-		$ownerFields = $qb->getQuery()->getResult();
-
+		$baseFields = $qb->getQuery()->getResult();
 		$map = $this->getIndexedMap();
 
 		$visibleFields = new ArraySet();
-		foreach ($ownerFields as $ownerField){
-			$neighbours = $this->getFieldNeighbours($ownerField, $depth, $map);
-			foreach($neighbours as $neighbour){
+		foreach ($baseFields as $field) {
+			foreach ($this->getFieldNeighbours($field, $depth, $map) as $neighbour) {
 				$visibleFields->offsetSet($neighbour->id, $neighbour);
 			}
 		}
-
-
-		return $visibleFields;
+		$this->getVisibleFieldsCache()->save($clan->id, array_keys((array) $visibleFields));
 	}
-
+	
 	/**
 	 * Finds visible fields' id's
 	 * @param Entities\Clan
 	 * @param integer
 	 * @return array of integers
 	 */
-	public function getVisibleFieldsIds ($clan, $depth)
+	public function getVisibleFieldsIds (Entities\Clan $clan, $depth)
 	{
 		$cache = $this->getVisibleFieldsCache();
 		$ids = $cache->load($clan->id);
 		if ($ids === NULL) {
-			$ids = array();
-			foreach($this->getVisibleFields($clan, $depth) as $field){
-				$ids[] = $field->id;
-			}
-			$cache->save($clan->id, $ids);
+			$this->computeVisibleFields($clan, $depth);
+			$ids = $cache->load($clan->id);
 		}
 		return $ids;
 	}
@@ -331,17 +334,18 @@ class Field extends BaseRepository {
 	 * @param integer
 	 * @return 2d array of integers
 	 */
-	public function getVisibleFieldsArray ($clan, $depth)
+	public function getVisibleFieldsArray (Entities\Clan $clan, $depth)
 	{
 		$ids = $this->getVisibleFieldsIds($clan, $depth);
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
-		$qb->where($qb->expr()->in('f.id', $ids));
+		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a')
+			->where($qb->expr()->in('f.id', $ids));
 		$unitsQb = $this->getEntityManager()->createQueryBuilder();
-		$unitsQb->select('u', 'l')->from('Entities\Unit', 'u')->innerJoin('u.location', 'l')->where($unitsQb->expr()->andX(
-			$unitsQb->expr()->in('u.location', $ids),
-			$unitsQb->expr()->eq('u.owner', $clan->id)
-		));
+		$unitsQb->select('u', 'l')->from('Entities\Unit', 'u')->innerJoin('u.location', 'l')
+			->where($unitsQb->expr()->andX(
+				$unitsQb->expr()->in('u.location', $ids),
+				$unitsQb->expr()->eq('u.owner', $clan->id)
+			));
 		$units = array();
 		foreach ($unitsQb->getQuery()->getArrayResult() as $row) {
 			if (!isset($units[$row['location']['id']])) {
