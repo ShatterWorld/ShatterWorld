@@ -8,6 +8,11 @@ use Nette;
 
 class Clan extends BaseRepository
 {
+	/**
+	 * Returns a clan specified by user given
+	 * @param Entities\User
+	 * @return Entities\Clan
+	 */
 	public function findOneByUser ($user)
 	{
 		$qb = $this->createQueryBuilder('c');
@@ -19,6 +24,10 @@ class Clan extends BaseRepository
 		}
 	}
 
+	/**
+	 * Returns a players clan
+	 * @return Entities\Clan
+	 */
 	public function getPlayerClan ()
 	{
 		return $this->findOneByUser($this->context->user->id);
@@ -48,7 +57,7 @@ class Clan extends BaseRepository
 	 */
 	public function getDealers ($clan, $initDepth, $startup = true)
 	{
-		$fifo = $this->getVisibleClans($clan);
+		$fifo = ArraySet::from($this->getVisibleClans($clan));
 		$depths = new ArraySet();
 		$dealers = new ArraySet();
 
@@ -91,7 +100,7 @@ class Clan extends BaseRepository
 	/**
 	 * Finds clans which are visible for the given clan
 	 * @param Entities\Clan
-	 * @return ArraySet of Entities\Clan
+	 * @return array of Entities\Clan
 	 */
 	public function getVisibleClans ($clan)
 	{
@@ -100,6 +109,11 @@ class Clan extends BaseRepository
 		return $qb->getQuery()->getResult();
 	}
 
+	/**
+	 * Finds ids of clans which are visible for the given clan
+	 * @param Entities\Clan
+	 * @return array of int
+	 */
 	protected function getVisibleClansIds ($clan)
 	{
 		$cache = $this->getVisibleClansCache();
@@ -110,7 +124,12 @@ class Clan extends BaseRepository
 		}
 		return $ids;
 	}
-	
+
+	/**
+	 * Sets the visible clans cache
+	 * @param Entities\Clan
+	 * @return void
+	 */
 	protected function computeVisibleClans ($clan)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
@@ -119,7 +138,11 @@ class Clan extends BaseRepository
 			->groupBy('o.id');
 		return array_map(function ($val) {return $val['id'];}, $qb->getQuery()->getArrayResult());
 	}
-	
+
+	/**
+	 * Returns cache of visible clans
+	 * @return Cache
+	 */
 	public function getVisibleClansCache ()
 	{
 		return new Nette\Caching\Cache($this->context->cacheStorage, 'VisibleClans');
