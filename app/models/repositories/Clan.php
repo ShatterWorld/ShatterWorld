@@ -40,50 +40,70 @@ class Clan extends BaseRepository
 
 
 	/**
-	 * Finds clans which are visible for the player
+	 * Finds clans which offers are visible to given clan
 	 * @param Entities\Clan
 	 * @param integer
-	 * @param ArraySet of Entities\Clan
-	 * @param ArraySet of Entities\Clan
-	 * @param array of array of function
 	 * @return ArraySet of Entities\Clan
 	 */
-	public function getVisibleClans ($clan, $depth = 1, &$visibleClans = null, &$visitedClans = null, &$functionStack = array(array()))
+	public function getDealers ($clan, $initDepth, $startup = true)
 	{
+		$fifo = $this->getVisibleClans($clan);
+		$depths = new ArraySet();
+		$dealers = new ArraySet();
 
-		//$this->markClans();
+		foreach($fifo as $dealer){
+			$depths->addElement($dealer->id, $initDepth-1);
+		}
 
+		foreach($fifo as $dealer){
+//Debugger::barDump($fifo);
 
-		if ($depth <= 0) return $visibleClans;
+			$id = $dealer->id;
+			$dealers->addElement($id, $dealer);
 
-		if ($visibleClans === null) $visibleClans = new ArraySet();
-		if ($visitedClans === null) $visitedClans = new ArraySet();
+			$dealersVisibleClans = $this->getVisibleClans($dealer);
+//Debugger::barDump($dealersVisibleClans);
+			foreach($dealersVisibleClans as $dvc){
+				if($depths->offsetGet($id) < 1) continue;
 
-
-		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $this->context->stats->getVisibilityRadius($clan));
-		//Debugger::barDump($visibleFields);
-
-		$newClans = new ArraySet();
-		foreach ($visibleFields as $visibleField){
-			if($visibleField->owner !== null){
-				if($visibleClans->addElement($visibleField->owner->id, $visibleField->owner)){
-					$newClans->addElement($visibleField->owner->id, $visibleField->owner);
+				$dvcId = $dvc->id;
+				if ($depths->offsetExists($dvcId)){
+					if($depths->offsetGet($dvcId) < $depths->offsetGet($id)-1){
+						$depths->updateElement($dvcId, $depths->offsetGet($id)-1);
+						$fifo->updateElement($dvc->id, $dvc);
+					}
 				}
+				else{
+					$depths->addElement($dvcId, $depths->offsetGet($id)-1);
+					$fifo->addElement($dvcId, $dvc);
+				}
+
 			}
+
+			$fifo->deleteElement($dealer->id);
 		}
 
-		foreach ($newClans as $newClan){
-			$this->getVisibleClans($newClan, $depth-1, $visibleClans);
-		}
-
-		return $visibleClans;
+		return $dealers;
 
 	}
 
-	protected function markClans($clan, $depth)
+	/**
+	 * Finds clans which are visible for the given clan
+	 * @param Entities\Clan
+	 * @return ArraySet of Entities\Clan
+	 */
+	public function getVisibleClans ($clan)
 	{
+		$visibleFields = $this->context->model->getFieldRepository()->getVisibleFields ($clan, $this->context->stats->getVisibilityRadius($clan));
 
-
+		$visibleClans = new ArraySet();
+		foreach ($visibleFields as $visibleField){
+			if($visibleField->owner !== null){
+				if($visibleClans->addElement($visibleField->owner->id, $visibleField->owner)){
+				}
+			}
+		}
+		return $visibleClans;
 	}
 
 

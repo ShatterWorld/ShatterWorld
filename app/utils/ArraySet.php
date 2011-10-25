@@ -23,7 +23,7 @@ class ArraySet extends Nette\ArrayHash
 
 	/**
 	 * Adds new item to the set only if the item had not been added before
-	 * Returns true is the iten is added, false otherwise
+	 * Returns true is the item is added, false otherwise
 	 * @param int
 	 * @param mixed
 	 * @return boolean
@@ -36,4 +36,56 @@ class ArraySet extends Nette\ArrayHash
 		}
 		return false;
 	}
+
+	/**
+	 * Deletes the element by given id
+	 * Returns true is the item is deleted, false otherwise
+	 * @param int
+	 * @return boolean
+	 */
+	public function deleteElement ($index)
+	{
+		if ($this->offsetExists($index)){
+			$this->offsetUnset($index);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Updates the element
+	 * @param int
+	 * @param mixed
+	 * @return void
+	 */
+	public function updateElement ($index, $value)
+	{
+		if ($this->deleteElement($index)){
+			$this->addElement($index, $value);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Joins the given ArraySet
+	 * @param ArraySet
+	 * @return void
+	 */
+	public function join ($arraySet)
+	{
+		foreach($arraySet as $index => $item){
+			$this->addElement($index, $item);
+		}
+	}
+
+	/**
+	 * Returns the array representation of ArraySet
+	 * @return array
+	 */
+	public function toArray ()
+	{
+		return iterator_to_array ($this->getIterator(), true);
+	}
+
 }

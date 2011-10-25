@@ -30,12 +30,12 @@ class Offer extends BaseRepository
 		$offers = $qb->getQuery()->getResult();
 		//Debugger::barDump($offers);
 
-		$visibleClans = $this->context->model->getClanRepository()->getVisibleClans($clan, $depth);
-		//Debugger::barDump($visibleClans);
+		$dealers = $this->context->model->getClanRepository()->getDealers($clan, $depth);
+		Debugger::barDump($dealers);
 
 		$visibleOffers = array();
 		foreach($offers as $offer){
-			if($visibleClans->offsetExists($offer->owner->id)){
+			if($dealers->offsetExists($offer->owner->id)){
 				$visibleOffers[] = $offer;
 			}
 		}
