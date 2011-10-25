@@ -287,12 +287,12 @@ class Field extends BaseRepository
 	protected function computeVisibleFields (Entities\Clan $clan, $depth)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('f')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
+		$qb->select('f')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o');
 		if ($clan->alliance !== null) {
 			$qb->where(
 				$qb->expr()->orX(
 					$qb->expr()->eq('o.id', $clan->id),
-					$qb->expr()->eq('a.id', $clan->alliance->id)
+					$qb->expr()->eq('o.alliance', $clan->alliance->id)
 				)
 			);
 		} else {
@@ -300,15 +300,18 @@ class Field extends BaseRepository
 		}
 
 		$baseFields = $qb->getQuery()->getResult();
-		$map = $this->getIndexedMap();
+		$map = $this->getIndexedMapIds();
 
-		$visibleFields = new ArraySet();
+		$visibleFields = array();
 		foreach ($baseFields as $field) {
 			foreach ($this->getFieldNeighbours($field, $depth, $map) as $neighbour) {
-				$visibleFields->offsetSet($neighbour->id, $neighbour);
+				$id = intval($neighbour);
+				if (!array_search($id, $visibleFields)) {
+					$visibleFields[] = $id;
+				}
 			}
 		}
-		$this->getVisibleFieldsCache()->save($clan->id, array_keys((array) $visibleFields));
+		return $visibleFields;
 	}
 	
 	/**
@@ -322,8 +325,8 @@ class Field extends BaseRepository
 		$cache = $this->getVisibleFieldsCache();
 		$ids = $cache->load($clan->id);
 		if ($ids === NULL) {
-			$this->computeVisibleFields($clan, $depth);
-			$ids = $cache->load($clan->id);
+			$ids = $this->computeVisibleFields($clan, $depth);
+			$cache->save($clan->id, $ids);
 		}
 		return $ids;
 	}

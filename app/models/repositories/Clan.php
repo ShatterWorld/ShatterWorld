@@ -105,8 +105,8 @@ class Clan extends BaseRepository
 		$cache = $this->getVisibleClansCache();
 		$ids = $cache->load($clan->id);
 		if ($ids === NULL) {
-			$this->computeVisibleClans($clan);
-			$ids = $cache->load($clan->id);
+			$ids = $this->computeVisibleClans($clan);
+			$cache->save($clan->id, $ids);
 		}
 		return $ids;
 	}
@@ -117,8 +117,7 @@ class Clan extends BaseRepository
 		$qb->select('o.id')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')
 			->where($qb->expr()->in('f.id', $this->context->model->getFieldRepository()->getVisibleFieldsIds($clan, $this->context->stats->getVisibilityRadius($clan))))
 			->groupBy('o.id');
-		$result = array_map(function ($val) {return $val['id'];}, $qb->getQuery()->getArrayResult());
-		$this->getVisibleClansCache()->save($clan->id, $result);
+		return array_map(function ($val) {return $val['id'];}, $qb->getQuery()->getArrayResult());
 	}
 	
 	public function getVisibleClansCache ()
