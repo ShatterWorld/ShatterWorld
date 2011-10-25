@@ -14,14 +14,14 @@ class MapPresenter extends BasePresenter {
 
 	public function submitGenerateMapForm (Form $form)
 	{
-		$this->getUnitService()->deleteAll();
-		$this->getReportService()->deleteAll();
-		$this->getEventService()->deleteAll();
-		$this->getResourceService()->deleteAll();
-		$this->getOfferService()->deleteAll();
-		$this->getClanService()->deleteAll();
-		$this->getAllianceService()->deleteAll();
-		$this->getFieldService()->deleteAll();
+		$this->getUnitService()->deleteAll(FALSE);
+		$this->getReportService()->deleteAll(FALSE);
+		$this->getEventService()->deleteAll(FALSE);
+		$this->getResourceService()->deleteAll(FALSE);
+		$this->getOfferService()->deleteAll(FALSE);
+		$this->getClanService()->deleteAll(FALSE);
+		$this->getAllianceService()->deleteAll(TRUE);
+		$this->getFieldService()->deleteAll(TRUE);
 		$this->getFieldService()->createMap();
 		$this->flashMessage('Nová mapa byla vygenerována');
 		$this->redirect('default');

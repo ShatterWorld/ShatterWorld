@@ -128,11 +128,11 @@ class BaseService extends Nette\Object {
 	 * Delete all objects
 	 * @return void
 	 */
-	 public function deleteAll ()
+	 public function deleteAll ($flush = TRUE)
 	 {
-		foreach ($this->getRepository()->findAll() as $object) {
-			$this->delete($object, FALSE);
+		$this->entityManager->createQueryBuilder()->delete($this->entityClass)->getQuery()->execute();
+		if ($flush) {
+			$this->entityManager->flush();
 		}
-		$this->entityManager->flush();
 	 }
 }

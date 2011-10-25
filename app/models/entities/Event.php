@@ -26,6 +26,7 @@ abstract class Event extends BaseEntity {
 	
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan")
+	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\Clan
 	 */
 	private $owner;

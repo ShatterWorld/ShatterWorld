@@ -41,6 +41,7 @@ class Clan extends BaseEntity {
 	
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Alliance")
+	 * @JoinColumn(onDelete = "SET NULL")
 	 * @var Entities\Alliance
 	 */
 	private $allianceApplication;
@@ -58,6 +59,12 @@ class Clan extends BaseEntity {
 	private $expiredOrders;
 	
 	/**
+	 * @Column(type = "boolean")
+	 * @var bool
+	 */
+	private $deleted;
+	
+	/**
 	 * Constructor
 	 * @param Entities\User
 	 */
@@ -67,6 +74,7 @@ class Clan extends BaseEntity {
 		$this->user = $user;
 		$this->issuedOrders = 0;
 		$this->expiredOrders = 0;
+		$this->deleted = FALSE;
 	}
 	
 	/**
@@ -215,5 +223,24 @@ class Clan extends BaseEntity {
 	public function setExpiredOrders ($expiredOrders)
 	{
 		$this->expiredOrders = $expiredOrders;
+	}
+	
+	/**
+	 * Has the clan been deleted?
+	 * @return bool
+	 */
+	public function isDeleted ()
+	{
+		return $this->deleted;
+	}
+	
+	/**
+	 * Deleted setter
+	 * @param bool
+	 * @return void
+	 */
+	public function setDeleted ($deleted)
+	{
+		$this->deleted = $deleted;
 	}
 }
