@@ -17,8 +17,8 @@ class Quarry extends AbstractRule implements IFacility
 	public function getConstructionCost ($level = 1)
 	{
 		return array(
-			'stone' => $level * 5,
-			'metal' => ($level - 1) * 10 
+			'stone' => $level * 40,
+			'metal' => ($level - 1) * 20 
 		);
 	}
 	

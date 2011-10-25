@@ -17,8 +17,8 @@ class Refinery extends AbstractRule implements IFacility
 	public function getConstructionCost ($level = 1)
 	{
 		return array(
-			'stone' => $level * 10,
-			'metal' => ($level - 1) * 10 
+			'stone' => $level * 60,
+			'metal' => ($level - 1) * 20 
 		);
 	}
 	

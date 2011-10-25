@@ -23,6 +23,7 @@ class Alliance extends BaseEntity
 	
 	/**
 	 * @OneToOne(targetEntity = "Entities\Clan")
+	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\Clan
 	 */
 	private $leader;

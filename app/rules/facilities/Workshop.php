@@ -17,8 +17,8 @@ class Workshop extends AbstractRule implements IConstructionFacility
 	public function getConstructionCost ($level = 1)
 	{
 		return array(
-			'stone' => $level * 10,
-			'metal' => ($level - 1) * 5
+			'stone' => $level * 70,
+			'metal' => ($level - 1) * 50
 		);
 	}
 	

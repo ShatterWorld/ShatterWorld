@@ -11,6 +11,7 @@ class Field extends BaseEntity {
 
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan", inversedBy = "fields")
+	 * @JoinColumn(onDelete = "SET NULL")
 	 * @var Entities\Clan
 	 */
 	private $owner;
