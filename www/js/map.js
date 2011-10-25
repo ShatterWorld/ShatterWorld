@@ -395,17 +395,6 @@ Game.map = {
 };
 
 Game.map.marker = {
-	/**
-	 * Number of marked fields
-	 * @var integer
-	 */
-	markedFields : 0,
-
-	/**
-	 * Returns object representing the marker
-	 * @return object
-	 */
-	getMarkerImage : function () {return $('<img class="marker" />').attr('src', this.getBasepath() + '/images/fields/marker.png');},
 
 	/**
 	 * The size of the marker
@@ -413,7 +402,22 @@ Game.map.marker = {
 	 */
 	size : 5,
 
+	/**
+	 * The canvas
+	 * @var Paper
+	 */
+	paper : null,
+
+	/**
+	 * Marks the given fields with given valid color
+	 * @param object/string
+	 * @param string
+	 * @return void
+	 */
 	mark : function (field, color) {
+		/*if (this.paper === null){
+			//new Paper
+		}*/
 		$(field).attr('class', 'markedField'+color);
 
 
@@ -421,17 +425,29 @@ Game.map.marker = {
 
 		var paper = new Raphael(global['x']-2, global['y']-2, 66, 46);
 		var ellipse = paper.ellipse(33, 23, 30, 20); //left,top,x-axis, y-axis
+		ellipse.id = $(field).attr('id');
+		//paper.getById($(field).attr('id'))
 
-		paper.canvas.style.zIndex = $(field).css("z-index") + 6;
+		paper.canvas.style.zIndex = $(field).css("z-index") + 7;
 		ellipse.attr({stroke: color, "stroke-width": "4"});
 
 	},
+
+	/**
+	 * Unmarks the fields specified by its id
+	 * @param string
+	 * @return void
+	 */
+	/*unmarkById : function (id) {
+		this.paper.getById(id).hide();
+	},*/
 
 	/**
 	 * Unmarks all fields and sets click to zero
 	 * @return void
 	 */
 	unmarkAll : function(color){
+		//this.paper.clear();
 		$('.markedField'+color+' canvas').remove();
 		$('.markedField'+color).attr('class', 'field');
 		this.markedFields = 0;
