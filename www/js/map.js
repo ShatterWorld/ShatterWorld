@@ -80,16 +80,16 @@ Game.map = {
 	scrollY : 0,
 
 	/**
-	 * Represents the biggest X-index
+	 * The largest X-position value
 	 * @var integer
 	 */
-	maxX : -1,
-
+	maxXPos : 0,
+	
 	/**
-	 * Represents the biggest X-index
+	 * The largest Y-position value
 	 * @var integer
 	 */
-	maxY : -1,
+	maxYPos : 0,
 
 	/**
 	 * Represents the list of fields which are disabled right now
@@ -195,14 +195,9 @@ Game.map = {
 						Game.map.dY -= Game.map.fieldHeight;
 						Game.map.scrollY += Game.map.fieldHeight;
 					}
-					Game.map.maxY = Math.max(Game.map.maxY, key);
 
 				});
-				Game.map.maxX = Math.max(Game.map.maxX, rowKey);
 			});
-
-
-
 
 			/**
 			 * renders fields and adds event-listeners to them
@@ -212,7 +207,10 @@ Game.map = {
 
 					var posX = Game.map.calculateXPos(field) - Game.map.dX;
 					var posY = Game.map.calculateYPos(field) - Game.map.dY;
-
+					
+					Game.map.maxXPos = Math.max(posX, Game.map.maxXPos);
+					Game.map.maxYPos = Math.max(posY, Game.map.maxYPos);
+					
 					var borderType = 'neutral';
 					if(field['owner'] != null){
 						if (data['clanId'] == field['owner']['id']) {
@@ -372,19 +370,19 @@ Game.map = {
 							Game.map.marker.unmarkAll('red');
 						}
 					});
-
-
-
 				});
-
+				
 				/**
 				 * slides the sliders
 				 */
 				$('#mapContainer').scrollLeft(Game.map.scrollX);
 				$('#mapContainer').scrollTop(Game.map.scrollY);
-
 			});
-
+			
+			var canvasWidth = Game.map.maxXPos + Game.map.fieldWidth;
+			var canvasHeight = Game.map.maxYPos + Game.map.fieldHeight;
+			$('#map').append($('<div id="overlay">').css({'width' : canvasWidth, 'height' : canvasHeight}));
+			this.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
 			Game.spinner.hide();
 		});
 	},
