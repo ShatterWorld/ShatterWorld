@@ -385,6 +385,11 @@ Game.map = {
 			Game.map.marker.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight});
 			$('#map').append(Game.map.marker.overlayDiv);
 			Game.map.marker.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
+
+			Game.map.marker.overlayDiv.click(function(e){
+				//need to get the field div by real coords
+				//fieldDiv.click();
+			});
 			Game.spinner.hide();
 		});
 	},
