@@ -48,7 +48,7 @@ common:
 		host: localhost
 		dbname: ShatterWorld
 		user: swuser
-		password: 12345
+		password: swpass1828
 		charset: utf8
 
 	services:
