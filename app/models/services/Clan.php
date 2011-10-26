@@ -61,14 +61,13 @@ class Clan extends BaseService {
 			$lastHq =  $fieldRepository->find($lastHqId);
 		}
 
-		//Debugger::barDump($S);
-		//Debugger::barDump($lastHq);
+		Debugger::barDump($S);
+		Debugger::barDump($lastHq);
 
 
 		$neutralHexagonsCenters = $fieldRepository->findNeutralHexagons($lastHq, $playerDistance, $map);
-
-		//Debugger::barDump($neutralHexagonsCenters);
 		$fieldRepository->sortByDistance($neutralHexagonsCenters, $S);
+		Debugger::barDump($neutralHexagonsCenters);
 
 
 		$found = new ArraySet();
@@ -108,8 +107,14 @@ class Clan extends BaseService {
 		$values['headquarters'] = $headq;
 		//Debugger::barDump($values);
 		$clan = parent::create($values, $flush);
-		Debugger::barDump($clan);
-		$fieldService->update($headq, array('facility' => 'headquarters'));
+		//Debugger::barDump($clan);
+
+		foreach ($found as $foundField){
+			$fieldService->update($foundField, array('owner' => $clan));
+		}
+
+
+		//$fieldService->update($headq, array('facility' => 'headquarters'));
 
 		$this->cache->save('lastHqId', $headq->id);
 

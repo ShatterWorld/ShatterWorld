@@ -8,62 +8,62 @@ use Doctrine;
  * @author Jan "Teyras" Buchar
  */
 class Clan extends BaseEntity {
-	
+
 	/**
 	 * @Column(type = "string", unique = true)
 	 * @var string
 	 */
 	private $name;
-	
+
 	/**
 	 * @OneToOne(targetEntity = "Entities\User")
 	 * @var Entities\User
 	 */
 	private $user;
-	
+
 	/**
 	 * @OneToMany(targetEntity = "Entities\Field", mappedBy = "owner")
 	 * @var Doctrine\Common\Collections\ArrayCollection
 	 */
 	private $fields;
-	
+
 	/**
 	 * @OneToOne(targetEntity = "Entities\Field")
 	 * @var Entities\Field
 	 */
 	private $headquarters;
-	
+
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Alliance", inversedBy = "members")
 	 * @var Entities\Alliance
 	 */
 	private $alliance;
-	
+
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Alliance")
 	 * @JoinColumn(onDelete = "SET NULL")
 	 * @var Entities\Alliance
 	 */
 	private $allianceApplication;
-	
+
 	/**
 	 * @Column(type = "integer")
 	 * @var int
 	 */
 	private $issuedOrders;
-	
+
 	/**
 	 * @Column(type = "integer")
 	 * @var int
 	 */
 	private $expiredOrders;
-	
+
 	/**
 	 * @Column(type = "boolean")
 	 * @var bool
 	 */
 	private $deleted;
-	
+
 	/**
 	 * Constructor
 	 * @param Entities\User
@@ -76,7 +76,7 @@ class Clan extends BaseEntity {
 		$this->expiredOrders = 0;
 		$this->deleted = FALSE;
 	}
-	
+
 	/**
 	 * Name getter
 	 * @return string
@@ -85,7 +85,7 @@ class Clan extends BaseEntity {
 	{
 		return $this->name;
 	}
-	
+
 	/**
 	 * Name setter
 	 * @param string
@@ -95,7 +95,7 @@ class Clan extends BaseEntity {
 	{
 		$this->name = $name;
 	}
-	
+
 	/**
 	 * User getter
 	 * @return Entities\User
@@ -113,7 +113,7 @@ class Clan extends BaseEntity {
 	{
 		return $this->fields;
 	}
-	
+
 	/**
 	 * Add a field to the clan's territory
 	 * @param Entities\Field
@@ -123,7 +123,7 @@ class Clan extends BaseEntity {
 	{
 		$field->setOwner($this);
 	}
-	
+
 	/**
 	 * Headquarters getter
 	 * @return Entities\Field
@@ -132,7 +132,7 @@ class Clan extends BaseEntity {
 	{
 		return $this->headquarters;
 	}
-	
+
 	/**
 	 * Headquarters setter
 	 * @param Entities\Field
@@ -140,9 +140,11 @@ class Clan extends BaseEntity {
 	 */
 	public function setHeadquarters (Field $headquarters)
 	{
+		$headquarters->setOwner($this);
+		$headquarters->facility = 'headquarters';
 		$this->headquarters = $headquarters;
 	}
-	
+
 	/**
 	 * Alliance getter
 	 * @return Entities\Alliance
@@ -151,7 +153,7 @@ class Clan extends BaseEntity {
 	{
 		return $this->alliance;
 	}
-	
+
 	/**
 	 * Alliance setter
 	 * @param Entities\Alliance
@@ -167,7 +169,7 @@ class Clan extends BaseEntity {
 			$alliance->getMembers()->add($this);
 		}
 	}
-	
+
 	/**
 	 * Alliance application getter
 	 * @return Entities\Alliance
@@ -176,7 +178,7 @@ class Clan extends BaseEntity {
 	{
 		return $this->allianceApplication;
 	}
-	
+
 	/**
 	 * Alliance setter
 	 * @param Entities\Alliance
@@ -186,7 +188,7 @@ class Clan extends BaseEntity {
 	{
 		$this->allianceApplication = $alliance;
 	}
-	
+
 	/**
 	 * Issued orders getter
 	 * @return int
@@ -195,7 +197,7 @@ class Clan extends BaseEntity {
 	{
 		return $this->issuedOrders;
 	}
-	
+
 	/**
 	 * Issued orders setter
 	 * @param int
@@ -205,7 +207,7 @@ class Clan extends BaseEntity {
 	{
 		$this->issuedOrders = $issuedOrders;
 	}
-	
+
 	/**
 	 * Expired orders getter
 	 * @return int
@@ -214,7 +216,7 @@ class Clan extends BaseEntity {
 	{
 		return $this->issuedOrders;
 	}
-	
+
 	/**
 	 * Expired orders setter
 	 * @param int
@@ -224,7 +226,7 @@ class Clan extends BaseEntity {
 	{
 		$this->expiredOrders = $expiredOrders;
 	}
-	
+
 	/**
 	 * Has the clan been deleted?
 	 * @return bool
@@ -233,7 +235,7 @@ class Clan extends BaseEntity {
 	{
 		return $this->deleted;
 	}
-	
+
 	/**
 	 * Deleted setter
 	 * @param bool

@@ -22,7 +22,7 @@ abstract class BasePresenter extends \BasePresenter
 		$clan = $this->getPlayerClan();
 		$this->template->reportCount = $clan ? $this->getReportRepository()->countUnread($clan) : 0;
 	}
-	
+
 	public function handleLogout ()
 	{
 		$this->getUser()->logout(TRUE);
@@ -106,7 +106,7 @@ abstract class BasePresenter extends \BasePresenter
 			)
 		);
 
-		$this->redirect('Map:');
+		//$this->redirect('Map:');
 	}
 
 	public function handleCreate10Users ()
@@ -127,7 +127,7 @@ abstract class BasePresenter extends \BasePresenter
 				'user' => $user
 			)
 		);		}
-		$this->redirect('Map:');
+		//$this->redirect('Map:');
 	}
 
 	public function handleCreate100Users ()
