@@ -21,14 +21,11 @@ class Clan extends BaseService {
 	}
 
 	/**
-	* Creates an object as parent does
+	* Creates an object as the parent does
 	* In addition, it assigns N fields to the clan
 	* @param array
 	* @param bool
-	* @return object
-	*
-	* TODO: outline caching and incrementing
-	*
+	* @return Entities\Clan
 	*/
 	public function create ($values, $flush = TRUE)
 	{
@@ -39,18 +36,9 @@ class Clan extends BaseService {
 		$mapSize = $this->context->params['game']['map']['size'];
 		$playerDistance = $this->context->params['game']['map']['playerDistance'];
 		$initialFieldsCount = $this->context->params['game']['map']['initialFieldsCount'];
-		//$toleration = $this->context->params['game']['map']['toleration'];
 
 		$S = $fieldRepository->findByCoords($mapSize/2 - 1, $mapSize/2);
 		$map = $fieldRepository->getIndexedMap();
-
-		/*$outline = $this->cache->load('outline');
-		if ($outline === null || $outline - $toleration < 0){
-			$level = 0;
-		}
-		else{
-			$level = $outline - $toleration;
-		}*/
 
 		$lastHqId = $this->cache->load('lastHqId');
 		$lastHq = null;
@@ -61,24 +49,17 @@ class Clan extends BaseService {
 			$lastHq =  $fieldRepository->find($lastHqId);
 		}
 
-		Debugger::barDump($S);
-		Debugger::barDump($lastHq);
-
-
 		$neutralHexagonsCenters = $fieldRepository->findNeutralHexagons($lastHq, $playerDistance, $map);
 		$fieldRepository->sortByDistance($neutralHexagonsCenters, $S);
-		Debugger::barDump($neutralHexagonsCenters);
-
 
 		$found = new ArraySet();
 		foreach ($neutralHexagonsCenters as $center){
-
-			$neighbours = $fieldRepository->getFieldNeighbours($center, 1, $map);
 			$finalized = false;
 
 			$found = new ArraySet();
 			$found->addElement($center->type, $center);
 
+			$neighbours = $fieldRepository->getFieldNeighbours($center, 1, $map);
 			foreach ($neighbours as $neighbour){
 
 				if ($found->count() >= $initialFieldsCount){
@@ -86,7 +67,6 @@ class Clan extends BaseService {
 					break;
 				}
 				$found->addElement($neighbour->type, $neighbour);
-
 			}
 
 			if ($finalized){
@@ -94,30 +74,19 @@ class Clan extends BaseService {
 			}
 		}
 
-		//Debugger::barDump($found);
-
-		$maxNeighbours = 0;
 		$headq = null;
 		foreach ($found as $foundField){
 			$headq = $foundField;
 			break;
 		}
-		//Debugger::barDump($headq);
 
 		$values['headquarters'] = $headq;
-		//Debugger::barDump($values);
 		$clan = parent::create($values, $flush);
-		//Debugger::barDump($clan);
 
 		foreach ($found as $foundField){
 			$fieldService->update($foundField, array('owner' => $clan));
 		}
-
-
-		//$fieldService->update($headq, array('facility' => 'headquarters'));
-
 		$this->cache->save('lastHqId', $headq->id);
-
 
 		$now = new \DateTime();
 		foreach ($this->context->rules->getAll('resource') as $type => $rule) {

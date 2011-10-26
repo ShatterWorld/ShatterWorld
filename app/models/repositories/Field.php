@@ -381,15 +381,14 @@ class Field extends BaseRepository
 	 * @param array of Entities\Field
 	 * @return array of Entities\Field
 	 */
-	public function findNeutralHexagons($S, $playerDistance, &$map = null){
-
-		//Debugger::barDump($S);
+	public function findNeutralHexagons($S, $playerDistance, &$map = null)
+	{
 		$foundCenters = array();
-		$circuit = $this->findCircuit($S, $playerDistance+1, $map);
+		$circuit = $this->findCircuit($S, $playerDistance+3, $map);
 
 		foreach($circuit as $field){
 			if($field->owner == null){
-				$neighbours = $this->getFieldNeighbours($field, $playerDistance/* + 1*/, $map);
+				$neighbours = $this->getFieldNeighbours($field, $playerDistance+1, $map);
 				$add = true;
 
 				foreach($neighbours as $neighbour){
@@ -403,9 +402,7 @@ class Field extends BaseRepository
 				}
 			}
 		}
-
 		return $foundCenters;
-
 	}
 
 	/**

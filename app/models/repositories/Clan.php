@@ -55,7 +55,7 @@ class Clan extends BaseRepository
 	 * @param integer
 	 * @return ArraySet of Entities\Clan
 	 */
-	public function getDealers ($clan, $initDepth, $startup = true)
+	public function getDealers ($clan, $initDepth)
 	{
 		$fifo = ArraySet::from($this->getVisibleClans($clan));
 		$depths = new ArraySet();
@@ -66,13 +66,10 @@ class Clan extends BaseRepository
 		}
 
 		foreach($fifo as $dealer){
-//Debugger::barDump($fifo);
-
 			$id = $dealer->id;
 			$dealers->addElement($id, $dealer);
 
 			$dealersVisibleClans = $this->getVisibleClans($dealer);
-//Debugger::barDump($dealersVisibleClans);
 			foreach($dealersVisibleClans as $dvc){
 				if($depths->offsetGet($id) < 1) continue;
 
@@ -92,9 +89,7 @@ class Clan extends BaseRepository
 
 			$fifo->deleteElement($dealer->id);
 		}
-
 		return $dealers;
-
 	}
 
 	/**

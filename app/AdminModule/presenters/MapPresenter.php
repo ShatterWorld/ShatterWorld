@@ -22,8 +22,8 @@ class MapPresenter extends BasePresenter {
 		$this->getClanService()->deleteAll(FALSE);
 		$this->getAllianceService()->deleteAll(TRUE);
 		$this->getFieldService()->deleteAll(TRUE);
-		$this->getFieldRepository()->getVisibleFieldsCache()->release();
-		$this->getClanRepository()->getVisibleClansCache()->release();
+		$this->getFieldRepository()->getVisibleFieldsCache()->clean();
+		$this->getClanRepository()->getVisibleClansCache()->clean();
 		$this->getFieldService()->createMap();
 		$this->flashMessage('Nová mapa byla vygenerována');
 		$this->redirect('default');
