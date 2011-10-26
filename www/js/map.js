@@ -84,7 +84,7 @@ Game.map = {
 	 * @var integer
 	 */
 	maxXPos : 0,
-	
+
 	/**
 	 * The largest Y-position value
 	 * @var integer
@@ -207,10 +207,10 @@ Game.map = {
 
 					var posX = Game.map.calculateXPos(field) - Game.map.dX;
 					var posY = Game.map.calculateYPos(field) - Game.map.dY;
-					
+
 					Game.map.maxXPos = Math.max(posX, Game.map.maxXPos);
 					Game.map.maxYPos = Math.max(posY, Game.map.maxYPos);
-					
+
 					var borderType = 'neutral';
 					if(field['owner'] != null){
 						if (data['clanId'] == field['owner']['id']) {
@@ -371,18 +371,20 @@ Game.map = {
 						}
 					});
 				});
-				
+
 				/**
 				 * slides the sliders
 				 */
 				$('#mapContainer').scrollLeft(Game.map.scrollX);
 				$('#mapContainer').scrollTop(Game.map.scrollY);
 			});
-			
+
 			var canvasWidth = Game.map.maxXPos + Game.map.fieldWidth;
 			var canvasHeight = Game.map.maxYPos + Game.map.fieldHeight;
-			$('#map').append($('<div id="overlay">').css({'width' : canvasWidth, 'height' : canvasHeight}));
-			this.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
+			Game.map.marker.overlayDiv = $('<div id="overlay">');
+			Game.map.marker.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight});
+			$('#map').append(Game.map.marker.overlayDiv);
+			Game.map.marker.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
 			Game.spinner.hide();
 		});
 	},
@@ -415,10 +417,22 @@ Game.map.marker = {
 	size : 5,
 
 	/**
-	 * The canvas
-	 * @var Paper
+	 * The max z-index
+	 * @var integer
 	 */
-	papers : {},
+	maxZIndex : -1,
+
+	/**
+	 * The div of overlay
+	 * @var object
+	 */
+	overlayDiv : null,
+
+	/**
+	 * The global paper
+	 * @var paper
+	 */
+	overlay : null,
 
 	/**
 	 * The stack of ellipses
@@ -433,28 +447,23 @@ Game.map.marker = {
 	 * @return void
 	 */
 	mark : function (field, color) {
-		/*if (this.paper === null){
-			//new Paper
-		}*/
 		if (!Game.utils.isset(this.ellipses[color])){
 			this.ellipses[color] = {};
 		}
-		if (!Game.utils.isset(this.papers)){
-			this.papers = {};
-		}
+
 		$(field).attr('class', 'markedField'+color);
 
+		var globalField = Game.utils.localToGlobal(field, 0, 0);
+		var globalOverlay = Game.utils.localToGlobal(this.overlayDiv, 0, 0);
 
-		var global = Game.utils.localToGlobal(field, 0, 0);
-
-		var paper = new Raphael(global['x']-2, global['y']-2, 66, 46);
-		var ellipse = paper.ellipse(33, 23, 30, 20); //left,top,x-axis, y-axis
+		var ellipse = this.overlay.ellipse(globalField['x'] - globalOverlay['x']+30, globalField['y'] - globalOverlay['y']+20, 30, 20); //left,top,x-axis, y-axis
 		ellipse.id = $(field).attr('id');
 
-		paper.canvas.style.zIndex = $(field).css("z-index") + 7;
+		this.maxZIndex = Math.max(this.maxZIndex, $(field).css("z-index"));
+
+		this.overlay.canvas.style.zIndex = this.maxZIndex + 7;
 		ellipse.attr({stroke: color, "stroke-width": "4"});
 
-		this.papers[$(field).attr('id')] = paper;
 		this.ellipses[color][$(field).attr('id')] = ellipse;
 
 	},
@@ -478,16 +487,11 @@ Game.map.marker = {
 	 * @return void
 	 */
 	unmarkAll : function(color){
-		//this.paper.clear();
-		var paper = new Raphael(2,2, 66, 46);
-		paper.remove();
 		if(Game.utils.isset(this.ellipses[color])){
 			$.each(this.ellipses[color], function(key, ellipse){
 				ellipse.remove();
-				//Game.map.marker.papers[key].remove();
 			});
-			this.ellipses[color] = null;
-			//this.papers[color] = null;
+			this.ellipses[color] = {};
 		}
 
 		this.initialField = null;
