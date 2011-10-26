@@ -7,7 +7,7 @@ use Nette\Diagnostics\Debugger;
 use Nette\Caching\Cache;
 use ArraySet;
 
-class Field extends BaseRepository 
+class Field extends BaseRepository
 {
 	/**
 	 * Returns the map indexed by coordinates
@@ -26,7 +26,7 @@ class Field extends BaseRepository
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Returns map of field ids indexed by coordinates
 	 * @return array of arrays of integers
@@ -313,7 +313,7 @@ class Field extends BaseRepository
 		}
 		return $visibleFields;
 	}
-	
+
 	/**
 	 * Finds visible fields' id's
 	 * @param Entities\Clan
@@ -374,33 +374,26 @@ class Field extends BaseRepository
 	}
 
 	/**
-	 * Finds centers of seven-fields-sized hexagons which are located $outline from the center of the map. The hexagons are chosen only if $playerDistance fields around are neutral. $S is the center of the map.
-	 * @param integer
-	 * @param integer
+	 * Finds centers of seven-fields-sized hexagons which are located $outline from the $S.
+	 * The hexagons are chosen only if $playerDistance fields around are neutral.
 	 * @param Entities\Field
+	 * @param int
 	 * @param array of Entities\Field
 	 * @return array of Entities\Field
-	 *
-	 * TODO: $visitedFields (maybe not necessary)
-	 *
 	 */
-	public function findNeutralHexagons($outline, $playerDistance, $S = null, &$map = array()){
+	public function findNeutralHexagons($S, $playerDistance, &$map = null){
 
-		if ($S == null){
-			$mapSize = $this->context->params['game']['map']['size'];
-			$S = $this->findByCoords($mapSize/2 - 1, $mapSize/2);
-		}
-
+		//Debugger::barDump($S);
 		$foundCenters = array();
-		$circuit = $this->findCircuit($S, $outline, $map);
+		$circuit = $this->findCircuit($S, $playerDistance+1, $map);
 
 		foreach($circuit as $field){
 			if($field->owner == null){
-				$neighbours = $this->getFieldNeighbours($field, $playerDistance + 1, $map);
+				$neighbours = $this->getFieldNeighbours($field, $playerDistance/* + 1*/, $map);
 				$add = true;
 
 				foreach($neighbours as $neighbour){
-					if($neighbour->owner != null){
+					if($neighbour->owner !== null){
 						$add = false;
 						break;
 					}
@@ -494,6 +487,23 @@ class Field extends BaseRepository
 
 		return $circuit;
 	}
+
+	/**
+	 * Sorts the given array by the distance from the field given
+	 * @param array of Entities\Field
+	 * @param Entities\Field
+	 * @return void
+	 */
+	public function sortByDistance (&$fields, $S){
+		$fieldRepository = $this;
+		usort($fields, function ($a, $b) use ($fieldRepository, $S){
+			$dA = $fieldRepository->calculateDistance($S, $a);
+			$dB = $fieldRepository->calculateDistance($S, $b);
+			if ($dA == $dB) return 0;
+			return ($dA < $dB) ? -1 : 1;
+		});
+	}
+
 }
 
 class InvalidCoordinatesException extends \Exception {}
