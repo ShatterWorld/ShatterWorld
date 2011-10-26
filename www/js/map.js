@@ -80,6 +80,18 @@ Game.map = {
 	scrollY : 0,
 
 	/**
+	 * Represents the biggest X-index
+	 * @var integer
+	 */
+	maxX : -1,
+
+	/**
+	 * Represents the biggest X-index
+	 * @var integer
+	 */
+	maxY : -1,
+
+	/**
 	 * Represents the list of fields which are disabled right now
 	 * @var array of Field
 	 */
@@ -183,8 +195,10 @@ Game.map = {
 						Game.map.dY -= Game.map.fieldHeight;
 						Game.map.scrollY += Game.map.fieldHeight;
 					}
+					Game.map.maxY = Math.max(Game.map.maxY, key);
 
 				});
+				Game.map.maxX = Math.max(Game.map.maxX, rowKey);
 			});
 
 
