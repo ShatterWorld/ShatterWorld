@@ -3,7 +3,7 @@ namespace Repositories;
 use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
-
+use ArraySet;
 /**
  * Offer repository
  * @author Petr Bělohlávek
@@ -30,7 +30,15 @@ class Offer extends BaseRepository
 		$offers = $qb->getQuery()->getResult();
 		//Debugger::barDump($offers);
 
-		$dealers = $this->context->model->getClanRepository()->getDealers($clan, $depth);
+		$clanRepository = $this->context->model->getClanRepository();
+
+		$graph = $clanRepository->getDealersGraph($clan, $depth);
+		$dealersIds = array_keys($graph);
+
+		$dealers = new ArraySet();
+		foreach($dealersIds as $id){
+			$dealers->addElement($id, $clanRepository->find($id));
+		}
 		Debugger::barDump($dealers);
 
 		$visibleOffers = array();

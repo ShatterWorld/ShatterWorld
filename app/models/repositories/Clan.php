@@ -50,16 +50,19 @@ class Clan extends BaseRepository
 
 
 	/**
-	 * Finds clans which offers are visible to given clan
+	 * Returns oriented graph where key is clan index, and value distance
+	 * The form $from->$target
 	 * @param Entities\Clan
 	 * @param integer
-	 * @return ArraySet of Entities\Clan
+	 * @return array of array of int
 	 */
-	public function getDealers ($clan, $initDepth)
+	public function getDealersGraph ($clan, $initDepth)
 	{
 		$fifo = ArraySet::from($this->getVisibleClans($clan));
 		$depths = new ArraySet();
 		$dealers = new ArraySet();
+
+		$graph = array();
 
 		foreach($fifo as $dealer){
 			$depths->addElement($dealer->id, $initDepth-1);
@@ -74,10 +77,12 @@ class Clan extends BaseRepository
 				if($depths->offsetGet($id) < 1) continue;
 
 				$dvcId = $dvc->id;
+				$graph[$id][$dvcId] = $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters);
+
 				if ($depths->offsetExists($dvcId)){
 					if($depths->offsetGet($dvcId) < $depths->offsetGet($id)-1){
 						$depths->updateElement($dvcId, $depths->offsetGet($id)-1);
-						$fifo->updateElement($dvc->id, $dvc);
+						$fifo->updateElement($dvcId, $dvc);
 					}
 				}
 				else{
@@ -89,7 +94,7 @@ class Clan extends BaseRepository
 
 			$fifo->deleteElement($dealer->id);
 		}
-		return $dealers;
+		return $graph;
 	}
 
 	/**
