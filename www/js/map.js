@@ -409,42 +409,42 @@ Game.map = {
 						 * north
 						 * */
 						if(Game.utils.isset(data['fields'][x+1]) && Game.utils.isset(data['fields'][x+1][y-1]) && (!Game.utils.isset(data['fields'][x+1][y-1]['owner']) || (Game.utils.isset(data['fields'][x+1][y-1]['owner']) && field['owner']['id'] != data['fields'][x+1][y-1]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3) + ' ' + posY + ' l 30 0'));
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + posY + ' l ' + (Game.map.fieldWidth/2) + ' 0'));
 						}
 
 						/*
 						 * south
 						 * */
 						if(Game.utils.isset(data['fields'][x-1]) && Game.utils.isset(data['fields'][x-1][y+1]) && (!Game.utils.isset(data['fields'][x-1][y+1]['owner']) || (Game.utils.isset(data['fields'][x-1][y+1]['owner']) && field['owner']['id'] != data['fields'][x-1][y+1]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3) + ' ' + (posY+40) + ' l 30 0'));
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + (posY + Game.map.fieldHeight) + ' l ' + (Game.map.fieldWidth/2) + ' 0'));
 						}
 
 						/*
 						 * north-west
 						 * */
 						if(Game.utils.isset(data['fields'][x]) && Game.utils.isset(data['fields'][x][y-1]) && (!Game.utils.isset(data['fields'][x][y-1]['owner']) || (Game.utils.isset(data['fields'][x][y-1]['owner']) && field['owner']['id'] != data['fields'][x][y-1]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3) + ' ' + posY + ' l -15 20'));
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + posY + ' l ' + ((-1)*Game.map.fieldWidth/4) + ' 20'));
 						}
 
 						/*
 						 * north-east
 						 * */
 						if(Game.utils.isset(data['fields'][x+1]) && Game.utils.isset(data['fields'][x+1][y]) && (!Game.utils.isset(data['fields'][x+1][y]['owner']) || (Game.utils.isset(data['fields'][x+1][y]['owner']) && field['owner']['id'] != data['fields'][x+1][y]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3+30) + ' ' + posY + ' l 15 20'));
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth - Game.map.fieldWidth/4) + ' ' + posY + ' l ' + (Game.map.fieldWidth/4) + ' ' + Game.map.fieldHeight/2 + ''));
 						}
 
 						/*
 						 * south-east
 						 * */
 						if(Game.utils.isset(data['fields'][x]) && Game.utils.isset(data['fields'][x][y+1]) && (!Game.utils.isset(data['fields'][x][y+1]['owner']) || (Game.utils.isset(data['fields'][x][y+1]['owner']) && field['owner']['id'] != data['fields'][x][y+1]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3+30) + ' ' + (posY+40) + ' l 15 -20'));
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth/4 + Game.map.fieldWidth/2) + ' ' + (posY + Game.map.fieldHeight) + ' l ' + (Game.map.fieldWidth/4) + ' -20'));
 						}
 
 						/*
 						 * south-west
 						 * */
 						if(Game.utils.isset(data['fields'][x-1]) && Game.utils.isset(data['fields'][x-1][y]) && (!Game.utils.isset(data['fields'][x-1][y]['owner']) || (Game.utils.isset(data['fields'][x-1][y]['owner']) && field['owner']['id'] != data['fields'][x-1][y]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3-15) + ' ' + (posY+20) + ' l 15 20'));
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX) + ' ' + (posY + Game.map.fieldHeight/2) + ' l ' + (Game.map.fieldWidth/4) + ' 20'));
 						}
 
 
