@@ -19,8 +19,8 @@ class MapPresenter extends BasePresenter {
 		$this->getEventService()->deleteAll(FALSE);
 		$this->getResourceService()->deleteAll(FALSE);
 		$this->getOfferService()->deleteAll(FALSE);
+		$this->getAllianceService()->deleteAll(FALSE);
 		$this->getClanService()->deleteAll(FALSE);
-		$this->getAllianceService()->deleteAll(TRUE);
 		$this->getFieldService()->deleteAll(TRUE);
 		$this->getFieldRepository()->getVisibleFieldsCache()->clean();
 		$this->getClanRepository()->getVisibleClansCache()->clean();
