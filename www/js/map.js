@@ -212,17 +212,7 @@ Game.map = {
 					Game.map.maxYPos = Math.max(posY, Game.map.maxYPos);
 
 					var borderType = 'neutral';
-					/*if(field['owner'] != null){
-						if (data['clanId'] == field['owner']['id']) {
-							borderType = 'player';
-						} else if (field['owner']['alliance'] != null && field['owner']['alliance']['id'] == data['allianceId']) {
-							borderType = 'ally';
-						} else {
-							borderType = 'enemy';
-						}
-					}*/
-
-					var background = "url('"+Game.map.getBasepath()+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
+					var background = "url('"+Game.map.getBasepath()+"/images/fields/hex_"+field['type']+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
 					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['coordX']*field['coordY']+'; background: '+background+';';
 					div.attr('style', divStyle);
