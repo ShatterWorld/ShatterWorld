@@ -21,6 +21,12 @@ Game.map = {
 	map : null,
 
 	/**
+	 * All fields by coodrs
+	 * @var Object
+	 */
+	fieldsByCoodrs : {},
+
+	/**
 	 * The width of field
 	 * @var integer
 	 */
@@ -202,6 +208,9 @@ Game.map = {
 			/**
 			 * renders fields and adds event-listeners to them
 			 */
+			if (!Game.utils.isset(Game.map.fieldsByCoodrs)){
+				Game.map.fieldsByCoodrs = {};
+			}
 			$.each(data['fields'], function(rowKey, row) {
 				$.each(row, function(key, field) {
 
@@ -245,6 +254,18 @@ Game.map = {
 					}
 					div.append(text);
 					$('#map').append(div);
+
+
+					/**
+					 * Fills the fieldsByCoodrs
+					 */
+					if (!Game.utils.isset(Game.map.fieldsByCoodrs[posX])){
+						Game.map.fieldsByCoodrs[posX] = {};
+					}
+					if (!Game.utils.isset(Game.map.fieldsByCoodrs[posX][posY])){
+						Game.map.fieldsByCoodrs[posX][posY] = {};
+					}
+					Game.map.fieldsByCoodrs[posX][posY] = div;
 
 					/**
 					 * Shows and fills fieldInfo when user gets mouse over a field
@@ -382,7 +403,6 @@ Game.map = {
 			 */
 			$.each(data['fields'], function(rowKey, row) {
 				$.each(row, function(key, field) {
-
 					var posX = Game.map.calculateXPos(field) - Game.map.dX;
 					var posY = Game.map.calculateYPos(field) - Game.map.dY;
 
@@ -391,7 +411,6 @@ Game.map = {
 
 						var x = parseInt(rowKey);
 						var y = parseInt(key);
-
 
 						var pathStack = new Array();
 
@@ -437,8 +456,6 @@ Game.map = {
 							pathStack.push(Game.map.marker.overlay.path('M ' + (posX) + ' ' + (posY + Game.map.fieldHeight/2) + ' l ' + (Game.map.fieldWidth/4) + ' 20'));
 						}
 
-
-
 						var color;
 						if (data['clanId'] == field['owner']['id']) {
 							//color = '#7aee3c';
@@ -450,26 +467,40 @@ Game.map = {
 							color = 'red';
 						}
 
-
 						$.each(pathStack, function(key, path){
 							path.attr({stroke: color, 'stroke-width': 4});
 						});
 
-
 						//Game.map.marker.maxZIndex = Math.max(Game.map.marker.maxZIndex, $(field).css("z-index"));
 						Game.map.marker.overlay.canvas.style.zIndex = 9999999999999999;
-
-
 					}
-
 				});
 			});
 
-
-
 			Game.map.marker.overlayDiv.click(function(e){
-				//need to get the field div by real coords
-				//fieldDiv.click();
+				var local = Game.utils.globalToLocal(Game.map.marker.overlayDiv, e.pageX, e.pageY);
+
+				var breaker = false;
+				$.each(Game.map.fieldsByCoodrs, function(xKey, x){
+					if (xKey > local['x'] -Game.map.fieldWidth && xKey < local['x']){
+						$.each(x, function(yKey, div){
+							if (yKey > local['y'] - Game.map.fieldHeight && yKey < local['y']){
+								var divLocal = Game.utils.globalToLocal(div, e.pageX, e.pageY);
+								//var event = jQuery.Event(e.type);
+								//var event = e;
+								e.pageX = divLocal['x'];
+								//event.pageX = divLocal['x'];
+								e.pageY = divLocal['y'];
+								//event.pageY = divLocal['y'];
+								//$(div).click(event);
+								$(div).click(e);
+								breaker = true;
+							}
+							if (breaker) return false;
+						});
+						if (breaker) return false;
+					}
+				});
 			});
 			Game.spinner.hide();
 		});
