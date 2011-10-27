@@ -386,6 +386,95 @@ Game.map = {
 			$('#map').append(Game.map.marker.overlayDiv);
 			Game.map.marker.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
 
+
+			/**
+			 * outlining
+			 */
+			$.each(data['fields'], function(rowKey, row) {
+				$.each(row, function(key, field) {
+
+					var posX = Game.map.calculateXPos(field) - Game.map.dX;
+					var posY = Game.map.calculateYPos(field) - Game.map.dY;
+
+					var borderType = 'neutral';
+					if(field['owner'] != null){
+
+						var x = parseInt(rowKey);
+						var y = parseInt(key);
+
+
+						var pathStack = new Array();
+
+						/*
+						 * north
+						 * */
+						if(Game.utils.isset(data['fields'][x+1]) && Game.utils.isset(data['fields'][x+1][y-1]) && (!Game.utils.isset(data['fields'][x+1][y-1]['owner']) || (Game.utils.isset(data['fields'][x+1][y-1]['owner']) && field['owner']['id'] != data['fields'][x+1][y-1]['owner']['id']))){
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3) + ' ' + posY + ' l 30 0'));
+						}
+
+						/*
+						 * south
+						 * */
+						if(Game.utils.isset(data['fields'][x-1]) && Game.utils.isset(data['fields'][x-1][y+1]) && (!Game.utils.isset(data['fields'][x-1][y+1]['owner']) || (Game.utils.isset(data['fields'][x-1][y+1]['owner']) && field['owner']['id'] != data['fields'][x-1][y+1]['owner']['id']))){
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3) + ' ' + (posY+40) + ' l 30 0'));
+						}
+
+						/*
+						 * north-west
+						 * */
+						if(Game.utils.isset(data['fields'][x]) && Game.utils.isset(data['fields'][x][y-1]) && (!Game.utils.isset(data['fields'][x][y-1]['owner']) || (Game.utils.isset(data['fields'][x][y-1]['owner']) && field['owner']['id'] != data['fields'][x][y-1]['owner']['id']))){
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3) + ' ' + posY + ' l -15 20'));
+						}
+
+						/*
+						 * north-east
+						 * */
+						if(Game.utils.isset(data['fields'][x+1]) && Game.utils.isset(data['fields'][x+1][y]) && (!Game.utils.isset(data['fields'][x+1][y]['owner']) || (Game.utils.isset(data['fields'][x+1][y]['owner']) && field['owner']['id'] != data['fields'][x+1][y]['owner']['id']))){
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3+30) + ' ' + posY + ' l 15 20'));
+						}
+
+						/*
+						 * south-east
+						 * */
+						if(Game.utils.isset(data['fields'][x]) && Game.utils.isset(data['fields'][x][y+1]) && (!Game.utils.isset(data['fields'][x][y+1]['owner']) || (Game.utils.isset(data['fields'][x][y+1]['owner']) && field['owner']['id'] != data['fields'][x][y+1]['owner']['id']))){
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3+30) + ' ' + (posY+40) + ' l 15 -20'));
+						}
+
+						/*
+						 * south-west
+						 * */
+						if(Game.utils.isset(data['fields'][x-1]) && Game.utils.isset(data['fields'][x-1][y]) && (!Game.utils.isset(data['fields'][x-1][y]['owner']) || (Game.utils.isset(data['fields'][x-1][y]['owner']) && field['owner']['id'] != data['fields'][x-1][y]['owner']['id']))){
+							pathStack.push(Game.map.marker.overlay.path('M ' + (posX-3-15) + ' ' + (posY+20) + ' l 15 20'));
+						}
+
+
+
+						var color;
+						if (data['clanId'] == field['owner']['id']) {
+							color = 'cyan';
+						} else if (field['owner']['alliance'] != null && field['owner']['alliance']['id'] == data['allianceId']) {
+							color = 'brown';
+						} else {
+							color = 'yellow';
+						}
+
+
+						$.each(pathStack, function(key, path){
+							path.attr({stroke: color, 'stroke-width': 4});
+						});
+
+
+						//Game.map.marker.maxZIndex = Math.max(Game.map.marker.maxZIndex, $(field).css("z-index"));
+						Game.map.marker.overlay.canvas.style.zIndex = 9999999999999999;
+
+
+					}
+
+				});
+			});
+
+
+
 			Game.map.marker.overlayDiv.click(function(e){
 				//need to get the field div by real coords
 				//fieldDiv.click();
@@ -465,10 +554,9 @@ Game.map.marker = {
 		ellipse.id = $(field).attr('id');
 
 		this.maxZIndex = Math.max(this.maxZIndex, $(field).css("z-index"));
-
 		this.overlay.canvas.style.zIndex = this.maxZIndex + 7;
-		ellipse.attr({stroke: color, "stroke-width": "4"});
 
+		ellipse.attr({stroke: color, "stroke-width": "4"});
 		this.ellipses[color][$(field).attr('id')] = ellipse;
 
 	},
