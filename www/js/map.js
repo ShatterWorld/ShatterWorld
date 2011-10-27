@@ -212,7 +212,7 @@ Game.map = {
 					Game.map.maxYPos = Math.max(posY, Game.map.maxYPos);
 
 					var borderType = 'neutral';
-					if(field['owner'] != null){
+					/*if(field['owner'] != null){
 						if (data['clanId'] == field['owner']['id']) {
 							borderType = 'player';
 						} else if (field['owner']['alliance'] != null && field['owner']['alliance']['id'] == data['allianceId']) {
@@ -220,7 +220,7 @@ Game.map = {
 						} else {
 							borderType = 'enemy';
 						}
-					}
+					}*/
 
 					var background = "url('"+Game.map.getBasepath()+"/images/fields/gen/hex_"+field['type']+"_"+borderType+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
@@ -451,11 +451,13 @@ Game.map = {
 
 						var color;
 						if (data['clanId'] == field['owner']['id']) {
+							//color = '#7aee3c';
 							color = 'cyan';
 						} else if (field['owner']['alliance'] != null && field['owner']['alliance']['id'] == data['allianceId']) {
-							color = 'brown';
+							//color = '#4380d3';
+							color = '#9f3ed5';
 						} else {
-							color = 'yellow';
+							color = 'red';
 						}
 
 
