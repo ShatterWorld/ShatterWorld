@@ -1,0 +1,93 @@
+#
+# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+#
+# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
+# http://nette.org/security-warning
+#
+common:
+	php:
+		date.timezone: UTC
+		session.save_path: %tempDir%/sessions
+		# zlib.output_compression: yes
+
+	game:
+		start: 2011-09-25 18:00:00
+
+		map:
+			size: 50
+			diversityMinimum: 2
+			playerDistance: 3
+			initialFieldsCount: 3
+			toleration: 3
+
+		stats:
+			baseLOS: 5
+			baseColonisationTime: 30
+			baseAbandonmentTime: 60
+			baseStorage: 1200
+			orderTime: 3600
+			orderCap: 30
+			facilityLevelCap: 10
+
+		ruleAliases:
+			unit: Rules\Units
+			field: Rules\Fields
+			facility: Rules\Facilities
+			resource: Rules\Resources
+			event: Rules\Events
+
+	doctrine:
+		proxyDir: %tempDir%/proxies
+		proxyNamespace: Proxies
+		entityDir: [%appDir%/models/entities]
+		entityNamespace: Entities
+		serviceNamespace: Services
+
+	database:
+		driver: pdo_mysql
+		host: localhost
+		dbname: ShatterWorld
+		user: swuser
+		password: 12345
+		charset: utf8
+
+	services:
+		robotLoader:
+			run: true
+			option:
+				directory: [%appDir%, %libsDir%]
+
+		modelContext:
+			factory: ServiceFactory::createModelContext
+
+		model:
+			class: ModelContainer
+			arguments: [@modelContext]
+
+		entityManager:
+			factory: ServiceFactory::createEntityManager
+
+		doctrineCache:
+			class: DoctrineCache
+			arguments: [@cacheStorage]
+
+		authenticator:
+			class: Authenticator
+			arguments: [@userService]
+
+		authorizator:
+			factory: ServiceFactory::createAuthorizator
+
+		rules:
+			class: RuleLoader
+			arguments: [@modelContext, @robotLoader, @cacheStorage, %game.ruleAliases%]
+
+		stats:
+			class: StatContainer
+			arguments: [@modelContext]
+
+production < common:
+
+development < common:
+
+console < common:
