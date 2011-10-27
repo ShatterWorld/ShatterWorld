@@ -20,11 +20,15 @@ Game.map = {
 	 */
 	map : null,
 
+	clan : 0,
+	
+	alliance : 0,
+	
 	/**
 	 * All fields by coodrs
 	 * @var Object
 	 */
-	fieldsByCoodrs : {},
+	fieldsByCoords : {},
 
 	/**
 	 * The width of field
@@ -85,6 +89,12 @@ Game.map = {
 	 */
 	scrollY : 0,
 
+	/**
+	 * The largest z-index value
+	 * @var integer
+	 */
+	maxZ : 0,
+	
 	/**
 	 * The largest X-position value
 	 * @var integer
@@ -164,7 +174,9 @@ Game.map = {
 		 */
 		$.getJSON('?do=fetchMap', function(data) {
 			Game.map.map = data['fields'];
-
+			Game.map.clan = data['clanId'];
+			Game.map.alliance = data['allianceId'];
+			
 			/**
 			 * finds the center and calculate dX and dY
 			 */
@@ -208,26 +220,27 @@ Game.map = {
 			/**
 			 * renders fields and adds event-listeners to them
 			 */
-			if (!Game.utils.isset(Game.map.fieldsByCoodrs)){
-				Game.map.fieldsByCoodrs = {};
+			if (!Game.utils.isset(Game.map.fieldsByCoords)){
+				Game.map.fieldsByCoords = {};
 			}
 			$.each(data['fields'], function(rowKey, row) {
 				$.each(row, function(key, field) {
 
 					var posX = Game.map.calculateXPos(field) - Game.map.dX;
 					var posY = Game.map.calculateYPos(field) - Game.map.dY;
-
+					var z = field['coordX']*field['coordY'];
+					Game.map.maxZ = Math.max(z, Game.map.maxZ);
 					Game.map.maxXPos = Math.max(posX, Game.map.maxXPos);
 					Game.map.maxYPos = Math.max(posY, Game.map.maxYPos);
 
 					var borderType = 'neutral';
 					var background = "url('"+Game.map.getBasepath()+"/images/fields/hex_"+field['type']+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
-					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+field['coordX']*field['coordY']+'; background: '+background+';';
+					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
 					div.attr('style', divStyle);
 					div.attr('data-id', field['id']);
-
-
+					div.attr('data-coordx', field['coordX']);
+					div.attr('data-coordy', field['coordY']);
 					div.css({
 						'vertical-align' : 'middle'
 					});
@@ -253,134 +266,22 @@ Game.map = {
 						}
 					}
 					div.append(text);
+					field.element = div;
 					$('#map').append(div);
 
 
 					/**
-					 * Fills the fieldsByCoodrs
+					 * Fills the fieldsByCoords
 					 */
-					if (!Game.utils.isset(Game.map.fieldsByCoodrs[posX])){
-						Game.map.fieldsByCoodrs[posX] = {};
+					if (!Game.utils.isset(Game.map.fieldsByCoords[posX])){
+						Game.map.fieldsByCoords[posX] = {};
 					}
-					if (!Game.utils.isset(Game.map.fieldsByCoodrs[posX][posY])){
-						Game.map.fieldsByCoodrs[posX][posY] = {};
+					if (!Game.utils.isset(Game.map.fieldsByCoords[posX][posY])){
+						Game.map.fieldsByCoords[posX][posY] = {};
 					}
-					Game.map.fieldsByCoodrs[posX][posY] = div;
+					Game.map.fieldsByCoords[posX][posY] = div;
 
-					/**
-					 * Shows and fills fieldInfo when user gets mouse over a field
-					 * @return void
-					 */
-					div.mouseenter(function(e){
-						if (Game.map.contextMenuShown){
-							return;
-						}
-
-						Game.map.tooltip.show();
-
-						var secret = '???';
-						var none = '---';
-
-						var coords = '['+field['coordX']+';'+field['coordY']+']';
-						var type = field['type'];
-						var owner = none;
-						var alliance = none;
-						var facility = none;
-						var level = none;
-
-
-						var ownerId = null;
-						var allianceId = null;
-
-						if (field['owner'] != null){
-							owner = field['owner']['name'];
-							ownerId = field['owner']['id'];
-
-							if (field['owner']['alliance'] != null){
-								alliance = field['owner']['alliance']['name'];
-								allianceId = field['owner']['alliance']['id'];
-							}
-						}
-
-
-						if ((ownerId !== null && ownerId == data['clanId']) || (allianceId !== null && allianceId == data['allianceId'])){
-							if (field['facility'] != null){
-								facility = field['facility'];
-							}
-
-							if (field['level'] !== null && field['facility'] !== null && field['facility'] != 'headquarters'){
-								level = field['level'];
-							}
-
-						}
-						else if ((ownerId !== null && ownerId != data['clanId']) || (allianceId !== null && allianceId != data['allianceId'])){
-							facility = secret;
-							level = secret;
-
-						}
-
-						$("#fieldInfo #coords").html(coords);
-						Game.descriptions.translate('field', type, "#fieldInfo #type");
-						$("#fieldInfo #owner").html(owner);
-						$("#fieldInfo #alliance").html(alliance);
-						Game.descriptions.translate('facility', facility, "#fieldInfo #facility");
-						$("#fieldInfo #level").html(level);
-
-					});
-
-
-					/**
-					 * Hides #fieldInfo
-					 * @return void
-					 */
-					div.mouseleave(function(){
-						Game.map.tooltip.hide();
-					});
-
-
-					/**
-					 * Moves with #infoBox
-					 * @return void
-					 */
-					div.mousemove(function(e) {
-						var localCoordinates = Game.utils.globalToLocal(
-							div.parent(),
-							e.pageX,
-							e.pageY
-						);
-
-						var leftPos = localCoordinates.x + 30 - $('#mapContainer').scrollLeft();
-						var topPos = localCoordinates.y + 30 - $('#mapContainer').scrollTop();
-
-						Game.map.tooltip.position(leftPos, topPos);
-					});
-
-					/**
-					 * Runs when user click some field
-					 * @return void
-					 */
-					div.click(function(e){
-
-						if(Game.map.contextMenu.contextMenuShown){
-							Game.map.contextMenu.hide();
-							Game.map.marker.unmarkAll('red');
-							return;
-						}
-
-						if(Game.map.contextMenu.initialField === null || Game.map.contextMenu.action === null){
-							Game.map.contextMenu.initialField = field;
-							Game.map.marker.mark(div, 'red');
-							Game.map.contextMenu.show(div, e, field, data);
-						}
-						else if(Game.map.contextMenu.action == "attackSelect2nd"){
-							Game.map.contextMenu.attackSelect2nd(Game.map.contextMenu.initialField, field, div, data)
-						}
-						else{
-							Game.map.contextMenu.action(Game.map.contextMenu.initialField, field);
-							Game.map.contextMenu.hide();
-							Game.map.marker.unmarkAll('red');
-						}
-					});
+					
 				});
 
 				/**
@@ -392,10 +293,10 @@ Game.map = {
 
 			var canvasWidth = Game.map.maxXPos + Game.map.fieldWidth;
 			var canvasHeight = Game.map.maxYPos + Game.map.fieldHeight;
-			Game.map.marker.overlayDiv = $('<div id="overlay">');
-			Game.map.marker.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight});
-			$('#map').append(Game.map.marker.overlayDiv);
-			Game.map.marker.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
+			Game.map.overlayDiv = $('<div id="overlay">');
+			Game.map.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight, 'position' : 'absolute', 'left' : 0, 'top' : 0});
+			$('#map').append(Game.map.overlayDiv);
+			Game.map.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
 
 
 			/**
@@ -418,42 +319,42 @@ Game.map = {
 						 * north
 						 * */
 						if(Game.utils.isset(data['fields'][x+1]) && Game.utils.isset(data['fields'][x+1][y-1]) && (!Game.utils.isset(data['fields'][x+1][y-1]['owner']) || (Game.utils.isset(data['fields'][x+1][y-1]['owner']) && field['owner']['id'] != data['fields'][x+1][y-1]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + posY + ' l ' + (Game.map.fieldWidth/2) + ' 0'));
+							pathStack.push(Game.map.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + posY + ' l ' + (Game.map.fieldWidth/2) + ' 0'));
 						}
 
 						/*
 						 * south
 						 * */
 						if(Game.utils.isset(data['fields'][x-1]) && Game.utils.isset(data['fields'][x-1][y+1]) && (!Game.utils.isset(data['fields'][x-1][y+1]['owner']) || (Game.utils.isset(data['fields'][x-1][y+1]['owner']) && field['owner']['id'] != data['fields'][x-1][y+1]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + (posY + Game.map.fieldHeight) + ' l ' + (Game.map.fieldWidth/2) + ' 0'));
+							pathStack.push(Game.map.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + (posY + Game.map.fieldHeight) + ' l ' + (Game.map.fieldWidth/2) + ' 0'));
 						}
 
 						/*
 						 * north-west
 						 * */
 						if(Game.utils.isset(data['fields'][x]) && Game.utils.isset(data['fields'][x][y-1]) && (!Game.utils.isset(data['fields'][x][y-1]['owner']) || (Game.utils.isset(data['fields'][x][y-1]['owner']) && field['owner']['id'] != data['fields'][x][y-1]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + posY + ' l ' + ((-1)*Game.map.fieldWidth/4) + ' 20'));
+							pathStack.push(Game.map.overlay.path('M ' + (posX + Game.map.fieldWidth/4) + ' ' + posY + ' l ' + ((-1)*Game.map.fieldWidth/4) + ' 20'));
 						}
 
 						/*
 						 * north-east
 						 * */
 						if(Game.utils.isset(data['fields'][x+1]) && Game.utils.isset(data['fields'][x+1][y]) && (!Game.utils.isset(data['fields'][x+1][y]['owner']) || (Game.utils.isset(data['fields'][x+1][y]['owner']) && field['owner']['id'] != data['fields'][x+1][y]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth - Game.map.fieldWidth/4) + ' ' + posY + ' l ' + (Game.map.fieldWidth/4) + ' ' + Game.map.fieldHeight/2 + ''));
+							pathStack.push(Game.map.overlay.path('M ' + (posX + Game.map.fieldWidth - Game.map.fieldWidth/4) + ' ' + posY + ' l ' + (Game.map.fieldWidth/4) + ' ' + Game.map.fieldHeight/2 + ''));
 						}
 
 						/*
 						 * south-east
 						 * */
 						if(Game.utils.isset(data['fields'][x]) && Game.utils.isset(data['fields'][x][y+1]) && (!Game.utils.isset(data['fields'][x][y+1]['owner']) || (Game.utils.isset(data['fields'][x][y+1]['owner']) && field['owner']['id'] != data['fields'][x][y+1]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX + Game.map.fieldWidth/4 + Game.map.fieldWidth/2) + ' ' + (posY + Game.map.fieldHeight) + ' l ' + (Game.map.fieldWidth/4) + ' -20'));
+							pathStack.push(Game.map.overlay.path('M ' + (posX + Game.map.fieldWidth/4 + Game.map.fieldWidth/2) + ' ' + (posY + Game.map.fieldHeight) + ' l ' + (Game.map.fieldWidth/4) + ' -20'));
 						}
 
 						/*
 						 * south-west
 						 * */
 						if(Game.utils.isset(data['fields'][x-1]) && Game.utils.isset(data['fields'][x-1][y]) && (!Game.utils.isset(data['fields'][x-1][y]['owner']) || (Game.utils.isset(data['fields'][x-1][y]['owner']) && field['owner']['id'] != data['fields'][x-1][y]['owner']['id']))){
-							pathStack.push(Game.map.marker.overlay.path('M ' + (posX) + ' ' + (posY + Game.map.fieldHeight/2) + ' l ' + (Game.map.fieldWidth/4) + ' 20'));
+							pathStack.push(Game.map.overlay.path('M ' + (posX) + ' ' + (posY + Game.map.fieldHeight/2) + ' l ' + (Game.map.fieldWidth/4) + ' 20'));
 						}
 
 						var color;
@@ -472,40 +373,114 @@ Game.map = {
 						});
 
 						//Game.map.marker.maxZIndex = Math.max(Game.map.marker.maxZIndex, $(field).css("z-index"));
-						Game.map.marker.overlay.canvas.style.zIndex = 9999999999999999;
+						Game.map.overlay.canvas.style.zIndex = Game.map.maxZ + 1;
 					}
 				});
 			});
 
-			Game.map.marker.overlayDiv.click(function(e){
-				var local = Game.utils.globalToLocal(Game.map.marker.overlayDiv, e.pageX, e.pageY);
+			/**
+			 * Shows and fills fieldInfo when user gets mouse over a field
+			 * @return void
+			 */
+			Game.map.overlayDiv.mouseenter(function(e){
+				if (Game.map.contextMenuShown){
+					return;
+				}
+				var field = Game.map.determineField(e);
+				if (field) {
+					Game.map.tooltip.show(field);
+				}
+			});
 
-				var breaker = false;
-				$.each(Game.map.fieldsByCoodrs, function(xKey, x){
-					if (xKey > local['x'] -Game.map.fieldWidth && xKey < local['x']){
-						$.each(x, function(yKey, div){
-							if (yKey > local['y'] - Game.map.fieldHeight && yKey < local['y']){
-								var divLocal = Game.utils.globalToLocal(div, e.pageX, e.pageY);
-								//var event = jQuery.Event(e.type);
-								//var event = e;
-								e.pageX = divLocal['x'];
-								//event.pageX = divLocal['x'];
-								e.pageY = divLocal['y'];
-								//event.pageY = divLocal['y'];
-								//$(div).click(event);
-								$(div).click(e);
-								breaker = true;
-							}
-							if (breaker) return false;
-						});
-						if (breaker) return false;
+
+			/**
+			 * Hides #fieldInfo
+			 * @return void
+			 */
+			Game.map.overlayDiv.mouseleave(function(){
+				Game.map.tooltip.hide();
+			});
+
+
+			/**
+			 * Moves with #infoBox
+			 * @return void
+			 */
+			Game.map.overlayDiv.mousemove(function(e) {
+				var field = Game.map.determineField(e);
+				
+				if (field !== Game.map.tooltip.field) {
+					if (field === null) {
+						Game.map.tooltip.hide();
+					} else {
+						Game.map.tooltip.show(field);
 					}
-				});
+				}
+				if (field !== null) {
+					var coords = Game.utils.globalToLocal($('#mapContainer'), e.pageX, e.pageY);
+					Game.map.tooltip.element.css({
+						'left': coords['x'] + 30,
+						'top': coords['y'] + 30
+					});
+				}
+			});
+
+			/**
+			 * Runs when user clicks a field
+			 * @return void
+			 */
+			Game.map.overlayDiv.click(function(e){
+				var field = Game.map.determineField(e);
+					if (field) {
+					var div = field.element;
+					
+					if(Game.map.contextMenu.contextMenuShown){
+						Game.map.contextMenu.hide();
+						Game.map.marker.unmarkAll('red');
+						return;
+					}
+
+					if(Game.map.contextMenu.initialField === null || Game.map.contextMenu.action === null){
+						Game.map.contextMenu.initialField = field;
+						Game.map.marker.mark(div, 'red');
+						Game.map.contextMenu.show(div, field);
+					}
+					else if(Game.map.contextMenu.action == "attackSelect2nd"){
+						Game.map.contextMenu.attackSelect2nd(Game.map.contextMenu.initialField, field, div, data)
+					}
+					else{
+						Game.map.contextMenu.action(Game.map.contextMenu.initialField, field);
+						Game.map.contextMenu.hide();
+						Game.map.marker.unmarkAll('red');
+					}
+				}
 			});
 			Game.spinner.hide();
 		});
 	},
 
+	determineField : function (e)
+	{
+		var local = Game.utils.globalToLocal(Game.map.overlayDiv, e.pageX, e.pageY);
+		var mouseX = local['x'];
+		var mouseY = local['y'];
+		var breaker = false;
+		var result = null;
+		$.each(Game.map.fieldsByCoords, function(xKey, x){
+			if (xKey > mouseX - Game.map.fieldWidth && xKey < mouseX){
+				$.each(x, function(yKey, div){
+					if (yKey > mouseY - Game.map.fieldHeight && yKey < mouseY){
+						result = Game.map.map[div.data('coordx')][div.data('coordy')];
+						breaker = true;
+					}
+					if (breaker) return false;
+				});
+				if (breaker) return false;
+			}
+		});
+		return result;
+	},
+	
 	/**
 	 * Calculates somehow x-position of the field
 	 * @param field
@@ -534,24 +509,6 @@ Game.map.marker = {
 	size : 5,
 
 	/**
-	 * The max z-index
-	 * @var integer
-	 */
-	maxZIndex : -1,
-
-	/**
-	 * The div of overlay
-	 * @var object
-	 */
-	overlayDiv : null,
-
-	/**
-	 * The global paper
-	 * @var paper
-	 */
-	overlay : null,
-
-	/**
 	 * The stack of ellipses
 	 * @var array
 	 */
@@ -571,13 +528,13 @@ Game.map.marker = {
 		$(field).attr('class', 'markedField'+color);
 
 		var globalField = Game.utils.localToGlobal(field, 0, 0);
-		var globalOverlay = Game.utils.localToGlobal(this.overlayDiv, 0, 0);
+		var globalOverlay = Game.utils.localToGlobal(Game.map.overlayDiv, 0, 0);
 
-		var ellipse = this.overlay.ellipse(globalField['x'] - globalOverlay['x']+30, globalField['y'] - globalOverlay['y']+20, 30, 20); //left,top,x-axis, y-axis
+		var ellipse = Game.map.overlay.ellipse(globalField['x'] - globalOverlay['x']+30, globalField['y'] - globalOverlay['y']+20, 30, 20); //left,top,x-axis, y-axis
 		ellipse.id = $(field).attr('id');
 
-		this.maxZIndex = Math.max(this.maxZIndex, $(field).css("z-index"));
-		this.overlay.canvas.style.zIndex = this.maxZIndex + 7;
+// 		this.maxZIndex = Math.max(this.maxZIndex, $(field).css("z-index"));
+// 		Game.map.overlay.canvas.style.zIndex = this.maxZIndex + 7;
 
 		ellipse.attr({stroke: color, "stroke-width": "4"});
 		this.ellipses[color][$(field).attr('id')] = ellipse;
@@ -654,19 +611,71 @@ Game.map.tooltip = {
 			'padding' : '3px',
 			'min-width' : '180px',
 			'position' : 'absolute',
-			'z-index' : '99999999999999999',
 			'display' : 'none',
 			'-ms-filter' : "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)",
 			'-moz-opacity' : '0.9',
 			'opacity' : '0.9'
 	}),
-
+	
+	
+	
+	field : null,
+	
 	/**
 	 * Displays the info
 	 * @return void
 	 */
-	show : function(){
+	show : function (field){
+		var secret = '???';
+		var none = '---';
+
+		var coords = '['+field['coordX']+';'+field['coordY']+']';
+		var type = field['type'];
+		var owner = none;
+		var alliance = none;
+		var facility = none;
+		var level = none;
+
+
+		var ownerId = null;
+		var allianceId = null;
+
+		if (field['owner'] != null){
+			owner = field['owner']['name'];
+			ownerId = field['owner']['id'];
+
+			if (field['owner']['alliance'] != null){
+				alliance = field['owner']['alliance']['name'];
+				allianceId = field['owner']['alliance']['id'];
+			}
+		}
+
+
+		if ((ownerId !== null && ownerId == Game.map.clan) || (allianceId !== null && allianceId == Game.map.alliance)){
+			if (field['facility'] != null){
+				facility = field['facility'];
+			}
+
+			if (field['level'] !== null && field['facility'] !== null && field['facility'] != 'headquarters'){
+				level = field['level'];
+			}
+
+		}
+		else if ((ownerId !== null && ownerId != Game.map.clan) || (allianceId !== null && allianceId != Game.map.alliance)){
+			facility = secret;
+			level = secret;
+
+		}
+
+		$("#fieldInfo #coords").html(coords);
+		Game.descriptions.translate('field', type, "#fieldInfo #type");
+		$("#fieldInfo #owner").html(owner);
+		$("#fieldInfo #alliance").html(alliance);
+		Game.descriptions.translate('facility', facility, "#fieldInfo #facility");
+		$("#fieldInfo #level").html(level);
+		this.element.css('z-index', Game.map.maxZ + 3);
 		this.element.show();
+		this.field = field;
 	},
 
 	/**
@@ -675,6 +684,7 @@ Game.map.tooltip = {
 	 */
 	hide : function(){
 		this.element.hide();
+		this.field = null;
 	},
 
 	/**
@@ -756,7 +766,6 @@ Game.map.contextMenu = {
 			'padding' : '5px',
 			'width' : "150px",
 			'position' : "absolute",
-			'z-index' : "999999999999999999999999999",
 			'-ms-filter' : "'progid:DXImageTransform.Microsoft.Alpha(Opacity=90)'",
 			'-moz-opacity' : "0.9",
 			'opacity' : "0.9"
@@ -778,26 +787,25 @@ Game.map.contextMenu = {
 	 * @param event - fired event
 	 * @return void
 	 */
-	show: function(object, e, field, data){
+	show: function(object, field){
 
 		this.contextMenu.html('');
+		this.contextMenu.css('z-index', Game.map.maxZ + 2);
 		this.contextMenu.show();
 
 		$('#fieldInfo').hide();
-		var localCoords = Game.utils.globalToLocal(
-			$(object).parent(),
-			e.pageX,
-			e.pageY
-		);
 
-		this.contextMenu.css("left", localCoords.x + 30 - $('#mapContainer').scrollLeft() + 'px');
-		this.contextMenu.css("top", localCoords.y + 30 - $('#mapContainer').scrollTop() + 'px');
+		var x = parseInt(object.css('left'));
+		var y = parseInt(object.css('top'));
+		
+		this.contextMenu.css("left", x + 50);
+		this.contextMenu.css("top", y + 30);
 
 		this.contextMenuShown = true;
 		$('#mapContainer').append(this.contextMenu);
 
 		//my
-		if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
+		if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
 
 			if (field['units'] !== null || field['units'] != null){
 				this.addAttackAction(field);
@@ -821,7 +829,7 @@ Game.map.contextMenu = {
 			}
 		}
 		//alliance
-		else if(field['owner'] !== null && field['owner']['alliance'] !== null && data['allianceId'] !== null && field['owner']['alliance']['id'] == data['allianceId']){
+		else if(field['owner'] !== null && field['owner']['alliance'] !== null && Game.map.alliance !== null && field['owner']['alliance']['id'] == Game.map.alliance){
 			alert('aliance');
 		}
 		//enemy
@@ -829,7 +837,7 @@ Game.map.contextMenu = {
 			alert('enemy');
 		}
 		//neutral neighbour
-		else if(this.isNeighbour(field, data['clanId'])){
+		else if(this.isNeighbour(field, Game.map.clan)){
 			this.addColonisationAction(field);
 		}
 		//other neutral

@@ -41,3 +41,15 @@
 	/*padding-left: 15px;
 	margin-bottom: 10px;*/
 }
+
+.report {
+	margin-bottom: 1em;
+}
+
+.report h2 {
+	font-weight: bold;
+}
+
+.report .date {
+	font-style: italic;
+}
