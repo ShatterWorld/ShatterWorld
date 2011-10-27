@@ -35,6 +35,7 @@ class Clan extends BaseEntity {
 
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Alliance", inversedBy = "members")
+	 * @JoinColumn(onDelete = "SET NULL")
 	 * @var Entities\Alliance
 	 */
 	private $alliance;
