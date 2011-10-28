@@ -478,7 +478,7 @@ Game.map = {
 				if (breaker) return false;
 			}
 		});
-		return result;
+		return result !== undefined ? result : null;
 	},
 	
 	/**
