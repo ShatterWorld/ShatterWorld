@@ -23,9 +23,9 @@ interface IEvent extends \Rules\IRule {
 	public function isValid (Entities\Event $event);
 	
 	/**
-	 * Formats report data into a whatever TODO: decide about the format
+	 * Formats report data into an array
 	 * @param object
-	 * @return string
+	 * @return array of ReportItem
 	 */
-	public function formatReport ($data);
+	public function formatReport (Entities\Report $report);
 }

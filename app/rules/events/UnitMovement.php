@@ -21,8 +21,8 @@ class UnitMovement extends AbstractRule implements IEvent
 		return $event->target->owner == $event->origin->owner;
 	}
 	
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		return array();
 	}
 }

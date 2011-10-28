@@ -1,6 +1,7 @@
 <?php
 namespace Rules\Events;
 use Entities;
+use ReportItem;
 use Rules\AbstractRule;
 
 class FacilityDemolition extends AbstractRule implements IConstruction
@@ -27,9 +28,13 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 		return $event->target->owner == $clan && ($event->level === 0 || ($event->target->level - 1 === $event->level));
 	}
 	
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		$facility = $this->getContext()->rules->get('facility', $report->event->construction)->getDescription();
+		$level = $report->event->level;
+		return array(
+			new ReportItem('text', $level == 0 ? sprintf("Budova %s byla zbořena.", $facility) : sprintf("Úroveň budovy %s byla snížena na %s.", $facility, $level))
+		);
 	}
 	
 	public function isExclusive ()

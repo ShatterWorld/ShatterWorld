@@ -3,6 +3,7 @@ namespace Rules\Events;
 use Rules\AbstractRule;
 use Nette\Utils\Json;
 use Entities;
+use ReportItem;
 
 class UnitTraining extends AbstractRule implements IConstruction
 {
@@ -22,9 +23,11 @@ class UnitTraining extends AbstractRule implements IConstruction
 		return TRUE;
 	}
 	
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		return array(
+			new ReportItem('unitGrid', (array) Json::decode($report->event->construction))
+		);
 	}
 	
 	public function isExclusive ()

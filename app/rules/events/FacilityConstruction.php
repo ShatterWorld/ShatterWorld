@@ -1,6 +1,7 @@
 <?php
 namespace Rules\Events;
 use Rules\AbstractRule;
+use ReportItem;
 use Entities;
 
 class FacilityConstruction extends AbstractRule implements IConstruction
@@ -27,9 +28,13 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 			(($event->target->facility === $event->construction || ($event->target->facility === NULL && $event->level === 1)) && $event->target->level === ($event->level - 1));
 	}
 	
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		$facility = $this->getContext()->rules->get('facility', $report->event->construction)->getDescription();
+		$level = $report->event->level;
+		return array(
+			new ReportItem('text', $level == 1 ? sprintf("Budova %s byla dostavena.", $facility) : sprintf("Budova %s byla vylepšena na úroveň %s.", $facility, $level))
+		);
 	}
 	
 	public function isExclusive ()

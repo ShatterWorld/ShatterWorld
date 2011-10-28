@@ -22,8 +22,8 @@ class Shipment extends AbstractRule implements IEvent
 		return true;
 	}
 
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		return array();
 	}
 }

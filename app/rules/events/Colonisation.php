@@ -1,6 +1,7 @@
 <?php
 namespace Rules\Events;
 use Rules\AbstractRule;
+use ReportItem;
 use Entities;
 
 class Colonisation extends AbstractRule implements IConstruction
@@ -32,9 +33,11 @@ class Colonisation extends AbstractRule implements IConstruction
 		return FALSE;
 	}
 	
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		return array(
+			new ReportItem('text', 'Úspěšně jsme připojili další území k našemu teritoriu!')
+		);
 	}
 	
 	public function isExclusive ()

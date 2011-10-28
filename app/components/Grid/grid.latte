@@ -1,0 +1,13 @@
+<h3 n:if="$heading">{$heading}</h3>
+<table>
+<tr>
+<td n:foreach="$columns as $key => $label">
+{$label}
+</td>
+</tr>
+<tr>
+<td n:foreach="$columns as $key => $label">
+{isset($data[$key]) ? $data[$key] : 0}
+</td>
+</tr>
+</table>

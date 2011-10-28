@@ -72,16 +72,23 @@ class RuleLoader extends Nette\Object
 	}
 	
 	/**
-	 * Get the descriptions of all the rules
+	 * Get the descriptions of all the rules (optionally of given type)
+	 * @param string
 	 * @return array of string
 	 */
-	public function getDescriptions ()
+	public function getDescriptions ($type = NULL)
 	{
 		$result = array();
-		foreach ($this->aliases as $alias => $type) {
-			$result[$alias] = array();
-			foreach ($this->getAll($alias) as $name => $rule) {
-				$result[$alias][$name] = $rule->getDescription();
+		if (!$type) {
+			foreach ($this->aliases as $alias => $type) {
+				$result[$alias] = array();
+				foreach ($this->getAll($alias) as $name => $rule) {
+					$result[$alias][$name] = $rule->getDescription();
+				}
+			}
+		} else {
+			foreach ($this->getAll($type) as $name => $rule) {
+				$result[$name] = $rule->getDescription();
 			}
 		}
 		return $result;

@@ -36,8 +36,8 @@ abstract class Attack extends AbstractRule implements IEvent
 			$defenderPower = $defenderPower + $unit->count * $rule->getAttack();
 			$defenderDefense = $defenderDefense + $unit->count * $rule->getDefense();
 		}
-		$attackerCasualtiesCoefficient = 1 - tanh($attackerPower / (5 * $defenderDefense));
-		$defenderCasualtiesCoefficient = tanh(2 * $attackerPower / $defenderDefense);
+		$attackerCasualtiesCoefficient = $defenderDefense > 0 ? 1 - tanh($attackerPower / (5 * $defenderDefense)) : 0;
+		$defenderCasualtiesCoefficient = $defenderDefense > 0 ? tanh(2 * $attackerPower / $defenderDefense) : 1;
 		foreach ($event->getUnits() as $unit) {
 			$result['attacker']['casualties'][$unit->type] = intval(round($unit->count * $attackerCasualtiesCoefficient));
 		}

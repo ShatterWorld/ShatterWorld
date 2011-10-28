@@ -22,9 +22,9 @@ class Occupation extends Attack
 		return $result;
 	}
 	
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		return array();
 	}
 	
 	public function needsTotalVictory ()
