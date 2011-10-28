@@ -5,6 +5,7 @@ use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use InsufficientCapacityException;
 use InsufficientResourcesException;
+use Rules\Facilities\IConstructionFacility;
 
 class UnitPresenter extends BasePresenter
 {
@@ -16,7 +17,23 @@ class UnitPresenter extends BasePresenter
 
 	public function renderTrain ()
 	{
+		$slots = array();
+		foreach ($this->context->rules->getAll('facility') as $name => $rule) {
+			if ($rule instanceof IConstructionFacility) {
+				$slots[$name] = $rule;
+			}
+		}
+
+		$resources = array();
+		foreach ($this->context->rules->getAll('resource') as $name => $rule) {
+			//if ($rule instanceof IConstructionFacility) {
+				$resources[$name] = $rule;
+			//}
+		}
+
+		$this->template->resources = $resources;
 		$this->template->units = $this->context->rules->getAll('unit');
+		$this->template->slots = $slots;
 		$this->template->totalSlots = $this->context->stats->getTotalUnitSlots($this->getPlayerClan());
 	}
 
@@ -67,7 +84,7 @@ class UnitPresenter extends BasePresenter
 
 		$this->redirect('Unit:Train');
 	}
-	
+
 	public function getUnitDescription ($type)
 	{
 		return $this->context->rules->get('unit', $type)->getDescription();

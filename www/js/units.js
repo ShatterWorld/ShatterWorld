@@ -46,18 +46,12 @@ Game.units = {
 
 			$(td).click(function(){
 				$(td).parent().children('.amount').children('input').val(countSpan.html());
-
-				//$('#slotDiv').append('<div>max change</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-				//$(td).parent().children('.amount').children('input').change();
 				Game.units.inputChange();
 			});
-
 			$(td).css({
 				'cursor': 'pointer',
 				'text-decoration' : 'underline'
 			});
-
 		});
 	},
 
@@ -75,9 +69,7 @@ Game.units = {
 				}
 				Game.units.totalCosts[resource] += $(td).children('input').val() * cost;
 			});
-
 		});
-
 	},
 
 	/**
@@ -85,23 +77,17 @@ Game.units = {
 	 * @return void
 	 */
 	handleTotalSlots: function (){
-
 		this.availableSlots = Game.utils.clone(this.totalAvailableSlots);
-		//$('#slotDiv').append('<div>----- nulling -> barracks: '+this.availableSlots['barracks']+'/'+this.totalAvailableSlots['barracks']+'</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 		$.each($('#trainUnitTable .unit'), function(unitKey, tr){
 
 			var difficulty = $(tr).data()['difficulty'];
 
 			$.each(difficulty, function(key, diff){
 				if (Game.utils.isset(Game.units.availableSlots[key])){
-					//$('#slotDiv').append('<div>' + unitKey + ': ' + key+': '+Game.units.availableSlots[key]);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					Game.units.availableSlots[key] -= $(tr).children('.amount').children('input').val() * diff;
-					//$('#slotDiv').append(' -> '+Game.units.availableSlots[key]+'</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				}
 			});
 		});
-
 	},
 
 	/**
@@ -119,11 +105,10 @@ Game.units = {
 	 * @return void
 	 */
 	printTotalSlots: function (){
-		$.each(this.availableSlots, function(key, res){
-			$('#slotDiv').append('<div>available: '+key+': '+res+'</div>');//!!!!!!!!!!!!!!!!!!!!!!!!
+		$.each(this.availableSlots, function(key, slotCount){
+			$('#slotSum #'+key+' .used').html(Game.units.totalAvailableSlots[key] - slotCount);
+			$('#slotSum #'+key+' .remains').html(slotCount);
 		});
-
-
 	},
 
 	/**
@@ -145,19 +130,16 @@ Game.units = {
 	 */
 	hasSufficientSlots : function(){
 		var ret = true;
-
 		$.each(this.availableSlots, function(key, actSlot){
 			if(actSlot < 0){
 				ret = false;
 				return false;
 			}
 		});
-
 		return ret;
 	},
 
 	inputChange : function(){
-		//$('#slotDiv').append('<div>own change</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		this.handleTotalCosts();
 		this.handleTotalSlots();
 
@@ -165,7 +147,6 @@ Game.units = {
 		this.printTotalSlots();
 
 		this.handleSubmit();
-
 	}
 
 };
@@ -177,8 +158,7 @@ $(document).ready(function(){
 	Game.units.setMaximumAmount();
 
 	$('#trainUnitTable .amount input').keypress(function(e) {
-
-		if(e.which != 0 && e.which != 8){
+		if(e.which != 0/* && e.which != 8*/){
 			e.preventDefault();
 		}
 
@@ -186,19 +166,12 @@ $(document).ready(function(){
 			$(this).val($(this).val().substr(0, $(this).val().length - 1));
 		}
 
-		//$('#slotDiv').append('<div>keyup</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-		//alert(e.which);
-
-
-		if (e.which == 0 || e.which == 8 || e.which < 48 || e.which > 57){ /*need to check num in a better way*/
-			//$('#slotDiv').append('<div>->return</div>');//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			Game.units.inputChange(); //need to execute right after change(), not before
+		if (e.which == 0 || e.which == 8 || e.which < 48 || e.which > 57){
+			Game.units.inputChange();
 			return;
 		}
 
 		$(this).val($(this).val() + String.fromCharCode(e.which));
-
 		Game.units.inputChange();
 	});
 
