@@ -4,6 +4,7 @@ use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
 use ArraySet;
+use Graph;
 use Nette;
 
 class Clan extends BaseRepository
@@ -61,8 +62,7 @@ class Clan extends BaseRepository
 		$fifo = ArraySet::from($this->getVisibleClans($clan));
 		$depths = new ArraySet();
 		$dealers = new ArraySet();
-
-		$graph = array();
+		$graph = new Graph();
 
 		foreach($fifo as $dealer){
 			$depths->addElement($dealer->id, $initDepth-1);
@@ -77,7 +77,7 @@ class Clan extends BaseRepository
 				if($depths->offsetGet($id) < 1) continue;
 
 				$dvcId = $dvc->id;
-				$graph[$id][$dvcId] = $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters);
+				$graph->addEdge($id, $dvcId, $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters));
 
 				if ($depths->offsetExists($dvcId)){
 					if($depths->offsetGet($dvcId) < $depths->offsetGet($id)-1){

@@ -1,22 +1,40 @@
 <?php
-use ArraySet;
+use Nette\Diagnostics\Debugger;
 
 /**
  * Graph class
  * @author Petr Bělohlávek
  */
-class Grpah
+class Graph
 {
 
 	/**
 	 * Data of graph
-	 * @return array of array of int
+	 * @var array of array of int
 	 */
 	protected $data;
 
 	/**
+	 * Result of floyd-warshall
+	 * @var array of array of int
+	 */
+	protected $floydRes;
+
+	/**
+	 * The shortest path
+	 * @var array of int
+	 */
+	protected $path;
+
+	/**
+	 * Is floydRes updated?
+	 * @var boolean
+	 */
+	protected $pathUpdated;
+
+	/**
 	 * Vertices
-	 * @return ArraySet of int
+	 * @var ArraySet of int
 	 */
 	protected $vertices;
 
@@ -27,7 +45,19 @@ class Grpah
 	public function __construct ()
 	{
 		$this->vertices = new ArraySet();
-		$this->data = $data;
+		$this->data = array();
+		$this->floydRes = array();
+		$this->pathUpdated = false;
+		$this->path = array();
+	}
+
+	/**
+	 * Returns the data of graph
+	 * @return array of array of in
+	 */
+	public function getGraph ()
+	{
+		return $this->data;
 	}
 
 	/**
@@ -37,11 +67,12 @@ class Grpah
 	 * @param float
 	 * @return void
 	 */
-	public function addEdge ($from, $to, $value = -1)
+	public function addEdge ($from, $to, $value = 0)
 	{
 		$this->data[$from][$to] = $value;
-		$this-vertices->addElement($from, -1);
-		$this-vertices->addElement($to, -1);
+		$this->vertices->addElement($from, 0);
+		$this->vertices->addElement($to, 0);
+		$this->pathUpdated = false;
 	}
 
 	/**
@@ -53,6 +84,7 @@ class Grpah
 	public function removeEdge ($from, $to)
 	{
 		unset($this->data[$from][$to]);
+		$this->pathUpdated = false;
 	}
 
 	/**
@@ -63,11 +95,63 @@ class Grpah
 	 */
 	public function updateVertice ($id, $value)
 	{
-		$this-vertices->updateElement($id, $value);
+		$this->vertices->updateElement($id, $value);
+		$this->pathUpdated = false;
 	}
 
 
+	protected function floydWarshall ()
+	{
+		$vertices = array_keys($this->data);
+		foreach($vertices as $k){
+			foreach($vertices as $i){
+				foreach($vertices as $j){
+					if(isset($this->data[$i][$k]) && isset($this->data[$k][$j])){
+						if(!isset($this->data[$i][$j])){
+							$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
+							$this->floydRes[$i][$j]=$k;
 
+						}
+						else{
+							if($this->data[$i][$k] + $this->data[$k][$j] < $this->data[$i][$j]){
+								$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
+								$this->floydRes[$i][$j]=$k;
+							}
+						}
+
+
+					}
+/*					if($this->data[$i][$k] + $this->data[$k][$j] < $this->data[$i][$j]){
+						$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
+						$this->floydRes[$i][$j]=$k;
+					}*/
+				}
+			}
+		}
+		$this->pathUpdated = true;
+	}
+
+	protected function findPath ($from, $to)
+	{
+		Debugger::barDump($this->floydRes);
+		if (isset($this->floydRes[$from][$to])){
+			$k = $this->floydRes[$from][$to];
+			$this->findPath($from,$k);
+			$this->path[] = $k;
+			Debugger::barDump($this->path);
+			$this->findPath($k,$to);
+		}
+	}
+
+	public function getPath ($from, $to)
+	{
+		//Debugger::barDump($this->pathUpdated);
+		if(!$this->pathUpdated) $this->floydWarshall();
+		//Debugger::barDump($this->pathUpdated);
+		$this->findPath($from, $to);
+		Debugger::barDump($this->path);
+		return $this->path;
+	}
 
 }
 

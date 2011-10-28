@@ -4,6 +4,7 @@ use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
 use ArraySet;
+use Graph;
 /**
  * Offer repository
  * @author Petr Bělohlávek
@@ -33,20 +34,24 @@ class Offer extends BaseRepository
 		$clanRepository = $this->context->model->getClanRepository();
 
 		$graph = $clanRepository->getDealersGraph($clan, $depth);
-		$dealersIds = array_keys($graph);
+		//Debugger::barDump($graph);
+		$dealersIds = array_keys($graph->getGraph());
 
 		$dealers = new ArraySet();
 		foreach($dealersIds as $id){
 			$dealers->addElement($id, $clanRepository->find($id));
 		}
-		Debugger::barDump($dealers);
+		//Debugger::barDump($dealers);
 
 		$visibleOffers = array();
 		foreach($offers as $offer){
 			if($dealers->offsetExists($offer->owner->id)){
 				$visibleOffers[] = $offer;
+				//$path = $graph->getPath($clan->id, $offer->owner->id);
+				//Debugger::barDump($path);
 			}
 		}
+
 		//Debugger::barDump($visibleOffers);
 
 		return $visibleOffers;
