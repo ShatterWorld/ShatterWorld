@@ -31,8 +31,31 @@ class UnitPresenter extends BasePresenter
 			//}
 		}
 
+		$units = $this->context->rules->getAll('unit');
+		$trainingTimes = array();
+		foreach($units as $key => $unit){
+			$t = $unit->getTrainingTime();
+
+			$h = floor($t / 3600);
+			$t -= $h*3600;
+			$m = floor($t / 60);
+			$t -= $m*60;
+			$s = $t;
+
+			if ($s < 10){
+				$s = '0'.$s;
+			}
+			if ($m < 10){
+				$m = '0'.$m;
+			}
+
+			$trainingTimes[$key] = $h.':'.$m.':'.$s;
+		}
+
+
 		$this->template->resources = $resources;
-		$this->template->units = $this->context->rules->getAll('unit');
+		$this->template->units = $units;
+		$this->template->trainingTimes = $trainingTimes;
 		$this->template->slots = $slots;
 		$this->template->totalSlots = $this->context->stats->getTotalUnitSlots($this->getPlayerClan());
 	}
