@@ -8,6 +8,9 @@
 {/block}
 
 {block #content}
+	<script>
+		var totalSlots = {$totalSlots}
+	</script>
 
 
 	{form trainUnitForm}
@@ -17,38 +20,44 @@
 				<li n:foreach="$form->errors as $error">{$error}</li>
 		</ul>
 
-		<script>var totalSlots = {$totalSlots}</script>
 
 		<table id="trainUnitTable">
 			<tr>
 				<th>Jméno</th>
 				<td>Síla</td>
-				<td>Cena</td>
+				{foreach $resources as $key => $res}
+					<td>
+						<img src="{$basePath}/images/resources/{$key}.png"/>
+					</td>
+				{/foreach}
+
 				<td>Sloty</td>
 				<td>Čas</td>
 				<td>Množství</td>
 				<td>Max</td>
 			</tr>
+
 			{foreach $form->getControls() as $name => $field}
 				{if $name !== 'send'}
-
-					{?$cost = $units[$name]->getCost()}
-					{?$metal = 0}
-					{?$stone = 0}
-					{?$food = 0}
-					{?$fuel = 0}
-
-					{?$slots}
-
-					{ifset $cost['metal']}{?$metal = $cost['metal']}{/ifset}
-					{ifset $cost['stone']}{?$stone = $cost['stone']}{/ifset}
-					{ifset $cost['food']}{?$food = $cost['food']}{/ifset}
-					{ifset $cost['fuel']}{?$fuel = $cost['fuel']}{/ifset}
+					{?$cost}
+					{foreach $resources as $key => $res}
+						{?$tmpCost = $units[$name]->getCost()}
+						{?$cost[$key] = 0}
+						{ifset $tmpCost[$key]}{?$cost[$key] = $tmpCost[$key]}{/ifset}
+					{/foreach}
 
 					<tr class="unit" data-costs="{$cost|json}" data-difficulty="{$units[$name]->getDifficulty()|json}">
-						<th class="name">{label $name /}</th>
-						<td class="force">{$units[$name]->getAttack()}/{$units[$name]->getDefense()}</td>
-						<td class="costs">M:{$metal}/S:{$stone}/Fo:{$food}/Fu:{$fuel}</td>
+						<th class="name">
+							{label $name /}
+						</th>
+						<td class="force">
+							{$units[$name]->getAttack()}/{$units[$name]->getDefense()}
+						</td>
+						{foreach $resources as $key => $res}
+							<td class="costs-{$key}">
+								{$cost[$key]}
+							</td>
+						{/foreach}
 						<td class="difficulty">
 							{?$first = true}
 							{foreach $units[$name]->getDifficulty() as $key => $diff}
@@ -59,35 +68,59 @@
 								{?$first = false}
 							{/foreach}
 						</td>
-						<td class="trainingTime">{$units[$name]->getTrainingTime()}</td>
-						<td class="amount">{input $name}</td>
+						<td class="trainingTime">
+							{$units[$name]->getTrainingTime()}
+						</td>
+						<td class="amount">
+							{input $name}
+						</td>
 						<td class="max"></td>
 					</tr>
-					{else}
-
-						</table>
-
+				{else}
+					</table>
 				{/if}
 			{/foreach}
 
 
 			<h2>Celkem</h2>
-{*
 			{dump $slots}
 
+			<h3>Volné sloty</h3>
+
 			<table id="slotSum">
+				<tr>
+					<td>Slot</td>
+					<td>Použito</td>
+					<td>Zbývá</td>
+					<td>Celkem</td>
+				</tr>
 				{foreach $slots as $key => $slot}
-					<tr id="{$key}"><td>{$key}</td><td>0</td></tr>
+					<tr id="{$key}">
+						<td>{$key}</td>
+						<td class="used">0</td>
+						<td class="remains">{$totalSlots[$key]}</td>
+						<td>{$totalSlots[$key]}</td>
+					</tr>
 				{/foreach}
 			</table>
-*}
+
+			<h3>Suroviny</h3>
 			<table id="resSum">
 				<tr>
-					<td>Metal</td><td>Stone</td><td>Food</td><td>Fuel</td>
+					{foreach $resources as $key => $res}
+						<td>
+							<img src="{$basePath}/images/resources/{$key}.png"/>
+						</td>
+					{/foreach}
 				</tr>
 				<tr>
-					<td id="metal">0</td><td id="stone">0</td><td id="food">0</td><td id="fuel">0</td>
+					{foreach $resources as $key => $res}
+						<td id="{$key}">0</td>
+					{/foreach}
 				</tr>
+			</table>
+
+			<table>
 				<tr>
 					<td></td><td></td><td></td><td colspan="5">{input $name}</td>
 				</tr>
