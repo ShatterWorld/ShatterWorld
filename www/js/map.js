@@ -12,7 +12,7 @@ Game.map = {
 	 * Basepath
 	 * @var string
 	 */
-	getBasepath : function () {return $('#map').data()['basepath'];},
+	getBasepath : function () {return basePath},
 
 	/**
 	 * Indexed map
@@ -107,6 +107,10 @@ Game.map = {
 	 */
 	maxYPos : 0,
 
+	loaded : false,
+	
+	disabledFieldsStack : new Array(),
+	
 	/**
 	 * Represents the list of fields which are disabled right now
 	 * @var array of Field
@@ -128,35 +132,16 @@ Game.map = {
 	 * @param String
 	 * @return void
 	 */
-	addDisabledField : function(disField, type){
-		this.disabledFields.push(disField);
-
-		div = $('#field_'+disField['x']+'_'+disField['y']);
-		div.attr('data-disabled', type);
-		this.markDisabledField(div);
-
-		div.unbind('click');
-		div.click(function(e){
-			alert(type); //tmp
-		});
-
+	disableField : function(field, type){
+		this.disabledFields.push(field);
+		field.element.attr('data-disabled', type);
+		Game.map.marker.mark(field, 'brown');
 	},
 
-	/**
-	 * Marks the disabled field influenced by
-	 * @param Object/String
-	 * @return void
-	 */
-	markDisabledField : function(div) {
-		/*
-		 * case (div.data-disabled) -> mark/label/img //==type
-		 *
-		 * */
-		Game.map.marker.mark(div, 'brown');
-
-
+	getField : function (x, y) {
+		return this.map[x][y];
 	},
-
+	
 	/**
 	 * Cleans the #map and rerender the map (using db-data)
 	 * @return void
@@ -183,7 +168,7 @@ Game.map = {
 			$.each(data['fields'], function(rowKey, row) {
 				$.each(row, function(key, field) {
 					if(field['owner'] != null){
-						if (data['clanId'] == field['owner']['id']){
+						if (Game.map.clan == field['owner']['id']){
 							if(field['facility'] != null){
 								if (field['facility'] == 'headquarters'){
 									var posX = Game.map.calculateXPos(field);
@@ -256,7 +241,7 @@ Game.map = {
 						//'line-height' : Game.map.fieldHeight+'px'
 					});
 
-					if (field['owner'] !== null && data['clanId'] !== null && field['owner']['id'] == data['clanId']){
+					if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
 						if (field['facility'] !== null){
 							text.append(fieldLabel);
 							Game.descriptions.translate('facility', field['facility'], fieldLabel);
@@ -279,7 +264,7 @@ Game.map = {
 					if (!Game.utils.isset(Game.map.fieldsByCoords[posX][posY])){
 						Game.map.fieldsByCoords[posX][posY] = {};
 					}
-					Game.map.fieldsByCoords[posX][posY] = div;
+					Game.map.fieldsByCoords[posX][posY] = field;
 
 					
 				});
@@ -358,10 +343,10 @@ Game.map = {
 						}
 
 						var color;
-						if (data['clanId'] == field['owner']['id']) {
+						if (Game.map.clan == field['owner']['id']) {
 							//color = '#7aee3c';
 							color = 'cyan';
-						} else if (field['owner']['alliance'] != null && field['owner']['alliance']['id'] == data['allianceId']) {
+						} else if (field['owner']['alliance'] != null && field['owner']['alliance']['id'] == Game.map.alliance) {
 							//color = '#4380d3';
 							color = '#9f3ed5';
 						} else {
@@ -372,12 +357,17 @@ Game.map = {
 							path.attr({stroke: color, 'stroke-width': 4});
 						});
 
-						//Game.map.marker.maxZIndex = Math.max(Game.map.marker.maxZIndex, $(field).css("z-index"));
 						Game.map.overlay.canvas.style.zIndex = Game.map.maxZ + 1;
 					}
 				});
 			});
 
+			Game.map.loaded = true;
+			
+			while (f = Game.map.disabledFieldsStack.pop()) {
+				Game.map.disableField(Game.map.map[f.x][f.y], f.type);
+			}
+			
 			/**
 			 * Shows and fills fieldInfo when user gets mouse over a field
 			 * @return void
@@ -412,8 +402,10 @@ Game.map = {
 				if (field !== Game.map.tooltip.field) {
 					if (field === null) {
 						Game.map.tooltip.hide();
+						Game.map.overlayDiv.css('cursor', 'auto');
 					} else {
 						Game.map.tooltip.show(field);
+						Game.map.overlayDiv.css('cursor', 'pointer');
 					}
 				}
 				if (field !== null) {
@@ -442,11 +434,11 @@ Game.map = {
 
 					if(Game.map.contextMenu.initialField === null || Game.map.contextMenu.action === null){
 						Game.map.contextMenu.initialField = field;
-						Game.map.marker.mark(div, 'red');
-						Game.map.contextMenu.show(div, field);
+						Game.map.marker.mark(field, 'red');
+						Game.map.contextMenu.show(field);
 					}
 					else if(Game.map.contextMenu.action == "attackSelect2nd"){
-						Game.map.contextMenu.attackSelect2nd(Game.map.contextMenu.initialField, field, div, data)
+						Game.map.contextMenu.attackSelect2nd(Game.map.contextMenu.initialField, field)
 					}
 					else{
 						Game.map.contextMenu.action(Game.map.contextMenu.initialField, field);
@@ -468,9 +460,9 @@ Game.map = {
 		var result = null;
 		$.each(Game.map.fieldsByCoords, function(xKey, x){
 			if (xKey > mouseX - Game.map.fieldWidth && xKey < mouseX){
-				$.each(x, function(yKey, div){
+				$.each(x, function(yKey, field){
 					if (yKey > mouseY - Game.map.fieldHeight && yKey < mouseY){
-						result = Game.map.map[div.data('coordx')][div.data('coordy')];
+						result = field;
 						breaker = true;
 					}
 					if (breaker) return false;
@@ -525,19 +517,16 @@ Game.map.marker = {
 			this.ellipses[color] = {};
 		}
 
-		$(field).attr('class', 'markedField'+color);
+		$(field.element).attr('class', 'markedField'+color);
 
-		var globalField = Game.utils.localToGlobal(field, 0, 0);
+		var globalField = Game.utils.localToGlobal(field.element, 0, 0);
 		var globalOverlay = Game.utils.localToGlobal(Game.map.overlayDiv, 0, 0);
 
 		var ellipse = Game.map.overlay.ellipse(globalField['x'] - globalOverlay['x']+30, globalField['y'] - globalOverlay['y']+20, 30, 20); //left,top,x-axis, y-axis
-		ellipse.id = $(field).attr('id');
-
-// 		this.maxZIndex = Math.max(this.maxZIndex, $(field).css("z-index"));
-// 		Game.map.overlay.canvas.style.zIndex = this.maxZIndex + 7;
+		ellipse.id = $(field.element).attr('id');
 
 		ellipse.attr({stroke: color, "stroke-width": "4"});
-		this.ellipses[color][$(field).attr('id')] = ellipse;
+		this.ellipses[color][$(field.element).attr('id')] = ellipse;
 
 	},
 
@@ -787,7 +776,7 @@ Game.map.contextMenu = {
 	 * @param event - fired event
 	 * @return void
 	 */
-	show: function(object, field){
+	show: function(field){
 
 		this.contextMenu.html('');
 		this.contextMenu.css('z-index', Game.map.maxZ + 2);
@@ -795,11 +784,14 @@ Game.map.contextMenu = {
 
 		$('#fieldInfo').hide();
 
-		var x = parseInt(object.css('left'));
-		var y = parseInt(object.css('top'));
+		var x = parseInt(field.element.css('left'));
+		var y = parseInt(field.element.css('top'));
 		
-		this.contextMenu.css("left", x + 50);
-		this.contextMenu.css("top", y + 30);
+		var coords = Game.utils.localToGlobal($('#map'), x, y);
+		coords = Game.utils.globalToLocal($('#mapContainer'), coords.x, coords.y);
+		
+		this.contextMenu.css("left", coords.x + 50);
+		this.contextMenu.css("top", coords.y + 30);
 
 		this.contextMenuShown = true;
 		$('#mapContainer').append(this.contextMenu);
@@ -888,7 +880,7 @@ Game.map.contextMenu = {
 								Game.events.fetchEvents();
 								Game.resources.fetchResources();
 								Game.map.marker.unmarkAll('red');
-								Game.map.addDisabledField(target);
+								Game.map.disableField(target);
 								Game.spinner.hide();
 								Game.map.contextMenu.hide();
 							}
@@ -998,21 +990,17 @@ Game.map.contextMenu = {
 	 * @param JSON
 	 * @return void
 	 */
-	attackSelect2nd : function(from, target, div, data){
+	attackSelect2nd : function(from, target){
 
-		if (!(target['owner'] !== null && data['clanId'] !== null && target['owner']['id'] == data['clanId']) && !(target['owner'] !== null && target['owner']['alliance'] !== null && data['allianceId'] !== null && target['owner']['alliance']['id'] == data['allianceId'])){
-
-
+		if (!(target['owner'] !== null && Game.map.clan !== null && target['owner']['id'] == Game.map.clan) && !(target['owner'] !== null && target['owner']['alliance'] !== null && Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance)) {
 			var attackDialog = $('#attackDialog');
 			var targetX = $('#attackDialog #targetX');
 			var targetY = $('#attackDialog #targetY');
 
 			Game.map.marker.unmarkAll('yellow');
-			Game.map.marker.mark(div, 'yellow');
+			Game.map.marker.mark(from, 'yellow');
 			targetX.html(target['coordX']);
 			targetY.html(target['coordY']);
-
-
 
 			$(attackDialog).dialog(
 				"option",
@@ -1083,7 +1071,7 @@ Game.map.contextMenu = {
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
 							Game.map.marker.unmarkAll('red');
-							Game.map.addDisabledField(target);
+							Game.map.disableField(target);
 							Game.spinner.hide();
 							Game.map.contextMenu.hide();
 						}
@@ -1121,7 +1109,7 @@ Game.map.contextMenu = {
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
 							Game.map.marker.unmarkAll('red');
-							Game.map.addDisabledField(target);
+							Game.map.disableField(target);
 							Game.spinner.hide();
 							Game.map.contextMenu.hide();
 						}
@@ -1160,7 +1148,7 @@ Game.map.contextMenu = {
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
 							Game.map.marker.unmarkAll('red');
-							Game.map.addDisabledField(target);
+							Game.map.disableField(target);
 							Game.spinner.hide();
 							Game.map.contextMenu.hide();
 						}
@@ -1205,7 +1193,7 @@ Game.map.contextMenu = {
 								Game.events.fetchEvents();
 								Game.resources.fetchResources();
 								Game.map.marker.unmarkAll('red');
-								Game.map.addDisabledField(target);
+								Game.map.disableField(target);
 								Game.spinner.hide();
 								Game.map.contextMenu.hide();
 							}
@@ -1244,7 +1232,7 @@ Game.map.contextMenu = {
 				function(){
 					Game.events.fetchEvents();
 					Game.map.marker.unmarkAll('red');
-					Game.map.addDisabledField(target);
+					Game.map.disableField(target);
 					Game.spinner.hide();
 					Game.map.contextMenu.hide();
 				}

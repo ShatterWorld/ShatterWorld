@@ -4,7 +4,7 @@ $(document).ready(function(){
 	* Hides all submenus except the first one
 	*/
 	$("#menu .submenu ul").hide();
-	$("#menu .active ul").show("slow");
+	$("#menu .active ul").show();
 
 	/**
 	* Toggles visibility of submenus
