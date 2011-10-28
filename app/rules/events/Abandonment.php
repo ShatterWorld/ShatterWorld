@@ -1,6 +1,7 @@
 <?php
 namespace Rules\Events;
 use Rules\AbstractRule;
+use ReportItem;
 use Entities;
 
 class Abandonment extends AbstractRule implements IConstruction
@@ -23,9 +24,11 @@ class Abandonment extends AbstractRule implements IConstruction
 		return $event->target->owner === $event->owner;
 	}
 	
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		return array(
+			new ReportItem('text', "Opustili jsme území.")
+		);
 	}
 	
 	public function isExclusive ()

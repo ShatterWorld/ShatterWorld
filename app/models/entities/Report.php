@@ -54,7 +54,7 @@ class Report extends BaseEntity
 	 */
 	public function getData ()
 	{
-		return Json::decode($this->data);
+		return Json::decode($this->data, Json::FORCE_ARRAY);
 	}
 	
 	/**

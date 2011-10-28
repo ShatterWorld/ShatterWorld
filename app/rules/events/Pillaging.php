@@ -1,5 +1,6 @@
 <?php
 namespace Rules\Events;
+use ReportItem;
 use Entities;
 
 class Pillaging extends Attack
@@ -9,8 +10,16 @@ class Pillaging extends Attack
 		return 'Loupežný útok';
 	}
 	
-	public function formatReport ($data)
+	public function formatReport (Entities\Report $report)
 	{
-		return $data;
+		$data = $report->data;
+		$message = array(
+			new ReportItem('text', $data['successful'] ? 'Vítězství' : 'Porážka'),
+			new ReportItem('unitGrid', $data['attacker']['casualties'], 'Ztráty')
+		);
+		if ($data['attacker']['loot']) {
+			$message[] = new ReportItem('resourceGrid', $data['attacker']['loot'], 'Kořist');
+		}
+		return $message;
 	}
 }

@@ -1,10 +1,21 @@
 {block #content}
 {if $reports}
-{foreach $reports as $report}
+<div n:foreach="$reports as $report" class="report">
+{?$rule = $rules->get('event', $report->event->type)}
+<h2>{$rule->getDescription()}</h2>
+<span class="date">{$report->event->term|date:"Y-m-d H:i:s"}</span>
 <div>
-{$report->event->type}
-</div>
+{foreach $rule->formatReport($report) as $item}
+{if $item->type === 'text'}
+<p>
+{$item->data}
+</p>
+{else}
+{control $item->type $item->data, $item->heading}
+{/if}
 {/foreach}
+</div>
+</div>
 {else}
 Žádné zprávy k zobrazení
 {/if}
