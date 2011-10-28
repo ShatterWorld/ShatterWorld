@@ -9,8 +9,8 @@
 var Game = Game || {};
 Game.events = {
 	/**
-		* Fetches and displays countdowns of events
-		*/
+	 * Fetches and displays countdowns of events
+	 */
 	fetchEvents: function (){
 		$.getJSON('?do=fetchEvents', function(data) {
 
@@ -19,98 +19,67 @@ Game.events = {
 			}
 
 			Game.countdown.cleanDialog();
-			var mapDisplayed = Game.utils.isset(Game.map)
-			if (mapDisplayed){
-				Game.map.nullDisabledFields();
-			}
-
 			var count = 0;
 			$.each(data['events'], function(key, event) {
-
+				
 				var type = event['type'];
-				var label = 'Neznámá akce';
-				var x = -1;
-				var y = -1;
+				var label = $('<span>');
+				var coords = null;
+				var subject = null;
 
-				if (type == 'colonisation'){
-					label = 'Kolonizace';
-
-					x = event['target']['x'];
-					y = event['target']['y'];
-
-					if (mapDisplayed){
-						Game.map.addDisabledField(event['target'], 'colonisation');
-					}
-
+				var formatCoords = function (x, y) {
+					return '[' + x + ';' + y + ']';
 				}
-				if (type == 'abandonment'){
-					label = 'Opuštění pole';
-
-					x = event['target']['x'];
-					y = event['target']['y'];
-
-					if (mapDisplayed){
-						Game.map.addDisabledField(event['target'], 'abandonment');
+				
+				var text = $('<span>');
+				label.append(text);
+				Game.descriptions.translate('event', type, text);
+				
+				if (type == 'facilityConstruction'){
+					var facility = $('<span>');
+					label.append(' ');
+					label.append(facility);
+					if (event.level > 1) {
+						label.append(' (' + event.level + ')');
 					}
-
-				}
-				else if (type == 'facilityConstruction'){
-					if(event['level'] > 1){
-						label = 'Upgrade '+event['construction'] + ' (' + event['level'] + ')';
-					}
-					else{
-						label = 'Stavba '+event['construction'];
-					}
-
-					x = event['target']['x'];
-					y = event['target']['y'];
-
-					if (mapDisplayed){
-						Game.map.addDisabledField(event['target'], 'facilityConstruction');
-					}
-
+					Game.descriptions.translate('facility', event.construction, facility);
 				}
 				else if (type == 'facilityDemolition'){
-					if(event['construction'] == 'downgrade'){
-						label = 'Downgrade '+event['target']['facility'] + ' (' + event['level'] + ')';
+					var facility = $('<span>');
+					label.append(' ');
+					label.append(facility);
+					if (event.level > 1) {
+						label.append(' (' + event.level + ')');
 					}
-					else{
-						label = 'Demolice budovy';
-					}
-
-					x = event['target']['x'];
-					y = event['target']['y'];
-
-					if (mapDisplayed){
-						Game.map.addDisabledField(event['target'], 'facilityConstruction');
-					}
-
+					Game.descriptions.translate('facility', event.construction, facility);
 				}
 				else if (type == 'unitTraining'){
 
 					var data = jQuery.parseJSON(event['construction']);
 
-					label = "<div style='float:left;font-weight:bold'>Výcvik</div><div style='float:right; width:70%'><table style='text-align:left;border:1px solid white'>";
+// 					label = "<div style='float:left;font-weight:bold'>Výcvik</div><div style='float:right; width:70%'><table style='text-align:left;border:1px solid white'>";
 					$.each(data, function(unit, quantity){
-						label += '<tr><td>' + unit + '</td><td>' + quantity + '</td></tr>';
+// 						label += '<tr><td>' + unit + '</td><td>' + quantity + '</td></tr>';
 					});
-					label += "</table></div>";
-
-					x = -1;
-					y = -1;
+// 					label += "</table></div>";
 				}
 
-				else if (type == 'shipment'){
-
-					var data = jQuery.parseJSON(event['construction']);
-
-					label = 'Obchod';
-					x = event['target']['x'];
-					y = event['target']['y'];
+				if (['colonisation', 'abandonment', 'facilityConstruction', 'facilityDemolition'].indexOf(type) >= 0) {
+					if (Game.utils.isset(Game.map)) {
+						if (Game.map.loaded) {
+							Game.map.disableField(Game.map.getField(event.target.x, event.target.y), type);
+						} else {
+							Game.map.disabledFieldsStack.push({
+								'x': event['target']['x'],
+								'y': event['target']['y'],
+								'type': type
+							});
+						}
+					}
+					label.append(' ' + formatCoords(event['target']['x'], event['target']['y']));
 				}
 
-
-				Game.countdown.addCountdown(label, x, y, event['countdown']);
+				Game.countdown.addCountdown(label, coords, event['countdown']);
 				count++
 			});
 

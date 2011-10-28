@@ -17,39 +17,32 @@ Game.countdown = {
 	 * @param integer [s]
 	 * @return void
 	 */
-	addCountdown: function(title, x, y, remainingTime)
+	addCountdown: function(label, coords, timeout)
 	{
 		var countdownTr = $('<tr class="countdown" />');
-
-		var coord = '';
-		if (x >= 0 && y >= 0){
-			if (Game.utils.isset(Game.map)){
+		if (coords){
+			var x = coords.x;
+			var y = coords.y;
+			if (Game.utils.isset(Game.map) && Game.map.loaded){
 				countdownTr.mouseenter(function(){
-					Game.map.marker.mark('#field_' + x + '_' + y, 'blue');
+					Game.map.marker.mark(Game.map.getField(x, y), 'blue');
 				});
 
 				countdownTr.mouseleave(function(){
 					Game.map.marker.unmarkAll('blue');
-					Game.map.markDisabledField('#field_' + x + '_' + y);
-
+					Game.map.disableField(Game.map.getField(x, y));
 				});
-
 			}
-			coord = ' [' + x + ';' + y + ']';
 		}
 
-		var titleTd = $('<td class="countdownTitle" />').html(title + coord)
-			.css({
-				'font-weight' : 'bold',
-				'width' : '90%',
-				'vertical-align' : 'top'
-			});
-
-		var timeTd = $('<td class="countdownTime" />')
-			.css({
-				'text-align' : 'right',
-
-			});
+		var titleTd = $('<td class="countdownTitle" />').html(label).css({
+			'font-weight' : 'bold',
+			'width' : '90%',
+			'vertical-align' : 'top'
+		});
+		var timeTd = $('<td class="countdownTime" />').css({
+			'text-align' : 'right',
+		});
 
 		countdownTr.append(titleTd);
 		countdownTr.append(timeTd);
@@ -57,7 +50,7 @@ Game.countdown = {
 		$('#countdownDialog').append(countdownTr);
 
 		var countdownFunction = function(){
-			if (remainingTime < 0){
+			if (timeout < 0){
 				if (Game.utils.isset(Game.map)){
 					Game.map.render();
 				}
@@ -65,7 +58,7 @@ Game.countdown = {
 				clearInterval(interval);
 				return;
 			}
-			var t = remainingTime;
+			var t = timeout;
 
 			var h = Math.floor(t / 3600);
 			t -= h*3600;
@@ -83,10 +76,8 @@ Game.countdown = {
 			var time = h + ':' + m + ':' + s;
 
 			$(timeTd).html(time);
-			remainingTime--;
-
+			timeout--;
 		};
-
 		countdownFunction();
 		var interval = setInterval(countdownFunction, 1000);
 
