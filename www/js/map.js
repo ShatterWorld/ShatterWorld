@@ -462,7 +462,15 @@ Game.map = {
 			if (xKey > mouseX - Game.map.fieldWidth && xKey < mouseX){
 				$.each(x, function(yKey, field){
 					if (yKey > mouseY - Game.map.fieldHeight && yKey < mouseY){
-						result = field;
+						var dX = mouseX - xKey;
+						var dY = -(mouseY - yKey); // More comfortable for analythic geometry
+						if ((4*dX + 3*dY - 172) > 0) { // Hardcore f**king analythic geometry
+							result = Game.map.map[field.coordX + 1][field.coordY];
+						} else if ((4*dX - 3*dY - 292) > 0) { // More hardcore f**king analythic geometry
+							result = Game.map.map[field.coordX][field.coordY + 1];
+						} else {
+							result = field;
+						}
 						breaker = true;
 					}
 					if (breaker) return false;
