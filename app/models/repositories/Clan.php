@@ -39,10 +39,10 @@ class Clan extends BaseRepository
 		$now = new \DateTime();
 		$cap = $this->context->params['game']['stats']['orderCap'];
 		$diff = $now->format('U') - $this->context->params['game']['start']->format('U');
-		$orders = ($diff / $this->context->params['game']['stats']['orderTime']) - $clan->issuedOrders - $clan->expiredOrders;
+		$orders = ($diff / $this->context->params['game']['stats']['orderTime']) - $clan->orders->issued - $clan->orders->expired;
 		if ($orders > $cap) {
-			$this->context->model->getClanService()->update($clan, array(
-				'expiredOrders' => $clan->expiredOrders + ($orders - $cap)
+			$this->context->model->getOrderService()->update($clan->orders, array(
+				'expired' => $clan->orders->expired + ($orders - $cap)
 			));
 			return $cap;
 		}

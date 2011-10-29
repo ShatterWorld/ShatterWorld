@@ -60,6 +60,12 @@ class Clan extends BaseEntity {
 	private $expiredOrders;
 
 	/**
+	 * @OneToOne(targetEntity = "Entities\Orders", mappedBy = "owner")
+	 * @var Entities\Orders
+	 */
+	private $orders;
+	
+	/**
 	 * @Column(type = "boolean")
 	 * @var bool
 	 */
@@ -74,8 +80,6 @@ class Clan extends BaseEntity {
 		$this->fields = new Doctrine\Common\Collections\ArrayCollection();
 		$this->applications = new Doctrine\Common\Collections\ArrayCollection();
 		$this->user = $user;
-		$this->issuedOrders = 0;
-		$this->expiredOrders = 0;
 		$this->deleted = FALSE;
 	}
 
@@ -194,41 +198,12 @@ class Clan extends BaseEntity {
 	}
 
 	/**
-	 * Issued orders getter
-	 * @return int
+	 * Orders getter
+	 * @return Entities\Orders
 	 */
-	public function getIssuedOrders ()
+	public function getOrders ()
 	{
-		return $this->issuedOrders;
-	}
-
-	/**
-	 * Issued orders setter
-	 * @param int
-	 * @return void
-	 */
-	public function setIssuedOrders ($issuedOrders)
-	{
-		$this->issuedOrders = $issuedOrders;
-	}
-
-	/**
-	 * Expired orders getter
-	 * @return int
-	 */
-	public function getExpiredOrders ()
-	{
-		return $this->issuedOrders;
-	}
-
-	/**
-	 * Expired orders setter
-	 * @param int
-	 * @return void
-	 */
-	public function setExpiredOrders ($expiredOrders)
-	{
-		$this->expiredOrders = $expiredOrders;
+		return $this->orders;
 	}
 
 	/**
