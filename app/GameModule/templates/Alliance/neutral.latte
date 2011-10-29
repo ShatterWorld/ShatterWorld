@@ -12,7 +12,7 @@
 <tr>
 <td>{$alliance->name}</td>
 <td>{$alliance->leader->name}</td>
-<td>{if $clan->allianceApplication === $alliance}Ucházíte se o vstup{else}<a n:href="apply! $alliance->id">Požádat o vstup</a>{/if}</td>
+<td>{if $clan->applications->contains($alliance)}Ucházíte se o vstup{else}<a n:href="apply! $alliance->id">Požádat o vstup</a>{/if}</td>
 </tr>
 {/foreach}
 </table>

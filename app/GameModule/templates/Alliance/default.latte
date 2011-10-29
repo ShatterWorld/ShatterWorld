@@ -11,7 +11,7 @@
 <h2>Uchazeči o vstup</h2>
 <table>
 <tr><th>Jméno</th><th></th></tr>
-{foreach $applicants as $applicant}
+{foreach $alliance->applicants as $applicant}
 <tr><td>{$applicant->name}</td><td><a n:href="accept! $applicant->id">Přijmout</a></td></tr>
 {/foreach}
 </table>

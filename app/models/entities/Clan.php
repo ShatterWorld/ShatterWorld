@@ -41,11 +41,11 @@ class Clan extends BaseEntity {
 	private $alliance;
 
 	/**
-	 * @ManyToOne(targetEntity = "Entities\Alliance")
-	 * @JoinColumn(onDelete = "SET NULL")
+	 * @ManyToMany(targetEntity = "Entities\Alliance", inversedBy = "applicants")
+	 * @JoinTable(name = "AllianceApplication")
 	 * @var Entities\Alliance
 	 */
-	private $allianceApplication;
+	private $applications;
 
 	/**
 	 * @Column(type = "integer")
@@ -72,6 +72,7 @@ class Clan extends BaseEntity {
 	public function __construct (User $user)
 	{
 		$this->fields = new Doctrine\Common\Collections\ArrayCollection();
+		$this->applications = new Doctrine\Common\Collections\ArrayCollection();
 		$this->user = $user;
 		$this->issuedOrders = 0;
 		$this->expiredOrders = 0;
@@ -162,32 +163,34 @@ class Clan extends BaseEntity {
 	 */
 	public function setAlliance (Alliance $alliance = NULL)
 	{
-		$this->alliance = $alliance;
 		if ($this->alliance) {
 			$this->alliance->getMembers()->removeElement($this);
 		}
+		$this->alliance = $alliance;
 		if ($alliance) {
 			$alliance->getMembers()->add($this);
+			$this->applications->clear();
 		}
 	}
 
 	/**
-	 * Alliance application getter
-	 * @return Entities\Alliance
+	 * Alliance applications getter
+	 * @return Doctrine\Common\Collections\ArrayCollection
 	 */
-	public function getAllianceApplication ()
+	public function getApplications ()
 	{
-		return $this->allianceApplication;
+		return $this->applications;
 	}
 
 	/**
-	 * Alliance setter
+	 * Add an alliance application
 	 * @param Entities\Alliance
 	 * @return void
 	 */
-	public function setAllianceApplication (Alliance $alliance = NULL)
+	public function addApplication (Alliance $alliance)
 	{
-		$this->allianceApplication = $alliance;
+		$alliance->addApplicant($this);
+		$this->applications[] = $alliance;
 	}
 
 	/**

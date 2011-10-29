@@ -22,6 +22,12 @@ class Alliance extends BaseEntity
 	private $members;
 	
 	/**
+	 * @ManyToMany(targetEntity = "Entities\Clan", mappedBy = "applicants")
+	 * @var Doctrine\Common\Collections\ArrayCollection
+	 */
+	private $applicants;
+	
+	/**
 	 * @OneToOne(targetEntity = "Entities\Clan")
 	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\Clan
@@ -34,6 +40,7 @@ class Alliance extends BaseEntity
 	public function __construct ()
 	{
 		$this->members = new Doctrine\Common\Collections\ArrayCollection();
+		$this->applicants = new Doctrine\Common\Collections\ArrayCollection();
 	}
 	
 	/**
@@ -72,6 +79,25 @@ class Alliance extends BaseEntity
 	public function addMember (Clan $member)
 	{
 		$member->setAlliance($this);
+	}
+	
+	/**
+	 * Applicants getter
+	 * @return Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function getApplicants ()
+	{
+		return $this->applicants;
+	}
+	
+	/**
+	 * Add an applicant
+	 * @param Entities\Clan
+	 * @return void
+	 */
+	public function addApplicant (Clan $clan)
+	{
+		$this->applicants[] = $clan;
 	}
 	
 	/**

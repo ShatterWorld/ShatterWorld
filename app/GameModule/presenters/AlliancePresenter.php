@@ -14,8 +14,7 @@ class AlliancePresenter extends BasePresenter
 	
 	public function renderDefault ()
 	{
-		$this->template->alliance = $alliance = $this->getPlayerClan()->getAlliance();
-		$this->template->applicants = $this->getClanRepository()->findBy(array('allianceApplication' => $alliance->id, 'alliance' => NULL));
+		$this->template->alliance = $this->getPlayerClan()->getAlliance();
 	}
 	
 	public function renderNeutral ()
@@ -28,7 +27,7 @@ class AlliancePresenter extends BasePresenter
 	{
 		$clan = $this->getPlayerClan();
 		if ($clan->alliance === NULL) {
-			$this->getClanService()->update($clan, array('allianceApplication' => $this->getAllianceRepository()->find($id)));
+			$clan->addApplication($this->getAllianceRepository()->find($id));
 		}
 		$this->redirect('this');
 	}
