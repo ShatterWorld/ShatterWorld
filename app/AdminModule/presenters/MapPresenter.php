@@ -1,9 +1,11 @@
 <?php
 namespace AdminModule;
 use Nette;
+use Nette\Caching\Cache;
 use Nette\Application\UI\Form;
 
-class MapPresenter extends BasePresenter {
+class MapPresenter extends BasePresenter 
+{
 	protected function createComponentGenerateMapForm ()
 	{
 		$form = new Form;
@@ -14,16 +16,11 @@ class MapPresenter extends BasePresenter {
 
 	public function submitGenerateMapForm (Form $form)
 	{
-		$this->getUnitService()->deleteAll(FALSE);
-		$this->getReportService()->deleteAll(FALSE);
-		$this->getEventService()->deleteAll(FALSE);
-		$this->getResourceService()->deleteAll(FALSE);
-		$this->getOfferService()->deleteAll(FALSE);
-		$this->getAllianceService()->deleteAll(FALSE);
 		$this->getClanService()->deleteAll(FALSE);
 		$this->getFieldService()->deleteAll(TRUE);
-		$this->getFieldRepository()->getVisibleFieldsCache()->clean();
-		$this->getClanRepository()->getVisibleClansCache()->clean();
+		$this->getFieldRepository()->getVisibleFieldsCache()->clean(array(Cache::ALL => TRUE));
+		$this->getClanRepository()->getVisibleClansCache()->clean(array(Cache::ALL => TRUE));
+		$this->getClanService()->getCache()->clean(array(Cache::ALL => TRUE));
 		$this->getFieldService()->createMap();
 		$this->flashMessage('Nová mapa byla vygenerována');
 		$this->redirect('default');

@@ -16,6 +16,7 @@ class Profile extends BaseEntity {
 	
 	/**
 	 * @OneToOne(targetEntity = "Entities\User")
+	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\User
 	 */
 	private $user;

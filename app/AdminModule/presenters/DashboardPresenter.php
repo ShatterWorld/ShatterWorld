@@ -4,5 +4,5 @@ use Nette;
 
 class DashboardPresenter extends BasePresenter
 {
-
+	
 }

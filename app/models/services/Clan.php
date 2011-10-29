@@ -20,13 +20,18 @@ class Clan extends BaseService {
 		$this->cache = new Cache($this->context->cacheStorage, 'Map');
 	}
 
+	public function getCache ()
+	{
+		return $this->cache;
+	}
+	
 	/**
-	* Creates an object as the parent does
-	* In addition, it assigns N fields to the clan
-	* @param array
-	* @param bool
-	* @return Entities\Clan
-	*/
+	 * Creates an object as the parent does
+	 * In addition, it assigns N fields to the clan
+	 * @param array
+	 * @param bool
+	 * @return Entities\Clan
+	 */
 	public function create ($values, $flush = TRUE)
 	{
 
@@ -83,6 +88,8 @@ class Clan extends BaseService {
 		$values['headquarters'] = $headq;
 		$clan = parent::create($values, $flush);
 
+		$this->context->model->getOrdersService()->create(array('owner' => $clan), FALSE);
+		
 		foreach ($found as $foundField){
 			$fieldService->update($foundField, array('owner' => $clan));
 		}

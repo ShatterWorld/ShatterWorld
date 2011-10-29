@@ -11,6 +11,7 @@ class Report extends BaseEntity
 {
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Event")
+	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\Event
 	 */
 	private $event;

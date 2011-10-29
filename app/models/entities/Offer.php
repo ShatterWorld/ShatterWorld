@@ -6,9 +6,8 @@ namespace Entities;
  * @Entity(repositoryClass = "Repositories\Offer")
  * @author Petr Bělohlávek
  */
-class Offer extends BaseEntity {
-
-
+class Offer extends BaseEntity 
+{
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan")
 	 * @JoinColumn(onDelete = "CASCADE")

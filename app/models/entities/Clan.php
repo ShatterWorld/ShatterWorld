@@ -16,7 +16,8 @@ class Clan extends BaseEntity {
 	private $name;
 
 	/**
-	 * @OneToOne(targetEntity = "Entities\User")
+	 * @ManyToOne(targetEntity = "Entities\User")
+	 * JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\User
 	 */
 	private $user;
@@ -46,18 +47,6 @@ class Clan extends BaseEntity {
 	 * @var Entities\Alliance
 	 */
 	private $applications;
-
-	/**
-	 * @Column(type = "integer")
-	 * @var int
-	 */
-	private $issuedOrders;
-
-	/**
-	 * @Column(type = "integer")
-	 * @var int
-	 */
-	private $expiredOrders;
 
 	/**
 	 * @OneToOne(targetEntity = "Entities\Orders", mappedBy = "owner")
