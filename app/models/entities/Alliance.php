@@ -22,7 +22,7 @@ class Alliance extends BaseEntity
 	private $members;
 	
 	/**
-	 * @ManyToMany(targetEntity = "Entities\Clan", mappedBy = "applicants")
+	 * @ManyToMany(targetEntity = "Entities\Clan", mappedBy = "applications")
 	 * @var Doctrine\Common\Collections\ArrayCollection
 	 */
 	private $applicants;
