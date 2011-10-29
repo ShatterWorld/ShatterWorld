@@ -100,7 +100,12 @@ Game.resources = {
 					$(span).children('.balance').removeClass('resourceFull');
 				}
 
-				if(production == 0){
+				if(balance < 0){
+					period = 0;
+					$(span).children('.balance').html('0');
+					return;
+				}
+				else if(production == 0){
 					period = 0;
 					return;
 				}
