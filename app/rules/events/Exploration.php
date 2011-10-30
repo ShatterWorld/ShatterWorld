@@ -35,6 +35,7 @@ class Exploration extends AbstractRule implements IConstruction
 			}
 			return $valid;
 		}*/
+		}
 		return FALSE;
 	}
 

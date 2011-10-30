@@ -8,7 +8,7 @@ class StatContainer extends Nette\Object
 {
 	/** @var Nette\DI\Container */
 	protected $context;
-	
+
 	/**
 	 * Constructor
 	 * @param Nette\DI\Container
@@ -17,7 +17,7 @@ class StatContainer extends Nette\Object
 	{
 		$this->context = $context;
 	}
-	
+
 	/**
 	 * Get the count of available orders for given clan
 	 * @param Entities\Clan
@@ -37,7 +37,7 @@ class StatContainer extends Nette\Object
 		}
 		return $orders;
 	}
-	
+
 	/**
 	 * Returns how many fields in the distance can the clan see from its territory
 	 * @param Entities\Clan
@@ -47,14 +47,14 @@ class StatContainer extends Nette\Object
 	{
 		return $this->context->params['game']['stats']['baseLOS'];
 	}
-	
+
 	protected function getColonisationCoefficient (Entities\Field $target, Entities\Clan $clan)
 	{
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
 		$count = $this->context->model->getFieldRepository()->getTerritorySize($clan) + $this->context->model->getConstructionRepository()->getColonisationCount($clan);
 		return $distance * $count;
 	}
-	
+
 	/**
 	 * Calculate the time needed to colonise a field
 	 * @param Entities\Field
@@ -67,7 +67,7 @@ class StatContainer extends Nette\Object
 		$coefficient = $this->getColonisationCoefficient($target, $clan);
 		return $base * $coefficient;
 	}
-	
+
 	public function getColonisationCost (Entities\Field $target, Entities\Clan $clan)
 	{
 		$coefficient = $this->getColonisationCoefficient($target, $clan);
@@ -77,12 +77,34 @@ class StatContainer extends Nette\Object
 			'metal' => 20 * $coefficient
 		);
 	}
-	
+
+	protected function getExplorationCoefficient (Entities\Field $target, Entities\Clan $clan)
+	{
+		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
+
+		return $distance;
+	}
+
+	public function getExplorationTime (Entities\Field $target, Entities\Clan $clan)
+	{
+		$base = $this->context->params['game']['stats']['baseExplorationTime'];
+		$coefficient = $this->getColonisationCoefficient($target, $clan);
+		return $base * $coefficient;
+	}
+
+	public function getExplorationCost (Entities\Field $target, Entities\Clan $clan)
+	{
+		$coefficient = $this->getExplorationCoefficient($target, $clan);
+		return array(
+			'food' => 10 * $coefficient,
+		);
+	}
+
 	public function getAbandonmentTime ($level)
 	{
 		return $level * $this->context->params['game']['stats']['baseAbandonmentTime'];
 	}
-	
+
 	/**
 	 * Get given clan's production of resources
 	 * @param Entities\Clan
@@ -120,7 +142,7 @@ class StatContainer extends Nette\Object
 		}
 		return $result;
 	}
-	
+
 	public function getTotalUnitSlots (Entities\Clan $clan)
 	{
 		$result = array();
@@ -139,7 +161,7 @@ class StatContainer extends Nette\Object
 		}
 		return $result;
 	}
-	
+
 	public function getAvailableFacilities (Entities\Clan $clan)
 	{
 		$result = array();

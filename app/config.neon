@@ -23,6 +23,7 @@ common:
 		stats:
 			baseLOS: 5
 			baseColonisationTime: 30
+			baseExplorationTime: 20
 			baseAbandonmentTime: 60
 			baseStorage: 1200
 			orderTime: 3600
