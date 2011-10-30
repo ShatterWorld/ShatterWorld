@@ -9,6 +9,12 @@ use MultipleConstructionsException;
 
 class Construction extends Event
 {
+	/**
+	 * Event constructor
+	 * @param array of mixed
+	 * @param boolean
+	 * @return Entities\Construction
+	 */
 	public function create ($values, $flush = TRUE)
 	{
 		if ($this->context->rules->get('event', $values['type'])->isExclusive()) {
@@ -21,6 +27,12 @@ class Construction extends Event
 		parent::create($values, $flush);
 	}
 
+	/**
+	 * Start colonisation of given field
+	 * @param Entities\Field
+	 * @param Entities\Clan
+	 * @return void
+	 */
 	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
 	{
 		$cost = $this->context->stats->getColonisationCost($target, $clan);
@@ -40,6 +52,12 @@ class Construction extends Event
 		}
 	}
 
+	/**
+	 * Start exploration of given field
+	 * @param Entities\Field
+	 * @param Entities\Clan
+	 * @return void
+	 */
 	public function startExploration (Entities\Field $target, Entities\Clan $clan)
 	{
 		$cost = $this->context->stats->getColonisationCost($target, $clan);

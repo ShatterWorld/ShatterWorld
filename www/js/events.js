@@ -21,7 +21,7 @@ Game.events = {
 			Game.countdown.cleanDialog();
 			var count = 0;
 			$.each(data['events'], function(key, event) {
-				
+
 				var type = event['type'];
 				var label = $('<span>');
 				var coords = null;
@@ -30,11 +30,11 @@ Game.events = {
 				var formatCoords = function (x, y) {
 					return '[' + x + ';' + y + ']';
 				}
-				
+
 				var text = $('<span>');
 				label.append(text);
 				Game.descriptions.translate('event', type, text);
-				
+
 				if (type == 'facilityConstruction'){
 					var facility = $('<span>');
 					label.append(' ');
@@ -64,7 +64,7 @@ Game.events = {
 // 					label += "</table></div>";
 				}
 
-				if (['colonisation', 'abandonment', 'facilityConstruction', 'facilityDemolition'].indexOf(type) >= 0) {
+				if (['colonisation', 'abandonment', 'facilityConstruction', 'facilityDemolition', 'exploration'].indexOf(type) >= 0) {
 					if (Game.utils.isset(Game.map)) {
 						if (Game.map.loaded) {
 							Game.map.disableField(Game.map.getField(event.target.x, event.target.y), type);

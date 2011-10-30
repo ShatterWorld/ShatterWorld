@@ -48,6 +48,12 @@ class StatContainer extends Nette\Object
 		return $this->context->params['game']['stats']['baseLOS'];
 	}
 
+	/**
+	 * Returns the colonisation coefficient
+	 * @param Entities\Field
+	 * @param Entities\Clan
+	 * @return int
+	 */
 	protected function getColonisationCoefficient (Entities\Field $target, Entities\Clan $clan)
 	{
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
@@ -68,6 +74,12 @@ class StatContainer extends Nette\Object
 		return $base * $coefficient;
 	}
 
+	/**
+	 * Calculate the costs needed to colonise a field
+	 * @param Entities\Field
+	 * @param Entities\Clan
+	 * @return int
+	 */
 	public function getColonisationCost (Entities\Field $target, Entities\Clan $clan)
 	{
 		$coefficient = $this->getColonisationCoefficient($target, $clan);
@@ -78,6 +90,12 @@ class StatContainer extends Nette\Object
 		);
 	}
 
+	/**
+	 * Returns the exploration coefficient
+	 * @param Entities\Field
+	 * @param Entities\Clan
+	 * @return int
+	 */
 	protected function getExplorationCoefficient (Entities\Field $target, Entities\Clan $clan)
 	{
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
@@ -85,6 +103,12 @@ class StatContainer extends Nette\Object
 		return $distance;
 	}
 
+	/**
+	 * Calculate the time needed to esplore a field
+	 * @param Entities\Field
+	 * @param Entities\Clan
+	 * @return int
+	 */
 	public function getExplorationTime (Entities\Field $target, Entities\Clan $clan)
 	{
 		$base = $this->context->params['game']['stats']['baseExplorationTime'];
@@ -92,6 +116,12 @@ class StatContainer extends Nette\Object
 		return $base * $coefficient;
 	}
 
+	/**
+	 * Calculate the costs needed to colonise a field
+	 * @param Entities\Field
+	 * @param Entities\Clan
+	 * @return int
+	 */
 	public function getExplorationCost (Entities\Field $target, Entities\Clan $clan)
 	{
 		$coefficient = $this->getExplorationCoefficient($target, $clan);
