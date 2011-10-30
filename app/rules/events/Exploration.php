@@ -4,23 +4,28 @@ use Rules\AbstractRule;
 use ReportItem;
 use Entities;
 
-class Colonisation extends AbstractRule implements IConstruction
+class Exploration extends AbstractRule implements IConstruction
 {
 	public function getDescription ()
 	{
-		return 'Kolonizace';
+		return 'Průzkum';
 	}
 
 	public function process (Entities\Event $event)
 	{
+		/*
 		$event->target->setOwner($event->owner);
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
-		return array();
+		return array();*/
+
+		//send resources !!!
 	}
 
 	public function isValid (Entities\Event $event)
 	{
 		if ($event->target->owner === NULL) {
+			return true;
+			/*
 			$valid = FALSE;
 			foreach ($this->getContext()->model->getFieldRepository()->getFieldNeighbours($event->target) as $neighbour) {
 				if ($neighbour->owner == $event->owner) {
@@ -29,19 +34,19 @@ class Colonisation extends AbstractRule implements IConstruction
 				}
 			}
 			return $valid;
-		}
+		}*/
 		return FALSE;
 	}
 
 	public function formatReport (Entities\Report $report)
 	{
 		return array(
-			new ReportItem('text', 'Úspěšně jsme připojili další území k našemu teritoriu!')
+			new ReportItem('text', 'Prozkoumáno!')
 		);
 	}
 
 	public function isExclusive ()
 	{
-		return TRUE;
+		return false;
 	}
 }

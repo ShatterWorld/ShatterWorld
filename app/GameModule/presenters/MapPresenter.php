@@ -61,7 +61,7 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Takový útok není možný', 'error');
 		}
 	}
-	
+
 	public function handleFetchColonisationCost ($targetId)
 	{
 		$target = $this->getFieldRepository()->find($targetId);
@@ -91,7 +91,7 @@ class MapPresenter extends BasePresenter
 		try {
 			$this->context->model->getConstructionService()->startAbandonment($target);
 			$this->flashMessage('Opuštení zahájeno');
-		} catch (MultipleConstructionsException $e) { 
+		} catch (MultipleConstructionsException $e) {
 			$this->flashMessage('Nelze opustit pole, na kterém právě probíhá stavba', 'error');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze opustit pole, které vám nepatří.', 'error');
@@ -157,4 +157,29 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		}
 	}
+
+	public function handleFetchExplorationCost ($targetId)
+	{
+		$target = $this->getFieldRepository()->find($targetId);
+		$clan = $this->getPlayerClan();
+		$this->payload->cost = $this->context->stats->getExplorationCost($target, $clan);
+		$this->payload->time = $this->context->stats->getExplorationTime($target, $clan);
+		$this->sendPayload();
+	}
+
+	public function handleSendExploration ($targetId)
+	{
+		try {
+			$this->context->model->getConstructionService()->startExploration($this->context->model->getFieldRepository()->find($targetId), $this->getPlayerClan());
+			$this->flashMessage('Průzkum zahájen');
+		} catch (MultipleConstructionsException $e) {
+			$this->flashMessage('Toto pole už kolonizujete nebo ho již prozkoumáváte.', 'error');
+		} catch (RuleViolationException $e) {
+			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
+		} catch (InsufficientResourcesException $e) {
+			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		}
+	}
+
+
 }

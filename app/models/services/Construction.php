@@ -20,7 +20,7 @@ class Construction extends Event
 		}
 		parent::create($values, $flush);
 	}
-	
+
 	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
 	{
 		$cost = $this->context->stats->getColonisationCost($target, $clan);
@@ -39,7 +39,26 @@ class Construction extends Event
 			throw new \InsufficientResourcesException;
 		}
 	}
-	
+
+	public function startExploration (Entities\Field $target, Entities\Clan $clan)
+	{
+		$cost = $this->context->stats->getColonisationCost($target, $clan);
+		if ($this->context->model->getResourceRepository()->checkResources($clan, $cost)) {
+			$this->create(array(
+				'owner' => $clan,
+				'target' => $target,
+				'origin' => $clan->getHeadquarters(),
+				'type' => 'exploration',
+				'timeout' => $this->context->stats->getColonisationTime($target, $clan)
+			), FALSE);
+			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
+			$this->context->model->getClanService()->issueOrder($clan, FALSE);
+			$this->entityManager->flush();
+		} else {
+			throw new \InsufficientResourcesException;
+		}
+	}
+
 	/**
 	 * Start building given facility on given field
 	 * @param Entities\Field
@@ -68,7 +87,7 @@ class Construction extends Event
 			throw new InsufficientResourcesException;
 		}
 	}
-	
+
 	/**
 	 * Start demolition on given field
 	 * @param Entities\Field
@@ -96,7 +115,7 @@ class Construction extends Event
 			throw new InsufficientResourcesException;
 		}
 	}
-	
+
 	/**
 	 * Start abandonment of given field
 	 * @param Entities\Field
@@ -113,8 +132,8 @@ class Construction extends Event
 		$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
 		$this->entityManager->flush();
 	}
-	
-	/** 
+
+	/**
 	 * Start training specified number of units
 	 * @param Entities\Clan
 	 * @param Entities\Field

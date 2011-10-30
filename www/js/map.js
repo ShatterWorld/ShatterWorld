@@ -842,12 +842,11 @@ Game.map.contextMenu = {
 		//neutral neighbour
 		else if(this.isNeighbour(field, Game.map.clan)){
 			this.addColonisationAction(field);
+			this.addExplorationAction(field);
 		}
 		//other neutral
 		else {
-			Game.map.marker.unmarkAll('red');
-			this.hide();
-			return;
+			this.addExplorationAction(field);
 		}
 
 		this.addCancelAction();
@@ -1249,6 +1248,52 @@ Game.map.contextMenu = {
 				}
 			);
 		});
+
+		this.action = null;
+		this.contextMenu.append(actionDiv);
+	},
+
+	/**
+	 * Adds the exploration building action
+	 * @param field
+	 * @return void
+	 */
+	addExplorationAction: function(target) {
+		var actionDiv = this.basicActionDiv.clone().html('Průzkum');
+
+		Game.spinner.show(Game.map.contextMenu.contextMenu);
+		$.getJSON('?' + $.param({
+						'do': 'fetchExplorationCost',
+						'targetId': target['id']
+					}),
+			function(data) {
+				Game.spinner.hide();
+				if (Game.resources.hasSufficientResources(data['cost'])){
+					actionDiv.click(function(){
+						Game.spinner.show(Game.map.contextMenu.contextMenu);
+						$.get('?' + $.param({
+								'do': 'sendExploration',
+								'targetId': target['id']
+							}),
+							function(){
+								Game.events.fetchEvents();
+								Game.resources.fetchResources();
+								Game.map.marker.unmarkAll('purple');
+								Game.map.disableField(target);
+								Game.spinner.hide();
+								Game.map.contextMenu.hide();
+							}
+						);
+
+					});
+
+				}
+				else{
+					actionDiv.css('text-decoration', 'line-through');
+				}
+			}
+		);
+
 
 		this.action = null;
 		this.contextMenu.append(actionDiv);
