@@ -1008,7 +1008,7 @@ Game.map.contextMenu = {
 								var params = {
 									'originId': from['id'],
 									'targetId': target['id']
-								});
+								};
 
 								$.each(inputs, function(key, input){
 									var unitCount = $(input).val();
