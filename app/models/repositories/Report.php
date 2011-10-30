@@ -22,7 +22,7 @@ class Report extends BaseRepository
 		$qb->select($qb->expr()->count('r.id'))->from($this->getEntityName(), 'r')->innerJoin('r.event', 'e');
 		$qb->where($qb->expr()->andX(
 			$qb->expr()->eq('e.owner', '?1'),
-			$qb->expr()->eq('r.isRead', '?2')
+			$qb->expr()->eq('r.read', '?2')
 		));
 		$qb->setParameter(1, $clan->id);
 		$qb->setParameter(2, FALSE);
