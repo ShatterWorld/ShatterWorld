@@ -52,7 +52,8 @@ class Exploration extends AbstractRule implements IConstruction
 	public function formatReport (Entities\Report $report)
 	{
 		return array(
-			new ReportItem('text', 'Prozkoumáno!')
+			new ReportItem('text', 'Prozkoumáno!'),
+			new ReportItem('resourceGrid', $report->data, 'Zisk')
 		);
 	}
 
