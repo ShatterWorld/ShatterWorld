@@ -15,19 +15,19 @@ class Report extends BaseEntity
 	 * @var Entities\Event
 	 */
 	private $event;
-	
+
 	/**
 	 * @Column(type = "string")
 	 * @var string
 	 */
 	private $data;
-	
+
 	/**
 	 * @Column(type = "boolean")
 	 * @var bool
 	 */
 	private $isRead;
-	
+
 	/**
 	 * Constructor
 	 * @param Entities\Event
@@ -39,7 +39,7 @@ class Report extends BaseEntity
 		$this->data = Json::encode($data);
 		$this->isRead = FALSE;
 	}
-	
+
 	/**
 	 * Event getter
 	 * @return Entities\Event
@@ -48,7 +48,7 @@ class Report extends BaseEntity
 	{
 		return $this->event;
 	}
-	
+
 	/**
 	 * Data getter
 	 * @return object
@@ -57,22 +57,22 @@ class Report extends BaseEntity
 	{
 		return Json::decode($this->data, Json::FORCE_ARRAY);
 	}
-	
+
 	/**
 	 * Has the report been read?
 	 * @return bool
 	 */
-	public function isRead ()
+	public function getIsRead ()
 	{
 		return $this->isRead;
 	}
-	
+
 	/**
 	 * Mark the report as read/unread
 	 * @param bool
 	 * @return void
 	 */
-	public function setRead ($read = TRUE)
+	public function setIsRead ($read = TRUE)
 	{
 		$this->isRead = $read;
 	}
