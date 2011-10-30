@@ -22,6 +22,11 @@ class Plain extends AbstractRule implements IField
 	
 	public function getProductionBonuses ()
 	{
-		return array();
+		return array(
+			'food' => 20,
+			'fuel' => -10,
+			'metal' => -20,
+			'stone' => -10
+		);
 	}
 }

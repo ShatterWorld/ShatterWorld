@@ -22,6 +22,10 @@ class Moor extends AbstractRule implements IField
 	
 	public function getProductionBonuses ()
 	{
-		return array();
+		return array(
+			'fuel' => 20,
+			'stone' => -40,
+			'metal' => -40
+		);
 	}
 }
