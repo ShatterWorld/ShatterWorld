@@ -56,6 +56,7 @@ class MapPresenter extends BasePresenter
 		$target = $this->getFieldRepository()->find($targetId);
 		try {
 			$this->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), 'pillaging', $units);
+			$this->invalidateControl('orders');
 			$this->flashMessage('Útok zahájen');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Takový útok není možný', 'error');
@@ -75,6 +76,7 @@ class MapPresenter extends BasePresenter
 	{
 		try {
 			$this->context->model->getConstructionService()->startColonisation($this->context->model->getFieldRepository()->find($targetId), $this->getPlayerClan());
+			$this->invalidateControl('orders');
 			$this->flashMessage('Kolonizace zahájena');
 		} catch (MultipleConstructionsException $e) {
 			$this->flashMessage('Toto pole už kolonizujete.', 'error');
@@ -90,6 +92,7 @@ class MapPresenter extends BasePresenter
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
 			$this->context->model->getConstructionService()->startAbandonment($target);
+			$this->invalidateControl('orders');
 			$this->flashMessage('Opuštení zahájeno');
 		} catch (MultipleConstructionsException $e) {
 			$this->flashMessage('Nelze opustit pole, na kterém právě probíhá stavba', 'error');
@@ -103,6 +106,7 @@ class MapPresenter extends BasePresenter
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
 			$this->context->model->getConstructionService()->startFacilityConstruction($target, $facility);
+			$this->invalidateControl('orders');
 			$this->flashMessage('Stavba zahájena');
 		} catch (MultipleConstructionsException $e) {
 			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
@@ -118,6 +122,7 @@ class MapPresenter extends BasePresenter
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
 			$this->context->model->getConstructionService()->startFacilityDemolition($target, 0);
+			$this->invalidateControl('orders');
 			$this->flashMessage('Demolice zahájena');
 		} catch (MultipleConstructionsException $e) {
 			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
@@ -132,8 +137,9 @@ class MapPresenter extends BasePresenter
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
-			$this->flashMessage('Stavba zahájena');
 			$this->context->model->getConstructionService()->startFacilityConstruction($target, $target->facility, $target->level + 1);
+			$this->invalidateControl('orders');
+			$this->flashMessage('Stavba zahájena');
 		} catch (MultipleConstructionsException $e) {
 			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
 		} catch (InsufficientResourcesException $e) {
@@ -148,6 +154,7 @@ class MapPresenter extends BasePresenter
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
 			$this->context->model->getConstructionService()->startFacilityDemolition($target, $target->level - 1);
+			$this->invalidateControl('orders');
 			$this->flashMessage('Demolice zahájena');
 		} catch (MultipleConstructionsException $e) {
 			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
@@ -171,6 +178,7 @@ class MapPresenter extends BasePresenter
 	{
 		try {
 			$this->context->model->getConstructionService()->startExploration($this->context->model->getFieldRepository()->find($targetId), $this->getPlayerClan());
+			$this->invalidateControl('orders');
 			$this->flashMessage('Průzkum zahájen');
 		} catch (MultipleConstructionsException $e) {
 			$this->flashMessage('Toto pole už kolonizujete nebo ho již prozkoumáváte.', 'error');

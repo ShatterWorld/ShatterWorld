@@ -70,12 +70,16 @@
 				<div id="resourceBar">
 					<span class="text">&nbsp;</span>
 				</div>
+				{snippet reports}
 				<div id="reportBar" n:if="$reportCount > 0">
 					<a n:href="Report:" class="text">{$reportCount}</a>
 				</div>
+				{/snippet}
+				{snippet orders}
 				<div id="orderBar">
 					<span class="text">{$orderCount}/{$orderCap}</span>
 				</div>
+				{/snippet}
 				<div id="countdownBar">
 					<span class="text">Odpočítávání (<span id="countdownCount"></span>)</span>
 				</div>
