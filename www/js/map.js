@@ -21,9 +21,9 @@ Game.map = {
 	map : null,
 
 	clan : 0,
-	
+
 	alliance : 0,
-	
+
 	/**
 	 * All fields by coodrs
 	 * @var Object
@@ -94,7 +94,7 @@ Game.map = {
 	 * @var integer
 	 */
 	maxZ : 0,
-	
+
 	/**
 	 * The largest X-position value
 	 * @var integer
@@ -108,9 +108,9 @@ Game.map = {
 	maxYPos : 0,
 
 	loaded : false,
-	
+
 	disabledFieldsStack : new Array(),
-	
+
 	/**
 	 * Represents the list of fields which are disabled right now
 	 * @var array of Field
@@ -141,7 +141,7 @@ Game.map = {
 	getField : function (x, y) {
 		return this.map[x][y];
 	},
-	
+
 	/**
 	 * Cleans the #map and rerender the map (using db-data)
 	 * @return void
@@ -153,6 +153,9 @@ Game.map = {
 
 		Game.spinner.show('#mapContainer');
 		Game.map.contextMenu.fetchFacilities();
+		if (Game.utils.isset(this.overlayDiv)){
+			this.overlayDiv.remove();
+		}
 
 		/**
 		 * ajax that gets JSON data of visibleFields
@@ -161,7 +164,7 @@ Game.map = {
 			Game.map.map = data['fields'];
 			Game.map.clan = data['clanId'];
 			Game.map.alliance = data['allianceId'];
-			
+
 			/**
 			 * finds the center and calculate dX and dY
 			 */
@@ -266,7 +269,7 @@ Game.map = {
 					}
 					Game.map.fieldsByCoords[posX][posY] = field;
 
-					
+
 				});
 
 				/**
@@ -363,11 +366,11 @@ Game.map = {
 			});
 
 			Game.map.loaded = true;
-			
+
 			while (f = Game.map.disabledFieldsStack.pop()) {
 				Game.map.disableField(Game.map.map[f.x][f.y], f.type);
 			}
-			
+
 			/**
 			 * Shows and fills fieldInfo when user gets mouse over a field
 			 * @return void
@@ -398,7 +401,7 @@ Game.map = {
 			 */
 			Game.map.overlayDiv.mousemove(function(e) {
 				var field = Game.map.determineField(e);
-				
+
 				if (field !== Game.map.tooltip.field) {
 					if (field === null) {
 						Game.map.tooltip.hide();
@@ -425,7 +428,7 @@ Game.map = {
 				var field = Game.map.determineField(e);
 					if (field) {
 					var div = field.element;
-					
+
 					if(Game.map.contextMenu.contextMenuShown){
 						Game.map.contextMenu.hide();
 						Game.map.marker.unmarkAll('red');
@@ -480,7 +483,7 @@ Game.map = {
 		});
 		return result !== undefined ? result : null;
 	},
-	
+
 	/**
 	 * Calculates somehow x-position of the field
 	 * @param field
@@ -613,11 +616,11 @@ Game.map.tooltip = {
 			'-moz-opacity' : '0.9',
 			'opacity' : '0.9'
 	}),
-	
-	
-	
+
+
+
 	field : null,
-	
+
 	/**
 	 * Displays the info
 	 * @return void
@@ -794,10 +797,10 @@ Game.map.contextMenu = {
 
 		var x = parseInt(field.element.css('left'));
 		var y = parseInt(field.element.css('top'));
-		
+
 		var coords = Game.utils.localToGlobal($('#map'), x, y);
 		coords = Game.utils.globalToLocal($('#mapContainer'), coords.x, coords.y);
-		
+
 		this.contextMenu.css("left", coords.x + 50);
 		this.contextMenu.css("top", coords.y + 30);
 
