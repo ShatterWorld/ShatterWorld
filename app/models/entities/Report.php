@@ -23,10 +23,10 @@ class Report extends BaseEntity
 	private $data;
 
 	/**
-	 * @Column(type = "boolean")
+	 * @Column(type = "boolean", name = "isRead")
 	 * @var bool
 	 */
-	private $isRead;
+	private $read;
 
 	/**
 	 * Constructor
@@ -37,7 +37,7 @@ class Report extends BaseEntity
 	{
 		$this->event = $event;
 		$this->data = Json::encode($data);
-		$this->isRead = FALSE;
+		$this->read = FALSE;
 	}
 
 	/**
@@ -62,9 +62,9 @@ class Report extends BaseEntity
 	 * Has the report been read?
 	 * @return bool
 	 */
-	public function getIsRead ()
+	public function isRead ()
 	{
-		return $this->isRead;
+		return $this->read;
 	}
 
 	/**
@@ -72,8 +72,8 @@ class Report extends BaseEntity
 	 * @param bool
 	 * @return void
 	 */
-	public function setIsRead ($read = TRUE)
+	public function setRead ($read = TRUE)
 	{
-		$this->isRead = $read;
+		$this->read = $read;
 	}
 }
