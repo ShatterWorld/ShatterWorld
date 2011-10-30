@@ -16,7 +16,7 @@ class Exploration extends AbstractRule implements IConstruction
 		$cargo = array();
 		foreach($this->getContext()->rules->get('field', $event->target->type)->getProductionBonuses() as $name => $resource){
 			if ($resource > 0){
-				$cargo[$name] = floor($resource * rand(1, 2.5));
+				$cargo[$name] = floor($resource * rand($this->getContext()->params['game']['stats']['minExplorationCoefficient'], $this->getContext()->params['game']['stats']['minExplorationCoefficient']));
 			}
 		}
 		$this->getContext()->model->getShipmentService()->create(array(
@@ -33,20 +33,7 @@ class Exploration extends AbstractRule implements IConstruction
 
 	public function isValid (Entities\Event $event)
 	{
-		if ($event->target->owner === NULL) {
-			return true;
-			/*
-			$valid = FALSE;
-			foreach ($this->getContext()->model->getFieldRepository()->getFieldNeighbours($event->target) as $neighbour) {
-				if ($neighbour->owner == $event->owner) {
-					$valid = TRUE;
-					break;
-				}
-			}
-			return $valid;
-		}*/
-		}
-		return FALSE;
+		return ($event->target->owner === NULL) ? true : false;
 	}
 
 	public function formatReport (Entities\Report $report)

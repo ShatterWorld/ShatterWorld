@@ -24,6 +24,8 @@ common:
 			baseLOS: 5
 			baseColonisationTime: 30
 			baseExplorationTime: 120
+			minExplorationCoefficient: 1
+			maxExplorationCoefficient: 1.5
 			baseAbandonmentTime: 60
 			baseStorage: 1200
 			orderTime: 3600
