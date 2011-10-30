@@ -16,7 +16,8 @@ class Clan extends BaseRepository
 	 */
 	public function findOneByUser ($user)
 	{
-		$qb = $this->createQueryBuilder('c');
+		$qb = $this->getEntityManager()->createQueryBuilder()
+			->select('c', 'o')->from($this->getEntityName(), 'c')->innerJoin('c.orders', 'o');
 		$qb->where($qb->expr()->eq('c.user', $user));
 		try {
 			return $qb->getQuery()->useResultCache(true)->getSingleResult();
