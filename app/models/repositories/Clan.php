@@ -34,22 +34,6 @@ class Clan extends BaseRepository
 		return $this->findOneByUser($this->context->user->id);
 	}
 
-	public function getAvailableOrders (Entities\Clan $clan)
-	{
-		$now = new \DateTime();
-		$cap = $this->context->params['game']['stats']['orderCap'];
-		$diff = $now->format('U') - $this->context->params['game']['start']->format('U');
-		$orders = ($diff / $this->context->params['game']['stats']['orderTime']) - $clan->orders->issued - $clan->orders->expired;
-		if ($orders > $cap) {
-			$this->context->model->getOrderService()->update($clan->orders, array(
-				'expired' => $clan->orders->expired + ($orders - $cap)
-			));
-			return $cap;
-		}
-		return $orders;
-	}
-
-
 	/**
 	 * Returns oriented graph where key is clan index, and value distance
 	 * The form $from->$target

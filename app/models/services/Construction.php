@@ -33,6 +33,7 @@ class Construction extends Event
 				'timeout' => $this->context->stats->getColonisationTime($target, $clan)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
+			$this->context->model->getClanService()->issueOrder($clan, FALSE);
 			$this->entityManager->flush();
 		} else {
 			throw new \InsufficientResourcesException;
@@ -61,6 +62,7 @@ class Construction extends Event
 				'timeout' => $rule->getConstructionTime($level)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
+			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
 			$this->entityManager->flush();
 		} else {
 			throw new InsufficientResourcesException;
@@ -88,6 +90,7 @@ class Construction extends Event
 				'timeout' => $rule->getDemolitionTime($field->level, $level)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
+			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
 			$this->entityManager->flush();
 		} else {
 			throw new InsufficientResourcesException;
@@ -106,7 +109,9 @@ class Construction extends Event
 			'owner' => $field->owner,
 			'type' => 'abandonment',
 			'timeout' => $this->context->stats->getAbandonmentTime($field->level)
-		));
+		), FALSE);
+		$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
+		$this->entityManager->flush();
 	}
 	
 	/** 
@@ -162,6 +167,7 @@ class Construction extends Event
 			'timeout' => $timeout
 		), FALSE);
 		$this->context->model->getResourceService()->pay($clan, $price, FALSE);
+		$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
 		$this->entityManager->flush();
 	}
 }

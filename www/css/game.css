@@ -19,15 +19,15 @@
 	vertical-align: middle;
 }
 
-#infoBar #countdownBar, #infoBar #reportBar {
+#infoBar #countdownBar, #infoBar #reportBar, #infoBar #orderBar {
 	color: white;
 	float: right;
 	margin-right: 15px;
-	cursor: pointer;
 	vertical-align: middle;
 }
 
 #infoBar #countdownBar {
+	cursor: pointer;
 	display: none;
 }
 

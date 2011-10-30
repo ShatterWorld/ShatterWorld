@@ -19,6 +19,26 @@ class StatContainer extends Nette\Object
 	}
 	
 	/**
+	 * Get the count of available orders for given clan
+	 * @param Entities\Clan
+	 * @return int
+	 */
+	public function getAvailableOrders (Entities\Clan $clan)
+	{
+		$now = new \DateTime();
+		$cap = $this->context->params['game']['stats']['orderCap'];
+		$diff = $now->format('U') - $this->context->params['game']['start']->format('U');
+		$orders = (intval($diff / $this->context->params['game']['stats']['orderTime'])) - $clan->orders->issued - $clan->orders->expired;
+		if ($orders > $cap) {
+			$this->context->model->getOrderService()->update($clan->orders, array(
+				'expired' => $clan->orders->expired + ($orders - $cap)
+			));
+			return $cap;
+		}
+		return $orders;
+	}
+	
+	/**
 	 * Returns how many fields in the distance can the clan see from its territory
 	 * @param Entities\Clan
 	 * @return int
@@ -53,7 +73,7 @@ class StatContainer extends Nette\Object
 		$coefficient = $this->getColonisationCoefficient($target, $clan);
 		return array(
 			'food' => 10 * $coefficient,
-			'stone' => 30 * $coefficient,
+			'stone' => 20 * $coefficient,
 			'metal' => 20 * $coefficient
 		);
 	}

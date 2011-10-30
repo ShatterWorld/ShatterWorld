@@ -2,14 +2,15 @@
 namespace Services;
 use Nette\Caching\Cache;
 use Nette\Diagnostics\Debugger;
+use Entities;
 use ArraySet;
+
 /**
  * Clan service class
  * @author Petr Bělohlávek
  */
-class Clan extends BaseService {
-
-
+class Clan extends BaseService 
+{
 	/** @var Nette\Caching\Cache*/
 	protected $cache;
 
@@ -23,6 +24,24 @@ class Clan extends BaseService {
 	public function getCache ()
 	{
 		return $this->cache;
+	}
+	
+	/**
+	 * Increase the number of issued orders for given clan
+	 * @param Entities\Clan
+	 * @param bool
+	 * @throws InsufficientOrdersException
+	 * @return void
+	 */
+	public function issueOrder (Entities\Clan $clan, $flush = TRUE)
+	{
+		if ($this->context->stats->getAvailableOrders($clan) > 0) {
+			$this->context->model->getOrdersService()->update($clan->orders, array(
+				'issued' => $clan->orders->issued + 1
+			), $flush);
+		} else {
+			throw new InsufficientOrdersException;
+		}
 	}
 	
 	/**
@@ -133,12 +152,8 @@ class Clan extends BaseService {
 		}
 	}
 
-
 	public function deleteAll ($flush = TRUE){
 		parent::deleteAll($flush);
 		$this->cache->clean();
 	}
-
-
-
 }

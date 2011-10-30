@@ -20,6 +20,8 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		parent::beforeRender();
 		$clan = $this->getPlayerClan();
+		$this->template->orderCount = $this->context->stats->getAvailableOrders($clan);
+		$this->template->orderCap = $this->context->params['game']['stats']['orderCap'];
 		$this->template->reportCount = $clan ? $this->getReportRepository()->countUnread($clan) : 0;
 	}
 

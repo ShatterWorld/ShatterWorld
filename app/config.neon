@@ -11,7 +11,7 @@ common:
 		# zlib.output_compression: yes
 
 	game:
-		start: 2011-09-25 18:00:00
+		start: 2011-10-30 00:00:00
 
 		map:
 			size: 50

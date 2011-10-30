@@ -19,8 +19,8 @@ class Offer extends BaseService {
 	{
 		if ($this->context->model->getResourceRepository()->checkResources($targetClan, array($offer->demand => $offer->demandAmount))){
 
-			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount));
-			$this->update($offer, array('sold' => true));
+			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount), FALSE);
+			$this->update($offer, array('sold' => true), FALSE);
 			$this->context->model->getShipmentService()->create(array(
 				'type' => 'shipment',
 				'timeout' => $time[0],
@@ -28,7 +28,7 @@ class Offer extends BaseService {
 				'origin' => $offer->owner->getHeadquarters(),
 				'target' => $targetClan->getHeadquarters(),
 				'cargo' => array($offer->offer => $offer->offerAmount)
-			));
+			), FALSE);
 
 			$this->context->model->getShipmentService()->create(array(
 				'type' => 'shipment',
@@ -37,7 +37,9 @@ class Offer extends BaseService {
 				'origin' => $targetClan->getHeadquarters(),
 				'target' => $offer->owner->getHeadquarters(),
 				'cargo' => array($offer->demand => $offer->demandAmount)
-			));
+			), FALSE);
+			$this->context->model->getClanService()->issueOrder($targetClan, FALSE);
+			$this->entityManager->flush();
 		}
 		else{
 			throw new InsufficientResourcesException();

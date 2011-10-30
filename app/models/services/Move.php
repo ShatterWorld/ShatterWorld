@@ -36,6 +36,7 @@ class Move extends Event
 			}
 		}
 		$move->setTimeout($time, $term);
+		$this->context->model->getClanService()->issueOrder($owner, FALSE);
 		$this->entityManager->flush();
 	}
 }
