@@ -22,6 +22,11 @@ class Lake extends AbstractRule implements IField
 	
 	public function getProductionBonuses ()
 	{
-		return array();
+		return array(
+			'food' => 40,
+			'fuel' => -90,
+			'stone' => -90,
+			'metal' => -90
+		);
 	}
 }

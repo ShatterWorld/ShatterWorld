@@ -22,6 +22,10 @@ class Barren extends AbstractRule implements IField
 	
 	public function getProductionBonuses ()
 	{
-		return array();
+		return array(
+			'food' => -30,
+			'fuel' => -40,
+			'metal' => -40
+		);
 	}
 }

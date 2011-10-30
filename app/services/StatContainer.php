@@ -99,8 +99,7 @@ class StatContainer extends Nette\Object
 	protected function getExplorationCoefficient (Entities\Field $target, Entities\Clan $clan)
 	{
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
-
-		return $distance;
+		return $distance - 1;
 	}
 
 	/**
@@ -112,7 +111,7 @@ class StatContainer extends Nette\Object
 	public function getExplorationTime (Entities\Field $target, Entities\Clan $clan)
 	{
 		$base = $this->context->params['game']['stats']['baseExplorationTime'];
-		$coefficient = $this->getColonisationCoefficient($target, $clan);
+		$coefficient = $this->getExplorationCoefficient($target, $clan);
 		return $base * $coefficient;
 	}
 

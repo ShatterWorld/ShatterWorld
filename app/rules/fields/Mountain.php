@@ -22,6 +22,10 @@ class Mountain extends AbstractRule implements IField
 	
 	public function getProductionBonuses ()
 	{
-		return array();
+		return array(
+			'food' => -20,
+			'metal' => 40,
+			'stone' => 60
+		);
 	}
 }

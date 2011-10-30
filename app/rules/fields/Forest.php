@@ -22,6 +22,11 @@ class Forest extends AbstractRule implements IField
 	
 	public function getProductionBonuses ()
 	{
-		return array();
+		return array(
+			'food' => 20,
+			'fuel' => 10,
+			'metal' => -30,
+			'stone' => -20
+		);
 	}
 }
