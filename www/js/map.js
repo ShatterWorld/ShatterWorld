@@ -1005,23 +1005,22 @@ Game.map.contextMenu = {
 								var inputs = $('#units .count input');
 								var trs = $('#units tr');
 
-								var params = '?' + $.param({
-										'do': 'attack',
-										'originId': from['id'],
-										'targetId': target['id']
-									});
+								var params = {
+									'originId': from['id'],
+									'targetId': target['id']
+								});
 
 								$.each(inputs, function(key, input){
 									var unitCount = $(input).val();
 
 									if (unitCount > 0 && unitCount !== "" && Game.utils.isset(unitCount)){
 										var unitId = $(trs[key+1]).attr('id');
-										params += '&' + unitId + '=' + unitCount;
+										params[unitId] = unitCount;
 									}
 
 								});
 
-								Game.utils.signal('attack', {'originId': from['id'], 'targetId': target['id']}, function() {
+								Game.utils.signal('attack', params, function() {
 									Game.events.fetchEvents();
 									Game.spinner.hide();
 									$(attackDialog).dialog("close");
