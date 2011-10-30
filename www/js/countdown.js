@@ -55,6 +55,7 @@ Game.countdown = {
 					Game.map.render();
 				}
 				Game.events.fetchEvents();
+				//Game.resources.fetchResources();
 				clearInterval(interval);
 				return;
 			}

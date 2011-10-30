@@ -1279,7 +1279,6 @@ Game.map.contextMenu = {
 								Game.events.fetchEvents();
 								Game.resources.fetchResources();
 								Game.map.marker.unmarkAll('purple');
-								Game.map.disableField(target);
 								Game.spinner.hide();
 								Game.map.contextMenu.hide();
 							}

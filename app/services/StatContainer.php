@@ -112,7 +112,7 @@ class StatContainer extends Nette\Object
 	{
 		$base = $this->context->params['game']['stats']['baseExplorationTime'];
 		$coefficient = $this->getExplorationCoefficient($target, $clan);
-		return $base * $coefficient;
+		return $base * ($coefficient+1);
 	}
 
 	/**
