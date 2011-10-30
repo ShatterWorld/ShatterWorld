@@ -9,6 +9,23 @@
 var Game = Game || {};
 Game.utils = {
 	/**
+	 * Send a signal to a Nette app
+	 * @param string
+	 * @param Object
+	 * @param function
+	 * @return void
+	 */
+	signal: function (signal, params, success)
+	{
+		params = this.isset(params) ? params : {};
+		success = this.isset(success) ? success : function () {};
+		$.get('?' + $.param($.extend({'do': signal}, params)), function (data) {
+			jQuery.nette.success(data);
+			success(data);
+		});
+	},
+	
+	/**
 	 * Calculates local position
 	 * @param object
 	 * @param integer
