@@ -160,7 +160,7 @@ Game.map = {
 		/**
 		 * ajax that gets JSON data of visibleFields
 		 */
-		$.getJSON('?do=fetchMap', function(data) {
+		$.get('?do=fetchMap', function(data) {
 			Game.map.map = data['fields'];
 			Game.map.clan = data['clanId'];
 			Game.map.alliance = data['allianceId'];
@@ -873,39 +873,24 @@ Game.map.contextMenu = {
 		var actionDiv = this.basicActionDiv.clone().html('Kolonizace');
 
 		Game.spinner.show(Game.map.contextMenu.contextMenu);
-		$.getJSON('?' + $.param({
-						'do': 'fetchColonisationCost',
-						'targetId': target['id']
-					}),
-			function(data) {
-				Game.spinner.hide();
-				if (Game.resources.hasSufficientResources(data['cost'])){
-					actionDiv.click(function(){
-						Game.spinner.show(Game.map.contextMenu.contextMenu);
-						$.get('?' + $.param({
-								'do': 'sendColonisation',
-								'targetId': target['id']
-							}),
-							function(){
-								Game.events.fetchEvents();
-								Game.resources.fetchResources();
-								Game.map.marker.unmarkAll('red');
-								Game.map.disableField(target);
-								Game.spinner.hide();
-								Game.map.contextMenu.hide();
-							}
-						);
-
+		Game.utils.signal('fetchColonisationCost', {'targetId': target['id']}, function(data) {
+			Game.spinner.hide();
+			if (Game.resources.hasSufficientResources(data['cost'])){
+				actionDiv.click(function(){
+					Game.spinner.show(Game.map.contextMenu.contextMenu);
+					Game.utils.signal('sendColonisation', {'targetId': target['id']}, function(){
+						Game.events.fetchEvents();
+						Game.resources.fetchResources();
+						Game.map.marker.unmarkAll('red');
+						Game.map.disableField(target);
+						Game.spinner.hide();
+						Game.map.contextMenu.hide();
 					});
-
-				}
-				else{
-					actionDiv.css('text-decoration', 'line-through');
-				}
+				});
+			} else {
+				actionDiv.css('text-decoration', 'line-through');
 			}
-		);
-
-
+		});
 		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
@@ -925,8 +910,7 @@ Game.map.contextMenu = {
 			var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
 			table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
 			attackDialog.append(table);
-			$.each(from['units'], function(key, unit){
-
+			$.each(from['units'], function (key, unit) {
 				var tr = $('<tr id="'+unit['id']+'" />');
 				tr.append('<td class="name" style="width:100px">'+key+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
 				table.append(tr);
@@ -936,8 +920,6 @@ Game.map.contextMenu = {
 				.css({
 					'cursor' : 'pointer'
 				});
-
-
 			});
 
 			var tmp;
@@ -1039,13 +1021,11 @@ Game.map.contextMenu = {
 
 								});
 
-								$.get(params,
-									function(){
-										Game.events.fetchEvents();
-										Game.spinner.hide();
-										$(attackDialog).dialog("close");
-									}
-								);
+								Game.utils.signal('attack', {'originId': from['id'], 'targetId': target['id']}, function() {
+									Game.events.fetchEvents();
+									Game.spinner.hide();
+									$(attackDialog).dialog("close");
+								});
 							}
 						},
 						{
@@ -1073,19 +1053,14 @@ Game.map.contextMenu = {
 			if (Game.resources.hasSufficientResources(upgrade['cost'])){
 				actionDiv.click(function(){
 					Game.spinner.show(Game.map.contextMenu.contextMenu);
-					$.get('?' + $.param({
-							'do': 'upgradeFacility',
-							'targetId': target['id']
-						}),
-						function(){
-							Game.events.fetchEvents();
-							Game.resources.fetchResources();
-							Game.map.marker.unmarkAll('red');
-							Game.map.disableField(target);
-							Game.spinner.hide();
-							Game.map.contextMenu.hide();
-						}
-					);
+					Game.utils.signal('upgradeFacility', {'targetId': target['id']}, function () {
+						Game.events.fetchEvents();
+						Game.resources.fetchResources();
+						Game.map.marker.unmarkAll('red');
+						Game.map.disableField(target);
+						Game.spinner.hide();
+						Game.map.contextMenu.hide();
+					});
 
 				});
 
@@ -1111,20 +1086,14 @@ Game.map.contextMenu = {
 			if (Game.resources.hasSufficientResources(downgrade['cost'])){
 				actionDiv.click(function(){
 					Game.spinner.show(Game.map.contextMenu.contextMenu);
-					$.get('?' + $.param({
-							'do': 'downgradeFacility',
-							'targetId': target['id']
-						}),
-						function(){
-							Game.events.fetchEvents();
-							Game.resources.fetchResources();
-							Game.map.marker.unmarkAll('red');
-							Game.map.disableField(target);
-							Game.spinner.hide();
-							Game.map.contextMenu.hide();
-						}
-					);
-
+					Game.utils.signal('downgradeFacility', {'targetId': target['id']}, function () {
+						Game.events.fetchEvents();
+						Game.resources.fetchResources();
+						Game.map.marker.unmarkAll('red');
+						Game.map.disableField(target);
+						Game.spinner.hide();
+						Game.map.contextMenu.hide();
+					});
 				});
 
 			}
@@ -1150,24 +1119,16 @@ Game.map.contextMenu = {
 			if (Game.resources.hasSufficientResources(destroy['cost'])){
 				actionDiv.click(function(){
 					Game.spinner.show(Game.map.contextMenu.contextMenu);
-					$.get('?' + $.param({
-							'do': 'destroyFacility',
-							'targetId': target['id']
-						}),
-						function(){
-							Game.events.fetchEvents();
-							Game.resources.fetchResources();
-							Game.map.marker.unmarkAll('red');
-							Game.map.disableField(target);
-							Game.spinner.hide();
-							Game.map.contextMenu.hide();
-						}
-					);
-
+					Game.utils.signal('destroyFacility', {'targetId': target['id']}, function () {
+						Game.events.fetchEvents();
+						Game.resources.fetchResources();
+						Game.map.marker.unmarkAll('red');
+						Game.map.disableField(target);
+						Game.spinner.hide();
+						Game.map.contextMenu.hide();
+					});
 				});
-
-			}
-			else{
+			} else {
 				actionDiv.css('text-decoration', 'line-through');
 			}
 		}
@@ -1194,20 +1155,14 @@ Game.map.contextMenu = {
 					facilityDiv.click(function(){
 
 						Game.spinner.show(Game.map.contextMenu.contextMenu);
-						$.get('?' + $.param({
-							'do': 'buildFacility',
-							'targetId': target['id'],
-							'facility': name
-							}),
-							function(data){
-								Game.events.fetchEvents();
-								Game.resources.fetchResources();
-								Game.map.marker.unmarkAll('red');
-								Game.map.disableField(target);
-								Game.spinner.hide();
-								Game.map.contextMenu.hide();
-							}
-						);
+						Game.utils.signal('buildFacility', {'targetId': target['id'], 'facility': name}, function (data) {
+							Game.events.fetchEvents();
+							Game.resources.fetchResources();
+							Game.map.marker.unmarkAll('red');
+							Game.map.disableField(target);
+							Game.spinner.hide();
+							Game.map.contextMenu.hide();
+						});
 					});
 				} else {
 					facilityDiv.css('text-decoration', 'line-through');
@@ -1233,20 +1188,14 @@ Game.map.contextMenu = {
 	addLeaveFieldAction: function(target) {
 		var actionDiv = this.basicActionDiv.clone().html('Opustit pole');
 		actionDiv.click(function(){
-
-			Game.spinner.show(Game.map.contextMenu.contextMenu);
-			$.get('?' + $.param({
-					'do': 'leaveField',
-					'targetId': target['id']
-				}),
-				function(){
-					Game.events.fetchEvents();
-					Game.map.marker.unmarkAll('red');
-					Game.map.disableField(target);
-					Game.spinner.hide();
-					Game.map.contextMenu.hide();
-				}
-			);
+		Game.spinner.show(Game.map.contextMenu.contextMenu);
+		Game.utils.signal('leaveField', {'targetId': target['id']}, function () {
+			Game.events.fetchEvents();
+			Game.map.marker.unmarkAll('red');
+			Game.map.disableField(target);
+			Game.spinner.hide();
+			Game.map.contextMenu.hide();
+		});
 		});
 
 		this.action = null;
@@ -1260,37 +1209,24 @@ Game.map.contextMenu = {
 	 */
 	addExplorationAction: function(target) {
 		var actionDiv = this.basicActionDiv.clone().html('Průzkum');
-
 		Game.spinner.show(Game.map.contextMenu.contextMenu);
-		$.getJSON('?' + $.param({
-						'do': 'fetchExplorationCost',
-						'targetId': target['id']
-					}),
-			function(data) {
-				Game.spinner.hide();
-				if (Game.resources.hasSufficientResources(data['cost'])){
-					actionDiv.click(function(){
-						Game.spinner.show(Game.map.contextMenu.contextMenu);
-						$.get('?' + $.param({
-								'do': 'sendExploration',
-								'targetId': target['id']
-							}),
-							function(){
-								Game.events.fetchEvents();
-								Game.resources.fetchResources();
-								Game.map.marker.unmarkAll('purple');
-								Game.spinner.hide();
-								Game.map.contextMenu.hide();
-							}
-						);
-
+		Game.utils.signal('fetchExplorationCost', {'targetId': target['id']}, function(data) {
+			Game.spinner.hide();
+			if (Game.resources.hasSufficientResources(data['cost'])) {
+				actionDiv.click(function(){
+					Game.spinner.show(Game.map.contextMenu.contextMenu);
+					Game.utils.signal('sendExploration', {'targetId': target['id']}, function(){
+						Game.events.fetchEvents();
+						Game.resources.fetchResources();
+						Game.map.marker.unmarkAll('purple');
+						Game.spinner.hide();
+						Game.map.contextMenu.hide();
 					});
-
-				}
-				else{
-					actionDiv.css('text-decoration', 'line-through');
-				}
+				});
+			} else {
+				actionDiv.css('text-decoration', 'line-through');
 			}
+		}
 		);
 
 
@@ -1318,7 +1254,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	fetchFacilities: function (){
-		$.getJSON('?do=fetchFacilities', function(data) {
+		Game.utils.signal('fetchFacilities', {}, function(data) {
 			Game.map.contextMenu.facilities = data['facilities'];
 			Game.map.contextMenu.upgrades = data['upgrades'];
 			Game.map.contextMenu.downgrades = data['downgrades'];
