@@ -60,14 +60,14 @@ class Construction extends Event
 	 */
 	public function startExploration (Entities\Field $target, Entities\Clan $clan)
 	{
-		$cost = $this->context->stats->getColonisationCost($target, $clan);
+		$cost = $this->context->stats->getExplorationCost($target, $clan);
 		if ($this->context->model->getResourceRepository()->checkResources($clan, $cost)) {
 			$this->create(array(
 				'owner' => $clan,
 				'target' => $target,
 				'origin' => $clan->getHeadquarters(),
 				'type' => 'exploration',
-				'timeout' => $this->context->stats->getColonisationTime($target, $clan)
+				'timeout' => $this->context->stats->getExplorationTime($target, $clan)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);
