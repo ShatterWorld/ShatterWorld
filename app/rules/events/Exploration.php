@@ -13,12 +13,22 @@ class Exploration extends AbstractRule implements IConstruction
 
 	public function process (Entities\Event $event)
 	{
-		/*
-		$event->target->setOwner($event->owner);
-		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
-		return array();*/
+		$cargo = array();
+		foreach($this->getContext()->rules->get('field', $event->target->type)->getProductionBonuses() as $name => $resource){
+			if ($resource > 0){
+				$cargo[$name] = floor($resource * rand(0, 1));
+			}
+		}
+		$this->context->model->getShipmentService()->create(array(
+			'type' => 'shipment',
+			'timeout' => 120 * $this->getContext()->getFieldRepository()->calculateDistance($event->owner->getHeadquarters(), $event->target),
+			'owner' => $event->owner,
+			'origin' => $event->target,
+			'target' => $event->owner->getHeadquarters(),
+			'cargo' => $cargo
+		), FALSE);
 
-		//send resources !!!
+		return $cargo;
 	}
 
 	public function isValid (Entities\Event $event)
