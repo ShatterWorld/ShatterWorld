@@ -11,7 +11,7 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 		return 'Stavba budovy';
 	}
 
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$this->getContext()->model->getFieldService()->update($event->target, array(
 			'facility' => $event->construction,

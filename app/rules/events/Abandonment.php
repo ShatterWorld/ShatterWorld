@@ -11,7 +11,7 @@ class Abandonment extends AbstractRule implements IConstruction
 		return 'Opuštění území';
 	}
 
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$event->target->setOwner(NULL);
 		$event->target->setFacility(NULL);

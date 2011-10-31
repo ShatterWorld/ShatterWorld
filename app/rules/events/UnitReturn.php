@@ -10,7 +10,7 @@ class UnitReturn extends AbstractRule implements IEvent
 		return 'Návrat jednotek';
 	}
 	
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
 		if ($event->cargo) {
