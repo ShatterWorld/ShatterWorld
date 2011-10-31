@@ -48,4 +48,23 @@ class Message extends BaseRepository
 
 	}
 
+	/**
+	 * Returns number of unread messages
+	 * @param int
+	 * @return int
+	 */
+	public function getUnreadMsgCount ($userId)
+	{
+		$qb = $this->createQueryBuilder('m');
+		$qb->where($qb->expr()->andX(
+			$qb->expr()->eq('m.recipient', $userId),
+			$qb->expr()->eq('m.read', '?1')
+		));
+		$qb->setParameter(1, false);
+
+		$messages = $qb->getQuery()->getResult();
+		return count($messages);
+
+	}
+
 }

@@ -66,6 +66,11 @@ abstract class BasePresenter extends \BasePresenter
 		parent::flashMessage($message, $type);
 	}
 
+	public function getUnreadMsgCount ()
+	{
+		return $this->getMessageRepository()->getUnreadMsgCount($this->getPlayerClan()->user->id);
+	}
+
 	/**
 	 * Send upcoming events via ajax
 	 * @return void
