@@ -1,6 +1,7 @@
 <?php
 namespace GameModule;
 use Nette;
+use Nette\Utils\Strings;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
@@ -43,19 +44,26 @@ class MessagePresenter extends BasePresenter {
 	public function submitNewMessageForm (Form $form)
 	{
 		$data = $form->getValues();
-		$recipient = $this->getUserRepository()->findOneByNickname($data['recipient']);
-		if ($recipient !== null){
-			$data = $form->getValues();
-			$data['sender'] = $this->getPlayerClan()->user;
-			$data['recipient'] = $recipient;
-			$this->getMessageService()->create($data);
-			$this->flashMessage('Odesláno');
-			$this->redirect('Message:sent');
-		}
-		else{
-			$this->flashMessage('Neexistující příjemce', 'error');
+		$data['sender'] = $this->getPlayerClan()->user;
+
+		$recipientNicks = Strings::split($data['recipient'], '~[,|;| ]+\s*~');
+
+		foreach($recipientNicks as $recipientNick){
+			$recipient = $this->getUserRepository()->findOneByNickname($recipientNick);
+			if ($recipient === null){
+				$this->flashMessage('Příjemce '.$recipientNick.' neexistuje', 'error');
+				return;
+			}
+			$recipients[] = $recipient;
 		}
 
+		foreach($recipients as $recipient){
+			$data['recipient'] = $recipient;
+			$this->getMessageService()->create($data);
+		}
+
+		$this->flashMessage('Úspěšně odesláno '.count($recipients).' zpráv.');
+		$this->redirect('Message:sent');
 	}
 
 
