@@ -70,6 +70,15 @@ class Message extends BaseEntity
 	}
 
 	/**
+	 * SentTime getter
+	 * @return Nette\DateTime
+	 */
+	public function getSentTime ()
+	{
+		return $this->sentTime;
+	}
+
+	/**
 	 * Sender getter
 	 * @return Entities\User
 	 */
