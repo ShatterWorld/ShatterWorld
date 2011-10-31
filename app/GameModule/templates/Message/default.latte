@@ -1,0 +1,25 @@
+{block #header}
+	Přijaté zprávy
+{/block}
+
+{block #content}
+{dump $messages}
+	<table id = "receivedMessages">
+		<tr>
+			<th>Odesílatel</th>
+			<th>Předmět</th>
+			<th>Čas</th>
+			<th>Přečtená</th>
+			<th>Smazat</th>
+		</tr>
+		{foreach $messages as $message}
+			<tr>
+				<td>{$message->sender->nickname}</td>
+				<td><a href="{link Message:show $message->id}">{$message->subject}</a></td>
+				<td></td>
+				<td><a n:href="markRead! $message->id">Přečtená</a></td>
+				<td><a n:href="deleteByRecipient! $message->id">Smazat</a></td>
+			</tr>
+		{/foreach}
+	</table>
+{/block}

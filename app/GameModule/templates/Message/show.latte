@@ -1,0 +1,19 @@
+{block #header}
+	Koupit
+{/block}
+
+{block #content}
+
+	<h3>Odesílatel<h3>
+	{$message->sender->nickname}
+
+	<h3>Příjemce<h3>
+	{$message->recipient->nickname}
+
+	<h3>Předmět<h3>
+	{$message->subject}
+
+	<h3>Zpráva<h3>
+	{$message->body}
+
+{/block}
