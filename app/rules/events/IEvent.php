@@ -11,9 +11,10 @@ interface IEvent extends \Rules\IRule {
 	/**
 	 * Process the event and return report data
 	 * @param Entities\Event
+	 * @param Services\Event
 	 * @return array|object
 	 */
-	public function process (Entities\Event $event);
+	public function process (Entities\Event $event, $processor);
 	
 	/**
 	 * Is the event valid?

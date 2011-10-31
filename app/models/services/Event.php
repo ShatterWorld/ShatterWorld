@@ -1,15 +1,28 @@
 <?php
 namespace Services;
+use Entities;
 use RuleViolationException;
 
 class Event extends BaseService
 {
 	const LOCK_TIMEOUT = 30;
 	
+	/**
+	 * A queue of events to be processed
+	 * @var array
+	 */
+	protected $eventQueue;
+	
+	/**
+	 * Event processing time
+	 * @var DateTime
+	 */
+	protected $eventTime;
+	
 	public function processPendingEvents ()
 	{
 		$userId = $this->context->user->id;
-		$now = new \DateTime('@' . date('U'));
+		$this->eventTime = $now = new \DateTime('@' . date('U'));
 		$timeout = microtime(TRUE) + self::LOCK_TIMEOUT;
 		$qb = $this->entityManager->createQueryBuilder();
 		$qb->update('Entities\Event', 'e')
@@ -31,10 +44,11 @@ class Event extends BaseService
 		$qb->setParameter(4, $now->format('U'));
 		$qb->setParameter(5, FALSE);
 		if ($qb->getQuery()->execute() !== 0) {
-			foreach ($this->getRepository()->findPendingEvents($userId, $timeout) as $event) {
+			$this->eventQueue = $this->getRepository()->findPendingEvents($userId, $timeout);
+			foreach ($this->eventQueue as $event) {
 				$eventRule = $this->context->rules->get('event', $event->type);
 				if ($eventRule->isValid($event)) {
-					$report = $eventRule->process($event);
+					$report = $eventRule->process($event, $this);
 					$this->context->model->getReportService()->create(array(
 						'event' => $event,
 						'data' => $report
@@ -46,6 +60,24 @@ class Event extends BaseService
 			}
 		}
 		$this->entityManager->flush();
+	}
+	
+	/**
+	 * Add an event to the event processing queue if it is to be processed
+	 * @param Entities\Event
+	 * @return void
+	 */
+	public function queueEvent (Entities\Event $event)
+	{
+		if ($event->term < $this->eventTime) {
+			foreach ($this->eventQueue as $offset => $queuedEvent) {
+				if ($event->term < $queuedEvent->term) break;
+			}
+			$precessors = array_slice($this->eventQueue, 0, $offset - 1);
+			$successors = array_slice($this->eventQueue, $offset);
+			$precessors[] = $event;
+			$this->eventQueue = array_merge($precessors, $successors);
+		}
 	}
 	
 	public function create ($values, $flush = TRUE)

@@ -64,7 +64,7 @@ abstract class Attack extends AbstractRule implements IEvent
 		return $result;
 	}
 	
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$model = $this->getContext()->model;
 		$result = $this->evaluateBattle($event);
@@ -80,7 +80,7 @@ abstract class Attack extends AbstractRule implements IEvent
 			if ($loot = $result['attacker']['loot']) {
 				$model->getResourceService()->pay($event->target->owner, $loot);
 			}
-			$model->getMoveService()->startUnitMovement(
+			$processor->queueEvent($model->getMoveService()->startUnitMovement(
 				$event->target, 
 				$event->origin, 
 				$event->origin->owner, 
@@ -88,7 +88,7 @@ abstract class Attack extends AbstractRule implements IEvent
 				$attackerUnits, 
 				$loot, 
 				$event->term
-			);
+			));
 		}
 		return $result;
 	}

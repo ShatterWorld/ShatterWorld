@@ -11,7 +11,7 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 		return 'Bourání budovy';
 	}
 	
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$changes = array('level' => $event->level);
 		if ($event->level === 0) {

@@ -188,6 +188,4 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		}
 	}
-
-
 }

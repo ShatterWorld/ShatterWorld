@@ -11,7 +11,7 @@ class Shipment extends AbstractRule implements IEvent
 		return 'Zásilka surovin';
 	}
 
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$this->getContext()->model->getResourceService()->increase($event->target->owner, $event->cargo);
 		return array();

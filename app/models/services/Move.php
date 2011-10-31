@@ -4,7 +4,7 @@ use Entities;
 
 class Move extends Event
 {
-	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, Entities\Clan $owner, $type, $units, $cargo = array(), $term = NULL)
+	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, Entities\Clan $owner, $type, $units, $cargo = array(), $now = NULL)
 	{
 		$time = 0;
 		$move = $this->create(array(
@@ -35,8 +35,9 @@ class Move extends Event
 				}
 			}
 		}
-		$move->setTimeout($time, $term);
+		$move->setTimeout($time, $now);
 		$this->context->model->getClanService()->issueOrder($owner, FALSE);
 		$this->entityManager->flush();
+		return $move;
 	}
 }

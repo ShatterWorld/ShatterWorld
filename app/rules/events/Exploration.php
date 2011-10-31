@@ -11,7 +11,7 @@ class Exploration extends AbstractRule implements IConstruction
 		return 'Průzkum';
 	}
 
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$cargo = array();
 		foreach($this->getContext()->rules->get('field', $event->target->type)->getProductionBonuses() as $name => $resource){
@@ -19,15 +19,15 @@ class Exploration extends AbstractRule implements IConstruction
 				$cargo[$name] = floor($resource * rand($this->getContext()->params['game']['stats']['minExplorationCoefficient'], $this->getContext()->params['game']['stats']['minExplorationCoefficient']));
 			}
 		}
-		$this->getContext()->model->getShipmentService()->create(array(
+		$shipment = $this->getContext()->model->getShipmentService()->create(array(
 			'type' => 'shipment',
-			'timeout' => 120 * $this->getContext()->model->getFieldRepository()->calculateDistance($event->owner->getHeadquarters(), $event->target),
 			'owner' => $event->owner,
 			'origin' => $event->target,
 			'target' => $event->owner->getHeadquarters(),
 			'cargo' => $cargo
 		), FALSE);
-
+		$shipment->setTimeout(120 * $this->getContext()->model->getFieldRepository()->calculateDistance($event->owner->getHeadquarters(), $event->target), $event->term);
+		$processor->queueEvent($shipment);
 		return $cargo;
 	}
 

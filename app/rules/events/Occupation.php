@@ -9,7 +9,7 @@ class Occupation extends Attack
 		return 'Dobyvačný útok';
 	}
 	
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$result = parent::process($event);
 		$model = $this->getContext()->model;

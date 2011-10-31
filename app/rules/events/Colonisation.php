@@ -11,7 +11,7 @@ class Colonisation extends AbstractRule implements IConstruction
 		return 'Kolonizace';
 	}
 
-	public function process (Entities\Event $event)
+	public function process (Entities\Event $event, $processor)
 	{
 		$event->target->setOwner($event->owner);
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
