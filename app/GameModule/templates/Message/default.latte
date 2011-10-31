@@ -18,7 +18,7 @@
 		</tr>
 		{?$i = 1}
 		{foreach $messages as $message}
-			<tr class="row{($i++ % 2) + 1}">
+			<tr class="row{($i++ % 2) + 1} {if !$message->read}unread{/if}">
 				<td>{$message->sender->nickname}</td>
 				<td><a href="{link Message:show $message->id}">{$message->subject}</a></td>
 				<td class="time">{$message->sentTime|date:"d.m.Y H:i"}</td>
