@@ -468,9 +468,17 @@ Game.map = {
 						var dX = mouseX - xKey;
 						var dY = -(mouseY - yKey); // More comfortable for analythic geometry
 						if ((4*dX + 3*dY - 172) > 0) { // Hardcore f**king analythic geometry
-							result = Game.map.map[field.coordX + 1][field.coordY];
+							if(Game.utils.isset(Game.map.map[field.coordX + 1])){
+								if(Game.utils.isset(Game.map.map[field.coordX + 1][field.coordY])){
+									result = Game.map.map[field.coordX + 1][field.coordY];
+								}
+							}
 						} else if ((4*dX - 3*dY - 292) > 0) { // More hardcore f**king analythic geometry
-							result = Game.map.map[field.coordX][field.coordY + 1];
+							if(Game.utils.isset(Game.map.map[field.coordX])){
+								if(Game.utils.isset(Game.map.map[field.coordX][field.coordY+1])){
+									result = Game.map.map[field.coordX][field.coordY + 1];
+								}
+							}
 						} else {
 							result = field;
 						}
