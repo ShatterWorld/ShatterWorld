@@ -12,7 +12,7 @@
 		<tr>
 			<th>Odesílatel</th>
 			<th>Předmět</th>
-			<th>Čas</th>
+			<th>Datum a čas</th>
 			<th>Přečtená</th>
 			<th>Smazat</th>
 		</tr>
@@ -21,7 +21,7 @@
 			<tr class="row{($i++ % 2) + 1}">
 				<td>{$message->sender->nickname}</td>
 				<td><a href="{link Message:show $message->id}">{$message->subject}</a></td>
-				<td></td>
+				<td class="time">{$message->sentTime|date:"d.m.Y H:i"}</td>
 				<td><a n:href="markRead! $message->id">Přečtená</a></td>
 				<td class="delete"><a n:href="deleteByRecipient! $message->id">X</a></td>
 			</tr>

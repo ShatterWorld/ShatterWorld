@@ -13,7 +13,7 @@
 		<tr>
 			<th>Příjemce</th>
 			<th>Předmět</th>
-			<th>Čas</th>
+			<th>Datum a čas</th>
 			<th>Smazat</th>
 		</tr>
 		{?$i = 1}
@@ -21,7 +21,7 @@
 			<tr class="row{($i++ % 2) + 1}">
 				<td>{$message->recipient->nickname}</td>
 				<td><a href="{link Message:show $message->id}">{$message->subject}</a></td>
-				<td></td>
+				<td class="time">{$message->sentTime|date:"d.m.Y H:i"}</td>
 				<td class="delete"><a n:href="deleteBySender! $message->id">X</a></td>
 			</tr>
 		{/foreach}

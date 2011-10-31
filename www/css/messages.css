@@ -32,3 +32,8 @@
 	text-align: center;
 }
 
+#receivedMessages .time, #sentMessages .time{
+	width: 140px;
+	text-align: center;
+}
+

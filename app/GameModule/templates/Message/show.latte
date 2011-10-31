@@ -12,6 +12,7 @@
 	<table id="message">
 		<tr><th>Odesílatel:</th><td>{$message->sender->nickname}</td></tr>
 		<tr><th>Příjemce:</th><td>{$message->recipient->nickname}</td></tr>
+		<tr><th>Datum a čas:</th><td>{$message->sentTime|date:"d.m.Y H:i"}</td></tr>
 		<tr><th>Předmět:</th><td>{$message->subject}</td></tr>
 		<tr><th>Zpráva:</th><td>{$message->body}</td></tr>
 	</table>
