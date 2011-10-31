@@ -136,9 +136,13 @@ class Graph
 		//Debugger::barDump($vertices);
 		//Debugger::barDump($this->maxVertice);
 
-		for ($k = 0; $k <= $this->maxVertice; $k++){
+/*		for ($k = 0; $k <= $this->maxVertice; $k++){
 			for ($i = 0; $i <= $this->maxVertice; $i++){
 				for ($j = 0; $j <= $this->maxVertice; $j++){
+					* */
+		foreach ($vertices as $k){
+			foreach ($vertices as $i){
+				foreach ($vertices as $j){
 					if ($this->data[$i][$k] + $this->data[$k][$j] < $this->data[$i][$j]){
 						$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
 						$this->floydRes[$i][$j]=$k;
@@ -152,11 +156,13 @@ class Graph
 
 	protected function findPath ($from, $to)
 	{
-		$k = $this->floydRes[$from][$to];
-		if ($k != 0){
-			$this->findPath($from, $k);
-			$this->path[] = $k;
-			$this->findPath($k, $to);
+		if (isset($this->floydRes[$from][$to])){
+			$k = $this->floydRes[$from][$to];
+			if ($k != 0){
+				$this->findPath($from, $k);
+				$this->path[] = $k;
+				$this->findPath($k, $to);
+			}
 		}
 	}
 

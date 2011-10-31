@@ -1,3 +1,8 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/messages.css" />
+{/block}
+
 {block #header}
 	Odeslané zprávy
 {/block}
@@ -11,12 +16,13 @@
 			<th>Čas</th>
 			<th>Smazat</th>
 		</tr>
+		{?$i = 1}
 		{foreach $messages as $message}
-			<tr>
+			<tr class="row{($i++ % 2) + 1}">
 				<td>{$message->recipient->nickname}</td>
 				<td><a href="{link Message:show $message->id}">{$message->subject}</a></td>
 				<td></td>
-				<td><a n:href="deleteBySender! $message->id">Smazat</a></td>
+				<td class="delete"><a n:href="deleteBySender! $message->id">X</a></td>
 			</tr>
 		{/foreach}
 	</table>
