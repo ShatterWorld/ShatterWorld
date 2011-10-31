@@ -20,9 +20,15 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		parent::beforeRender();
 		$clan = $this->getPlayerClan();
-		$this->template->orderCount = $this->context->stats->getAvailableOrders($clan);
+		if ($clan !== null){
+			$this->template->orderCount = $this->context->stats->getAvailableOrders($clan);
+			$this->template->reportCount = $clan ? $this->getReportRepository()->countUnread($clan) : 0;
+		}
+		else{
+			$this->template->orderCount = 0;
+			$this->template->reportCount = 0;
+		}
 		$this->template->orderCap = $this->context->params['game']['stats']['orderCap'];
-		$this->template->reportCount = $clan ? $this->getReportRepository()->countUnread($clan) : 0;
 	}
 
 	public function handleLogout ()

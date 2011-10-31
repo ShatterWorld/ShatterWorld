@@ -39,6 +39,19 @@ class Graph
 	protected $vertices;
 
 	/**
+	 * Max edge value
+	 * @var int
+	 */
+	protected $maxValue;
+
+	/**
+	 * Max edge value
+	 * @var int
+	 */
+	protected $maxKey;
+
+
+	/**
 	 * Constructor
 	 * @return Graph
 	 */
@@ -49,6 +62,8 @@ class Graph
 		$this->floydRes = array();
 		$this->pathUpdated = false;
 		$this->path = array();
+		$this->maxValue = -1;
+		$this->maxVertice = -1;
 	}
 
 	/**
@@ -73,6 +88,13 @@ class Graph
 		$this->vertices->addElement($from, 0);
 		$this->vertices->addElement($to, 0);
 		$this->pathUpdated = false;
+
+		if($from > $this->maxVertice){
+			$this->maxVertice = $from;
+		}
+		if($to > $this->maxVertice){
+			$this->maxVertice = $to;
+		}
 	}
 
 	/**
@@ -103,51 +125,52 @@ class Graph
 	protected function floydWarshall ()
 	{
 		$vertices = array_keys($this->data);
-		foreach($vertices as $k){
-			foreach($vertices as $i){
-				foreach($vertices as $j){
-					if(isset($this->data[$i][$k]) && isset($this->data[$k][$j])){
-						if(!isset($this->data[$i][$j])){
-							$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
-							$this->floydRes[$i][$j]=$k;
 
-						}
-						else{
-							if($this->data[$i][$k] + $this->data[$k][$j] < $this->data[$i][$j]){
-								$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
-								$this->floydRes[$i][$j]=$k;
-							}
-						}
-
-
-					}
-/*					if($this->data[$i][$k] + $this->data[$k][$j] < $this->data[$i][$j]){
-						$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
-						$this->floydRes[$i][$j]=$k;
-					}*/
+		for($i = 0; $i <= $this->maxVertice; $i++){
+			for($j = 0; $j <= $this->maxVertice; $j++){
+				if (!isset($this->data[$i][$j])){
+					$this->data[$i][$j] =  &$this->maxValue;
 				}
 			}
 		}
+		//Debugger::barDump($vertices);
+		//Debugger::barDump($this->maxVertice);
+
+		for ($k = 0; $k <= $this->maxVertice; $k++){
+			for ($i = 0; $i <= $this->maxVertice; $i++){
+				for ($j = 0; $j <= $this->maxVertice; $j++){
+					if ($this->data[$i][$k] + $this->data[$k][$j] < $this->data[$i][$j]){
+						$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
+						$this->floydRes[$i][$j]=$k;
+					}
+				}
+			}
+		}
+
 		$this->pathUpdated = true;
 	}
 
 	protected function findPath ($from, $to)
 	{
-		Debugger::barDump($this->floydRes);
-		if (isset($this->floydRes[$from][$to])){
-			$k = $this->floydRes[$from][$to];
-			$this->findPath($from,$k);
+		$k = $this->floydRes[$from][$to];
+		if ($k != 0){
+			$this->findPath($from, $k);
 			$this->path[] = $k;
-			Debugger::barDump($this->path);
-			$this->findPath($k,$to);
+			$this->findPath($k, $to);
 		}
 	}
 
 	public function getPath ($from, $to)
 	{
+		$this->path = array();
 		//Debugger::barDump($this->pathUpdated);
-		if(!$this->pathUpdated) $this->floydWarshall();
+
+		if(!$this->pathUpdated){
+			$this->floydWarshall();
+		}
+
 		//Debugger::barDump($this->pathUpdated);
+
 		$this->findPath($from, $to);
 		Debugger::barDump($this->path);
 		return $this->path;
