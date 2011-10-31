@@ -22,11 +22,13 @@ abstract class BasePresenter extends \BasePresenter
 		$clan = $this->getPlayerClan();
 		if ($clan !== null){
 			$this->template->orderCount = $this->context->stats->getAvailableOrders($clan);
-			$this->template->reportCount = $clan ? $this->getReportRepository()->countUnread($clan) : 0;
-		}
-		else{
+			$this->template->reportCount = $this->getReportRepository()->countUnread($clan);
+			$this->template->resources = $this->getResourceRepository()->getResourcesArray($clan);
+			ksort($this->template->resources);
+		} else {
 			$this->template->orderCount = 0;
 			$this->template->reportCount = 0;
+			$this->template->resources = array();
 		}
 		$this->template->orderCap = $this->context->params['game']['stats']['orderCap'];
 	}
@@ -62,17 +64,6 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		$this->invalidateControl('flashes');
 		parent::flashMessage($message, $type);
-	}
-
-	/**
-	 * Send resources list via ajax
-	 * @return void
-	 */
-	public function handleFetchResources ()
-	{
-		$clan = $this->getPlayerClan();
-		$this->payload->resources = $clan ? $this->getResourceRepository()->getResourcesArray($clan) : NULL;
-		$this->sendPayload();
 	}
 
 	/**

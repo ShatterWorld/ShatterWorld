@@ -44,17 +44,6 @@ Game.resources = {
 	 */
 	setup: function ()
 	{
-		var keys = new Array();
-		$.each(this.data, function (key, value) {
-			keys.push(key);
-		});
-		keys.sort();
-		$('#resourceBar').html('');
-		$.each(keys, function() {
-			var element = $('<span />').attr('id', this);
-			element.html('<img src="'+basePath+'/images/resources/'+this+'.png"/> <span class="text"><span class="balance"></span>/<span class="storage"></span> (<span class="production"></span>)</span> ');
-			$('#resourceBar').append(element);
-		})
 		this.update();
 		this.initialized = true;
 	},
@@ -66,21 +55,18 @@ Game.resources = {
 	update: function ()
 	{
 
-		if(Game.utils.isset(this.intervals)){
+		if (Game.utils.isset(this.intervals)) {
 			$.each(this.intervals, function (key, interval) {
 				clearInterval(interval);
 			});
-}
+		}
 		this.intervals = new Array();
 
 		var period;
 
 		$.each(this.data, function (resource, value) {
-
-
 			var span = $('#resourceBar #' + resource + ' .text');
-
-			var incrementFunction = function(){
+			var incrementFunction = function () {
 				var production = Game.resources.data[resource].production;
 				var balance = Game.resources.data[resource].balance;
 				var storage = Game.resources.data[resource].storage;
@@ -90,9 +76,6 @@ Game.resources = {
 					$(this).html(Math.floor(balance)).fadeIn(250);
 				});
 */
-				$(span).children('.storage').html(storage);
-
-				$(span).children('.production').html((production >= 0 ? '+' : '') + Math.floor(production * 3600));
 				if (balance >= storage) {
 					$(span).children('.balance').addClass('resourceFull');
 					return;
@@ -100,16 +83,14 @@ Game.resources = {
 					$(span).children('.balance').removeClass('resourceFull');
 				}
 
-				if(balance < 0){
+				if (balance < 0) {
 					period = 0;
 					$(span).children('.balance').html('0');
 					return;
-				}
-				else if(production == 0){
+				} else if (production == 0) {
 					period = 0;
 					return;
-				}
-				else{
+				} else {
 					period = 1000/Math.abs(production);
 				}
 
@@ -135,26 +116,24 @@ Game.resources = {
 	 */
 	fetchResources: function ()
 	{
-		this.isFetching=true;
-		$.getJSON('?do=fetchResources', function(data) {
-			if (data === null || data['resources'] === null){
-				return;
-			}
+		this.isFetching = true;
+		data = $('#resourceBar').data('resources');
+		if (data === null) {
+			return;
+		}
 
-			Game.resources.data = data['resources'];
-			if (!Game.resources.initialized) {
-				Game.resources.setup();
-			} else {
-				Game.resources.update();
-			}
+		this.data = data;
+		if (!this.initialized) {
+			this.setup();
+		} else {
+			this.update();
+		}
 
-			Game.descriptions.isFetching = false;
+		this.isFetching = false;
 
-			while (fnc = Game.resources.callbackStack.pop()){
-				fnc();
-			}
-
-		});
+		while (fnc = this.callbackStack.pop()){
+			fnc();
+		}
 	},
 
 	/**

@@ -67,9 +67,19 @@
 			</div>
 
 			<div id="infoBar">
-				<div id="resourceBar">
-					<span class="text">&nbsp;</span>
+				{snippet resources}
+				<div id="resourceBar" data-resources="{$resources|json}">
+					{foreach $resources as $resource => $data}
+					<span class="text" id="{$resource}">
+						<img src="{$basePath}/images/resources/{$resource}.png" />
+						<span class="text">
+							<span class="balance{if $data['balance'] >= $data['storage']} resourceFull{/if}">{intval($data['balance'])}</span>/<span class="storage">{$data['storage']}</span>
+							 (<span class="production">{if $data['production'] > 0}+{/if}{intval($data['production'] * 3600)}</span>)
+						</span>
+					</span>
+					{/foreach}
 				</div>
+				{/snippet}
 				{snippet reports}
 				<div id="reportBar" n:if="$reportCount > 0">
 					<a n:href="Report:" class="text">{$reportCount}</a>
