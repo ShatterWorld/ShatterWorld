@@ -597,22 +597,7 @@ Game.map.tooltip = {
 		.append('<th>Úroveň</th><td id="level"></td>')
 		.append('</tr>')
 
-		.append('</table>')
-
-		.css({
-			'background' : '#5D6555',
-			'color' : 'white',
-			'border' : '1px solid white',
-			'padding' : '3px',
-			'min-width' : '180px',
-			'position' : 'absolute',
-			'display' : 'none',
-			'-ms-filter' : "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)",
-			'-moz-opacity' : '0.9',
-			'opacity' : '0.9'
-	}),
-
-
+		.append('</table>'),
 
 	field : null,
 
