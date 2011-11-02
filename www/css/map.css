@@ -40,3 +40,25 @@
 	padding: 1px;
 
 }
+#contextMenu {
+	background : #5D6555;
+	border : white 1px solid;
+	color : white;
+	padding : 5px;
+	width : 150px;
+	position : absolute;
+	-ms-filter : "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
+	-moz-opacity : 0.9;
+	opacity : 0.9;
+}
+
+#contextMenu a {
+	display: block;
+	padding: 3px;
+}
+
+#contextMenu a:hover {
+	background: #ABB99C;
+	color: #000;
+	text-decoration: none;
+}
