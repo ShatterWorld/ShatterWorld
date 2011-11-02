@@ -26,9 +26,7 @@ class UnitPresenter extends BasePresenter
 
 		$resources = array();
 		foreach ($this->context->rules->getAll('resource') as $name => $rule) {
-			//if ($rule instanceof IConstructionFacility) {
-				$resources[$name] = $rule;
-			//}
+			$resources[$name] = $rule;
 		}
 
 		$units = $this->context->rules->getAll('unit');
@@ -53,8 +51,8 @@ class UnitPresenter extends BasePresenter
 		}
 
 
-		$this->template->resources = $resources;
-		$this->template->units = $units;
+		$this->template->resourceRules = $resources;
+		$this->template->unitRules = $units;
 		$this->template->trainingTimes = $trainingTimes;
 		$this->template->slots = $slots;
 		$this->template->totalSlots = $this->context->stats->getTotalUnitSlots($this->getPlayerClan());
