@@ -9,12 +9,6 @@
 var Game = Game || {};
 Game.map = {
 	/**
-	 * Basepath
-	 * @var string
-	 */
-	getBasepath : function () {return basePath},
-
-	/**
 	 * Indexed map
 	 * @var JSON
 	 */
@@ -222,7 +216,7 @@ Game.map = {
 					Game.map.maxYPos = Math.max(posY, Game.map.maxYPos);
 
 					var borderType = 'neutral';
-					var background = "url('"+Game.map.getBasepath()+"/images/fields/hex_"+field['type']+".png')";
+					var background = "url('"+basePath+"/images/fields/hex_"+field['type']+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
 					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
 					div.attr('style', divStyle);
