@@ -41,17 +41,17 @@
 				{if $name !== 'send'}
 					{?$cost}
 					{foreach $resources as $key => $res}
-						{?$tmpCost = $units[$name]->getCost()}
+						{?$tmpCost = $unitRules[$name]->getCost()}
 						{?$cost[$key] = 0}
 						{ifset $tmpCost[$key]}{?$cost[$key] = $tmpCost[$key]}{/ifset}
 					{/foreach}
 
-					<tr class="unit" data-costs="{$cost|json}" data-difficulty="{$units[$name]->getDifficulty()|json}">
+					<tr class="unit" data-costs="{$cost|json}" data-difficulty="{$unitRules[$name]->getDifficulty()|json}">
 						<th class="name">
 							{label $name /}
 						</th>
 						<td class="force">
-							{$units[$name]->getAttack()}/{$units[$name]->getDefense()}
+							{$unitRules[$name]->getAttack()}/{$unitRules[$name]->getDefense()}
 						</td>
 						{foreach $resources as $key => $res}
 							<td class="costs-{$key}">
@@ -60,7 +60,7 @@
 						{/foreach}
 						<td class="difficulty">
 							{?$first = true}
-							{foreach $units[$name]->getDifficulty() as $key => $diff}
+							{foreach $unitRules[$name]->getDifficulty() as $key => $diff}
 								{?$d = 0}
 								{ifset $diff}{?$d = $diff}{/ifset}
 								{if !$first}/{/if}

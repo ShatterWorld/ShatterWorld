@@ -9,12 +9,6 @@
 var Game = Game || {};
 Game.map = {
 	/**
-	 * Basepath
-	 * @var string
-	 */
-	getBasepath : function () {return basePath},
-
-	/**
 	 * Indexed map
 	 * @var JSON
 	 */
@@ -222,7 +216,7 @@ Game.map = {
 					Game.map.maxYPos = Math.max(posY, Game.map.maxYPos);
 
 					var borderType = 'neutral';
-					var background = "url('"+Game.map.getBasepath()+"/images/fields/hex_"+field['type']+".png')";
+					var background = "url('"+basePath+"/images/fields/hex_"+field['type']+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
 					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
 					div.attr('style', divStyle);
@@ -603,22 +597,7 @@ Game.map.tooltip = {
 		.append('<th>Úroveň</th><td id="level"></td>')
 		.append('</tr>')
 
-		.append('</table>')
-
-		.css({
-			'background' : '#5D6555',
-			'color' : 'white',
-			'border' : '1px solid white',
-			'padding' : '3px',
-			'min-width' : '180px',
-			'position' : 'absolute',
-			'display' : 'none',
-			'-ms-filter' : "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)",
-			'-moz-opacity' : '0.9',
-			'opacity' : '0.9'
-	}),
-
-
+		.append('</table>'),
 
 	field : null,
 
@@ -759,28 +738,13 @@ Game.map.contextMenu = {
 	 * @var String/Object
 	 */
 	contextMenu : $('<div id="contextMenu" />')
-		.html('<h3>Akce:</h3>')
-		.css({
-			'background' : "#5D6555",
-			'border' : "white 1px solid",
-			'color' : "white",
-			'padding' : '5px',
-			'width' : "150px",
-			'position' : "absolute",
-			'-ms-filter' : "'progid:DXImageTransform.Microsoft.Alpha(Opacity=90)'",
-			'-moz-opacity' : "0.9",
-			'opacity' : "0.9"
-		}),
+		.html('<h3>Akce:</h3>'),
 
 	/**
 	 * Representing a div used in #contextMenu
 	 * @var String/Object
 	 */
-	basicActionDiv : $('<div class="action" />')
-		.css({
-			'cursor' : "pointer",
-			'text-decoration' : "underline"
-		}),
+	basicActionDiv : $('<a href="#" />').click(function (e) {e.preventDefault()}),
 
 	/**
 	 * Displays context menu
@@ -871,7 +835,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addColonisationAction: function(target) {
-		var actionDiv = this.basicActionDiv.clone().html('Kolonizace');
+		var actionDiv = this.basicActionDiv.clone(true).html('Kolonizace');
 
 		Game.spinner.show(Game.map.contextMenu.contextMenu);
 		Game.utils.signal('fetchColonisationCost', {'targetId': target['id']}, function(data) {
@@ -902,7 +866,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addAttackAction: function (from){
-		var actionDiv = this.basicActionDiv.clone().html('Útok*');
+		var actionDiv = this.basicActionDiv.clone(true).html('Útok*');
 
 		actionDiv.click(function(){
 			var attackDialog = $('<div />').attr('id', 'attackDialog')
@@ -1046,7 +1010,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addUpgradeFacilityAction: function (target){
-		var actionDiv = this.basicActionDiv.clone().html('Upgradovat budovu');
+		var actionDiv = this.basicActionDiv.clone(true).html('Upgradovat budovu');
 
 		var upgrade = this.upgrades[target['facility']][target['level']+1];
 		if(upgrade !== null){
@@ -1080,7 +1044,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addDowngradeFacilityAction: function (target){
-		var actionDiv = this.basicActionDiv.clone().html('Downgradovat budovu');
+		var actionDiv = this.basicActionDiv.clone(true).html('Downgradovat budovu');
 		var downgrade = this.downgrades[target['facility']][target['level']-1];
 		if(downgrade !== null){
 			if (Game.resources.hasSufficientResources(downgrade['cost'])){
@@ -1112,7 +1076,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addDestroyFacilityAction: function (target){
-		var actionDiv = this.basicActionDiv.clone().html('Strhnout budovu');
+		var actionDiv = this.basicActionDiv.clone(true).html('Strhnout budovu');
 		var destroy = this.demolitions[target['facility']][target['level']];
 
 		if(destroy !== null){
@@ -1144,12 +1108,12 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addBuildFacilityAction: function (target){
-		var actionDiv = this.basicActionDiv.clone().html('Postavit budovu');
+		var actionDiv = this.basicActionDiv.clone(true).html('Postavit budovu');
 		actionDiv.click(function(){
 			$('#contextMenu').html('Budovy:');
 
 			$.each(Game.map.contextMenu.facilities, function(name, facility) {
-				var facilityDiv = Game.map.contextMenu.basicActionDiv.clone();
+				var facilityDiv = Game.map.contextMenu.basicActionDiv.clone(true);
 				if (Game.resources.hasSufficientResources(facility['cost'])){
 
 					facilityDiv.click(function(){
@@ -1186,7 +1150,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addLeaveFieldAction: function(target) {
-		var actionDiv = this.basicActionDiv.clone().html('Opustit pole');
+		var actionDiv = this.basicActionDiv.clone(true).html('Opustit pole');
 		actionDiv.click(function(){
 		Game.spinner.show(Game.map.contextMenu.contextMenu);
 		Game.utils.signal('leaveField', {'targetId': target['id']}, function () {
@@ -1208,7 +1172,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addExplorationAction: function(target) {
-		var actionDiv = this.basicActionDiv.clone().html('Průzkum');
+		var actionDiv = this.basicActionDiv.clone(true).html('Průzkum');
 		Game.spinner.show(Game.map.contextMenu.contextMenu);
 		Game.utils.signal('fetchExplorationCost', {'targetId': target['id']}, function(data) {
 			Game.spinner.hide();
@@ -1239,7 +1203,7 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addCancelAction: function (){
-		var actionDiv = this.basicActionDiv.clone().html('Zrušit');
+		var actionDiv = this.basicActionDiv.clone(true).html('Zrušit');
 		actionDiv.click(function(){
 			Game.map.marker.unmarkAll('red');
 			Game.map.contextMenu.hide();
