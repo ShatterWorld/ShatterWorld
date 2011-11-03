@@ -62,6 +62,7 @@ class Clan extends BaseRepository
 				if($depths->offsetGet($id) < 1) continue;
 
 				$dvcId = $dvc->id;
+				if ($dvcId != $id)
 				$graph->addEdge($id, $dvcId, $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters));
 
 				if ($depths->offsetExists($dvcId)){

@@ -121,65 +121,90 @@ class Graph
 		$this->pathUpdated = false;
 	}
 
+	/**
+	 * Get the value of vertrice if isset, -1 otherwise
+	 * @param int
+	 * @param int
+	 * @return int
+	 */
+	protected function getDijkstraData($i, $j){
+		if (isset($this->data[$i][$j])){
+			return $this->data[$i][$j];
+		}
+		return -1;
 
-	protected function floydWarshall ()
+	}
+
+	/**
+	 * Finds all shortest path from vertice given to all other vertices, -1 if the path doesnt exist
+	 * @param int
+	 * @return array of int
+	 */
+	protected function dijkstra ($from)
 	{
-		$vertices = array_keys($this->data);
+		/*memorize the path*/
+		$N = 414; //hard madafaka
+		$lengths = array();
+		$def = array();
 
-		for($i = 0; $i <= $this->maxVertice; $i++){
-			for($j = 0; $j <= $this->maxVertice; $j++){
-				if (!isset($this->data[$i][$j])){
-					$this->data[$i][$j] =  &$this->maxValue;
+//Debugger::barDump($N);
+//Debugger::barDump($from);
+//Debugger::barDump($this->getDijkstraData($from, 412));
+
+		for ($i = 0; $i <= $N; $i++){
+			$def[$i] = false;
+			$lengths[$i] = -1;
+		}
+
+//Debugger::barDump($lengths);
+		$def[$from] = true;
+		$lengths[$from] = 0;
+
+		$c = 0;
+		do{
+			//$c++;
+			$w = 0;
+
+			for ($i = 0; $i <= $N; $i++){
+				if ((!$def[$i]) && (($w == 0) || ($lengths[$i] < $lengths[$w]))){
+					$w = $i;
+					//Debugger::barDump($w);
 				}
 			}
-		}
-		//Debugger::barDump($vertices);
-		//Debugger::barDump($this->maxVertice);
+Debugger::barDump($w);
 
-/*		for ($k = 0; $k <= $this->maxVertice; $k++){
-			for ($i = 0; $i <= $this->maxVertice; $i++){
-				for ($j = 0; $j <= $this->maxVertice; $j++){
-					* */
-		foreach ($vertices as $k){
-			foreach ($vertices as $i){
-				foreach ($vertices as $j){
-					if ($this->data[$i][$k] + $this->data[$k][$j] < $this->data[$i][$j]){
-						$this->data[$i][$j] = $this->data[$i][$k] + $this->data[$k][$j];
-						$this->floydRes[$i][$j]=$k;
+			if ($w != 0){
+				$def[$w] = true;
+				//Debugger::barDump($def[$w]);
+				for ($i = 0; $i <= $N; $i++){
+					//Debugger::barDump($this->getDijkstraData($w, $i));
+					if (($this->getDijkstraData($w, $i) != -1) && ($lengths[$w] + $this->getDijkstraData($w, $i) < $lengths[$i])){
+						$lengths[$i] = $lengths[$w] + $this->getDijkstraData($w, $i);
+						Debugger::barDump($lengths[$i]);
 					}
 				}
 			}
-		}
 
-		$this->pathUpdated = true;
+		}while($w != 0);
+
+//Debugger::barDump($lengths);
+//Debugger::barDump($def);
+
+		return $lengths;
 	}
 
-	protected function findPath ($from, $to)
-	{
-		if (isset($this->floydRes[$from][$to])){
-			$k = $this->floydRes[$from][$to];
-			if ($k != 0){
-				$this->findPath($from, $k);
-				$this->path[] = $k;
-				$this->findPath($k, $to);
-			}
-		}
-	}
-
+	/**
+	 * Finds shortest path from/to vertices given
+	 * @param int
+	 * @param int
+	 * @return array of vertrices
+	 */
 	public function getPath ($from, $to)
 	{
-		$this->path = array();
-		//Debugger::barDump($this->pathUpdated);
-
-		if(!$this->pathUpdated){
-			$this->floydWarshall();
-		}
-
-		//Debugger::barDump($this->pathUpdated);
-
-		$this->findPath($from, $to);
-		Debugger::barDump($this->path);
-		return $this->path;
+		/*needs cond.*/
+		$res = $this->dijkstra($from);
+		return $res;
+		/*return clans, not dijkstra output*/
 	}
 
 }
