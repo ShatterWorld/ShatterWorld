@@ -164,7 +164,7 @@ Game.resources = {
 	printAvailableUnitCount : function (costs, totalCosts, slots, availableSlots, selector){
 
 
-		if (this.isFetching || !Game.utils.isset(null)){
+		if (this.isFetching){
 			this.callbackStack.push(function(){
 
 				var min = null;
