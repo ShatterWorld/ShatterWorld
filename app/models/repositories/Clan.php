@@ -44,6 +44,11 @@ class Clan extends BaseRepository
 	 */
 	public function getDealersGraph ($clan, $initDepth)
 	{
+
+		/*
+		 * if cached, return it
+		 * */
+
 		$fifo = ArraySet::from($this->getVisibleClans($clan));
 		$depths = new ArraySet();
 		$dealers = new ArraySet();
