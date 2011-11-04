@@ -6,19 +6,16 @@ use Nette\Diagnostics\Debugger;
  * Report service class
  * @author Petr Bělohlávek
  */
-class Report extends BaseService {
-
-	public function markRead ($report)
-	{
-		$this->update($report, array('read' => true));
-	}
-
+class Report extends BaseService 
+{
 	public function markReadAll ($clan)
 	{
-		foreach($this->context->model->getReportRepository()->findByOwner($clan) as $report){
-			$this->markRead($report);
-		}
+		$qb = $this->entityManager->createQueryBuilder();
+		$qb->update($this->entityClass, 'r')
+			->set('r.read', '?1')
+			->where('r.owner', '?2');
+		$qb->setParameter(1, TRUE);
+		$qb->setParameter(2, $clan->id);
+		$qb->getQuery()->execute();
 	}
-
-
 }

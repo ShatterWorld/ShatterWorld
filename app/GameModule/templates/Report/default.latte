@@ -1,6 +1,8 @@
 {block #content}
 {if $reports}
-<div n:foreach="$reports as $report" class="report">
+<a n:href="markRead!">Označit všechna hlášení jako přečtená</a>
+{control pager}
+<div n:foreach="$reports as $report" class="report {$report->read ? 'read' : 'unread'}">
 {?$rule = $rules->get('event', $report->event->type)}
 <h2>{$rule->getDescription()}</h2>
 <span class="date">{$report->event->term|date:"Y-m-d H:i:s"}</span>
@@ -16,6 +18,7 @@
 {/foreach}
 </div>
 </div>
+{control pager}
 {else}
 Žádné zprávy k zobrazení
 {/if}

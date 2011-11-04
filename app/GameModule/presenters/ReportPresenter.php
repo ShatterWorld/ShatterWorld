@@ -1,17 +1,24 @@
 <?php
 namespace GameModule;
 use Grid;
+use Pager;
 use Nette;
 
 class ReportPresenter extends BasePresenter
 {
-	public function renderDefault ()
+	public function renderDefault ($page = 1)
 	{
-		$this->template->reports = $this->getReportRepository()->findByOwner($this->getPlayerClan());
+		$pageLength = 10;
+		$this['pager']->setup($this->getReportRepository()->getCount($this->getPlayerClan()), $pageLength, $page);
+		$this->template->reports = $this->getReportRepository()->getPage($this->getPlayerClan(), $pageLength, $page);
 		$this->template->rules = $this->context->rules;
+	}
+	
+	public function handleMarkRead ()
+	{
 		$this->getReportService()->markReadAll($this->getPlayerClan());
 	}
-
+	
 	protected function createComponentUnitGrid ()
 	{
 		return new Grid($this, 'unitGrid', $this->context->rules->getDescriptions('unit'));
@@ -20,5 +27,10 @@ class ReportPresenter extends BasePresenter
 	protected function createComponentResourceGrid ()
 	{
 		return new Grid($this, 'resourceGrid', $this->context->rules->getDescriptions('resource'));
+	}
+	
+	protected function createComponentPager ()
+	{
+		return new Pager;
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Rules\Events;
 use Rules\AbstractRule;
+use ReportItem;
+use DataRow;
 use Entities;
 
 abstract class Attack extends AbstractRule implements IEvent
@@ -98,6 +100,25 @@ abstract class Attack extends AbstractRule implements IEvent
 		return $event->target->owner !== NULL && 
 			$event->target->owner !== $event->owner && 
 			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance);
+	}
+	
+	public function formatReport (Entities\Report $report)
+	{
+		$data = $report->data;
+		$message = array(
+			ReportItem::create('unitGrid', array(
+				DataRow::from($data['attacker']['units'])->setLabel('Jednotky'),
+				DataRow::from($data['attacker']['casualties'])->setLabel('Ztráty')
+			))->setHeading('Útočník'),
+			ReportItem::create('unitGrid', array(
+				DataRow::from($data['defender']['units'])->setLabel('Jednotky'),
+				DataRow::from($data['defender']['casualties'])->setLabel('Ztráty')
+			))->setHeading('Obránce')
+		);
+		if ($data['attacker']['loot']) {
+			$message[] = ReportItem::create('resourceGrid', array($data['attacker']['loot']))->setHeading('Kořist');
+		}
+		return $message;
 	}
 	
 	public function isReturning ()

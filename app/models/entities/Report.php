@@ -17,6 +17,13 @@ class Report extends BaseEntity
 	private $event;
 
 	/**
+	 * @ManyToOne(targetEntity = "Entities\Clan")
+	 * @JoinColumn(onDelete = "CASCADE")
+	 * @var Entities\Clan
+	 */
+	private $owner;
+	
+	/**
 	 * @Column(type = "string")
 	 * @var string
 	 */
@@ -36,6 +43,7 @@ class Report extends BaseEntity
 	public function __construct (Event $event, $data = array())
 	{
 		$this->event = $event;
+		$this->owner = $event->owner;
 		$this->data = Json::encode($data);
 		$this->read = FALSE;
 	}
@@ -49,6 +57,15 @@ class Report extends BaseEntity
 		return $this->event;
 	}
 
+	/**
+	 * Owner getter
+	 * @return Entities\Clan
+	 */
+	public function getOwner ()
+	{
+		return $this->owner;
+	}
+	
 	/**
 	 * Data getter
 	 * @return object
