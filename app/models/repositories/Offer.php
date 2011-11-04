@@ -47,8 +47,8 @@ class Offer extends BaseRepository
 		foreach($offers as $offer){
 			if($dealers->offsetExists($offer->owner->id)){
 				$visibleOffers[] = $offer;
-				//$path = $graph->getPath($clan->id, $offer->owner->id);
-				//Debugger::barDump($path);
+				$path = $graph->getPath($clan->id, $offer->owner->id);
+				Debugger::barDump($path);
 			}
 		}
 

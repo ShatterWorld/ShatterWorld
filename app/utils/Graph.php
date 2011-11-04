@@ -21,12 +21,6 @@ class Graph
 	protected $floydRes;
 
 	/**
-	 * The shortest path
-	 * @var array of int
-	 */
-	protected $path;
-
-	/**
 	 * Is floydRes updated?
 	 * @var boolean
 	 */
@@ -39,19 +33,6 @@ class Graph
 	protected $vertices;
 
 	/**
-	 * Max edge value
-	 * @var int
-	 */
-	protected $maxValue;
-
-	/**
-	 * Max edge value
-	 * @var int
-	 */
-	protected $maxKey;
-
-
-	/**
 	 * Constructor
 	 * @return Graph
 	 */
@@ -61,9 +42,6 @@ class Graph
 		$this->data = array();
 		$this->floydRes = array();
 		$this->pathUpdated = false;
-		$this->path = array();
-		$this->maxValue = -1;
-		$this->maxVertice = -1;
 	}
 
 	/**
@@ -89,12 +67,6 @@ class Graph
 		$this->vertices->addElement($to, 0);
 		$this->pathUpdated = false;
 
-		if($from > $this->maxVertice){
-			$this->maxVertice = $from;
-		}
-		if($to > $this->maxVertice){
-			$this->maxVertice = $to;
-		}
 	}
 
 	/**
@@ -122,17 +94,34 @@ class Graph
 	}
 
 	/**
-	 * Get the value of vertrice if isset, -1 otherwise
-	 * @param int
-	 * @param int
+	 * Returns and unset the smallest element
+	 * @param *array of int
 	 * @return int
 	 */
-	protected function getDijkstraData($i, $j){
-		if (isset($this->data[$i][$j])){
-			return $this->data[$i][$j];
+	protected function popSmallest(&$arr){
+		$value = null;
+		$key = null;
+		foreach($arr as $arrKey => $item){
+			if($value === null || $item < $value){
+				$value = $item;
+				$key = $arrKey;
+			}
 		}
-		return -1;
+		unset($arr[$key]);
+		return $value;
+	}
 
+	/**
+	 * Returns the array of ids of all vertices which can be accessed from vertice id given
+	 * @param int
+	 * @return array of int
+	 */
+	protected function getNeighbours($from){
+		$neighbours = array();
+		foreach($this->data[$from] as $key => $value){
+			$neighbours[$key] = $value;
+		}
+		return $neighbours;
 	}
 
 	/**
@@ -142,55 +131,31 @@ class Graph
 	 */
 	protected function dijkstra ($from)
 	{
-		/*memorize the path*/
-		$N = 414; //hard madafaka
+		//init
 		$lengths = array();
-		$def = array();
-
-//Debugger::barDump($N);
-//Debugger::barDump($from);
-//Debugger::barDump($this->getDijkstraData($from, 412));
-
-		for ($i = 0; $i <= $N; $i++){
-			$def[$i] = false;
-			$lengths[$i] = -1;
+		$prevVertices = array();
+		$vertices = array_keys($this->data);
+		foreach ($vertices as $key => $vertice){
+			$lengths[$vertice] = 100000;
+			$prevVertices[$vertice] = null;
 		}
-
-//Debugger::barDump($lengths);
-		$def[$from] = true;
 		$lengths[$from] = 0;
 
-		$c = 0;
-		do{
-			//$c++;
-			$w = 0;
+		// alg
+		while(count($vertices) > 0){
+			$u = $this->popSmallest($vertices);//id
+			$neighbours = $this->getNeighbours($u);
 
-			for ($i = 0; $i <= $N; $i++){
-				if ((!$def[$i]) && (($w == 0) || ($lengths[$i] < $lengths[$w]))){
-					$w = $i;
-					//Debugger::barDump($w);
+			foreach($neighbours as $key => $neighbour){
+				$potentialLength = $lengths[$u] + $neighbour;
+				if($potentialLength < $lengths[$key]){
+					$lengths[$key] = $potentialLength;
+					$prevVertices[$key] = $u;
 				}
 			}
-Debugger::barDump($w);
+		}
 
-			if ($w != 0){
-				$def[$w] = true;
-				//Debugger::barDump($def[$w]);
-				for ($i = 0; $i <= $N; $i++){
-					//Debugger::barDump($this->getDijkstraData($w, $i));
-					if (($this->getDijkstraData($w, $i) != -1) && ($lengths[$w] + $this->getDijkstraData($w, $i) < $lengths[$i])){
-						$lengths[$i] = $lengths[$w] + $this->getDijkstraData($w, $i);
-						Debugger::barDump($lengths[$i]);
-					}
-				}
-			}
-
-		}while($w != 0);
-
-//Debugger::barDump($lengths);
-//Debugger::barDump($def);
-
-		return $lengths;
+		return $prevVertices;
 	}
 
 	/**
@@ -201,10 +166,18 @@ Debugger::barDump($w);
 	 */
 	public function getPath ($from, $to)
 	{
-		/*needs cond.*/
-		$res = $this->dijkstra($from);
-		return $res;
-		/*return clans, not dijkstra output*/
+		/*needs prev. routes saving (by $from)/even caching?*/
+		$routes = $this->dijkstra($from);
+
+		$path = array();
+		$tmp = $routes[$to];
+		while($tmp !== null){
+			array_unshift($path, $tmp);
+			$tmp = $routes[$tmp];
+		}
+		array_shift($path);
+
+		return $path;
 	}
 
 }
