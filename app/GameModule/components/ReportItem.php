@@ -29,11 +29,21 @@ class ReportItem extends Nette\Object
 	 * @param mixed
 	 * @param string
 	 */
-	public function __construct ($type, $data, $heading = NULL)
+	public function __construct ($type, $data)
 	{
 		$this->type = $type;
-		$this->heading = $heading;
 		$this->data = $data;
+	}
+	
+	/**
+	 * A static constructor
+	 * @param string
+	 * @param array
+	 * @return ReportItem
+	 */
+	public static function create ($type, $data)
+	{
+		return new static($type, $data);
 	}
 	
 	/**
@@ -52,6 +62,17 @@ class ReportItem extends Nette\Object
 	public function getHeading ()
 	{
 		return $this->heading;
+	}
+	
+	/**
+	 * Heading setter
+	 * @param string
+	 * @return ReportItem
+	 */
+	public function setHeading ($heading)
+	{
+		$this->heading = $heading;
+		return $this;
 	}
 	
 	/**

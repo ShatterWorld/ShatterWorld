@@ -26,7 +26,7 @@ class UnitTraining extends AbstractRule implements IConstruction
 	public function formatReport (Entities\Report $report)
 	{
 		return array(
-			new ReportItem('unitGrid', (array) Json::decode($report->event->construction))
+			ReportItem::create('unitGrid', array((array) Json::decode($report->event->construction)))
 		);
 	}
 	

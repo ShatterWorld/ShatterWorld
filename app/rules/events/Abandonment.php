@@ -27,7 +27,7 @@ class Abandonment extends AbstractRule implements IConstruction
 	public function formatReport (Entities\Report $report)
 	{
 		return array(
-			new ReportItem('text', "Opustili jsme území.")
+			ReportItem::create('text', "Opustili jsme území.")
 		);
 	}
 	

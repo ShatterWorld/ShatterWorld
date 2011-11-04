@@ -36,7 +36,7 @@ class Colonisation extends AbstractRule implements IConstruction
 	public function formatReport (Entities\Report $report)
 	{
 		return array(
-			new ReportItem('text', 'Úspěšně jsme připojili další území k našemu teritoriu!')
+			ReportItem::create('text', 'Úspěšně jsme připojili další území k našemu teritoriu!')
 		);
 	}
 

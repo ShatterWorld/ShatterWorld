@@ -1,13 +1,19 @@
 <h3 n:if="$heading">{$heading}</h3>
 <table>
 <tr>
+<td>
+&nbsp;
+</td>
 <td n:foreach="$columns as $key => $label">
 {$label}
 </td>
 </tr>
-<tr>
+<tr n:foreach="$data as $object">
+<td>
+{$object instanceof DataRow ? $object->getLabel() : ''}
+</td>
 <td n:foreach="$columns as $key => $label">
-{isset($data[$key]) ? $data[$key] : 0}
+{isset($object[$key]) ? $object[$key] : 0}
 </td>
 </tr>
 </table>

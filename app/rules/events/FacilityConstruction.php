@@ -33,7 +33,7 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 		$facility = $this->getContext()->rules->get('facility', $report->event->construction)->getDescription();
 		$level = $report->event->level;
 		return array(
-			new ReportItem('text', $level == 1 ? sprintf("Budova %s byla dostavena.", $facility) : sprintf("Budova %s byla vylepšena na úroveň %s.", $facility, $level))
+			ReportItem::create('text', $level == 1 ? sprintf("Budova %s byla dostavena.", $facility) : sprintf("Budova %s byla vylepšena na úroveň %s.", $facility, $level))
 		);
 	}
 	
