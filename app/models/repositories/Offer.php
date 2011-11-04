@@ -29,10 +29,8 @@ class Offer extends BaseRepository
 		$qb->setParameter(2, false);
 
 		$offers = $qb->getQuery()->getResult();
-		//Debugger::barDump($offers);
 
 		$clanRepository = $this->context->model->getClanRepository();
-
 		$graph = $clanRepository->getDealersGraph($clan, $depth);
 		//Debugger::barDump($graph);
 		$dealersIds = $graph->getVertices();
@@ -41,20 +39,49 @@ class Offer extends BaseRepository
 		foreach($dealersIds as $id){
 			$dealers->addElement($id, $clanRepository->find($id));
 		}
-		//Debugger::barDump($dealers);
 
 		$visibleOffers = array();
 		foreach($offers as $offer){
 			if($dealers->offsetExists($offer->owner->id)){
 				$visibleOffers[] = $offer;
-				$path = $graph->getPath($clan->id, $offer->owner->id);
-				Debugger::barDump($path);
+				$mediators = $this->getMediators($clan, $offer, $graph);//put somewhere else
+				//Debugger::barDump($mediators);
 			}
 		}
-
-		//Debugger::barDump($visibleOffers);
 
 		return $visibleOffers;
 	}
 
+	/**
+	 * Returns the array of mediators
+	 * @param Entities\Clan
+	 * @param Entities\Offer
+	 * @param utils\Graph
+	 * @return array of Entities\Clan
+	 */
+	public function getMediators ($clan, $offer, $graph=null)
+	{
+		$clanRepository = $this->context->model->getClanRepository();
+		if ($graph === null){
+			$graph = $clanRepository->getDealersGraph($clan, $depth);
+		}
+		$path = $graph->getPath($clan->id, $offer->owner->id);
+
+		$mediators = array();
+		foreach($path as $mediator){
+			$mediators[] = $clanRepository->find($mediator);
+		}
+
+		return $mediators;
+	}
 }
+
+
+
+
+
+
+
+
+
+
