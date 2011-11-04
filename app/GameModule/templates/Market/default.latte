@@ -20,7 +20,7 @@
 				<td>{$offer->offerAmount}</td>
 				<td>{$offer->demand}</td>
 				<td>{$offer->demandAmount}</td>
-				<td><a href="{link Market:deleteOffer $offer->id}">X</a></td>
+				<td><a n:href="{link deleteOffer! $offer->id}">X</a></td>
 			</tr>
 		{/foreach}
 	</table>

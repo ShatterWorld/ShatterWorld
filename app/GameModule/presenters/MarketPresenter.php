@@ -13,29 +13,6 @@ use InsufficientResourcesException;
 class MarketPresenter extends BasePresenter {
 
 	/**
-	 * Action for buy
-	 * @return void
-	 */
-	public function actionBuy ()
-	{
-		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 5);
-		$clan = $this->getPlayerClan();
-		$clanHq = $clan->getHeadquarters();
-		$time = array();
-		$hasEnoughRes = array();
-		foreach ($offers as $key => $offer){
-			$targetHq = $offer->owner->getHeadquarters();
-			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
-			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
-		}
-
-		//Debugger::barDump($offers);
-		$this->template->offers = $offers;
-		$this->template->time = $time;
-		$this->template->hasEnoughRes = $hasEnoughRes;
-	}
-
-	/**
 	 * Creates the sell form
 	 * @return Nette\Application\UI\Form
 	 */
@@ -102,11 +79,34 @@ class MarketPresenter extends BasePresenter {
 	}
 
 	/**
-	 * Deletes the given offer
+	 * Displays availible offers
+	 * @return void
+	 */
+	public function renderBuy ()
+	{
+		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 7);
+		$clan = $this->getPlayerClan();
+		$clanHq = $clan->getHeadquarters();
+		$time = array();
+		$hasEnoughRes = array();
+		foreach ($offers as $key => $offer){
+			$targetHq = $offer->owner->getHeadquarters();
+			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
+			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
+		}
+
+		//Debugger::barDump($offers);
+		$this->template->offers = $offers;
+		$this->template->time = $time;
+		$this->template->hasEnoughRes = $hasEnoughRes;
+	}
+
+	/**
+	 * Signal deletes the given offer
 	 * @param int
 	 * @return void
 	 */
-	public function renderDeleteOffer ($offerId)
+	public function handleDeleteOffer ($offerId)
 	{
 		$this->getOfferService()->delete($this->getOfferRepository()->findOneById($offerId));
 		$this->flashMessage('Staženo z nabídky');
@@ -114,11 +114,11 @@ class MarketPresenter extends BasePresenter {
 	}
 
 	/**
-	 * Aceppts the given offer
+	 * Signal that accepts the given offer
 	 * @param int
 	 * @return void
 	 */
-	public function renderAcceptOffer ($offerId)
+	public function handleAcceptOffer ($offerId)
 	{
 		try{
 			$time = array(10, 10);
