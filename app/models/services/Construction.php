@@ -204,7 +204,7 @@ class Construction extends Event
 			'timeout' => $timeout
 		), FALSE);
 		$this->context->model->getResourceService()->pay($clan, $price, FALSE);
-		$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
+		$this->context->model->getClanService()->issueOrder($clan, FALSE);
 		$this->entityManager->flush();
 	}
 }
