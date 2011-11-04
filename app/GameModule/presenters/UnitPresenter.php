@@ -18,9 +18,13 @@ class UnitPresenter extends BasePresenter
 	public function renderTrain ()
 	{
 		$slots = array();
+		$totalSlots = $this->context->stats->getTotalUnitSlots($this->getPlayerClan());
 		foreach ($this->context->rules->getAll('facility') as $name => $rule) {
 			if ($rule instanceof IConstructionFacility) {
 				$slots[$name] = $rule;
+				if(!isset($totalSlots[$name])){
+					$totalSlots[$name] = 0;
+				}
 			}
 		}
 
@@ -55,7 +59,7 @@ class UnitPresenter extends BasePresenter
 		$this->template->unitRules = $units;
 		$this->template->trainingTimes = $trainingTimes;
 		$this->template->slots = $slots;
-		$this->template->totalSlots = $this->context->stats->getTotalUnitSlots($this->getPlayerClan());
+		$this->template->totalSlots = $totalSlots;
 	}
 
 	protected function createComponentTrainUnitForm ()
