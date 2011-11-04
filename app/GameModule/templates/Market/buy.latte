@@ -22,7 +22,7 @@
 				<td>{$time[$key]}</td>
 				<td>
 					{if $hasEnoughRes[$key]}
-						<a href="{link Market:acceptOffer $offer->id}">Ano</a>
+						<a n:href="acceptOffer! $offer->id">Ano</a>
 					{else}
 						Nedostatek surovin
 					{/if}

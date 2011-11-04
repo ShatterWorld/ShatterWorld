@@ -27,18 +27,11 @@ class Graph
 	protected $pathUpdated;
 
 	/**
-	 * Vertices
-	 * @var ArraySet of int
-	 */
-	protected $vertices;
-
-	/**
 	 * Constructor
 	 * @return Graph
 	 */
 	public function __construct ()
 	{
-		$this->vertices = new ArraySet();
 		$this->data = array();
 		$this->floydRes = array();
 		$this->pathUpdated = false;
@@ -63,10 +56,7 @@ class Graph
 	public function addEdge ($from, $to, $value = 0)
 	{
 		$this->data[$from][$to] = $value;
-		$this->vertices->addElement($from, 0);
-		$this->vertices->addElement($to, 0);
 		$this->pathUpdated = false;
-
 	}
 
 	/**
@@ -82,15 +72,12 @@ class Graph
 	}
 
 	/**
-	 * Update the vertice
-	 * @param int
-	 * @param float
-	 * @return void
+	 * Returns the vertices
+	 * @return array of int
 	 */
-	public function updateVertice ($id, $value)
+	public function getVertices ()
 	{
-		$this->vertices->updateElement($id, $value);
-		$this->pathUpdated = false;
+		return array_keys($this->data);
 	}
 
 	/**
@@ -116,7 +103,7 @@ class Graph
 	 * @param int
 	 * @return array of int
 	 */
-	protected function getNeighbours($from){
+	protected function getNeighbours ($from){
 		$neighbours = array();
 		foreach($this->data[$from] as $key => $value){
 			$neighbours[$key] = $value;
@@ -134,7 +121,7 @@ class Graph
 		//init
 		$lengths = array();
 		$prevVertices = array();
-		$vertices = array_keys($this->data);
+		$vertices = $this->getVertices();
 		foreach ($vertices as $key => $vertice){
 			$lengths[$vertice] = 100000;
 			$prevVertices[$vertice] = null;
