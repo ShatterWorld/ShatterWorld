@@ -179,14 +179,8 @@ class Graph
 		//init
 		$lengths = array();
 		$prevVertices = array();
-
 		$vertices = $this->getVerticesIds();
-		//$maxValue = 2 * $this->context->params['game']['map']['size'];
-		foreach ($vertices as $key => $vertice){
-			$lengths[$vertice] = 100000;
-			//$lengths[$vertice] = $maxValue;
-			$prevVertices[$vertice] = null;
-		}
+		$prevVertices[$from] = null;
 		$lengths[$from] = 0;
 
 		// alg
@@ -195,10 +189,12 @@ class Graph
 			$neighbours = $this->getNeighbours($u);
 
 			foreach($neighbours as $key => $neighbour){
-				$potentialLength = $lengths[$u] + $neighbour;
-				if($potentialLength < $lengths[$key]){
-					$lengths[$key] = $potentialLength;
-					$prevVertices[$key] = $u;
+				if (isset($lengths[$u])){
+					$potentialLength = $lengths[$u] + $neighbour;
+					if(!isset($lengths[$key]) || $potentialLength < $lengths[$key]){
+						$lengths[$key] = $potentialLength;
+						$prevVertices[$key] = $u;
+					}
 				}
 			}
 		}
