@@ -126,8 +126,7 @@ class MarketPresenter extends BasePresenter {
 	public function handleAcceptOffer ($offerId)
 	{
 		try{
-			$time = array(10, 10);
-			$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan(), $time);
+			$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan());
 			$this->flashMessage('Koupeno!');
 		}
 		catch(InsufficientResourcesException $e){

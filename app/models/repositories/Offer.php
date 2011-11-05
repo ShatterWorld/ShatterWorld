@@ -46,12 +46,13 @@ class Offer extends BaseRepository
 		foreach($offers as $offer){
 			if($dealers->offsetExists($offer->owner->id)){
 				$visibleOffers[] = $offer;
-				$mediators = $this->getMediators($clan, $offer, $graph);//put somewhere else
+				/*$mediators = $this->getMediators($clan, $offer, $graph);//put somewhere else
 				$profits = $this->getMediatorProfits($clan, $offer, $graph);
 				$totalProfit = $this->getTotalMediatorProfit($clan, $offer, $graph);
-				//Debugger::barDump($mediators);
+				Debugger::barDump($mediators);
 				Debugger::barDump($profits);
 				Debugger::barDump($totalProfit);
+				*/
 			}
 		}
 
