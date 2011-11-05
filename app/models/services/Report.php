@@ -13,7 +13,7 @@ class Report extends BaseService
 		$qb = $this->entityManager->createQueryBuilder();
 		$qb->update($this->entityClass, 'r')
 			->set('r.read', '?1')
-			->where('r.owner', '?2');
+			->where($qb->expr()->eq('r.owner', '?2'));
 		$qb->setParameter(1, TRUE);
 		$qb->setParameter(2, $clan->id);
 		$qb->getQuery()->execute();

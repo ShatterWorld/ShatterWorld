@@ -17,6 +17,7 @@ class ReportPresenter extends BasePresenter
 	public function handleMarkRead ()
 	{
 		$this->getReportService()->markReadAll($this->getPlayerClan());
+		$this->redirect('this');
 	}
 	
 	protected function createComponentUnitGrid ()
