@@ -49,7 +49,7 @@ abstract class Attack extends AbstractRule implements IEvent
 				$result['totalVictory'] = FALSE;
 			}
 		}
-		$result['successful'] = $this->needsTotalVictory() ? $result['totalVictory'] : $attackerPower > $defenderDefense;
+		$result['successful'] = $attackerPower > $defenderDefense;
 		if ($result['successful']) {
 			$resources = $this->getContext()->model->getResourceRepository()->getResourcesArray($event->target->owner);
 			$territorySize = $this->getContext()->model->getFieldRepository()->getTerritorySize($event->target->owner);
@@ -66,6 +66,22 @@ abstract class Attack extends AbstractRule implements IEvent
 		return $result;
 	}
 	
+	protected function returnAttackingUnits (Entities\Event $event, $processor, $loot = NULL)
+	{
+		if ($loot) {
+			$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot);
+		}
+		$processor->queueEvent($this->getContext()->model->getMoveService()->startUnitMovement(
+			$event->target, 
+			$event->origin, 
+			$event->origin->owner, 
+			'unitReturn', 
+			$event->getUnitList(), 
+			$loot, 
+			$event->term
+		));
+	}
+	
 	public function process (Entities\Event $event, $processor)
 	{
 		$model = $this->getContext()->model;
@@ -77,20 +93,6 @@ abstract class Attack extends AbstractRule implements IEvent
 		}
 		if ($result['defender']['casualties']) {
 			$model->getUnitService()->removeUnits($event->target->owner, $event->target, $result['defender']['casualties'], $event->term);
-		}
-		if ($this->isReturning()) {
-			if ($loot = $result['attacker']['loot']) {
-				$model->getResourceService()->pay($event->target->owner, $loot);
-			}
-			$processor->queueEvent($model->getMoveService()->startUnitMovement(
-				$event->target, 
-				$event->origin, 
-				$event->origin->owner, 
-				'unitReturn', 
-				$attackerUnits, 
-				$loot, 
-				$event->term
-			));
 		}
 		return $result;
 	}
@@ -115,19 +117,6 @@ abstract class Attack extends AbstractRule implements IEvent
 				DataRow::from($data['defender']['casualties'])->setLabel('Ztráty')
 			))->setHeading('Obránce')
 		);
-		if ($data['attacker']['loot']) {
-			$message[] = ReportItem::create('resourceGrid', array($data['attacker']['loot']))->setHeading('Kořist');
-		}
 		return $message;
-	}
-	
-	public function isReturning ()
-	{
-		return TRUE;
-	}
-	
-	public function needsTotalVictory ()
-	{
-		return FALSE;
 	}
 }

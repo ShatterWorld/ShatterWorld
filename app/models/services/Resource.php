@@ -31,13 +31,15 @@ class Resource extends BaseService
 	 * @param array of $resource => $amount
 	 * @return void
 	 */
-	public function increase (Entities\Clan $clan, $payment)
+	public function increase (Entities\Clan $clan, $payment, $flush = TRUE)
 	{
 		$resources = $this->getRepository()->findResourcesByClan($clan);
 		foreach ($payment as $resource => $amount) {
 			$resources[$resource]->increase($amount);
 		}
-		$this->entityManager->flush();
+		if ($flush) {
+			$this->entityManager->flush();
+		}
 	}
 	
 	public function recalculateProduction (Entities\Clan $clan, $term = NULL)

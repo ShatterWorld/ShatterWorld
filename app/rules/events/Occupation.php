@@ -1,5 +1,6 @@
 <?php
 namespace Rules\Events;
+use ReportItem;
 use Entities;
 
 class Occupation extends Attack
@@ -13,22 +14,29 @@ class Occupation extends Attack
 	{
 		$result = parent::process($event);
 		$model = $this->getContext()->model;
-		if ($result['successful']) {
-			foreach ($model->getConstructionRepository()->findBy(array('target' => $event->ŧarget->id)) as $construction) {
+		if ($result['totalVictory']) {
+			foreach ($model->getConstructionRepository()->findBy(array('target' => $event->target->id)) as $construction) {
 				$construction->failed = TRUE;
 			}
+			if ($loot = $result['attacker']['loot']) {
+				$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, FALSE);
+				$this->getContext()->model->getResourceService()->increase($event->owner, $loot, FALSE);
+			}
 			$event->target->owner = $event->owner;
+		} else {
+			$this->returnAttackingUnits($event, $processor);
 		}
 		return $result;
 	}
 	
 	public function formatReport (Entities\Report $report)
 	{
-		return array();
-	}
-	
-	public function needsTotalVictory ()
-	{
-		return TRUE;
+		$data = $report->data;
+		$message = array(ReportItem::create('text', $data['totalVictory'] ? 'Vítězství' : 'Útok odražen'));
+		$message = array_merge($message, parent::formatReport($report));
+		if ($data['totalVictory'] && $data['attacker']['loot']) {
+			$message[] = ReportItem::create('resourceGrid', array($data['attacker']['loot']))->setHeading('Kořist');
+		}
+		return $message;
 	}
 }
