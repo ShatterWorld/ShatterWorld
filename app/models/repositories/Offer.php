@@ -34,8 +34,8 @@ class Offer extends BaseRepository
 
 		$clanRepository = $this->context->model->getClanRepository();
 		$graph = $clanRepository->getDealersGraph($clan, $depth);
-		//Debugger::barDump($graph);
-		$dealersIds = $graph->getVertices();
+		$dealersIds = $graph->getVerticesIds();
+
 
 		$dealers = new ArraySet();
 		foreach($dealersIds as $id){
@@ -46,13 +46,6 @@ class Offer extends BaseRepository
 		foreach($offers as $offer){
 			if($dealers->offsetExists($offer->owner->id)){
 				$visibleOffers[] = $offer;
-				/*$mediators = $this->getMediators($clan, $offer, $graph);//put somewhere else
-				$profits = $this->getMediatorProfits($clan, $offer, $graph);
-				$totalProfit = $this->getTotalMediatorProfit($clan, $offer, $graph);
-				Debugger::barDump($mediators);
-				Debugger::barDump($profits);
-				Debugger::barDump($totalProfit);
-				*/
 			}
 		}
 

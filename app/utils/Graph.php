@@ -9,16 +9,16 @@ class Graph
 {
 
 	/**
-	 * Data of graph
+	 * The edges of graph
 	 * @var array of array of int
 	 */
-	protected $data;
+	protected $edges;
 
 	/**
-	 * Result of floyd-warshall
-	 * @var array of array of int
+	 * The vertices of graph
+	 * @var utils\ArraySet
 	 */
-	protected $floydRes;
+	protected $vertices;
 
 	/**
 	 * Is floydRes updated?
@@ -32,22 +32,76 @@ class Graph
 	 */
 	public function __construct ()
 	{
-		$this->data = array();
-		$this->floydRes = array();
+		$this->edges = array();
+		$this->vertices = new ArraySet();
 		$this->pathUpdated = false;
 	}
 
 	/**
-	 * Returns the data of graph
-	 * @return array of array of in
+	 * Adds the vertice
+	 * @param int
+	 * @param int
+	 * @return boolean
 	 */
-	public function getGraph ()
+	public function addVertice ($id, $value)
 	{
-		return $this->data;
+		if ($this->vertices->addElement($id, $value)){
+			$this->pathUpdated = false;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Deletes the vertice
+	 * @param int
+	 * @return boolean
+	 */
+	public function removeVertice ($id)
+	{
+		if ($this->vertices->deleteElement($id)){
+			$this->pathUpdated = false;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Updates the vertice
+	 * @param int
+	 * @param int
+	 * @return boolean
+	 */
+	public function updateVertice ($id, $newValue)
+	{
+		if ($this->vertices->updateElement($id, $newValue)){
+			$this->pathUpdated = false;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the vertices ids
+	 * @return utils\ArraySet
+	 */
+	public function getVerticesIds ()
+	{
+		return array_keys($this->vertices->toArray());
+	}
+
+	/**
+	 * Returns ids of the vertices
+	 * @return array of int
+	 */
+	public function getVertices ()
+	{
+		return $this->vertices;
 	}
 
 	/**
 	 * Adds or update the edge
+	 * @throws Exception
 	 * @param int
 	 * @param int
 	 * @param float
@@ -55,30 +109,34 @@ class Graph
 	 */
 	public function addEdge ($from, $to, $value = 0)
 	{
-		$this->data[$from][$to] = $value;
+		if (!$this->vertices->offsetExists($from) || !$this->vertices->offsetExists($to)){
+			throw new Exception('Can not add the edge from/to vertice which doesnt exist.');
+		}
+		$this->edges[$from][$to] = $value;
 		$this->pathUpdated = false;
 	}
 
 	/**
-	 * Removed the edge
+	 * Remove the edge
 	 * @param int
 	 * @param int
 	 * @return void
 	 */
 	public function removeEdge ($from, $to)
 	{
-		unset($this->data[$from][$to]);
+		unset($this->edges[$from][$to]);
 		$this->pathUpdated = false;
 	}
 
 	/**
-	 * Returns the vertices
-	 * @return array of int
+	 * Returns the edges of graph
+	 * @return array of array of in
 	 */
-	public function getVertices ()
+	public function getEdges ()
 	{
-		return array_keys($this->data);
+		return $this->edges;
 	}
+
 
 	/**
 	 * Returns and unset the smallest element
@@ -105,7 +163,7 @@ class Graph
 	 */
 	protected function getNeighbours ($from){
 		$neighbours = array();
-		foreach($this->data[$from] as $key => $value){
+		foreach($this->edges[$from] as $key => $value){
 			$neighbours[$key] = $value;
 		}
 		return $neighbours;
@@ -116,14 +174,17 @@ class Graph
 	 * @param int
 	 * @return array of int
 	 */
-	protected function dijkstra ($from)
+	protected function dijkstraEdges ($from)
 	{
 		//init
 		$lengths = array();
 		$prevVertices = array();
-		$vertices = $this->getVertices();
+
+		$vertices = $this->getVerticesIds();
+		//$maxValue = 2 * $this->context->params['game']['map']['size'];
 		foreach ($vertices as $key => $vertice){
 			$lengths[$vertice] = 100000;
+			//$lengths[$vertice] = $maxValue;
 			$prevVertices[$vertice] = null;
 		}
 		$lengths[$from] = 0;
@@ -154,7 +215,7 @@ class Graph
 	public function getPath ($from, $to)
 	{
 		/*needs prev. routes saving (by $from)/even caching?*/
-		$routes = $this->dijkstra($from);
+		$routes = $this->dijkstraEdges($from);
 
 		$path = array();
 		$tmp = $routes[$to];

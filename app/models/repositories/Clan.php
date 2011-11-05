@@ -60,6 +60,7 @@ class Clan extends BaseRepository
 
 		foreach($fifo as $dealer){
 			$id = $dealer->id;
+			$graph->addVertice($id, 1);
 			$dealers->addElement($id, $dealer);
 
 			$dealersVisibleClans = $this->getVisibleClans($dealer);
@@ -67,9 +68,10 @@ class Clan extends BaseRepository
 				if($depths->offsetGet($id) < 1) continue;
 
 				$dvcId = $dvc->id;
-				if ($dvcId != $id)
-				$graph->addEdge($id, $dvcId, $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters));
-
+				if ($dvcId != $id){
+					$graph->addVertice($dvcId, 1);
+					$graph->addEdge($id, $dvcId, $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters));
+				}
 				if ($depths->offsetExists($dvcId)){
 					if($depths->offsetGet($dvcId) < $depths->offsetGet($id)-1){
 						$depths->updateElement($dvcId, $depths->offsetGet($id)-1);
