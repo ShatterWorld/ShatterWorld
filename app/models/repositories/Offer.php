@@ -36,7 +36,6 @@ class Offer extends BaseRepository
 		$graph = $clanRepository->getDealersGraph($clan, $depth);
 		$dealersIds = $graph->getVerticesIds();
 
-
 		$dealers = new ArraySet();
 		foreach($dealersIds as $id){
 			$dealers->addElement($id, $clanRepository->find($id));
