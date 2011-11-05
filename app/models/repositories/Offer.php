@@ -18,8 +18,10 @@ class Offer extends BaseRepository
 	 * @param int
 	 * @return void
 	 */
-	public function findReachable ($clan, $depth=1)
+	public function findReachable ($clan)
 	{
+		$depth = 7; //get const !!!
+
 		$qb = $this->createQueryBuilder('o');
 		$qb->where($qb->expr()->andX(
 			$qb->expr()->neq('o.owner', '?1'),
@@ -45,7 +47,11 @@ class Offer extends BaseRepository
 			if($dealers->offsetExists($offer->owner->id)){
 				$visibleOffers[] = $offer;
 				$mediators = $this->getMediators($clan, $offer, $graph);//put somewhere else
+				$profits = $this->getMediatorProfits($clan, $offer, $graph);
+				$totalProfit = $this->getTotalMediatorProfit($clan, $offer, $graph);
 				//Debugger::barDump($mediators);
+				Debugger::barDump($profits);
+				Debugger::barDump($totalProfit);
 			}
 		}
 
@@ -63,7 +69,7 @@ class Offer extends BaseRepository
 	{
 		$clanRepository = $this->context->model->getClanRepository();
 		if ($graph === null){
-			$graph = $clanRepository->getDealersGraph($clan, $depth);
+			$graph = $clanRepository->getDealersGraph($clan, 7); //get const !!!
 		}
 		$path = $graph->getPath($clan->id, $offer->owner->id);
 
@@ -73,6 +79,46 @@ class Offer extends BaseRepository
 		}
 
 		return $mediators;
+	}
+
+	/**
+	 * Returns the array of mediators profits
+	 * @param Entities\Clan
+	 * @param Entities\Offer
+	 * @param utils\Graph
+	 * @return array of int
+	 */
+	public function getMediatorProfits ($clan, $offer, $graph=null)
+	{
+		$mediators = $this->getMediators($clan, $offer, $graph);
+
+		$profits = array();
+		$resLeft = $offer->offerAmount;
+		foreach($mediators as $mediator){
+			$profit = floor($resLeft * 0.1);//get const !!!
+			$resLeft -= $profit;
+			$profits[$mediator->id] = $profit;
+		}
+		//Debugger::barDump($profits);
+		return $profits;
+	}
+
+	/**
+	 * Returns the total mediators profit
+	 * @param Entities\Clan
+	 * @param Entities\Offer
+	 * @param utils\Graph
+	 * @return int
+	 */
+	public function getTotalMediatorProfit ($clan, $offer, $graph=null)
+	{
+		$profits = $this->getMediatorProfits($clan, $offer, $graph);
+		$totalProfit = 0;
+		foreach($profits as $profit){
+			$totalProfit += $profit;
+		}
+
+		return $totalProfit;
 	}
 }
 

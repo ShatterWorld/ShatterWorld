@@ -84,21 +84,26 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function renderBuy ()
 	{
-		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 7);
-		$clan = $this->getPlayerClan();
-		$clanHq = $clan->getHeadquarters();
+		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan());
 		$time = array();
 		$hasEnoughRes = array();
+		$profits = array();
+
+		$clan = $this->getPlayerClan();
+		$clanHq = $clan->getHeadquarters();
+
 		foreach ($offers as $key => $offer){
 			$targetHq = $offer->owner->getHeadquarters();
 			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
 			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
+			$profits[$key] = $this->getOfferRepository()->getTotalMediatorProfit($clan, $offer);
 		}
 
 		//Debugger::barDump($offers);
 		$this->template->offers = $offers;
 		$this->template->time = $time;
 		$this->template->hasEnoughRes = $hasEnoughRes;
+		$this->template->profits = $profits;
 	}
 
 	/**
