@@ -4,7 +4,7 @@
 
 {block #content}
 	<h3>Moje nabídky</h3>
-	<table id = "offers">
+	<table id = "clanOffers">
 		<tr>
 			<th>Kdo</th>
 			<th>Co</th>
@@ -13,7 +13,7 @@
 			<th>Kolik</th>
 			<th>X</th>
 		</tr>
-		{foreach $offers as $offer}
+		{foreach $clanOffers as $offer}
 			<tr>
 				<td>{$offer->owner->name}</td>
 				<td>{$offer->offer}</td>
@@ -25,6 +25,26 @@
 		{/foreach}
 	</table>
 
-<h3>Probíhající obchody</h3>
+	<h3>Probíhající obchody</h3>
+	{dump $runningShipments}
+	<table id = "runningShipments">
+		<tr>
+			<th>Kdo</th>
+			<th>Komu</th>
+			<th>Co</th>
+			<th>Kolik</th>
+			<th>Čas</th>
+		</tr>
+		{foreach $runningShipments as $shipment}
+			<tr>
+				<td>{$shipment->origin->owner->name}</td>
+				<td>{$shipment->target->owner->name}</td>
+				<td>{foreach $shipment->cargo as $res => $value}{$res}{/foreach}</td>
+				<td>{foreach $shipment->cargo as $res => $value}{$value}{/foreach}</td>
+				<td>{$shipment->term|date:"d.m.Y H:i"}</td>
+			</tr>
+		{/foreach}
+	</table>
+
 
 {/block}

@@ -23,7 +23,7 @@ class Offer extends BaseService {
 
 			$profits = $offerRepositary->getMediatorProfits($pathType, $targetClan, $offer);
 
-			$time = array('offer' => 10, 'demand' => 10);
+			$time = array('offer' => 60, 'demand' => 60);
 
 			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount), FALSE);
 			$this->update($offer, array('sold' => true), FALSE);
@@ -34,15 +34,15 @@ class Offer extends BaseService {
 				'owner' => $offer->owner,
 				'origin' => $offer->owner->getHeadquarters(),
 				'target' => $targetClan->getHeadquarters(),
-				'cargo' => array($offer->offer => $offer->offerAmount - $offerRepositary->getTotalMediatorProfit($targetClan, $offer))
+				'cargo' => array($offer->offer => $offer->offerAmount - $offerRepositary->getTotalMediatorProfit($pathType, $targetClan, $offer))
 			), FALSE);
 
 			foreach($profits as $clanId => $profit){
-				$this->context->model->getShipmentService()->create(array( //target->mediators
+				$this->context->model->getShipmentService()->create(array( //owner->mediators
 					'type' => 'shipment',
 					'timeout' => $time['demand'],
-					'owner' => $targetClan,
-					'origin' => $targetClan->getHeadquarters(),
+					'owner' => $offer->owner,
+					'origin' => $offer->owner->getHeadquarters(),
 					'target' => $clanRepository->find($clanId)->getHeadquarters(),
 					'cargo' => array($offer->offer => $profit)
 				), FALSE);

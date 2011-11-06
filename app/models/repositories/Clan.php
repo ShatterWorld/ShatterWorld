@@ -65,7 +65,6 @@ class Clan extends BaseRepository
 
 		$cachedGraph = $this->getClanGraphCache()->load($clan->id);
 		if ($cachedGraph !== null){
-			Debugger::barDump($a=true);
 			return $cachedGraph;
 		}
 
