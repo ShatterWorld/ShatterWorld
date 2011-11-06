@@ -75,7 +75,8 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function renderDefault ()
 	{
-		$this->template->offers = $this->getClanOffers();
+		$this->template->clanOffers = $this->getClanOffers();
+		$this->template->runningShipments = $this->getShipmentRepository()->getRunningShipments($this->getPlayerClan());
 	}
 
 	/**

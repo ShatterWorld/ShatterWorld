@@ -4,7 +4,7 @@ use Nette\Utils\Json;
 
 /**
  * A shipment of resources
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Shipment")
  * @author Jan "Teyras" Buchar
  */
 class Shipment extends Event
@@ -14,19 +14,19 @@ class Shipment extends Event
 	 * @var Entities\Field
 	 */
 	private $origin;
-	
+
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Field")
 	 * @var Entities\Field
 	 */
 	private $target;
-	
+
 	/**
 	 * @Column(type = "string")
 	 * @var string
 	 */
 	private $cargo;
-	
+
 	/**
 	 * Constructor
 	 * @param string
@@ -42,7 +42,7 @@ class Shipment extends Event
 		$this->target = $target;
 		$this->cargo = Json::encode($cargo);
 	}
-	
+
 	/**
 	 * Origin getter
 	 * @return Entities\Field
@@ -51,7 +51,7 @@ class Shipment extends Event
 	{
 		return $this->origin;
 	}
-	
+
 	/**
 	 * Target getter
 	 * @return Entities\Field
@@ -60,7 +60,7 @@ class Shipment extends Event
 	{
 		return $this->target;
 	}
-	
+
 	/**
 	 * Cargo getter
 	 * @return array
@@ -69,4 +69,5 @@ class Shipment extends Event
 	{
 		return Json::decode($this->cargo);
 	}
+
 }

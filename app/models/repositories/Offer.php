@@ -14,8 +14,7 @@ class Offer extends BaseRepository
 	/**
 	 * Returns all offers that can $clan accept
 	 * @param Entities\Clan
-	 * @param int
-	 * @return void
+	 * @return array of Entities\Offer
 	 */
 	public function findReachable ($clan)
 	{

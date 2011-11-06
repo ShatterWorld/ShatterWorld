@@ -14,7 +14,8 @@
 			<th>Čas</th>
 			<th>Profit (vzdálenost)</th>
 			<th>Profit (cena)</th>
-			<th>Přijmout nabídku</th>
+			<th>Přijmout (vzádlenost)</th>
+			<th>Přijmout (cena)</th>
 		</tr>
 		{foreach $offers as $key => $offer}
 			<tr>
@@ -26,7 +27,14 @@
 				<td>{(-1)*$profits[cheap][$key]}</td>
 				<td>
 					{if $hasEnoughRes[$key]}
-						<a n:href="acceptOffer! $offer->id">Ano</a>
+						<a n:href="acceptOfferShort! $offer->id">Ano</a>
+					{else}
+						Nedostatek surovin
+					{/if}
+				</td>
+				<td>
+					{if $hasEnoughRes[$key]}
+						<a n:href="acceptOfferCheap! $offer->id">Ano</a>
 					{else}
 						Nedostatek surovin
 					{/if}

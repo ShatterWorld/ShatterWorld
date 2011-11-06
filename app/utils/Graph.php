@@ -195,7 +195,7 @@ class Graph
 			$u = $this->popSmallest($vertices);//id
 			$neighbours = $this->getNeighbours($u);
 
-			Debugger::barDump($neighbours);
+			//Debugger::barDump($neighbours);
 			foreach($neighbours as $key => $neighbour){
 				if (isset($lengths[$u])){
 					$potentialLength = $lengths[$u] + $neighbour;

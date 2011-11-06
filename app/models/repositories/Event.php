@@ -4,7 +4,7 @@ use Entities;
 use Doctrine;
 
 class Event extends BaseRepository {
-	
+
 	/**
 	 * Finds pending events locked by given user on given time
 	 * @param int
@@ -23,7 +23,7 @@ class Event extends BaseRepository {
 		$qb->setParameter(2, $lockTimeout);
 		return $qb->getQuery()->getResult();
 	}
-	
+
 	public function getUpcomingEventsArray (Entities\Clan $clan)
 	{
 		$now = new \DateTime;
@@ -47,4 +47,17 @@ class Event extends BaseRepository {
 		}
 		return $result;
 	}
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
