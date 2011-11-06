@@ -8,6 +8,9 @@ use Nette\Diagnostics\Debugger;
 class Graph
 {
 
+	const SHORT = 0;
+	const CHEAP = 1;
+
 	/**
 	 * The edges of graph
 	 * @var array of array of int
@@ -110,7 +113,7 @@ class Graph
 	public function addEdge ($from, $to, $value = 0)
 	{
 		if (!$this->vertices->offsetExists($from) || !$this->vertices->offsetExists($to)){
-			throw new Exception('Can not add the edge from/to vertice which doesnt exist.');
+			throw new Exception('Can not add the edge from/to vertice which doesnt exist ('.$from.'/'.$to.')');
 		}
 		$this->edges[$from][$to] = $value;
 		$this->pathUpdated = false;
@@ -192,6 +195,7 @@ class Graph
 			$u = $this->popSmallest($vertices);//id
 			$neighbours = $this->getNeighbours($u);
 
+			Debugger::barDump($neighbours);
 			foreach($neighbours as $key => $neighbour){
 				if (isset($lengths[$u])){
 					$potentialLength = $lengths[$u] + $neighbour;
@@ -226,8 +230,9 @@ class Graph
 			$neighbours = $this->getNeighbours($u);
 
 			foreach($neighbours as $key => $neighbour){
+				$ver = $this->vertices->offsetGet($key);//price of neigh vertice
 				if (isset($lengths[$u])){
-					$potentialLength = $lengths[$u] + $neighbour;
+					$potentialLength = $lengths[$u] + $ver;
 					if(!isset($lengths[$key]) || $potentialLength < $lengths[$key]){
 						$lengths[$key] = $potentialLength;
 						$prevVertices[$key] = $u;
@@ -243,13 +248,22 @@ class Graph
 	 * Finds shortest path from/to vertices given
 	 * @param int
 	 * @param int
+	 * @param int
 	 * @return array of vertrices
 	 */
-	public function getPath ($from, $to)
+	public function getPath ($pathType, $from, $to)
 	{
 		/* needs prev. routes saving (by $from)
 		 * +even caching the whole graph*/
-		$routes = $this->dijkstraEdges($from);
+		if ($pathType === self::SHORT){
+			$routes = $this->dijkstraEdges($from);
+		}
+		else if ($pathType === self::CHEAP){
+			$routes = $this->dijkstraVertices($from);
+		}
+		else{
+			throw new Exception('No such path type: '.$pathType);
+		}
 
 		$path = array();
 		$tmp = $routes[$to];

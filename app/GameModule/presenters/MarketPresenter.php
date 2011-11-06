@@ -4,7 +4,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
-
+use Graph;
 
 /**
  * A MarketPresenter
@@ -96,7 +96,8 @@ class MarketPresenter extends BasePresenter {
 			$targetHq = $offer->owner->getHeadquarters();
 			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
 			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
-			$profits[$key] = $this->getOfferRepository()->getTotalMediatorProfit($clan, $offer);
+			$profits['short'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::SHORT, $clan, $offer);
+			$profits['cheap'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
 		}
 
 		//Debugger::barDump($offers);
@@ -119,14 +120,34 @@ class MarketPresenter extends BasePresenter {
 	}
 
 	/**
-	 * Signal that accepts the given offer
+	 * Signal that accepts the given offer by the shortest way
 	 * @param int
 	 * @return void
 	 */
-	public function handleAcceptOffer ($offerId)
+	public function handleAcceptOfferShort ($offerId)
 	{
 		try{
-			$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan());
+			$offerService = $this->getOfferService();
+			$offerService->accept(Graph::SHORT, $this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan());
+			$this->flashMessage('Koupeno!');
+		}
+		catch(InsufficientResourcesException $e){
+			$this->flashMessage('Nedostatek surovin');
+		}
+
+		$this->redirect('Market:');
+	}
+
+	/**
+	 * Signal that accepts the given offer by the cheapest way
+	 * @param int
+	 * @return void
+	 */
+	public function handleAcceptOfferCheap ($offerId)
+	{
+		try{
+			$offerService = $this->getOfferService();
+			$offerService->accept(Graph::CHEAP, $this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan());
 			$this->flashMessage('Koupeno!');
 		}
 		catch(InsufficientResourcesException $e){

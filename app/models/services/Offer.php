@@ -14,13 +14,15 @@ class Offer extends BaseService {
 	* @param Entities\Field
 	* @return void
 	*/
-	public function accept ($offer, $targetClan)
+	public function accept ($pathType, $offer, $targetClan)
 	{
 		if ($this->context->model->getResourceRepository()->checkResources($targetClan, array($offer->demand => $offer->demandAmount))){
 
 			$clanRepository = $this->context->model->getClanRepository();
 			$offerRepositary = $this->context->model->getOfferRepository();
-			$profits = $offerRepositary->getMediatorProfits($targetClan, $offer);
+
+			$profits = $offerRepositary->getMediatorProfits($pathType, $targetClan, $offer);
+
 			$time = array('offer' => 10, 'demand' => 10);
 
 			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount), FALSE);

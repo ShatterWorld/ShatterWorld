@@ -11,7 +11,6 @@ use Graph;
  */
 class Offer extends BaseRepository
 {
-
 	/**
 	 * Returns all offers that can $clan accept
 	 * @param Entities\Clan
@@ -36,18 +35,19 @@ class Offer extends BaseRepository
 
 	/**
 	 * Returns the array of mediators
+	 * @param int
 	 * @param Entities\Clan
 	 * @param Entities\Offer
 	 * @param utils\Graph
 	 * @return array of Entities\Clan
 	 */
-	public function getMediators ($clan, $offer, $graph=null)
+	public function getMediators ($pathType, $clan, $offer, $graph=null)
 	{
 		$clanRepository = $this->context->model->getClanRepository();
 		if ($graph === null){
 			$graph = $clanRepository->getDealersGraph($clan, 7); //get const !!!
 		}
-		$path = $graph->getPath($clan->id, $offer->owner->id);
+		$path = $graph->getPath($pathType, $clan->id, $offer->owner->id);
 
 		$mediators = array();
 		foreach($path as $mediator){
@@ -59,14 +59,15 @@ class Offer extends BaseRepository
 
 	/**
 	 * Returns the array of mediators profits
+	 * @param int
 	 * @param Entities\Clan
 	 * @param Entities\Offer
 	 * @param utils\Graph
 	 * @return array of int
 	 */
-	public function getMediatorProfits ($clan, $offer, $graph=null)
+	public function getMediatorProfits ($pathType, $clan, $offer, $graph=null)
 	{
-		$mediators = $this->getMediators($clan, $offer, $graph);
+		$mediators = $this->getMediators($pathType, $clan, $offer, $graph);
 
 		$profits = array();
 		$resLeft = $offer->offerAmount;
@@ -81,14 +82,15 @@ class Offer extends BaseRepository
 
 	/**
 	 * Returns the total mediators profit
+	 * @param int
 	 * @param Entities\Clan
 	 * @param Entities\Offer
 	 * @param utils\Graph
 	 * @return int
 	 */
-	public function getTotalMediatorProfit ($clan, $offer, $graph=null)
+	public function getTotalMediatorProfit ($pathType, $clan, $offer, $graph=null)
 	{
-		$profits = $this->getMediatorProfits($clan, $offer, $graph);
+		$profits = $this->getMediatorProfits($pathType, $clan, $offer, $graph);
 		$totalProfit = 0;
 		foreach($profits as $profit){
 			$totalProfit += $profit;
