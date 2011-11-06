@@ -13,28 +13,19 @@ class Clan extends BaseRepository
 	/* Cache of clan graphs
 	 * @var Nette\Caching\Cache
 	 */
-	protected $cache;
+	protected $clanGraphCache;
 
 	/**
 	 * Returns the cache
 	 * @return Nette\Caching\Cache
 	 */
-	public function getCache ()
+	public function getClanGraphCache ()
 	{
-		return $this->cache;
+		if ($this->clanGraphCache === null){
+			$this->clanGraphCache = new Cache($this->context->cacheStorage, 'ClanGraph');
+		}
+		return $this->clanGraphCache;
 	}
-
-	/**
-	 * Constructor - inits the cache
-	 * @return Repository
-	 */
-	public function __construct ($context, $entityClass)
-	{
-		parent::__construct($context, $entityClass);
-		//Debugger::barDump($this->getContext());
-		//$this->cache = new Cache($this->context->cacheStorage, 'ClanGraph');
-	}
-
 
 	/**
 	 * Returns a clan specified by user given
@@ -72,9 +63,10 @@ class Clan extends BaseRepository
 	public function getDealersGraph ($clan, $initDepth)
 	{
 
-		/*
-		 * if cached, return it
-		 * */
+		$cachedGraph = $this->getClanGraphCache()->load($clan->id);
+		if ($cachedGraph !== null){
+			return $cachedGraph;
+		}
 
 		$fifo = ArraySet::from($this->getVisibleClans($clan));
 		$depths = new ArraySet();
@@ -114,6 +106,9 @@ class Clan extends BaseRepository
 
 			$fifo->deleteElement($dealer->id);
 		}
+		/*$this->getClanGraphCache()->save($clan->id, $graph, array(
+			Cache::TAGS => array("observers/$graph->getVerticesIds")
+		));*/
 		return $graph;
 	}
 
