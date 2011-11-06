@@ -3,12 +3,39 @@ namespace Repositories;
 use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
+use Nette\Caching\Cache;
 use ArraySet;
 use Graph;
 use Nette;
 
 class Clan extends BaseRepository
 {
+	/* Cache of clan graphs
+	 * @var Nette\Caching\Cache
+	 */
+	protected $cache;
+
+	/**
+	 * Returns the cache
+	 * @return Nette\Caching\Cache
+	 */
+	public function getCache ()
+	{
+		return $this->cache;
+	}
+
+	/**
+	 * Constructor - inits the cache
+	 * @return Repository
+	 */
+	public function __construct ($context, $entityClass)
+	{
+		parent::__construct($context, $entityClass);
+		//Debugger::barDump($this->getContext());
+		//$this->cache = new Cache($this->context->cacheStorage, 'ClanGraph');
+	}
+
+
 	/**
 	 * Returns a clan specified by user given
 	 * @param Entities\User

@@ -144,12 +144,15 @@ class Graph
 	 * @return int
 	 */
 	protected function popSmallest(&$arr){
+
+		//Debugger::barDump($arr);
 		$value = null;
 		$key = null;
 		foreach($arr as $arrKey => $item){
 			if($value === null || $item < $value){
 				$value = $item;
 				$key = $arrKey;
+
 			}
 		}
 		unset($arr[$key]);
@@ -162,6 +165,7 @@ class Graph
 	 * @return array of int
 	 */
 	protected function getNeighbours ($from){
+		//Debugger::barDump($from);
 		$neighbours = array();
 		foreach($this->edges[$from] as $key => $value){
 			$neighbours[$key] = $value;
@@ -170,11 +174,44 @@ class Graph
 	}
 
 	/**
-	 * Finds all shortest path from vertice given to all other vertices, -1 if the path doesnt exist
+	 * Finds shortest paths from given vertice to all other vertices
 	 * @param int
 	 * @return array of int
 	 */
 	protected function dijkstraEdges ($from)
+	{
+		//init
+		$lengths = array();
+		$prevVertices = array();
+		$vertices = $this->getVerticesIds();
+		$prevVertices[$from] = null;
+		$lengths[$from] = 0;
+
+		// alg
+		while(count($vertices) > 0){
+			$u = $this->popSmallest($vertices);//id
+			$neighbours = $this->getNeighbours($u);
+
+			foreach($neighbours as $key => $neighbour){
+				if (isset($lengths[$u])){
+					$potentialLength = $lengths[$u] + $neighbour;
+					if(!isset($lengths[$key]) || $potentialLength < $lengths[$key]){
+						$lengths[$key] = $potentialLength;
+						$prevVertices[$key] = $u;
+					}
+				}
+			}
+		}
+
+		return $prevVertices;
+	}
+
+	/**
+	 * Finds cheapest paths from given vertice to all other vertices
+	 * @param int
+	 * @return array of int
+	 */
+	protected function dijkstraVertices ($from)
 	{
 		//init
 		$lengths = array();
@@ -210,7 +247,8 @@ class Graph
 	 */
 	public function getPath ($from, $to)
 	{
-		/*needs prev. routes saving (by $from)/even caching?*/
+		/* needs prev. routes saving (by $from)
+		 * +even caching the whole graph*/
 		$routes = $this->dijkstraEdges($from);
 
 		$path = array();
