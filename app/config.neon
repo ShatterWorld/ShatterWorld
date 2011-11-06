@@ -38,6 +38,7 @@ common:
 			facility: Rules\Facilities
 			resource: Rules\Resources
 			event: Rules\Events
+			research: Rules\Researches
 
 	doctrine:
 		proxyDir: %tempDir%/proxies

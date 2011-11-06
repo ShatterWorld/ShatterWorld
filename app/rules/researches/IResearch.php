@@ -1,6 +1,7 @@
 <?php
 namespace Rules\Researches;
 use Rules\IRule;
+use Entities;
 
 /**
  * A research
@@ -27,4 +28,11 @@ interface IResearch extends IRule
 	 * @return array of $research => $level
 	 */
 	public function getDependencies ();
+	
+	/**
+	 * Anything that should be done after finishing a research
+	 * @param Entities\Construction
+	 * @return void
+	 */
+	public function afterResearch (Entities\Construction $construction);
 }

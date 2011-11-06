@@ -207,4 +207,26 @@ class Construction extends Event
 		$this->context->model->getClanService()->issueOrder($clan, FALSE);
 		$this->entityManager->flush();
 	}
+	
+	/**
+	 * Start a research
+	 * @param Entities\Clan
+	 * @param string
+	 * @param int
+	 * @return void
+	 */
+	public function startResearch (Entities\Clan $clan, $research, $level)
+	{
+		$rule = $this->context->rules->get('research', $research);
+		$this->create(array(
+			'target' => $clan->getHeadquarters(),
+			'owner' => $clan,
+			'type' => 'resource',
+			'construction' => $research,
+			'level' => $level,
+			'timeout' => $rule->getResearchTime($level)
+		), FALSE);
+		$this->context->model->getResourceService()->pay($clan, $rule->getCost($level), FALSE);
+		$this->entityManager->flush();
+	}
 }

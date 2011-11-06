@@ -3,25 +3,23 @@ namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
 
-class Storage extends AbstractRule implements IResearch
+class Trading extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Skladování';
+		return 'Obchod';
 	}
 	
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 250,
-			'stone' => pow($level, 2) * 250,
-			'metal' => pow($level, 2) * 250,
+			'food' => pow($level, 2) * 500
 		);
 	}
 	
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 18000;
+		return $level * 36000;
 	}
 	
 	public function getDependencies ()
@@ -31,6 +29,6 @@ class Storage extends AbstractRule implements IResearch
 	
 	public function afterResearch (Entities\Construction $construction)
 	{
-		$this->getContext()->getResourceService()->recalculateStorage($construction->owner, $construction->term);
+		# clean cache
 	}
 }
