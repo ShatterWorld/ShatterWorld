@@ -3,12 +3,30 @@ namespace Repositories;
 use Doctrine;
 use Entities;
 use Nette\Diagnostics\Debugger;
+use Nette\Caching\Cache;
 use ArraySet;
 use Graph;
 use Nette;
 
 class Clan extends BaseRepository
 {
+	/* Cache of clan graphs
+	 * @var Nette\Caching\Cache
+	 */
+	protected $clanGraphCache;
+
+	/**
+	 * Returns the cache
+	 * @return Nette\Caching\Cache
+	 */
+	public function getClanGraphCache ()
+	{
+		if ($this->clanGraphCache === null){
+			$this->clanGraphCache = new Cache($this->context->cacheStorage, 'ClanGraph');
+		}
+		return $this->clanGraphCache;
+	}
+
 	/**
 	 * Returns a clan specified by user given
 	 * @param Entities\User
@@ -45,9 +63,11 @@ class Clan extends BaseRepository
 	public function getDealersGraph ($clan, $initDepth)
 	{
 
-		/*
-		 * if cached, return it
-		 * */
+		$cachedGraph = $this->getClanGraphCache()->load($clan->id);
+		if ($cachedGraph !== null){
+			Debugger::barDump($a=true);
+			return $cachedGraph;
+		}
 
 		$fifo = ArraySet::from($this->getVisibleClans($clan));
 		$depths = new ArraySet();
@@ -60,6 +80,7 @@ class Clan extends BaseRepository
 
 		foreach($fifo as $dealer){
 			$id = $dealer->id;
+			$graph->addVertice($id, 1);
 			$dealers->addElement($id, $dealer);
 
 			$dealersVisibleClans = $this->getVisibleClans($dealer);
@@ -67,9 +88,10 @@ class Clan extends BaseRepository
 				if($depths->offsetGet($id) < 1) continue;
 
 				$dvcId = $dvc->id;
-				if ($dvcId != $id)
-				$graph->addEdge($id, $dvcId, $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters));
-
+				if ($dvcId != $id){
+					$graph->addVertice($dvcId, 1);
+					$graph->addEdge($id, $dvcId, $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters));
+				}
 				if ($depths->offsetExists($dvcId)){
 					if($depths->offsetGet($dvcId) < $depths->offsetGet($id)-1){
 						$depths->updateElement($dvcId, $depths->offsetGet($id)-1);
@@ -85,6 +107,11 @@ class Clan extends BaseRepository
 
 			$fifo->deleteElement($dealer->id);
 		}
+
+		$this->getClanGraphCache()->save($clan->id, $graph, array(
+			Cache::TAGS => array_map(function ($id) {return "observer/$id";}, $graph->getVerticesIds())
+		));
+
 		return $graph;
 	}
 

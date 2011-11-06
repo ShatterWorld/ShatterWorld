@@ -12,27 +12,46 @@ class Offer extends BaseService {
 	* Aceppts the given offer
 	* @param int
 	* @param Entities\Field
-	* @param array of int
 	* @return void
 	*/
-	public function accept ($offer, $targetClan, $time)
+	public function accept ($pathType, $offer, $targetClan)
 	{
 		if ($this->context->model->getResourceRepository()->checkResources($targetClan, array($offer->demand => $offer->demandAmount))){
 
+			$clanRepository = $this->context->model->getClanRepository();
+			$offerRepositary = $this->context->model->getOfferRepository();
+
+			$profits = $offerRepositary->getMediatorProfits($pathType, $targetClan, $offer);
+
+			$time = array('offer' => 10, 'demand' => 10);
+
 			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount), FALSE);
 			$this->update($offer, array('sold' => true), FALSE);
-			$this->context->model->getShipmentService()->create(array(
+
+			$this->context->model->getShipmentService()->create(array( //owner->target
 				'type' => 'shipment',
-				'timeout' => $time[0],
+				'timeout' => $time['offer'],
 				'owner' => $offer->owner,
 				'origin' => $offer->owner->getHeadquarters(),
 				'target' => $targetClan->getHeadquarters(),
-				'cargo' => array($offer->offer => $offer->offerAmount)
+				'cargo' => array($offer->offer => $offer->offerAmount - $offerRepositary->getTotalMediatorProfit($targetClan, $offer))
 			), FALSE);
 
-			$this->context->model->getShipmentService()->create(array(
+			foreach($profits as $clanId => $profit){
+				$this->context->model->getShipmentService()->create(array( //target->mediators
+					'type' => 'shipment',
+					'timeout' => $time['demand'],
+					'owner' => $targetClan,
+					'origin' => $targetClan->getHeadquarters(),
+					'target' => $clanRepository->find($clanId)->getHeadquarters(),
+					'cargo' => array($offer->offer => $profit)
+				), FALSE);
+
+			}
+
+			$this->context->model->getShipmentService()->create(array( //target->owner
 				'type' => 'shipment',
-				'timeout' => $time[1],
+				'timeout' => $time['demand'],
 				'owner' => $targetClan,
 				'origin' => $targetClan->getHeadquarters(),
 				'target' => $offer->owner->getHeadquarters(),

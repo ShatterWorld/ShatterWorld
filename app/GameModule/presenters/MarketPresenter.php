@@ -4,7 +4,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
-
+use Graph;
 
 /**
  * A MarketPresenter
@@ -84,21 +84,27 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function renderBuy ()
 	{
-		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan(), 7);
-		$clan = $this->getPlayerClan();
-		$clanHq = $clan->getHeadquarters();
+		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan());
 		$time = array();
 		$hasEnoughRes = array();
+		$profits = array();
+
+		$clan = $this->getPlayerClan();
+		$clanHq = $clan->getHeadquarters();
+
 		foreach ($offers as $key => $offer){
 			$targetHq = $offer->owner->getHeadquarters();
 			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
 			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
+			$profits['short'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::SHORT, $clan, $offer);
+			$profits['cheap'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
 		}
 
 		//Debugger::barDump($offers);
 		$this->template->offers = $offers;
 		$this->template->time = $time;
 		$this->template->hasEnoughRes = $hasEnoughRes;
+		$this->template->profits = $profits;
 	}
 
 	/**
@@ -114,15 +120,34 @@ class MarketPresenter extends BasePresenter {
 	}
 
 	/**
-	 * Signal that accepts the given offer
+	 * Signal that accepts the given offer by the shortest way
 	 * @param int
 	 * @return void
 	 */
-	public function handleAcceptOffer ($offerId)
+	public function handleAcceptOfferShort ($offerId)
 	{
 		try{
-			$time = array(10, 10);
-			$this->getOfferService()->accept($this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan(), $time);
+			$offerService = $this->getOfferService();
+			$offerService->accept(Graph::SHORT, $this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan());
+			$this->flashMessage('Koupeno!');
+		}
+		catch(InsufficientResourcesException $e){
+			$this->flashMessage('Nedostatek surovin');
+		}
+
+		$this->redirect('Market:');
+	}
+
+	/**
+	 * Signal that accepts the given offer by the cheapest way
+	 * @param int
+	 * @return void
+	 */
+	public function handleAcceptOfferCheap ($offerId)
+	{
+		try{
+			$offerService = $this->getOfferService();
+			$offerService->accept(Graph::CHEAP, $this->getOfferRepository()->findOneById($offerId), $this->getPlayerClan());
 			$this->flashMessage('Koupeno!');
 		}
 		catch(InsufficientResourcesException $e){
