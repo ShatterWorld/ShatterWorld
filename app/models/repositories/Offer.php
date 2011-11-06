@@ -24,31 +24,14 @@ class Offer extends BaseRepository
 
 		$qb = $this->createQueryBuilder('o');
 		$qb->where($qb->expr()->andX(
-			$qb->expr()->neq('o.owner', '?1'),
-			$qb->expr()->eq('o.sold', '?2')
+			$qb->expr()->neq('o.owner', $clan->id),
+			$qb->expr()->eq('o.sold', '?1'),
+			$qb->expr()->in('o.owner', $this->context->model->getClanRepository()->getDealersGraph($clan, $depth)->getVerticesIds())
 		));
-		$qb->setParameter(1, $clan->id);
-		$qb->setParameter(2, false);
-
+		$qb->setParameter(1, false);
 		$offers = $qb->getQuery()->getResult();
 
-		$clanRepository = $this->context->model->getClanRepository();
-		$graph = $clanRepository->getDealersGraph($clan, $depth);
-		$dealersIds = $graph->getVerticesIds();
-
-		$dealers = new ArraySet();
-		foreach($dealersIds as $id){
-			$dealers->addElement($id, $clanRepository->find($id));
-		}
-
-		$visibleOffers = array();
-		foreach($offers as $offer){
-			if($dealers->offsetExists($offer->owner->id)){
-				$visibleOffers[] = $offer;
-			}
-		}
-
-		return $visibleOffers;
+		return $offers;
 	}
 
 	/**
