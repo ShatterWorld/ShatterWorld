@@ -40,18 +40,18 @@ Game.map = {
 	 * Returns the width of #mapContainer
 	 * @return int
 	 */
-	getMapContainerWidth : function () {
-		var width = $('#mapContainer').css('width');
-		return width.substring(0, width.length -2);
+	getMapContainerWidth : function () 
+	{
+		return parseInt($('#mapContainer').css('width'));
 	},
 
 	/**
 	 * Returns the height of #mapContainer
 	 * @return int
 	 */
-	getMapContainerHeight : function () {
-		var height = $('#mapContainer').css('height');
-		return height.substring(0, height.length -2)
+	getMapContainerHeight : function () 
+	{
+		return parseInt($('#mapContainer').css('height'));
 	},
 
 	/**
