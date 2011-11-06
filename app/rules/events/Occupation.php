@@ -39,4 +39,20 @@ class Occupation extends Attack
 		}
 		return $message;
 	}
+	
+	public function isValid (Entities\Event $event)
+	{
+		if (parent::isValid($event)) {
+			$valid = FALSE;
+			foreach ($this->getContext()->model->getFieldRepository()->getFieldNeighbours($event->target) as $neighbour) {
+				if ($neighbour->owner === $event->owner) {
+					$valid = TRUE;
+					break;
+				}
+			}
+			return $valid;
+		} else {
+			return FALSE;
+		}
+	}
 }

@@ -50,4 +50,13 @@ class Resource extends BaseService
 		}
 		$this->entityManager->flush();
 	}
+	
+	public function recalculateStorage (Entities\Clan $clan, $term = NULL)
+	{
+		$storage = $this->context->stats->getResourceStorage($clan);
+		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
+			$account->setStorage($storage, $term ?: new \DateTime());
+		}
+		$this->entityManager->flush();
+	}
 }

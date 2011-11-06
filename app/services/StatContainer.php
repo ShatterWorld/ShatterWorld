@@ -172,6 +172,19 @@ class StatContainer extends Nette\Object
 		return $result;
 	}
 
+	public function getResourceStorage (Entities\Clan $clan)
+	{
+		$storage = $this->context->params['game']['stats']['baseStorage'];
+		$research = $this->context->model->getResearchRepository()->findOneBy(array(
+			'type' => 'storage',
+			'owner' => $clan->id
+		));
+		if ($research) {
+			$storage = $storage * pow($research->level + 1, 2) / 2;
+		}
+		return $storage;
+	}
+	
 	public function getTotalUnitSlots (Entities\Clan $clan)
 	{
 		$result = array();

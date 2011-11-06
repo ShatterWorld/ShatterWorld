@@ -194,8 +194,9 @@ class Resource extends BaseEntity
 	 * @param int
 	 * @return void
 	 */
-	public function setStorage ($storage)
+	public function setStorage ($storage, $time = NULL)
 	{
+		$this->settleBalance($time);
 		$this->storage = $storage;
 	}
 	
