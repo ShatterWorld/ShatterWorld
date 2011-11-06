@@ -230,9 +230,9 @@ class Graph
 			$neighbours = $this->getNeighbours($u);
 
 			foreach($neighbours as $key => $neighbour){
-				$ver = $this->vertices->offsetGet($key);//price of neigh vertice
+				//$ver = $this->vertices->offsetGet($key);//price of neigh vertice
 				if (isset($lengths[$u])){
-					$potentialLength = $lengths[$u] + $ver;
+					$potentialLength = $lengths[$u] + $neighbour;
 					if(!isset($lengths[$key]) || $potentialLength < $lengths[$key]){
 						$lengths[$key] = $potentialLength;
 						$prevVertices[$key] = $u;

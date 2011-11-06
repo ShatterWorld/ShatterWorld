@@ -65,6 +65,7 @@ class Clan extends BaseRepository
 
 		$cachedGraph = $this->getClanGraphCache()->load($clan->id);
 		if ($cachedGraph !== null){
+			Debugger::barDump($a=true);
 			return $cachedGraph;
 		}
 
@@ -106,9 +107,11 @@ class Clan extends BaseRepository
 
 			$fifo->deleteElement($dealer->id);
 		}
-		/*$this->getClanGraphCache()->save($clan->id, $graph, array(
-			Cache::TAGS => array("observers/$graph->getVerticesIds")
-		));*/
+
+		$this->getClanGraphCache()->save($clan->id, $graph, array(
+			Cache::TAGS => array_map(function ($id) {return "observer/$id";}, $graph->getVerticesIds())
+		));
+
 		return $graph;
 	}
 
