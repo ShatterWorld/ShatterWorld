@@ -14,6 +14,7 @@ class Construction extends Event
 	 * @param array of mixed
 	 * @param boolean
 	 * @return Entities\Construction
+	 * @throws MultipleConstructionsException
 	 */
 	public function create ($values, $flush = TRUE)
 	{
@@ -24,7 +25,7 @@ class Construction extends Event
 				}
 			}
 		}
-		parent::create($values, $flush);
+		return parent::create($values, $flush);
 	}
 
 	/**
@@ -43,31 +44,6 @@ class Construction extends Event
 				'origin' => $clan->getHeadquarters(),
 				'type' => 'colonisation',
 				'timeout' => $this->context->stats->getColonisationTime($target, $clan)
-			), FALSE);
-			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
-			$this->context->model->getClanService()->issueOrder($clan, FALSE);
-			$this->entityManager->flush();
-		} else {
-			throw new \InsufficientResourcesException;
-		}
-	}
-
-	/**
-	 * Start exploration of given field
-	 * @param Entities\Field
-	 * @param Entities\Clan
-	 * @return void
-	 */
-	public function startExploration (Entities\Field $target, Entities\Clan $clan)
-	{
-		$cost = $this->context->stats->getExplorationCost($target, $clan);
-		if ($this->context->model->getResourceRepository()->checkResources($clan, $cost)) {
-			$this->create(array(
-				'owner' => $clan,
-				'target' => $target,
-				'origin' => $clan->getHeadquarters(),
-				'type' => 'exploration',
-				'timeout' => $this->context->stats->getExplorationTime($target, $clan)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);

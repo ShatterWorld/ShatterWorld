@@ -179,19 +179,23 @@ class MapPresenter extends BasePresenter
 		$this->sendPayload();
 	}
 
-	public function handleSendExploration ($targetId)
+	public function handleSendExploration ($originId, $targetId)
 	{
+		$args = $this->request->params;
+		$units = array();
+		foreach ($args as $key => $arg) {
+			if (is_numeric($key)) {
+				$units[$key] = $arg;
+			}
+		}
+		$origin = $this->getFieldRepository()->find($originId);
+		$target = $this->getFieldRepository()->find($targetId);
 		try {
-			$this->context->model->getConstructionService()->startExploration($this->context->model->getFieldRepository()->find($targetId), $this->getPlayerClan());
+			$this->context->model->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), 'pillaging', $units);
 			$this->invalidateControl('orders');
-			$this->invalidateControl('resources');
 			$this->flashMessage('Průzkum zahájen');
-		} catch (MultipleConstructionsException $e) {
-			$this->flashMessage('Toto pole už kolonizujete nebo ho již prozkoumáváte.', 'error');
 		} catch (RuleViolationException $e) {
-			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
-		} catch (InsufficientResourcesException $e) {
-			$this->flashMessage('Nemáte dostatek surovin', 'error');
+			$this->flashMessage('Toto pole nemůžete prozkoumávat', 'error');
 		}
 	}
 }
