@@ -31,6 +31,9 @@ common:
 			orderTime: 3600
 			orderCap: 30
 			facilityLevelCap: 10
+			baseTradingRadius: 7
+			baseMerchantSpeed: 1
+			baseTradeProfit: 0.01
 
 		ruleAliases:
 			unit: Rules\Units

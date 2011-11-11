@@ -18,7 +18,8 @@ class Offer extends BaseRepository
 	 */
 	public function findReachable ($clan)
 	{
-		$depth = 7; //get const !!!
+		$stats = $this->context->stats;
+		$depth = $stats->getTradingRadius($clan);
 
 		$qb = $this->createQueryBuilder('o');
 		$qb->where($qb->expr()->andX(
@@ -28,6 +29,22 @@ class Offer extends BaseRepository
 		));
 		$qb->setParameter(1, false);
 		$offers = $qb->getQuery()->getResult();
+
+		//Debugger::barDump($offers);
+
+		$fieldRepository = $this->context->model->getFieldRepository();
+		$hq = $clan->headquarters;
+
+		usort($offers, function($a, $b) use ($fieldRepository, $hq, $stats){
+			$timeA = $fieldRepository->calculateDistance($a->owner->headquarters, $hq) * $stats->getMerchantSpeed($a->owner);
+			$timeB = $fieldRepository->calculateDistance($b->owner->headquarters, $hq) * $stats->getMerchantSpeed($b->owner);
+
+			if ($timeA == $timeB) {
+				return 0;
+			}
+			return ($timeA < $timeB) ? -1 : 1;
+
+		});
 
 		return $offers;
 	}

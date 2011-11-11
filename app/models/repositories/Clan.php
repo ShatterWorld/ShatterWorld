@@ -88,7 +88,7 @@ class Clan extends BaseRepository
 
 				$dvcId = $dvc->id;
 				if ($dvcId != $id){
-					$graph->addVertice($dvcId, 1);
+					$graph->addVertice($dvcId, $this->context->stats->getTradeProfit($dvc));
 					$graph->addEdge($id, $dvcId, $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters));
 				}
 				if ($depths->offsetExists($dvcId)){

@@ -184,7 +184,7 @@ class StatContainer extends Nette\Object
 		}
 		return $storage;
 	}
-	
+
 	public function getTotalUnitSlots (Entities\Clan $clan)
 	{
 		$result = array();
@@ -222,4 +222,38 @@ class StatContainer extends Nette\Object
 		}
 		return $result;
 	}
+
+	/**
+	 * Get the number of mediators the offer can go through
+	 * @param Entities\Clan
+	 * @return int
+	 */
+	public function getTradingRadius (Entities\Clan $clan)
+	{
+		$baseRadius = $this->context->params['game']['stats']['baseTradingRadius'];
+		return $baseRadius;
+	}
+
+	/**
+	 * Get the speed of merchants
+	 * @param Entities\Clan
+	 * @return int
+	 */
+	public function getMerchantSpeed (Entities\Clan $clan)
+	{
+		$baseMerchantSpeed = $this->context->params['game']['stats']['baseMerchantSpeed'];
+		return $baseMerchantSpeed;
+	}
+
+	/**
+	 * Get the % profit of the clan
+	 * @param Entities\Clan
+	 * @return float
+	 */
+	public function getTradeProfit (Entities\Clan $clan)
+	{
+		$baseTradeProfit = $this->context->params['game']['stats']['baseTradeProfit'];
+		return $baseTradeProfit;
+	}
+
 }
