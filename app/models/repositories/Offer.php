@@ -21,7 +21,10 @@ class Offer extends BaseRepository
 		$stats = $this->context->stats;
 		$depth = $stats->getTradingRadius($clan);
 
-		$qb = $this->createQueryBuilder('o');
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('o')->from($this->getEntityName())
+			->innerJoin('c', 'o.owner')
+			->innerJoin('h', 'c.headquarters');
 		$qb->where($qb->expr()->andX(
 			$qb->expr()->neq('o.owner', $clan->id),
 			$qb->expr()->eq('o.sold', '?1'),
