@@ -194,8 +194,6 @@ class Graph
 		while(count($vertices) > 0){
 			$u = $this->popSmallest($vertices);//id
 			$neighbours = $this->getNeighbours($u);
-
-			//Debugger::barDump($neighbours);
 			foreach($neighbours as $key => $neighbour){
 				if (isset($lengths[$u])){
 					$potentialLength = $lengths[$u] + $neighbour;
@@ -224,10 +222,17 @@ class Graph
 		$prevVertices[$from] = null;
 		$lengths[$from] = 0;
 
+		//Debugger::barDump($this->vertices);
+		$x = $this->vertices->offsetGet('420');
+
 		// alg
+		Debugger::barDump($vertices);
 		while(count($vertices) > 0){
+
 			$u = $this->popSmallest($vertices);//id
 			$neighbours = $this->getNeighbours($u);
+			//$x = $this->vertices->offsetGet($u);
+			//Debugger::barDump($x);
 
 			foreach($neighbours as $key => $neighbour){
 				//$ver = $this->vertices->offsetGet($key);//price of neigh vertice
