@@ -222,22 +222,18 @@ class Graph
 		$prevVertices[$from] = null;
 		$lengths[$from] = 0;
 
-		//Debugger::barDump($this->vertices);
-		$x = $this->vertices->offsetGet('420');
+		$verArr = $this->vertices->toArray();
 
 		// alg
-		Debugger::barDump($vertices);
 		while(count($vertices) > 0){
 
 			$u = $this->popSmallest($vertices);//id
 			$neighbours = $this->getNeighbours($u);
-			//$x = $this->vertices->offsetGet($u);
-			//Debugger::barDump($x);
 
 			foreach($neighbours as $key => $neighbour){
-				//$ver = $this->vertices->offsetGet($key);//price of neigh vertice
 				if (isset($lengths[$u])){
-					$potentialLength = $lengths[$u] + $neighbour;
+					$x = -log($verArr[$u]);
+					$potentialLength = $lengths[$u] + $x;
 					if(!isset($lengths[$key]) || $potentialLength < $lengths[$key]){
 						$lengths[$key] = $potentialLength;
 						$prevVertices[$key] = $u;
@@ -245,7 +241,7 @@ class Graph
 				}
 			}
 		}
-
+		//Debugger::barDump($prevVertices);
 		return $prevVertices;
 	}
 
