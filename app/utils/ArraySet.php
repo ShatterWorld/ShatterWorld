@@ -85,7 +85,7 @@ class ArraySet extends Nette\ArrayHash
 	 */
 	public function toArray ()
 	{
-		return iterator_to_array ($this->getIterator(), true);
+		return (array) $this;
 	}
 
 }
