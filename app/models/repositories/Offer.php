@@ -22,9 +22,9 @@ class Offer extends BaseRepository
 		$depth = $stats->getTradingRadius($clan);
 
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('o')->from($this->getEntityName())
-			->innerJoin('c', 'o.owner')
-			->innerJoin('h', 'c.headquarters');
+		$qb->select('o', 'c', 'h')->from($this->getEntityName(), 'o')
+			->innerJoin('o.owner', 'c')
+			->innerJoin('c.headquarters', 'h');
 		$qb->where($qb->expr()->andX(
 			$qb->expr()->neq('o.owner', $clan->id),
 			$qb->expr()->eq('o.sold', '?1'),
@@ -33,20 +33,19 @@ class Offer extends BaseRepository
 		$qb->setParameter(1, false);
 		$offers = $qb->getQuery()->getResult();
 
-		//Debugger::barDump($offers);
-
 		$fieldRepository = $this->context->model->getFieldRepository();
 		$hq = $clan->headquarters;
 
 		usort($offers, function($a, $b) use ($fieldRepository, $hq, $stats){
-			$timeA = $fieldRepository->calculateDistance($a->owner->headquarters, $hq) * $stats->getMerchantSpeed($a->owner);
-			$timeB = $fieldRepository->calculateDistance($b->owner->headquarters, $hq) * $stats->getMerchantSpeed($b->owner);
+			//$timeA = $fieldRepository->calculateDistance($a->owner->headquarters, $hq) * $stats->getMerchantSpeed($a->owner);
+			//$timeB = $fieldRepository->calculateDistance($b->owner->headquarters, $hq) * $stats->getMerchantSpeed($b->owner);
+			$timeA = $fieldRepository->calculateDistance($hq, $hq);
+			$timeB = 5;
 
 			if ($timeA == $timeB) {
 				return 0;
 			}
 			return ($timeA < $timeB) ? -1 : 1;
-
 		});
 
 		return $offers;
