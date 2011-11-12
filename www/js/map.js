@@ -418,7 +418,8 @@ Game.map = {
 		});
 	},
 
-	openMenu: function(e){
+	openMenu: function (e) 
+	{
 		var field = Game.map.determineField(e);
 		if (field) {
 			var div = field.element;
@@ -427,20 +428,9 @@ Game.map = {
 				Game.map.contextMenu.hide();
 				Game.map.marker.unmarkByType('selected');
 				return;
-			}
-
-			if(Game.map.contextMenu.initialField === null || Game.map.contextMenu.action === null){
-				Game.map.contextMenu.initialField = field;
+			} else {
 				Game.map.marker.mark(field, 'selected');
 				Game.map.contextMenu.show(field);
-			}
-			else if(Game.map.contextMenu.action == "attackSelect2nd"){
-				Game.map.contextMenu.attackSelect2nd(Game.map.contextMenu.initialField, field)
-			}
-			else{
-				Game.map.contextMenu.action(Game.map.contextMenu.initialField, field);
-				Game.map.contextMenu.hide();
-				Game.map.marker.unmarkByType('selected');
 			}
 		}
 	},
@@ -559,8 +549,6 @@ Game.map.marker = {
 			});
 			this.markers[type] = {};
 		}
-
-		this.initialField = null;
 	}
 };
 
@@ -718,20 +706,6 @@ Game.map.contextMenu = {
 	demolitions : null,
 
 	/**
-	 * @var function - action that runs when the target is selected
-	 * @param Field
-	 * @param Field
-	 * @return void
-	 */
-	action : null,
-
-	/**
-	 * First clicked field (init. the action)
-	 * @var Field
-	 */
-	initialField : null,
-
-	/**
 	 * Representing the context menu
 	 * @var String/Object
 	 */
@@ -849,7 +823,6 @@ Game.map.contextMenu = {
 				actionDiv.css('text-decoration', 'line-through');
 			}
 		});
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
@@ -860,15 +833,12 @@ Game.map.contextMenu = {
 	 */
 	addAttackAction: function (from){
 		var actionDiv = this.basicActionDiv.clone(true).html('Útok');
-
 		actionDiv.click(function(){
 			var dialog = new Game.map.contextMenu.AttackDialog();
 			var attackDialog = $('<div />').attr('id', 'attackDialog');
 			dialog.setup(attackDialog, from);
 			Game.map.contextMenu.hide();
 		});
-
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
@@ -901,8 +871,6 @@ Game.map.contextMenu = {
 				actionDiv.css('text-decoration', 'line-through');
 			}
 		}
-
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
@@ -933,8 +901,6 @@ Game.map.contextMenu = {
 				actionDiv.css('text-decoration', 'line-through');
 			}
 		}
-
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
@@ -965,8 +931,6 @@ Game.map.contextMenu = {
 			}
 		}
 		else{alert('destroy is undefined');}
-
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
@@ -1007,8 +971,6 @@ Game.map.contextMenu = {
 			Game.map.contextMenu.addCancelAction();
 
 		});
-
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
@@ -1020,17 +982,15 @@ Game.map.contextMenu = {
 	addLeaveFieldAction: function(target) {
 		var actionDiv = this.basicActionDiv.clone(true).html('Opustit pole');
 		actionDiv.click(function(){
-		Game.spinner.show(Game.map.contextMenu.contextMenu);
-		Game.utils.signal('leaveField', {'targetId': target['id']}, function () {
-			Game.events.fetchEvents();
-			Game.map.marker.unmarkByType('selected');
-			Game.map.disableField(target);
-			Game.spinner.hide();
-			Game.map.contextMenu.hide();
+			Game.spinner.show(Game.map.contextMenu.contextMenu);
+			Game.utils.signal('leaveField', {'targetId': target['id']}, function () {
+				Game.events.fetchEvents();
+				Game.map.marker.unmarkByType('selected');
+				Game.map.disableField(target);
+				Game.spinner.hide();
+				Game.map.contextMenu.hide();
+			});
 		});
-		});
-
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
@@ -1047,7 +1007,6 @@ Game.map.contextMenu = {
 			dialog.setup(attackDialog, from);
 			Game.map.contextMenu.hide();
 		});
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
@@ -1061,8 +1020,6 @@ Game.map.contextMenu = {
 			Game.map.marker.unmarkByType('selected');
 			Game.map.contextMenu.hide();
 		});
-
-		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
 
