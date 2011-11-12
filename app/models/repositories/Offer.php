@@ -36,11 +36,9 @@ class Offer extends BaseRepository
 		$fieldRepository = $this->context->model->getFieldRepository();
 		$hq = $clan->headquarters;
 
-		usort($offers, function($a, $b) use ($fieldRepository, $hq, $stats){
-			//$timeA = $fieldRepository->calculateDistance($a->owner->headquarters, $hq) * $stats->getMerchantSpeed($a->owner);
-			//$timeB = $fieldRepository->calculateDistance($b->owner->headquarters, $hq) * $stats->getMerchantSpeed($b->owner);
-			$timeA = $fieldRepository->calculateDistance($hq, $hq);
-			$timeB = 5;
+		@usort($offers, function($a, $b) use ($fieldRepository, $hq, $stats){
+			$timeA = $fieldRepository->calculateDistance($a->owner->headquarters, $hq) * $stats->getMerchantSpeed($a->owner);
+			$timeB = $fieldRepository->calculateDistance($b->owner->headquarters, $hq) * $stats->getMerchantSpeed($b->owner);
 
 			if ($timeA == $timeB) {
 				return 0;
