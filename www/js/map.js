@@ -1143,7 +1143,7 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		Game.map.overlayDiv.unbind('click');
 		Game.map.overlayDiv.click({'context': this}, this.selectTarget);
 		$(element).dialog({
-			title: 'Útok',
+			title: this.getTitle(),
 			width: w,
 			height: h,
 
@@ -1151,6 +1151,7 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 				text: "Zrušit",
 				click: function() {
 					$(this).dialog("close");
+					$(this).dialog("destroy").remove();
 				}
 			}],
 
@@ -1200,6 +1201,7 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 	{
 		var context = e.data.context;
 		var target = Game.map.determineField(e);
+		context.target = target;
 		if (context.validateTarget(target)) {
 			var targetX = $('#attackDialog #targetX');
 			var targetY = $('#attackDialog #targetY');
@@ -1208,7 +1210,7 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 			Game.map.marker.mark(target, 'yellow');
 			targetX.html(target['coordX']);
 			targetY.html(target['coordY']);
-			$(element).dialog('option', 'buttons', context.getButtons().concat([{
+			$(element).dialog('option', 'buttons', context.getButtons(context).concat([{
 				text: "Zrušit",
 				click: function() {
 					$(this).dialog("close");
@@ -1228,20 +1230,24 @@ Game.map.contextMenu.AttackDialog = Class({
 			&& Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance);
 	},
 	
+	getTitle: function ()
+	{
+		return 'Útok';
+	},
+	
 	getAddition: function ()
 	{
 		return 'Typ útoku: <select id="#type"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>';
 	},
 	
-	getButtons: function () {
+	getButtons: function (context) {
 		return [{
 			text: "Zaútočit",
 			click: function (e) {
-				var context = e.data.context;
-				Game.spinner.show(element);
+				Game.spinner.show(context.element);
 				var params = {
 					'originId': context.origin['id'],
-					'targetId': target['id'],
+					'targetId': context.target['id'],
 					'type': $('#attackDialog #type').val()
 				};
 				jQuery.extend(params, context.getUnitList());
@@ -1263,16 +1269,20 @@ Game.map.contextMenu.ExplorationDialog = Class({
 		return target['owner'] == null;
 	},
 	
-	getButtons: function ()
+	getTitle: function ()
+	{
+		return 'Průzkum';
+	},
+	
+	getButtons: function (context)
 	{
 		return [{
 			text: "Zahájit průzkum",
 			click: function (e) {
-				var context = e.data.context;
-				Game.spinner.show(element);
+				Game.spinner.show(context.element);
 				var params = {
 					'originId': context.origin['id'],
-					'targetId': target['id']
+					'targetId': context.target['id']
 				};
 				jQuery.extend(params, context.getUnitList());
 				Game.utils.signal('sendExploration', params, function() {

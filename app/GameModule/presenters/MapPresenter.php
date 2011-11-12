@@ -43,7 +43,7 @@ class MapPresenter extends BasePresenter
 		$this->sendPayload();
 	}
 
-	public function handleAttack ($originId, $targetId)
+	public function handleSendAttack ($originId, $targetId, $type)
 	{
 		$args = $this->request->params;
 		$units = array();
@@ -55,7 +55,7 @@ class MapPresenter extends BasePresenter
 		$origin = $this->getFieldRepository()->find($originId);
 		$target = $this->getFieldRepository()->find($targetId);
 		try {
-			$this->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), 'pillaging', $units);
+			$this->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), $type, $units);
 			$this->invalidateControl('orders');
 			$this->flashMessage('Útok zahájen');
 		} catch (RuleViolationException $e) {
@@ -170,15 +170,6 @@ class MapPresenter extends BasePresenter
 		}
 	}
 
-	public function handleFetchExplorationCost ($targetId)
-	{
-		$target = $this->getFieldRepository()->find($targetId);
-		$clan = $this->getPlayerClan();
-		$this->payload->cost = $this->context->stats->getExplorationCost($target, $clan);
-		$this->payload->time = $this->context->stats->getExplorationTime($target, $clan);
-		$this->sendPayload();
-	}
-
 	public function handleSendExploration ($originId, $targetId)
 	{
 		$args = $this->request->params;
@@ -191,7 +182,7 @@ class MapPresenter extends BasePresenter
 		$origin = $this->getFieldRepository()->find($originId);
 		$target = $this->getFieldRepository()->find($targetId);
 		try {
-			$this->context->model->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), 'pillaging', $units);
+			$this->context->model->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), 'exploration', $units);
 			$this->invalidateControl('orders');
 			$this->flashMessage('Průzkum zahájen');
 		} catch (RuleViolationException $e) {

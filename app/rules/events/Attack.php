@@ -7,6 +7,8 @@ use Entities;
 
 abstract class Attack extends AbstractRule implements IEvent
 {
+	protected $attackingUnits;
+	
 	protected function evaluateBattle (Entities\Event $event)
 	{
 		$result = array(
@@ -71,13 +73,12 @@ abstract class Attack extends AbstractRule implements IEvent
 		if ($loot) {
 			$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot);
 		}
-		$processor->queueEvent($this->getContext()->model->getMoveService()->startUnitMovement(
-			$event->target, 
-			$event->origin, 
-			$event->origin->owner, 
-			'unitReturn', 
-			$event->getUnitList(), 
-			$loot, 
+		$processor->queueEvent($this->getContext()->model->getMoveService()->startUnitReturn(
+			$event->target,
+			$event->origin,
+			$event->origin->owner,
+			$this->attackingUnits,
+			$loot,
 			$event->term
 		));
 	}
@@ -86,7 +87,7 @@ abstract class Attack extends AbstractRule implements IEvent
 	{
 		$model = $this->getContext()->model;
 		$result = $this->evaluateBattle($event);
-		$attackerUnits = $event->getUnitList();
+		$this->attackingUnits = $event->getUnitList();
 		$model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
 		if ($result['attacker']['casualties']) {
 			$model->getUnitService()->removeUnits($event->owner, $event->target, $result['attacker']['casualties'], $event->term);
