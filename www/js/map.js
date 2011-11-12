@@ -112,7 +112,7 @@ Game.map = {
 	 */
 	nullDisabledFields : function(){
 		this.disabledFields = new Array();
-		Game.map.marker.unmarkAll('brown');
+		Game.map.marker.unmarkAll('disabled');
 	},
 
 	/**
@@ -124,7 +124,7 @@ Game.map = {
 	disableField : function(field, type){
 		this.disabledFields.push(field);
 		field.element.attr('data-disabled', type);
-		Game.map.marker.mark(field, 'brown');
+		Game.map.marker.mark(field, 'disabled');
 	},
 
 	getField : function (x, y) {
@@ -425,13 +425,13 @@ Game.map = {
 
 			if(Game.map.contextMenu.contextMenuShown){
 				Game.map.contextMenu.hide();
-				Game.map.marker.unmarkAll('red');
+				Game.map.marker.unmarkByType('selected');
 				return;
 			}
 
 			if(Game.map.contextMenu.initialField === null || Game.map.contextMenu.action === null){
 				Game.map.contextMenu.initialField = field;
-				Game.map.marker.mark(field, 'red');
+				Game.map.marker.mark(field, 'selected');
 				Game.map.contextMenu.show(field);
 			}
 			else if(Game.map.contextMenu.action == "attackSelect2nd"){
@@ -440,7 +440,7 @@ Game.map = {
 			else{
 				Game.map.contextMenu.action(Game.map.contextMenu.initialField, field);
 				Game.map.contextMenu.hide();
-				Game.map.marker.unmarkAll('red');
+				Game.map.marker.unmarkByType('selected');
 			}
 		}
 	},
@@ -498,42 +498,40 @@ Game.map = {
 Game.map.marker = {
 
 	/**
-	 * The size of the marker
-	 * @var integer
-	 */
-	size : 5,
-
-	/**
 	 * The stack of ellipses
 	 * @var array
 	 */
-	ellipses : {},
+	markers : {},
 
+	colors: {
+		disabled: 'brown',
+		selected: 'red',
+		target: 'yellow',
+		focus: 'blue',
+		hover: 'white'
+	},
+	
 	/**
 	 * Marks the given fields with given valid color
 	 * @param object/string
 	 * @param string
 	 * @return void
 	 */
-	mark : function (field, color) {
-		if (!Game.utils.isset(this.ellipses[color])){
-			this.ellipses[color] = {};
+	mark : function (field, type) {
+		if (!Game.utils.isset(this.markers[type])){
+			this.markers[type] = {};
 		}
 
-		$(field.element).attr('class', 'markedField'+color);
-
-// 		var globalField = Game.utils.localToGlobal(field.element, 0, 0);
-// 		var globalOverlay = Game.utils.localToGlobal(Game.map.overlayDiv, 0, 0);
+		$(field.element).attr('class', 'markedField'+type);
 
 		var x = parseInt(field.element.css('left'));
 		var y = parseInt(field.element.css('top'));
 		
 		var ellipse = Game.map.overlay.ellipse(x+30, y+20, 30, 20); //left,top,x-axis, y-axis
-		ellipse.id = $(field.element).attr('id');
+		ellipse.id = 'marker-' + $(field.element).attr('id');
 
-		ellipse.attr({stroke: color, "stroke-width": "4"});
-		this.ellipses[color][$(field.element).attr('id')] = ellipse;
-
+		ellipse.attr({stroke: this.colors[type], 'stroke-width': 4});
+		this.markers[type]['marker-' + $(field.element).attr('id')] = ellipse;
 	},
 
 	/**
@@ -542,9 +540,9 @@ Game.map.marker = {
 	 * @return void
 	 */
 	unmarkById : function (id) {
-		$.each(this.ellipses, function(color, arr){
-			if (Game.utils.isset(arr[id])){
-				arr[id].remove();
+		$.each(this.markers, function(type, arr){
+			if (Game.utils.isset(arr['marker-' + id])){
+				arr['marker-' + id].remove();
 			}
 		});
 	},
@@ -554,12 +552,12 @@ Game.map.marker = {
 	 * @param string
 	 * @return void
 	 */
-	unmarkAll : function(color){
-		if(Game.utils.isset(this.ellipses[color])){
-			$.each(this.ellipses[color], function(key, ellipse){
+	unmarkByType : function (type) {
+		if(Game.utils.isset(this.markers[type])){
+			$.each(this.markers[type], function(key, ellipse){
 				ellipse.remove();
 			});
-			this.ellipses[color] = {};
+			this.markers[type] = {};
 		}
 
 		this.initialField = null;
@@ -841,7 +839,7 @@ Game.map.contextMenu = {
 					Game.utils.signal('sendColonisation', {'targetId': target['id']}, function(){
 						Game.events.fetchEvents();
 						Game.resources.fetchResources();
-						Game.map.marker.unmarkAll('red');
+						Game.map.marker.unmarkByType('selected');
 						Game.map.disableField(target);
 						Game.spinner.hide();
 						Game.map.contextMenu.hide();
@@ -890,7 +888,7 @@ Game.map.contextMenu = {
 					Game.utils.signal('upgradeFacility', {'targetId': target['id']}, function () {
 						Game.events.fetchEvents();
 						Game.resources.fetchResources();
-						Game.map.marker.unmarkAll('red');
+						Game.map.marker.unmarkByType('selected');
 						Game.map.disableField(target);
 						Game.spinner.hide();
 						Game.map.contextMenu.hide();
@@ -923,7 +921,7 @@ Game.map.contextMenu = {
 					Game.utils.signal('downgradeFacility', {'targetId': target['id']}, function () {
 						Game.events.fetchEvents();
 						Game.resources.fetchResources();
-						Game.map.marker.unmarkAll('red');
+						Game.map.marker.unmarkByType('selected');
 						Game.map.disableField(target);
 						Game.spinner.hide();
 						Game.map.contextMenu.hide();
@@ -956,7 +954,7 @@ Game.map.contextMenu = {
 					Game.utils.signal('destroyFacility', {'targetId': target['id']}, function () {
 						Game.events.fetchEvents();
 						Game.resources.fetchResources();
-						Game.map.marker.unmarkAll('red');
+						Game.map.marker.unmarkByType('selected');
 						Game.map.disableField(target);
 						Game.spinner.hide();
 						Game.map.contextMenu.hide();
@@ -992,7 +990,7 @@ Game.map.contextMenu = {
 						Game.utils.signal('buildFacility', {'targetId': target['id'], 'facility': name}, function (data) {
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
-							Game.map.marker.unmarkAll('red');
+							Game.map.marker.unmarkByType('selected');
 							Game.map.disableField(target);
 							Game.spinner.hide();
 							Game.map.contextMenu.hide();
@@ -1025,7 +1023,7 @@ Game.map.contextMenu = {
 		Game.spinner.show(Game.map.contextMenu.contextMenu);
 		Game.utils.signal('leaveField', {'targetId': target['id']}, function () {
 			Game.events.fetchEvents();
-			Game.map.marker.unmarkAll('red');
+			Game.map.marker.unmarkByType('selected');
 			Game.map.disableField(target);
 			Game.spinner.hide();
 			Game.map.contextMenu.hide();
@@ -1060,7 +1058,7 @@ Game.map.contextMenu = {
 	addCancelAction: function (){
 		var actionDiv = this.basicActionDiv.clone(true).html('Zrušit');
 		actionDiv.click(function(){
-			Game.map.marker.unmarkAll('red');
+			Game.map.marker.unmarkByType('selected');
 			Game.map.contextMenu.hide();
 		});
 
@@ -1164,8 +1162,8 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 				Game.cookie.set('#unitDialogHeight', $(element).dialog("option", "height"), 7);
 			},
 			close: function(event, ui) {
-				Game.map.marker.unmarkAll('yellow');
-				Game.map.marker.unmarkAll('red');
+				Game.map.marker.unmarkByType('target');
+				Game.map.marker.unmarkByType('selected');
 				Game.map.overlayDiv.unbind('click');
 				Game.map.overlayDiv.click(Game.map.openMenu);
 				Game.map.contextMenu.action = null;
@@ -1206,8 +1204,8 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 			var targetX = $('#attackDialog #targetX');
 			var targetY = $('#attackDialog #targetY');
 			var element = context.element;
-			Game.map.marker.unmarkAll('yellow');
-			Game.map.marker.mark(target, 'yellow');
+			Game.map.marker.unmarkByType('target');
+			Game.map.marker.mark(target, 'target');
 			targetX.html(target['coordX']);
 			targetY.html(target['coordY']);
 			$(element).dialog('option', 'buttons', context.getButtons(context).concat([{

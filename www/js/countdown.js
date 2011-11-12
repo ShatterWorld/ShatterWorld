@@ -25,11 +25,11 @@ Game.countdown = {
 			var y = coords.y;
 			if (Game.utils.isset(Game.map) && Game.map.loaded){
 				countdownTr.mouseenter(function(){
-					Game.map.marker.mark(Game.map.getField(x, y), 'blue');
+					Game.map.marker.mark(Game.map.getField(x, y), 'focus');
 				});
 
 				countdownTr.mouseleave(function(){
-					Game.map.marker.unmarkAll('blue');
+					Game.map.marker.unmarkByType('focus');
 					Game.map.disableField(Game.map.getField(x, y));
 				});
 			}
