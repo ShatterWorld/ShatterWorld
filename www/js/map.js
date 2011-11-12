@@ -1151,7 +1151,6 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 				text: "Zrušit",
 				click: function() {
 					$(this).dialog("close");
-					$(this).dialog("destroy").remove();
 				}
 			}],
 
@@ -1164,12 +1163,13 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 				Game.cookie.set('#unitDialogWidth', $(element).dialog("option", "width"), 7);
 				Game.cookie.set('#unitDialogHeight', $(element).dialog("option", "height"), 7);
 			},
-			beforeClose: function(event, ui) {
+			close: function(event, ui) {
 				Game.map.marker.unmarkAll('yellow');
 				Game.map.marker.unmarkAll('red');
 				Game.map.overlayDiv.unbind('click');
 				Game.map.overlayDiv.click(Game.map.openMenu);
 				Game.map.contextMenu.action = null;
+				$(this).dialog("destroy").remove();
 			}
 		});
 	},
