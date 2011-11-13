@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * A research entity
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Research")
  * @author Jan "Teyras" Buchar
  */
 class Research extends BaseEntity
@@ -13,20 +13,20 @@ class Research extends BaseEntity
 	 * @var string
 	 */
 	private $type;
-	
+
 	/**
 	 * @Column(type = "integer")
 	 * @var int
 	 */
 	private $level;
-	
+
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan")
 	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\Clan
 	 */
 	private $owner;
-	
+
 	/**
 	 * Constructor
 	 * @param Entities\Clan
@@ -37,7 +37,7 @@ class Research extends BaseEntity
 		$this->owner = $owner;
 		$this->type = $type;
 	}
-	
+
 	/**
 	 * Type getter
 	 * @return string
@@ -46,7 +46,7 @@ class Research extends BaseEntity
 	{
 		return $this->type;
 	}
-	
+
 	/**
 	 * Owner getter
 	 * @return Entities\Clan
@@ -55,7 +55,7 @@ class Research extends BaseEntity
 	{
 		return $this->owner;
 	}
-	
+
 	/**
 	 * Level getter
 	 * @return int
@@ -64,7 +64,7 @@ class Research extends BaseEntity
 	{
 		return $this->level;
 	}
-	
+
 	/**
 	 * Level setter
 	 * @param int

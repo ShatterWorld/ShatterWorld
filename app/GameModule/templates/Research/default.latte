@@ -1,0 +1,47 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/researches.css" />
+{/block}
+
+{block #header}
+	Výzkum - přehled
+{/block}
+
+{block #content}
+{dump $all}
+
+	<table id = "researches">
+		<tr>
+			<th>Typ</th>
+			<th>Level</th>
+			<th>Aktivita</th>
+			<th>Akce</th>
+		</tr>
+
+		{?$i = 1}
+
+		{foreach $researched as $key => $research}
+			{dump $key}
+			<tr class="row{($i++ % 2) + 1}">
+				<td>{$research->type}</td>
+				<td>{$research->level}</td>
+				<td>Aktivní</td>
+				<td>Deaktivovat</td>
+			</tr>
+			{?unset($all[$research->type])}
+		{/foreach}
+
+		{foreach $all as $key => $research}
+			<tr class="row{($i++ % 2) + 1}">
+				<td>{$key}</td>
+				<td>1</td>
+				<td>Neaktivní</td>
+				<td>Aktivovat</td>
+			</tr>
+		{/foreach}
+	</table>
+
+
+
+
+{/block}
