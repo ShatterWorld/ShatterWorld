@@ -55,11 +55,6 @@ Game.map = {
 	},
 
 	/**
-	 * @var boolean
-	 */
-	selectTarget : false,
-
-	/**
 	 * Represents x-offset between real and calculated coord. of fields
 	 * @var integer
 	 */
@@ -418,36 +413,38 @@ Game.map = {
 			 * Runs when user clicks a field
 			 * @return void
 			 */
-			Game.map.overlayDiv.click(function(e){
-				var field = Game.map.determineField(e);
-					if (field) {
-					var div = field.element;
-
-					if(Game.map.contextMenu.contextMenuShown){
-						Game.map.contextMenu.hide();
-						Game.map.marker.unmarkAll('red');
-						return;
-					}
-
-					if(Game.map.contextMenu.initialField === null || Game.map.contextMenu.action === null){
-						Game.map.contextMenu.initialField = field;
-						Game.map.marker.mark(field, 'red');
-						Game.map.contextMenu.show(field);
-					}
-					else if(Game.map.contextMenu.action == "attackSelect2nd"){
-						Game.map.contextMenu.attackSelect2nd(Game.map.contextMenu.initialField, field)
-					}
-					else{
-						Game.map.contextMenu.action(Game.map.contextMenu.initialField, field);
-						Game.map.contextMenu.hide();
-						Game.map.marker.unmarkAll('red');
-					}
-				}
-			});
+			Game.map.overlayDiv.click(Game.map.openMenu);
 			Game.spinner.hide();
 		});
 	},
 
+	openMenu: function(e){
+		var field = Game.map.determineField(e);
+		if (field) {
+			var div = field.element;
+
+			if(Game.map.contextMenu.contextMenuShown){
+				Game.map.contextMenu.hide();
+				Game.map.marker.unmarkAll('red');
+				return;
+			}
+
+			if(Game.map.contextMenu.initialField === null || Game.map.contextMenu.action === null){
+				Game.map.contextMenu.initialField = field;
+				Game.map.marker.mark(field, 'red');
+				Game.map.contextMenu.show(field);
+			}
+			else if(Game.map.contextMenu.action == "attackSelect2nd"){
+				Game.map.contextMenu.attackSelect2nd(Game.map.contextMenu.initialField, field)
+			}
+			else{
+				Game.map.contextMenu.action(Game.map.contextMenu.initialField, field);
+				Game.map.contextMenu.hide();
+				Game.map.marker.unmarkAll('red');
+			}
+		}
+	},
+	
 	determineField : function (e)
 	{
 		var local = Game.utils.globalToLocal(Game.map.overlayDiv, e.pageX, e.pageY);
@@ -525,10 +522,13 @@ Game.map.marker = {
 
 		$(field.element).attr('class', 'markedField'+color);
 
-		var globalField = Game.utils.localToGlobal(field.element, 0, 0);
-		var globalOverlay = Game.utils.localToGlobal(Game.map.overlayDiv, 0, 0);
+// 		var globalField = Game.utils.localToGlobal(field.element, 0, 0);
+// 		var globalOverlay = Game.utils.localToGlobal(Game.map.overlayDiv, 0, 0);
 
-		var ellipse = Game.map.overlay.ellipse(globalField['x'] - globalOverlay['x']+30, globalField['y'] - globalOverlay['y']+20, 30, 20); //left,top,x-axis, y-axis
+		var x = parseInt(field.element.css('left'));
+		var y = parseInt(field.element.css('top'));
+		
+		var ellipse = Game.map.overlay.ellipse(x+30, y+20, 30, 20); //left,top,x-axis, y-axis
 		ellipse.id = $(field.element).attr('id');
 
 		ellipse.attr({stroke: color, "stroke-width": "4"});
@@ -775,8 +775,9 @@ Game.map.contextMenu = {
 		//my
 		if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
 
-			if (field['units'] !== null || field['units'] != null){
+			if (field['units'] != null){
 				this.addAttackAction(field);
+				this.addExplorationAction(field)
 			}
 			if (field['facility'] !== null){
 				if(field['facility'] !== 'headquarters'){
@@ -807,18 +808,12 @@ Game.map.contextMenu = {
 		//neutral neighbour
 		else if(this.isNeighbour(field, Game.map.clan)){
 			this.addColonisationAction(field);
-			this.addExplorationAction(field);
-		}
-		//other neutral
-		else {
-			this.addExplorationAction(field);
 		}
 
 		this.addCancelAction();
 
 	},
-
-
+	
 	/**
 	 * Hides context menu
 	 * @return void
@@ -866,142 +861,17 @@ Game.map.contextMenu = {
 	 * @return void
 	 */
 	addAttackAction: function (from){
-		var actionDiv = this.basicActionDiv.clone(true).html('Útok*');
+		var actionDiv = this.basicActionDiv.clone(true).html('Útok');
 
 		actionDiv.click(function(){
-			var attackDialog = $('<div />').attr('id', 'attackDialog')
-				.append('kliknutim vyberte cíl:<div id="coords">Z ['+from['coordX']+';'+from['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div><br/>');
-
-			var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
-			table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
-			attackDialog.append(table);
-			$.each(from['units'], function (key, unit) {
-				var tr = $('<tr id="'+unit['id']+'" />');
-				tr.append('<td class="name" style="width:100px">'+key+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
-				table.append(tr);
-				tr.children('.max').click(function(){
-					tr.children('.count').children('input').val(unit['count']);
-				})
-				.css({
-					'cursor' : 'pointer'
-				});
-			});
-
-			var tmp;
-			tmp = Game.cookie.get('#attackDialogWidth');
-			var w = (tmp !== null) ? tmp : 200;
-
-			tmp = Game.cookie.get('#attackDialogHeight');
-			var h = (tmp !== null) ? tmp : 120;
-
-			var pos = new Array();
-			tmp = Game.cookie.get('#attackDialogPosX');
-			pos[0] = (tmp !== null) ? parseInt(tmp) : 'center';
-
-			tmp = Game.cookie.get('#attackDialogPosY');
-			pos[1] = (tmp !== null) ? parseInt(tmp) : 'center';
-
-			$(attackDialog).dialog({
-				title: 'Útok',
-				width: w,
-				height: h,
-
-				buttons: [
-					{
-						text: "Zrušit",
-						click: function() {
-							$(this).dialog("close");
-						}
-					}
-				],
-
-				position: pos,
-				dragStop: function(event, ui){
-					Game.cookie.set('#attackDialogPosX', $(attackDialog).dialog("option", "position")[0], 7);
-					Game.cookie.set('#attackDialogPosY', $(attackDialog).dialog("option", "position")[1], 7);
-				},
-				resizeStop: function(event, ui) {
-					Game.cookie.set('#attackDialogWidth', $(attackDialog).dialog("option", "width"), 7);
-					Game.cookie.set('#attackDialogHeight', $(attackDialog).dialog("option", "height"), 7);
-				},
-				beforeClose: function(event, ui) {
-					Game.map.marker.unmarkAll('yellow');
-					Game.map.marker.unmarkAll('red');
-					Game.map.contextMenu.action = null;
-				}
-			});
-
+			var dialog = new Game.map.contextMenu.AttackDialog();
+			var attackDialog = $('<div />').attr('id', 'attackDialog');
+			dialog.setup(attackDialog, from);
 			Game.map.contextMenu.hide();
-			Game.map.contextMenu.action = "attackSelect2nd";
 		});
 
 		this.action = null;
 		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Marks the target and sets coords to attackDialog
-	 * @param field
-	 * @param field
-	 * @param object/string
-	 * @param JSON
-	 * @return void
-	 */
-	attackSelect2nd : function(from, target){
-
-		if (!(target['owner'] !== null && Game.map.clan !== null && target['owner']['id'] == Game.map.clan) && !(target['owner'] !== null && target['owner']['alliance'] !== null && Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance)) {
-			var attackDialog = $('#attackDialog');
-			var targetX = $('#attackDialog #targetX');
-			var targetY = $('#attackDialog #targetY');
-
-			Game.map.marker.unmarkAll('yellow');
-			Game.map.marker.mark(from, 'yellow');
-			targetX.html(target['coordX']);
-			targetY.html(target['coordY']);
-
-			$(attackDialog).dialog(
-				"option",
-					"buttons",
-					[
-						{
-							text: "Zaútočit",
-							click: function() {
-								Game.spinner.show(attackDialog);
-								var inputs = $('#units .count input');
-								var trs = $('#units tr');
-
-								var params = {
-									'originId': from['id'],
-									'targetId': target['id']
-								};
-
-								$.each(inputs, function(key, input){
-									var unitCount = $(input).val();
-
-									if (unitCount > 0 && unitCount !== "" && Game.utils.isset(unitCount)){
-										var unitId = $(trs[key+1]).attr('id');
-										params[unitId] = unitCount;
-									}
-
-								});
-
-								Game.utils.signal('attack', params, function() {
-									Game.events.fetchEvents();
-									Game.spinner.hide();
-									$(attackDialog).dialog("close");
-								});
-							}
-						},
-						{
-							text: "Zrušit",
-							click: function() {
-								$(this).dialog("close");
-							}
-						}
-					]
-			);
-		}
-
 	},
 
 	/**
@@ -1167,33 +1037,18 @@ Game.map.contextMenu = {
 	},
 
 	/**
-	 * Adds the exploration building action
+	 * Adds the exploration action
 	 * @param field
 	 * @return void
 	 */
-	addExplorationAction: function(target) {
+	addExplorationAction: function(from) {
 		var actionDiv = this.basicActionDiv.clone(true).html('Průzkum');
-		Game.spinner.show(Game.map.contextMenu.contextMenu);
-		Game.utils.signal('fetchExplorationCost', {'targetId': target['id']}, function(data) {
-			Game.spinner.hide();
-			if (Game.resources.hasSufficientResources(data['cost'])) {
-				actionDiv.click(function(){
-					Game.spinner.show(Game.map.contextMenu.contextMenu);
-					Game.utils.signal('sendExploration', {'targetId': target['id']}, function(){
-						Game.events.fetchEvents();
-						Game.resources.fetchResources();
-						Game.map.marker.unmarkAll('purple');
-						Game.spinner.hide();
-						Game.map.contextMenu.hide();
-					});
-				});
-			} else {
-				actionDiv.css('text-decoration', 'line-through');
-			}
-		}
-		);
-
-
+		actionDiv.click(function(){
+			var dialog = new Game.map.contextMenu.ExplorationDialog();
+			var attackDialog = $('<div />').attr('id', 'attackDialog');
+			dialog.setup(attackDialog, from);
+			Game.map.contextMenu.hide();
+		});
 		this.action = null;
 		this.contextMenu.append(actionDiv);
 	},
@@ -1226,7 +1081,6 @@ Game.map.contextMenu = {
 		});
 
 	},
-
 	/**
 	 * If field is neighbour of (at least) one clan field, returns true
 	 * @param field
@@ -1256,6 +1110,187 @@ Game.map.contextMenu = {
 			}
 		}
 		return false;
-	},
-
+	}
 };
+
+Game.map.contextMenu.UnitMoveDialog = Class({
+	setup: function (element, origin) {
+		this.element = element;
+		this.origin = origin;
+		$(element).append('kliknutim vyberte cíl:<div id="coords">Z ['+origin['coordX']+';'+origin['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div><br/>');
+		$(element).append(this.getAddition());
+		var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
+		table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
+		$(element).append(table);
+		$.each(origin['units'], function (key, unit) {
+			var tr = $('<tr id="'+unit['id']+'" />');
+			tr.append('<td class="name" style="width:100px">'+key+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
+			table.append(tr);
+			tr.children('.max').click(function(){
+				tr.children('.count').children('input').val(unit['count']);
+			})
+			.css({
+				'cursor' : 'pointer'
+			});
+		});
+		
+		var w = (width = Game.cookie.get('#unitDialogWidth')) !== null ? width : 200;
+		var h = (height = Game.cookie.get('#unitDialogHeight')) !== null ? height : 120;
+		var pos = [
+			(posX = Game.cookie.get('#unitDialogPosX')) !== null ? parseInt(posX) : 'center',
+			(posY = Game.cookie.get('#unitDialogPosY')) !== null ? parseInt(posY) : 'center'
+		];
+		Game.map.overlayDiv.unbind('click');
+		Game.map.overlayDiv.click({'context': this}, this.selectTarget);
+		$(element).dialog({
+			title: this.getTitle(),
+			width: w,
+			height: h,
+
+			buttons: [{
+				text: "Zrušit",
+				click: function() {
+					$(this).dialog("close");
+					$(this).dialog("destroy").remove();
+				}
+			}],
+
+			position: pos,
+			dragStop: function(event, ui){
+				Game.cookie.set('#unitDialogPosX', $(element).dialog("option", "position")[0], 7);
+				Game.cookie.set('#unitDialogPosY', $(element).dialog("option", "position")[1], 7);
+			},
+			resizeStop: function(event, ui) {
+				Game.cookie.set('#unitDialogWidth', $(element).dialog("option", "width"), 7);
+				Game.cookie.set('#unitDialogHeight', $(element).dialog("option", "height"), 7);
+			},
+			beforeClose: function(event, ui) {
+				Game.map.marker.unmarkAll('yellow');
+				Game.map.marker.unmarkAll('red');
+				Game.map.overlayDiv.unbind('click');
+				Game.map.overlayDiv.click(Game.map.openMenu);
+				Game.map.contextMenu.action = null;
+			}
+		});
+	},
+	
+	getUnitList: function ()
+	{
+		var inputs = $('#units .count input');
+		var trs = $('#units tr');
+		var result = {};
+		
+		$.each(inputs, function(key, input){
+			var unitCount = $(input).val();
+
+			if (unitCount > 0 && unitCount !== "" && Game.utils.isset(unitCount)){
+				var unitId = $(trs[key+1]).attr('id');
+				result[unitId] = unitCount;
+			}
+
+		});
+		return result;
+	},
+	
+	getAddition: function ()
+	{
+		return '';
+	},
+	
+	selectTarget: function (e)
+	{
+		var context = e.data.context;
+		var target = Game.map.determineField(e);
+		context.target = target;
+		if (context.validateTarget(target)) {
+			var targetX = $('#attackDialog #targetX');
+			var targetY = $('#attackDialog #targetY');
+			var element = context.element;
+			Game.map.marker.unmarkAll('yellow');
+			Game.map.marker.mark(target, 'yellow');
+			targetX.html(target['coordX']);
+			targetY.html(target['coordY']);
+			$(element).dialog('option', 'buttons', context.getButtons(context).concat([{
+				text: "Zrušit",
+				click: function() {
+					$(this).dialog("close");
+				}
+			}]));
+		}
+	}
+});
+
+Game.map.contextMenu.AttackDialog = Class({
+	extends: Game.map.contextMenu.UnitMoveDialog,
+	
+	validateTarget: function (target)
+	{
+		return !(target['owner'] !== null && Game.map.clan !== null && target['owner']['id'] == Game.map.clan) 
+			&& !(target['owner'] !== null && target['owner']['alliance'] !== null 
+			&& Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance);
+	},
+	
+	getTitle: function ()
+	{
+		return 'Útok';
+	},
+	
+	getAddition: function ()
+	{
+		return 'Typ útoku: <select id="#type"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>';
+	},
+	
+	getButtons: function (context) {
+		return [{
+			text: "Zaútočit",
+			click: function (e) {
+				Game.spinner.show(context.element);
+				var params = {
+					'originId': context.origin['id'],
+					'targetId': context.target['id'],
+					'type': $('#attackDialog #type').val()
+				};
+				jQuery.extend(params, context.getUnitList());
+				Game.utils.signal('sendAttack', params, function() {
+					Game.events.fetchEvents();
+					Game.spinner.hide();
+					$(context.element).dialog("close");
+				});
+			}
+		}];
+	}
+});
+
+Game.map.contextMenu.ExplorationDialog = Class({
+	extends: Game.map.contextMenu.UnitMoveDialog,
+	
+	validateTarget: function (target)
+	{
+		return target['owner'] == null;
+	},
+	
+	getTitle: function ()
+	{
+		return 'Průzkum';
+	},
+	
+	getButtons: function (context)
+	{
+		return [{
+			text: "Zahájit průzkum",
+			click: function (e) {
+				Game.spinner.show(context.element);
+				var params = {
+					'originId': context.origin['id'],
+					'targetId': context.target['id']
+				};
+				jQuery.extend(params, context.getUnitList());
+				Game.utils.signal('sendExploration', params, function() {
+					Game.events.fetchEvents();
+					Game.spinner.hide();
+					$(context.element).dialog("close");
+				});
+			}
+		}];
+	}
+});
