@@ -8,25 +8,32 @@
 {/block}
 
 {block #content}
-{dump $all}
+{dump $all[trading]}
 
 	<table id = "researches">
 		<tr>
 			<th>Typ</th>
 			<th>Level</th>
+			{foreach $resources as $key => $res}
+				<td>
+					<img src="{$basePath}/images/resources/{$key}.png"/>
+				</td>
+			{/foreach}
+			<th><img src="{$basePath}/images/icons/time.png"/></th>
 			<th>Aktivita</th>
-			<th>Akce</th>
 		</tr>
 
 		{?$i = 1}
 
-		{foreach $researched as $key => $research}
-			{dump $key}
+		{foreach $researched as $research}
 			<tr class="row{($i++ % 2) + 1}">
 				<td>{$research->type}</td>
 				<td>{$research->level}</td>
+				<td>-</td>
+				{foreach $resources as $resKey => $res}
+					<td class="costs-{$resKey}">-</td>
+				{/foreach}
 				<td>Aktivní</td>
-				<td>Deaktivovat</td>
 			</tr>
 			{?unset($all[$research->type])}
 		{/foreach}
@@ -35,7 +42,18 @@
 			<tr class="row{($i++ % 2) + 1}">
 				<td>{$key}</td>
 				<td>1</td>
-				<td>Neaktivní</td>
+
+				{?$cost}
+				{?$tmpCost = $research->getCost()}
+				{foreach $resources as $resKey => $res}
+					{?$cost[$resKey] = 0}
+					{ifset $tmpCost[$resKey]}{?$cost[$resKey] = $tmpCost[$resKey]}{/ifset}
+					<td class="costs-{$resKey}">
+						{$cost[$resKey]}
+					</td>
+				{/foreach}
+
+				<td>{$research->getResearchTime()}</td>
 				<td>Aktivovat</td>
 			</tr>
 		{/foreach}
