@@ -1,0 +1,74 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/researches.css" />
+{/block}
+
+{block #header}
+	Výzkum - přehled
+{/block}
+
+{block #content}
+{dump $all}
+
+	<table id = "researches">
+		<tr>
+			<th>Typ</th>
+			<th>Level</th>
+			<th>Max</th>
+			{foreach $resources as $key => $res}
+				<td>
+					<img src="{$basePath}/images/resources/{$key}.png"/>
+				</td>
+			{/foreach}
+			<th><img src="{$basePath}/images/icons/time.png"/></th>
+			<th>Aktivita</th>
+		</tr>
+
+		{?$i = 1}
+
+		{foreach $all as $key => $research}
+
+			{ifset $researched[$key]}
+				{?$lvl = $researched[$key]->level + 1}
+			{else}
+				{?$lvl = 1}
+			{/ifset}
+			{?$cap = $research->getLevelCap()}
+
+			{if $lvl < $cap}
+
+				<tr class="row{($i++ % 2) + 1}">
+					<td>{$key}</td>
+					<td>{$lvl}</td>
+					<td>{$cap}</td>
+
+					{?$cost}
+					{?$tmpCost = $research->getCost($lvl)}
+					{foreach $resources as $resKey => $res}
+						{?$cost[$resKey] = 0}
+						{ifset $tmpCost[$resKey]}{?$cost[$resKey] = $tmpCost[$resKey]}{/ifset}
+						<td class="costs-{$resKey}">
+							{$cost[$resKey]}
+						</td>
+					{/foreach}
+
+					<td>{$research->getResearchTime($lvl)}</td>
+
+					{if $lvl == 1}
+						{?$actionText = "Vyzkoumat"}
+					{else}
+						{?$actionText = "Vylepšit"}
+					{/if}
+
+					<td>{$actionText}</td>
+				</tr>
+			{/if}
+		{/foreach}
+
+
+	</table>
+
+
+
+
+{/block}

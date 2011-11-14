@@ -9,7 +9,7 @@ class Storage extends AbstractRule implements IResearch
 	{
 		return 'Skladování';
 	}
-	
+
 	public function getCost ($level = 1)
 	{
 		return array(
@@ -18,19 +18,24 @@ class Storage extends AbstractRule implements IResearch
 			'metal' => pow($level, 2) * 250,
 		);
 	}
-	
+
 	public function getResearchTime ($level = 1)
 	{
 		return $level * 18000;
 	}
-	
+
 	public function getDependencies ()
 	{
 		return array();
 	}
-	
+
 	public function afterResearch (Entities\Construction $construction)
 	{
 		$this->getContext()->getResourceService()->recalculateStorage($construction->owner, $construction->term);
 	}
+
+	public function getLevelCap (){
+		return 10;
+	}
+
 }

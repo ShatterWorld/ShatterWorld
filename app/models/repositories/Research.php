@@ -19,7 +19,14 @@ class Research extends BaseRepository
 		$qb = $this->createQueryBuilder('r');
 		$qb->where($qb->expr()->eq('r.owner', $clan->id));
 		$res = $qb->getQuery()->getResult();
-		return $res;
+
+		$indexedRes = array();
+
+		foreach($res as $r){
+			$indexedRes[$r->type] = $r;
+		}
+
+		return $indexedRes;
 	}
 
 }
