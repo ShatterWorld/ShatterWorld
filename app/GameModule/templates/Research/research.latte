@@ -4,12 +4,10 @@
 {/block}
 
 {block #header}
-	Výzkum - přehled
+	Výzkum
 {/block}
 
 {block #content}
-
-
 	<table id = "researches">
 		<tr>
 			<th>Typ</th>
@@ -38,7 +36,7 @@
 			{if $lvl < $cap}
 
 				<tr class="row{($i++ % 2) + 1}">
-					<td>{$key}</td>
+					<td>{$research->getDescription()}</td>
 					<td>{$lvl}</td>
 					<td>{$cap}</td>
 
@@ -55,23 +53,22 @@
 					{/foreach}
 
 					{?$available = true}
-{dump $research->getDependencies()}
-					{foreach $research->getDependencies() as $depKey => $dependence}
+					{foreach $research->getDependencies() as $depKey => $dependency}
 						{if !(isset($researched[$depKey]))}{?$available = false}{/if}
 					{/foreach}
 					<td>{$research->getResearchTime($lvl)}</td>
 
 					{if !$available}
-						{?$actionText = "Závislosti"}
+						<td class="missDep">Závislosti</td>
 					{elseif !$enoughRes}
-						{?$actionText = "Nedostatek surovin"}
+						<td class="missRes">Suroviny</td>
 					{elseif $lvl == 1}
-						{?$actionText = "Vyzkoumat"}
+						<td class="research"><a href="{link research! $key}">Vyzkoumat</a></td>
 					{else}
-						{?$actionText = "Vylepšit"}
+						<td class="upgrade"><a href="{link upgrade! $researched[$key]->id}">Vylepšit</a></td>
 					{/if}
 
-					<td>{$actionText}</td>
+
 				</tr>
 			{/if}
 		{/foreach}

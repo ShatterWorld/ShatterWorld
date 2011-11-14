@@ -19,7 +19,7 @@
 
 		{foreach $researched as $research}
 			<tr class="row{($i++ % 2) + 1}">
-				<td>{$research->type}</td>
+				<td>{$all[$research->type]->getDescription()}</td>
 				<td>{$research->level}</td>
 				<td>{$all[$research->type]->getLevelCap()}</td>
 			</tr>

@@ -34,6 +34,18 @@
 	text-align: center;
 }
 
+#researches .missDep, #researches .missRes{
+	color: red;
+}
+
+#researches .upgrade a{
+	color: blue;
+}
+
+#researches .research a{
+	color: green;
+}
+
 .unread{
 	color:red;
 }
