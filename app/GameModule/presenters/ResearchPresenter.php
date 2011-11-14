@@ -31,8 +31,31 @@ class ResearchPresenter extends BasePresenter {
 	 */
 	public function renderResearch ()
 	{
+		$all = $this->context->rules->getAll('research');
+
+		$researchTimes = array();
+		foreach($all as $key => $res){
+			$t = $res->getResearchTime();
+
+			$h = floor($t / 3600);
+			$t -= $h*3600;
+			$m = floor($t / 60);
+			$t -= $m*60;
+			$s = $t;
+
+			if ($s < 10){
+				$s = '0'.$s;
+			}
+			if ($m < 10){
+				$m = '0'.$m;
+			}
+
+			$researchTimes[$key] = $h.':'.$m.':'.$s;
+		}
+
 		$this->template->researched = $this->getResearchRepository()->getResearched($this->getPlayerClan());
-		$this->template->all = $this->context->rules->getAll('research');
+		$this->template->researchTimes = $researchTimes;
+		$this->template->all = $all;
 	}
 
 	/**

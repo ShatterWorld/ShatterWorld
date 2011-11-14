@@ -56,7 +56,7 @@
 					{foreach $research->getDependencies() as $depKey => $dependency}
 						{if !(isset($researched[$depKey]))}{?$available = false}{/if}
 					{/foreach}
-					<td>{$research->getResearchTime($lvl)}</td>
+					<td>{$researchTimes[$key]}</td>
 
 					{if !$available}
 						<td class="missDep">Závislosti</td>
