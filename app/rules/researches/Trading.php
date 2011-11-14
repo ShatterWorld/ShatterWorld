@@ -24,7 +24,9 @@ class Trading extends AbstractRule implements IResearch
 
 	public function getDependencies ()
 	{
-		return array();
+		$res = $this->getContext()->rules->getAll('research');
+
+		return $res;
 	}
 
 	public function afterResearch (Entities\Construction $construction)

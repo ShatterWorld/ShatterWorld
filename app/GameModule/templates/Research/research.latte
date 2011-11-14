@@ -8,7 +8,7 @@
 {/block}
 
 {block #content}
-{dump $all}
+
 
 	<table id = "researches">
 		<tr>
@@ -44,17 +44,28 @@
 
 					{?$cost}
 					{?$tmpCost = $research->getCost($lvl)}
+					{?$enoughRes = true}
 					{foreach $resources as $resKey => $res}
 						{?$cost[$resKey] = 0}
 						{ifset $tmpCost[$resKey]}{?$cost[$resKey] = $tmpCost[$resKey]}{/ifset}
 						<td class="costs-{$resKey}">
 							{$cost[$resKey]}
 						</td>
+						{if $cost[$resKey] > $res[balance]}{?$enoughRes = false}{/if}
 					{/foreach}
 
+					{?$available = true}
+{dump $research->getDependencies()}
+					{foreach $research->getDependencies() as $depKey => $dependence}
+						{if !(isset($researched[$depKey]))}{?$available = false}{/if}
+					{/foreach}
 					<td>{$research->getResearchTime($lvl)}</td>
 
-					{if $lvl == 1}
+					{if !$available}
+						{?$actionText = "Závislosti"}
+					{elseif !$enoughRes}
+						{?$actionText = "Nedostatek surovin"}
+					{elseif $lvl == 1}
 						{?$actionText = "Vyzkoumat"}
 					{else}
 						{?$actionText = "Vylepšit"}
