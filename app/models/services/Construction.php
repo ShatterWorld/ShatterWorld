@@ -6,6 +6,7 @@ use Rules\Facilities\IConstructionFacility;
 use InsufficientResourcesException;
 use InsufficientCapacityException;
 use MultipleConstructionsException;
+use MissingDependencyException;
 
 class Construction extends Event
 {
@@ -183,26 +184,53 @@ class Construction extends Event
 		$this->context->model->getClanService()->issueOrder($clan, FALSE);
 		$this->entityManager->flush();
 	}
-	
+
 	/**
 	 * Start a research
 	 * @param Entities\Clan
 	 * @param string
-	 * @param int
 	 * @return void
 	 */
-	public function startResearch (Entities\Clan $clan, $research, $level)
+	public function startResearch (Entities\Clan $clan, $type)
 	{
-		$rule = $this->context->rules->get('research', $research);
-		$this->create(array(
-			'target' => $clan->getHeadquarters(),
-			'owner' => $clan,
-			'type' => 'resource',
-			'construction' => $research,
-			'level' => $level,
-			'timeout' => $rule->getResearchTime($level)
-		), FALSE);
-		$this->context->model->getResourceService()->pay($clan, $rule->getCost($level), FALSE);
-		$this->entityManager->flush();
+		$level = 1;
+		$research = $this->context->model->getResearchRepository()->getClanResearch($clan, $type);
+		if ($research !== null){
+			$level = $research->level + 1;
+		}
+
+		$rule = $this->context->rules->get('research', $type);
+		$price = $rule->getResearchCost($level);
+		if ($this->context->model->getResourceRepository()->checkResources($clan, $price)) {
+
+			$researched = $this->context->model->getResearchRepository()->getResearched($clan);
+			foreach ($rule->getDependencies() as $key => $dependency){
+				if (!isset($researched[$key])){
+					throw new \MissingDependencyException;
+				}
+			}
+
+			$running = $this->context->model->getConstructionRepository()->getRunningResearches();
+			if (isset($running[$type])){
+				throw new MultipleConstructionsException;
+			}
+
+			$this->create(array(
+				'target' => $clan->getHeadquarters(),
+				'owner' => $clan,
+				'type' => 'research',
+				'construction' => $type,
+				'level' => $level,
+				'timeout' => $rule->getResearchTime($level)
+			), FALSE);
+			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
+			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
+			$this->entityManager->flush();
+		}
+		else {
+			throw new InsufficientResourcesException;
+		}
+
 	}
+
 }

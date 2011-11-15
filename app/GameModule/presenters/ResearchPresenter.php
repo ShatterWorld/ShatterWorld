@@ -31,6 +31,7 @@ class ResearchPresenter extends BasePresenter {
 	 */
 	public function renderResearch ()
 	{
+		Debugger::barDump($this->getConstructionRepository()->getRunningResearches($this->getPlayerClan()));
 		$all = $this->context->rules->getAll('research');
 
 		$researchTimes = array();
@@ -65,37 +66,21 @@ class ResearchPresenter extends BasePresenter {
 	 */
 	public function handleResearch ($type)
 	{
-		try{
-			$this->getResearchService()->research($type, $this->getPlayerClan());
+		try {
+			$this->context->model->getConstructionService()->startResearch($this->getPlayerClan(), $type);
+			$this->invalidateControl('orders');
+			$this->invalidateControl('resources');
 			$this->flashMessage('Výzkum zahájen');
-		}
-		catch(InsufficientResourcesException $e){
-			$this->flashMessage('Nedostatek surovin', 'error');
-		}
-		catch(MissingDependencyException $e){
-			$this->flashMessage('Chybí závislost', 'error');
-		}
-
-		$this->redirect('this');
-	}
-
-	/**
-	 * Upgrades the already existing research
-	 * @param int
-	 * @return void
-	 */
-	public function handleUpgrade ($resId)
-	{
-		$research = $this->getResearchRepository()->find($resId);
-		try{
-			$this->getResearchService()->upgrade($research, $this->getPlayerClan());
-			$this->flashMessage('Vylepšení zahájeno');
-		}
-		catch(InsufficientResourcesException $e){
-			$this->flashMessage('Nedostatek surovin', 'error');
+		} catch (MultipleConstructionsException $e) {
+			$this->flashMessage('Tento výzkum již zkoumáte', 'error');
+		} catch (RuleViolationException $e) {
+			$this->flashMessage('Tento výzkum nemůžete zkoumat', 'error');
+		} catch (InsufficientResourcesException $e) {
+			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		}
 
 		$this->redirect('this');
 	}
+
 
 }

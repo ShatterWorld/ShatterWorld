@@ -29,4 +29,14 @@ class Research extends BaseRepository
 		return $indexedRes;
 	}
 
+	public function getClanResearch ($clan, $type)
+	{
+		$qb = $this->createQueryBuilder('r');
+		$qb->where($qb->expr()->andX(
+			$qb->expr()->eq('r.owner', $clan->id),
+			$qb->expr()->eq('r.type', $type)
+		));
+		$res = $qb->getQuery()->getResult();
+		return $res;
+	}
 }
