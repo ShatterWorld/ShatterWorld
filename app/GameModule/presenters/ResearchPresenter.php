@@ -31,7 +31,6 @@ class ResearchPresenter extends BasePresenter {
 	 */
 	public function renderResearch ()
 	{
-		Debugger::barDump($this->getConstructionRepository()->getRunningResearches($this->getPlayerClan()));
 		$all = $this->context->rules->getAll('research');
 
 		$researchTimes = array();
@@ -57,6 +56,8 @@ class ResearchPresenter extends BasePresenter {
 		$this->template->researched = $this->getResearchRepository()->getResearched($this->getPlayerClan());
 		$this->template->researchTimes = $researchTimes;
 		$this->template->all = $all;
+		$this->template->running = $this->getConstructionRepository()->getRunningResearches($this->getPlayerClan());
+
 	}
 
 	/**

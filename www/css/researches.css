@@ -34,7 +34,7 @@
 	text-align: center;
 }
 
-#researches .missDep, #researches .missRes{
+#researches .missDep, #researches .missRes, #researches .running{
 	color: red;
 }
 

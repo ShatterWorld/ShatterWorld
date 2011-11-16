@@ -13,12 +13,12 @@
 			<th>Typ</th>
 			<th>Level</th>
 			<th>Max</th>
+			<th><img src="{$basePath}/images/icons/time.png"/></th>
 			{foreach $resources as $key => $res}
 				<td>
 					<img src="{$basePath}/images/resources/{$key}.png"/>
 				</td>
 			{/foreach}
-			<th><img src="{$basePath}/images/icons/time.png"/></th>
 			<th>Aktivita</th>
 		</tr>
 
@@ -39,35 +39,43 @@
 					<td>{$research->getDescription()}</td>
 					<td>{$lvl}</td>
 					<td>{$cap}</td>
-
-					{?$cost}
-					{?$tmpCost = $research->getCost($lvl)}
-					{?$enoughRes = true}
-					{foreach $resources as $resKey => $res}
-						{?$cost[$resKey] = 0}
-						{ifset $tmpCost[$resKey]}{?$cost[$resKey] = $tmpCost[$resKey]}{/ifset}
-						<td class="costs-{$resKey}">
-							{$cost[$resKey]}
-						</td>
-						{if $cost[$resKey] > $res[balance]}{?$enoughRes = false}{/if}
-					{/foreach}
-
-					{?$available = true}
-					{foreach $research->getDependencies() as $depKey => $dependency}
-						{if !(isset($researched[$depKey]))}{?$available = false}{/if}
-					{/foreach}
 					<td>{$researchTimes[$key]}</td>
 
-					{if !$available}
-						<td class="missDep">Závislosti</td>
-					{elseif !$enoughRes}
-						<td class="missRes">Suroviny</td>
-					{elseif $lvl == 1}
-						<td class="research"><a href="{link research! $key}">Vyzkoumat</a></td>
+					{ifset $running[$key]}
+						{foreach $resources as $resKey => $res}
+							<td class="costs-{$resKey}">
+								{$cost[$resKey]}
+							</td>
+						{/foreach}
+						<td class="running">Zkoumáno</td>
 					{else}
-						<td class="upgrade"><a href="{link research! $key}">Vylepšit</a></td>
-					{/if}
+						{?$cost}
+						{?$tmpCost = $research->getCost($lvl)}
+						{?$enoughRes = true}
+						{foreach $resources as $resKey => $res}
+							{?$cost[$resKey] = 0}
+							{ifset $tmpCost[$resKey]}{?$cost[$resKey] = $tmpCost[$resKey]}{/ifset}
+							<td class="costs-{$resKey}">
+								{$cost[$resKey]}
+							</td>
+							{if $cost[$resKey] > $res[balance]}{?$enoughRes = false}{/if}
+						{/foreach}
 
+						{?$available = true}
+						{foreach $research->getDependencies() as $depKey => $dependency}
+							{if !(isset($researched[$depKey]))}{?$available = false}{/if}
+						{/foreach}
+
+						{if !$available}
+							<td class="missDep">Závislosti</td>
+						{elseif !$enoughRes}
+							<td class="missRes">Suroviny</td>
+						{elseif $lvl == 1}
+							<td class="research"><a href="{link research! $key}">Vyzkoumat</a></td>
+						{else}
+							<td class="upgrade"><a href="{link research! $key}">Vylepšit</a></td>
+						{/if}
+					{/ifset}
 
 				</tr>
 			{/if}

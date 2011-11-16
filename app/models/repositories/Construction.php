@@ -81,7 +81,7 @@ class Construction extends BaseRepository
 
 		$indexedRes = array();
 		foreach($qb->getQuery()->getResult() as $r){
-			$indexedRes[$r->type] = $r;
+			$indexedRes[$r->construction] = $r;
 		}
 		return $indexedRes;
 	}

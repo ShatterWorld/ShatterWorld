@@ -196,8 +196,6 @@ class Construction extends Event
 	{
 		$level = 1;
 		$research = $this->context->model->getResearchRepository()->getClanResearch($clan, $type);
-		Debugger::barDump(gettype($research));
-		Debugger::barDump($research);
 		if ($research !== null){
 			$level = $research->level + 1;
 		}
