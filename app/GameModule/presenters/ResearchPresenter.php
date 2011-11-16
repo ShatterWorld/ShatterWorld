@@ -23,6 +23,8 @@ class ResearchPresenter extends BasePresenter {
 	{
 		$this->template->researched = $this->getResearchRepository()->getResearched($this->getPlayerClan());
 		$this->template->all = $this->context->rules->getAll('research');
+		$this->template->running = $this->getConstructionRepository()->getRunningResearches($this->getPlayerClan());
+
 	}
 
 	/**

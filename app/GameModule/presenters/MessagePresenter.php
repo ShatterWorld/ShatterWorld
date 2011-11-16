@@ -5,6 +5,7 @@ use Nette\Utils\Strings;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
+use RuleViolationException;
 
 
 /**
@@ -92,11 +93,21 @@ class MessagePresenter extends BasePresenter {
 	 */
 	public function actionShow ($messageId)
 	{
+		try{
+			$this->getMessageRepository()->checkPermission($this->getPlayerClan()->user, $this->getMessageRepository()->find($messageId));
+		}
+		catch (RuleViolationException $e){
+			$this->flashMessage('Nemůžete číst zprávy, které nejsou vaše', 'error');
+			$this->redirect('Message:');
+		}
+
+/*
 		$message = $this->getMessageRepository()->find($messageId);
 		if(!($message !== null && ($message->recipient == $this->getPlayerClan()->user || $message->sender == $this->getPlayerClan()->user))){
 			$this->flashMessage('Zpráva s tímto ID není vaše', 'error');
 			$this->redirect('Message:');
 		}
+*/
 	}
 
 	/**
@@ -118,16 +129,32 @@ class MessagePresenter extends BasePresenter {
 	 */
 	public function handleMarkRead ($messageId)
 	{
-		$message = $this->getMessageRepository()->find($messageId);
-		if($message->recipient == $this->getPlayerClan()->user){
-			$message = $this->getMessageRepository()->find($messageId);
-			$this->template->message = $message;
-			$this->getMessageService()->update($message, array('read' => true));
+		try{
+			$this->getMessageService()->markRead($this->getPlayerClan()->user, $this->getMessageRepository()->find($messageId), TRUE);
 			$this->flashMessage('Označeno jako přečtená');
 		}
-		else{
+		catch (RuleViolationException $e){
 			$this->flashMessage('Nemůžete číst zprávy, které nejsou vaše', 'error');
 		}
+
+		$this->redirect('this');
+	}
+
+	/**
+	 * Marks the message as unread
+	 * @param int
+	 * @return void
+	 */
+	public function handleMarkUnread ($messageId)
+	{
+		try{
+			$this->getMessageService()->markRead($this->getPlayerClan()->user, $this->getMessageRepository()->find($messageId), FALSE);
+			$this->flashMessage('Označeno jako přečtená');
+		}
+		catch (RuleViolationException $e){
+			$this->flashMessage('Nemůžete číst zprávy, které nejsou vaše', 'error');
+		}
+
 		$this->redirect('this');
 	}
 
@@ -138,16 +165,14 @@ class MessagePresenter extends BasePresenter {
 	 */
 	public function handleDeleteByRecipient ($messageId)
 	{
-		$message = $this->getMessageRepository()->find($messageId);
-		if($message->recipient == $this->getPlayerClan()->user){
-			$message = $this->getMessageRepository()->find($messageId);
-			$this->template->message = $message;
-			$this->getMessageService()->update($message, array('deletedByRecipient' => true));
+		try{
+			$this->getMessageService()->deleteByRecipient($this->getPlayerClan()->user, $this->getMessageRepository()->find($messageId));
 			$this->flashMessage('Smazáno');
 		}
-		else{
+		catch (RuleViolationException $e){
 			$this->flashMessage('Nemůžete mazat zprávy, které nejsou vaše', 'error');
 		}
+
 		$this->redirect('this');
 	}
 
@@ -158,15 +183,14 @@ class MessagePresenter extends BasePresenter {
 	 */
 	public function handleDeleteBySender ($messageId)
 	{
-		$message = $this->getMessageRepository()->find($messageId);
-		if($message->sender == $this->getPlayerClan()->user){
-			$message = $this->getMessageRepository()->find($messageId);
-			$this->template->message = $message;
-			$this->getMessageService()->update($message, array('deletedBySender' => true));
+		try{
+			$this->getMessageService()->deleteBySender($this->getPlayerClan()->user, $this->getMessageRepository()->find($messageId));
+			$this->flashMessage('Smazáno');
 		}
-		else{
+		catch (RuleViolationException $e){
 			$this->flashMessage('Nemůžete mazat zprávy, které nejsou vaše', 'error');
 		}
+
 		$this->redirect('this');
 	}
 

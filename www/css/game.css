@@ -53,3 +53,26 @@
 .report .date {
 	font-style: italic;
 }
+
+table {
+	width : 100%;
+	border-collapse:collapse;
+}
+
+table .row1{
+	/*background: blue;*/
+}
+
+table .row2{
+	background: #b8b8b8;
+}
+
+table a{
+	display: block;
+}
+
+table th{
+	font-weight: bold;
+	vertical-align : top;
+}
+

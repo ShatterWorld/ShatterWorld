@@ -1,42 +1,25 @@
-#receivedMessages, #sentMessages, #message{
-	width : 100%;
-	border-collapse:collapse;
-}
-
-#receivedMessages a, #sentMessages a, #message a{
-	display: block;
-}
-
-#message th{
-	width: 100px;
-	vertical-align : top;
-}
-
-#receivedMessages th, #sentMessages th, #message th{
-	font-weight : bold;
-}
-
-#receivedMessages .row1, #sentMessages .row1{
-	/*background: blue;*/
-}
-
-#receivedMessages .row2, #sentMessages .row2{
-	background: #b8b8b8;
-}
-#receivedMessages td, #sentMessages td{
+td {
 	border-left: 1px solid black;
 }
 
-#receivedMessages .delete, #sentMessages .delete{
-	width: 60px;
-	text-align: center;
-}
-
-#receivedMessages .time, #sentMessages .time{
+.time {
 	width: 140px;
 	text-align: center;
 }
 
-.unread{
-	color:red;
+.markAs {
+	width: 110px;
+	text-align: center;
+
 }
+
+.delete {
+	width: 60px;
+	text-align: center;
+}
+
+.unread, .unread a{
+	color: red;
+	font-weight: bold;
+}
+

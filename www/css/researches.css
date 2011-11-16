@@ -1,51 +1,21 @@
-#researches{
-	width : 100%;
-	border-collapse:collapse;
-}
-
-#researches a{
-	display: block;
-}
-
-#researches th{
-	width: 100px;
-	vertical-align : top;
-}
-
-
-#researches .row1{
-	/*background: blue;*/
-}
-
-#researches .row2{
-	background: #b8b8b8;
-}
-#researches td{
+td{
 	border-left: 1px solid black;
+	/*text-align: center;*/
 }
 
-#researches .delete{
-	width: 60px;
-	text-align: center;
-}
-
-#researches .time{
+.time{
 	width: 140px;
 	text-align: center;
 }
 
-#researches .missDep, #researches .missRes, #researches .running{
+.missDep, .missRes, .running{
 	color: red;
 }
 
-#researches .upgrade a{
+.upgrade a{
 	color: blue;
 }
 
-#researches .research a{
+.research a{
 	color: green;
-}
-
-.unread{
-	color:red;
 }

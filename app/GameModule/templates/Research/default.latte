@@ -8,20 +8,37 @@
 {/block}
 
 {block #content}
+	<h2>Vynalezeno</h2>
 	<table id = "researches">
 		<tr>
 			<th>Typ</th>
 			<th>Level</th>
 			<th>Max</th>
 		</tr>
-
 		{?$i = 1}
-
 		{foreach $researched as $research}
 			<tr class="row{($i++ % 2) + 1}">
 				<td>{$all[$research->type]->getDescription()}</td>
 				<td>{$research->level}</td>
 				<td>{$all[$research->type]->getLevelCap()}</td>
+			</tr>
+		{/foreach}
+	</table>
+
+	<br/>
+	<h2>Probíhá</h2>
+	<table id = "running">
+		<tr>
+			<th>Typ</th>
+			<th>Level</th>
+			<th><img src="{$basePath}/images/icons/time.png"/></th>
+		</tr>
+		{?$i = 1}
+		{foreach $running as $research}
+			<tr class="row{($i++ % 2) + 1}">
+				<td>{$research->construction}</td>
+				<td>{$research->level}</td>
+				<td>{$research->term|date:"d.m.Y H:i"}</td>
 			</tr>
 		{/foreach}
 	</table>
