@@ -10,12 +10,14 @@ class Research extends AbstractRule implements IEvent
 	{
 		return 'Výzkum';
 	}
-	
+
 	public function isValid (Entities\Event $event)
 	{
-		return TRUE;
+		return true;
+		//return isset($this->getConstructionRepository()->getRunningResearches($this->getPlayerClan())[$event->construction])
+
 	}
-	
+
 	public function process (Entities\Event $event, $processor)
 	{
 		if ($event->level > 1) {
@@ -32,7 +34,7 @@ class Research extends AbstractRule implements IEvent
 		$rule->afterResearch($event);
 		return array('type' => $event->type, 'level' => $event->level);
 	}
-	
+
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
@@ -40,5 +42,10 @@ class Research extends AbstractRule implements IEvent
 		return array(
 			ReportItem::create('text', $rule->getDescription())->setHeading('Výzkum dokončen'),
 		);
+	}
+
+	public function isExclusive ()
+	{
+		return true;
 	}
 }

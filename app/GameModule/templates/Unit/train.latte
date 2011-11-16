@@ -40,8 +40,8 @@
 			{foreach $form->getControls() as $name => $field}
 				{if $name !== 'send'}
 					{?$cost}
+					{?$tmpCost = $unitRules[$name]->getCost()}
 					{foreach $resources as $key => $res}
-						{?$tmpCost = $unitRules[$name]->getCost()}
 						{?$cost[$key] = 0}
 						{ifset $tmpCost[$key]}{?$cost[$key] = $tmpCost[$key]}{/ifset}
 					{/foreach}

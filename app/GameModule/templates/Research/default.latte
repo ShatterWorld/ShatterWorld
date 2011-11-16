@@ -1,0 +1,29 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/researches.css" />
+{/block}
+
+{block #header}
+	Výzkum - přehled
+{/block}
+
+{block #content}
+	<table id = "researches">
+		<tr>
+			<th>Typ</th>
+			<th>Level</th>
+			<th>Max</th>
+		</tr>
+
+		{?$i = 1}
+
+		{foreach $researched as $research}
+			<tr class="row{($i++ % 2) + 1}">
+				<td>{$all[$research->type]->getDescription()}</td>
+				<td>{$research->level}</td>
+				<td>{$all[$research->type]->getLevelCap()}</td>
+			</tr>
+		{/foreach}
+	</table>
+
+{/block}

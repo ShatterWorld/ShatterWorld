@@ -17,7 +17,7 @@ class Construction extends BaseRepository
 		}
 		return $this->findBy($criteria);
 	}
-	
+
 	public function getColonisationCount (Entities\Clan $clan)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
@@ -32,7 +32,7 @@ class Construction extends BaseRepository
 		$qb->setParameter(2, FALSE);
 		return $qb->getQuery()->getSingleScalarResult();
 	}
-	
+
 	public function getUsedUnitSlots (Entities\Clan $clan)
 	{
 		$qb = $this->createQueryBuilder('c');
@@ -62,4 +62,29 @@ class Construction extends BaseRepository
 		}
 		return $result;
 	}
+
+	public function getRunningResearches (Entities\Clan $clan)
+	{
+		$qb = $this->createQueryBuilder('c');
+		$qb->where($qb->expr()->andX(
+			$qb->expr()->eq('c.owner', '?0'),
+			$qb->expr()->eq('c.type', '?1'),
+			$qb->expr()->eq('c.processed', '?2'),
+			$qb->expr()->gte('c.term', '?3')
+		));
+		$qb->setParameters(array(
+			$clan->id,
+			'research',
+			FALSE,
+			new \DateTime()
+		));
+
+		$indexedRes = array();
+		foreach($qb->getQuery()->getResult() as $r){
+			$indexedRes[$r->construction] = $r;
+		}
+		return $indexedRes;
+	}
+
+
 }

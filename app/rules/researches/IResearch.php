@@ -15,24 +15,31 @@ interface IResearch extends IRule
 	 * @return array of $resource => $cost
 	 */
 	public function getCost ($level = 1);
-	
+
 	/**
 	 * Get the time this research takes on given level
 	 * @param int
 	 * @return int
 	 */
 	public function getResearchTime ($level = 1);
-	
+
 	/**
 	 * Get the dependencies of this research
 	 * @return array of $research => $level
 	 */
 	public function getDependencies ();
-	
+
 	/**
 	 * Anything that should be done after finishing a research
 	 * @param Entities\Construction
 	 * @return void
 	 */
 	public function afterResearch (Entities\Construction $construction);
+
+	/**
+	 * Returns the maximum level
+	 * @return int
+	 */
+	public function getLevelCap ();
+
 }
