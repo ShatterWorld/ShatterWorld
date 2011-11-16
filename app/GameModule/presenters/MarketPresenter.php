@@ -63,6 +63,8 @@ class MarketPresenter extends BasePresenter {
 		}
 		catch(InsufficientResourcesException $e){
 			$this->flashMessage('Nedostatek surovin');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 
 		$this->redirect('Market:');
@@ -115,6 +117,7 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function handleDeleteOffer ($offerId)
 	{
+		//!!!
 		$this->getOfferService()->delete($this->getOfferRepository()->findOneById($offerId));
 		$this->flashMessage('Staženo z nabídky');
 		$this->redirect('Market:');
@@ -134,8 +137,12 @@ class MarketPresenter extends BasePresenter {
 		}
 		catch(InsufficientResourcesException $e){
 			$this->flashMessage('Nedostatek surovin');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		}RuleViolationException
+		} catch (RuleViolationException $e){
+			$this->flashMessage('Nemáte právo stahovat cizí nabídky', 'error');
 		}
-
 		$this->redirect('Market:');
 	}
 
@@ -153,6 +160,8 @@ class MarketPresenter extends BasePresenter {
 		}
 		catch(InsufficientResourcesException $e){
 			$this->flashMessage('Nedostatek surovin');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 
 		$this->redirect('Market:');

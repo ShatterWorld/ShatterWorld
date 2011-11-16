@@ -97,14 +97,14 @@ class UnitPresenter extends BasePresenter
 		try{
 			$service->startUnitTraining($clan, $data);
 			$this->flashMessage("Trénování zahájeno");
-		}
-		catch (InsufficientResourcesException $e){
+		} catch (InsufficientResourcesException $e){
 			$this->flashMessage("Nedostatek surovin", 'error');
 
-		}
-		catch (InsufficientCapacityException $e){
+		} catch (InsufficientCapacityException $e){
 			$this->flashMessage("Nedostatek slotů", 'error');
 
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 
 		$this->redirect('Unit:Train');

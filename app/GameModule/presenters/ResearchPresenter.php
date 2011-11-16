@@ -78,6 +78,8 @@ class ResearchPresenter extends BasePresenter {
 			$this->flashMessage('Tento výzkum nemůžete zkoumat', 'error');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 
 		$this->redirect('this');

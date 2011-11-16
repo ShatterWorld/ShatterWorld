@@ -60,6 +60,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Útok zahájen');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Takový útok není možný', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 
@@ -85,6 +87,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nelze kolonizovat pole, se kterým nesousedíte', 'error');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 
@@ -99,6 +103,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nelze opustit pole, na kterém právě probíhá stavba', 'error');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze opustit pole, které vám nepatří.', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 
@@ -116,6 +122,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 
@@ -133,6 +141,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze bourat na cizím, nebo nezastaveném poli', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 
@@ -150,6 +160,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 
@@ -167,6 +179,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 
@@ -187,6 +201,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Průzkum zahájen');
 		} catch (RuleViolationException $e) {
 			$this->flashMessage('Toto pole nemůžete prozkoumávat', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 }

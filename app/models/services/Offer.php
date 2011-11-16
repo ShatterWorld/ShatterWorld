@@ -76,23 +76,29 @@ class Offer extends BaseService {
 		if($this->context->model->getResourceRepository()->checkResources($values['owner'], array($values['offer'] => $values['offerAmount']))){
 			parent::create($values, $flush);
 			$this->context->model->getResourceService()->pay($values['owner'], array($values['offer'] => $values['offerAmount']));
+			$this->context->model->getClanService()->issueOrder($values['owner'], FALSE);
 		}
 		else{
 			throw new InsufficientResourcesException();
 		}
-
 	}
 
 	/**
 	 * Delete a persisted object
-	 * @param Entities\BaseEntity
+	 * @param Entities\Offer
 	 * @param bool
 	 * @return void
 	 */
 	public function delete ($object, $flush = TRUE){
-		Debugger::barDump($object);
-		$this->context->model->getResourceService()->increase($object->owner, array($object->offer => $object->offerAmount));
-		parent::delete($object, $flush);
+		$clan = $this->context->model->getClanRepository()->getPlayerClan();
+		if ($clan->id == $object->owner->id){
+			$this->context->model->getResourceService()->increase($object->owner, array($object->offer => $object->offerAmount));
+			$this->context->model->getClanService()->issueOrder($clan, FALSE);
+			parent::delete($object, $flush);
+		}
+		else{
+			throw new RuleViolationException();
+		}
 
 	}
 }
