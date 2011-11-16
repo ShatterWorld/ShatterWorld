@@ -31,7 +31,7 @@ class Storage extends AbstractRule implements IResearch
 
 	public function afterResearch (Entities\Construction $construction)
 	{
-		$this->getContext()->getResourceService()->recalculateStorage($construction->owner, $construction->term);
+		$this->getContext()->model->getResourceService()->recalculateStorage($construction->owner, $construction->term);
 	}
 
 	public function getLevelCap (){

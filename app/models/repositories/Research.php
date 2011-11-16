@@ -33,10 +33,17 @@ class Research extends BaseRepository
 	{
 		$qb = $this->createQueryBuilder('r');
 		$qb->where($qb->expr()->andX(
-			$qb->expr()->eq('r.owner', $clan->id),
-			$qb->expr()->eq('r.type', $type)
+			$qb->expr()->eq('r.owner', '?0'),
+			$qb->expr()->eq('r.type', '?1')
+		));
+		$qb->setParameters(array(
+			$clan->id,
+			$type
 		));
 		$res = $qb->getQuery()->getResult();
-		return $res;
+		foreach($res as $r){
+			return $r;
+		}
+		return null;
 	}
 }

@@ -7,6 +7,7 @@ use InsufficientResourcesException;
 use InsufficientCapacityException;
 use MultipleConstructionsException;
 use MissingDependencyException;
+use Nette\Diagnostics\Debugger;
 
 class Construction extends Event
 {
@@ -195,12 +196,14 @@ class Construction extends Event
 	{
 		$level = 1;
 		$research = $this->context->model->getResearchRepository()->getClanResearch($clan, $type);
+		Debugger::barDump(gettype($research));
+		Debugger::barDump($research);
 		if ($research !== null){
 			$level = $research->level + 1;
 		}
 
 		$rule = $this->context->rules->get('research', $type);
-		$price = $rule->getResearchCost($level);
+		$price = $rule->getCost($level);
 		if ($this->context->model->getResourceRepository()->checkResources($clan, $price)) {
 
 			$researched = $this->context->model->getResearchRepository()->getResearched($clan);
@@ -210,7 +213,7 @@ class Construction extends Event
 				}
 			}
 
-			$running = $this->context->model->getConstructionRepository()->getRunningResearches();
+			$running = $this->context->model->getConstructionRepository()->getRunningResearches($clan);
 			if (isset($running[$type])){
 				throw new MultipleConstructionsException;
 			}
@@ -223,8 +226,8 @@ class Construction extends Event
 				'level' => $level,
 				'timeout' => $rule->getResearchTime($level)
 			), FALSE);
-			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
-			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
+			$this->context->model->getResourceService()->pay($clan, $price, FALSE);
+			$this->context->model->getClanService()->issueOrder($clan, FALSE);
 			$this->entityManager->flush();
 		}
 		else {
