@@ -365,7 +365,7 @@ Game.map = {
 			 * @return void
 			 */
 			Game.map.overlayDiv.mouseenter(function(e){
-				if (Game.map.contextMenuShown){
+				if (Game.map.contextMenu.shown){
 					return;
 				}
 				var field = Game.map.determineField(e);
@@ -424,7 +424,7 @@ Game.map = {
 		if (field) {
 			var div = field.element;
 
-			if(Game.map.contextMenu.contextMenuShown){
+			if(Game.map.contextMenu.shown){
 				Game.map.contextMenu.hide();
 				Game.map.marker.unmarkByType('selected');
 				return;
@@ -679,7 +679,7 @@ Game.map.contextMenu = {
 	 * true if the context menu is shown, otherwise false
 	 * @var boolean
 	 */
-	contextMenuShown : false,
+	shown : false,
 
 	/**
 	 * Represents facilities
@@ -709,14 +709,8 @@ Game.map.contextMenu = {
 	 * Representing the context menu
 	 * @var String/Object
 	 */
-	contextMenu : $('<div id="contextMenu" />')
+	contextMenu : $('<div class="toolbox" />')
 		.html('<h3>Akce:</h3>'),
-
-	/**
-	 * Representing a div used in #contextMenu
-	 * @var String/Object
-	 */
-	basicActionDiv : $('<a href="#" />').click(function (e) {e.preventDefault()}),
 
 	/**
 	 * Displays context menu
@@ -741,48 +735,56 @@ Game.map.contextMenu = {
 		this.contextMenu.css("left", coords.x + 50);
 		this.contextMenu.css("top", coords.y + 30);
 
-		this.contextMenuShown = true;
+		this.shown = true;
 		$('#mapContainer').append(this.contextMenu);
-
+		var actions = new Array();
 		//my
-		if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
-
-			if (field['units'] != null){
-				this.addAttackAction(field);
-				this.addExplorationAction(field)
+		if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan) {
+			if (field['units'] != null) {
+				actions.push(this.actions.attack);
+				actions.push(this.actions.exploration);
 			}
-			if (field['facility'] !== null){
-				if(field['facility'] !== 'headquarters'){
-					this.addUpgradeFacilityAction(field);
-					this.addDestroyFacilityAction(field);
+			if (field['facility'] !== null) {
+				if (field['facility'] !== 'headquarters') {
+					actions.push(this.actions.upgradeFacility);
+					actions.push(this.actions.destroyFacility);
 					if(field['level'] > 1){
-						this.addDowngradeFacilityAction(field);
+						actions.push(this.actions.downgradeFacility);
 					}
 				}
-
+			} else {
+				actions.push(this.actions.buildFacility);
 			}
-			else{
-				this.addBuildFacilityAction(field);
-			}
-
 			if ((field['facility'] === null) || (field['facility'] !== null && field['facility'] !== 'headquarters')){
-				this.addLeaveFieldAction(field);
+				actions.push(this.actions.leaveField);
 			}
 		}
-		//alliance
+		/*//alliance
 		else if(field['owner'] !== null && field['owner']['alliance'] !== null && Game.map.alliance !== null && field['owner']['alliance']['id'] == Game.map.alliance){
 			alert('aliance');
 		}
 		//enemy
 		else if(field['owner'] !== null){
 			alert('enemy');
-		}
+ 		}*/
 		//neutral neighbour
-		else if(this.isNeighbour(field, Game.map.clan)){
-			this.addColonisationAction(field);
+		else if (this.isNeighbour(field, Game.map.clan)) {
+			actions.push(this.actions.colonisation)
 		}
 
-		this.addCancelAction();
+		actions.push({title: 'Zrušit', click: function () {
+			Game.map.marker.unmarkByType('selected');
+			Game.map.contextMenu.hide();
+		}});
+		
+		$.each(actions, function () {
+			var element = $('<a href="#">').html(this.title).click({action: this}, function (e) {
+				e.preventDefault();
+				Game.map.contextMenu.hide();
+				e.data.action.click(field);
+			});
+			Game.map.contextMenu.contextMenu.append(element);
+		})
 
 	},
 	
@@ -793,234 +795,168 @@ Game.map.contextMenu = {
 	hide: function ()
 	{
 		this.contextMenu.hide();
-		this.contextMenuShown = false;
+		this.shown = false;
 	},
 
-	/**
-	 * Adds the colonisation action
-	 * @param field
-	 * @return void
-	 */
-	addColonisationAction: function(target) {
-		var actionDiv = this.basicActionDiv.clone(true).html('Kolonizace');
-
-		Game.spinner.show(Game.map.contextMenu.contextMenu);
-		Game.utils.signal('fetchColonisationCost', {'targetId': target['id']}, function(data) {
-			Game.spinner.hide();
-			if (Game.resources.hasSufficientResources(data['cost'])){
-				actionDiv.click(function(){
-					Game.spinner.show(Game.map.contextMenu.contextMenu);
-					Game.utils.signal('sendColonisation', {'targetId': target['id']}, function(){
-						Game.events.fetchEvents();
-						Game.resources.fetchResources();
-						Game.map.marker.unmarkByType('selected');
-						Game.map.disableField(target);
-						Game.spinner.hide();
-						Game.map.contextMenu.hide();
+	actions: {
+		colonisation: {
+			title: 'Kolonizace',
+			click: function (target) {
+				Game.spinner.show(Game.map.contextMenu.contextMenu);
+				Game.utils.signal('fetchColonisationCost', {'targetId': target.id}, function (data) {
+					var dialog = new Game.UI.Dialog('colonisationDialog');
+					dialog.setTitle('Kolonizace');
+					dialog.setBody($('<div />')
+						.append(Game.UI.resourceTable(data.cost))
+						.append($('<p>').html(data.time))
+					);
+					dialog.setSubmit({
+						text: 'Zahájit kolonizaci',
+						click: function () {
+							Game.utils.signal('sendColonisation', {'targetId': target['id']}, function(){
+								Game.events.fetchEvents();
+								Game.resources.fetchResources();
+								Game.map.marker.unmarkByType('selected');
+								Game.map.disableField(target);
+							});
+						}
 					});
+					dialog.show();
+					Game.spinner.hide();
 				});
-			} else {
-				actionDiv.css('text-decoration', 'line-through');
+				
 			}
-		});
-		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Adds the attack action
-	 * @param field
-	 * @return void
-	 */
-	addAttackAction: function (from){
-		var actionDiv = this.basicActionDiv.clone(true).html('Útok');
-		actionDiv.click(function(){
-			var dialog = new Game.map.contextMenu.AttackDialog();
-			var attackDialog = $('<div />').attr('id', 'attackDialog');
-			dialog.setup(attackDialog, from);
-			Game.map.contextMenu.hide();
-		});
-		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Adds the upgrade building action
-	 * @param field
-	 * @return void
-	 */
-	addUpgradeFacilityAction: function (target){
-		var actionDiv = this.basicActionDiv.clone(true).html('Upgradovat budovu');
-
-		var upgrade = this.upgrades[target['facility']][target['level']+1];
-		if(upgrade !== null){
-			if (Game.resources.hasSufficientResources(upgrade['cost'])){
-				actionDiv.click(function(){
-					Game.spinner.show(Game.map.contextMenu.contextMenu);
-					Game.utils.signal('upgradeFacility', {'targetId': target['id']}, function () {
-						Game.events.fetchEvents();
-						Game.resources.fetchResources();
-						Game.map.marker.unmarkByType('selected');
-						Game.map.disableField(target);
-						Game.spinner.hide();
+		},
+		exploration: {
+			title: 'Průzkum',
+			click: function (origin) {
+				var dialog = new Game.map.contextMenu.ExplorationDialog('explorationDialog', origin);
+				dialog.show();
+			}
+		},
+		attack: {
+			title: 'Útok',
+			click: function (origin) {
+				var dialog = new Game.map.contextMenu.AttackDialog('attackDialog', origin);
+				dialog.show();
+			}
+		},
+		upgradeFacility: {
+			title: 'Vylepšit budovu',
+			click: function (target) {
+				var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
+				dialog.setTitle('Vylepšit budovu');
+				var label = $('<span>');
+				Game.descriptions.translate('facility', target.facility, label);
+				dialog.setBody($('<div />')
+					.append($('<p>').append(label).append(' (' + (target.level + 1) + ')'))
+					.append(Game.UI.resourceTable(Game.map.contextMenu.upgrades[target.facility][target.level + 1].cost))
+					.append($('<p>').html(Game.map.contextMenu.upgrades[target.facility][target.level + 1].time))
+				);
+				dialog.setSubmit({
+					text: 'Zahájit stavbu', 
+					click: function () {
 						Game.map.contextMenu.hide();
-					});
-
-				});
-
-			}
-			else{
-				actionDiv.css('text-decoration', 'line-through');
-			}
-		}
-		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Adds the downgrade building action
-	 * @param field
-	 * @return void
-	 */
-	addDowngradeFacilityAction: function (target){
-		var actionDiv = this.basicActionDiv.clone(true).html('Downgradovat budovu');
-		var downgrade = this.downgrades[target['facility']][target['level']-1];
-		if(downgrade !== null){
-			if (Game.resources.hasSufficientResources(downgrade['cost'])){
-				actionDiv.click(function(){
-					Game.spinner.show(Game.map.contextMenu.contextMenu);
-					Game.utils.signal('downgradeFacility', {'targetId': target['id']}, function () {
-						Game.events.fetchEvents();
-						Game.resources.fetchResources();
-						Game.map.marker.unmarkByType('selected');
-						Game.map.disableField(target);
-						Game.spinner.hide();
-						Game.map.contextMenu.hide();
-					});
-				});
-
-			}
-			else{
-				actionDiv.css('text-decoration', 'line-through');
-			}
-		}
-		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Adds the destroy building action
-	 * @param field
-	 * @return void
-	 */
-	addDestroyFacilityAction: function (target){
-		var actionDiv = this.basicActionDiv.clone(true).html('Strhnout budovu');
-		var destroy = this.demolitions[target['facility']][target['level']];
-
-		if(destroy !== null){
-			if (Game.resources.hasSufficientResources(destroy['cost'])){
-				actionDiv.click(function(){
-					Game.spinner.show(Game.map.contextMenu.contextMenu);
-					Game.utils.signal('destroyFacility', {'targetId': target['id']}, function () {
-						Game.events.fetchEvents();
-						Game.resources.fetchResources();
-						Game.map.marker.unmarkByType('selected');
-						Game.map.disableField(target);
-						Game.spinner.hide();
-						Game.map.contextMenu.hide();
-					});
-				});
-			} else {
-				actionDiv.css('text-decoration', 'line-through');
-			}
-		}
-		else{alert('destroy is undefined');}
-		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Adds the build building action
-	 * @param field
-	 * @return void
-	 */
-	addBuildFacilityAction: function (target){
-		var actionDiv = this.basicActionDiv.clone(true).html('Postavit budovu');
-		actionDiv.click(function(){
-			$('#contextMenu').html('Budovy:');
-
-			$.each(Game.map.contextMenu.facilities, function(name, facility) {
-				var facilityDiv = Game.map.contextMenu.basicActionDiv.clone(true);
-				if (Game.resources.hasSufficientResources(facility['cost'])){
-
-					facilityDiv.click(function(){
-
-						Game.spinner.show(Game.map.contextMenu.contextMenu);
-						Game.utils.signal('buildFacility', {'targetId': target['id'], 'facility': name}, function (data) {
+						Game.utils.signal('upgradeFacility', {'targetId': target['id']}, function () {
 							Game.events.fetchEvents();
 							Game.resources.fetchResources();
 							Game.map.marker.unmarkByType('selected');
 							Game.map.disableField(target);
-							Game.spinner.hide();
-							Game.map.contextMenu.hide();
 						});
-					});
-				} else {
-					facilityDiv.css('text-decoration', 'line-through');
-				}
-				Game.map.contextMenu.contextMenu.append(facilityDiv);
-				Game.descriptions.translate('facility', name, facilityDiv);
-
-			});
-
-			Game.map.contextMenu.addCancelAction();
-
-		});
-		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Adds the colonisation action
-	 * @param field
-	 * @return void
-	 */
-	addLeaveFieldAction: function(target) {
-		var actionDiv = this.basicActionDiv.clone(true).html('Opustit pole');
-		actionDiv.click(function(){
-			Game.spinner.show(Game.map.contextMenu.contextMenu);
-			Game.utils.signal('leaveField', {'targetId': target['id']}, function () {
-				Game.events.fetchEvents();
-				Game.map.marker.unmarkByType('selected');
-				Game.map.disableField(target);
-				Game.spinner.hide();
+					}
+				});
+				dialog.show();
+			}
+		},
+		downgradeFacility: {
+			title: 'Downgradovat budovu',
+			click: function (target) {
+				var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
+				dialog.setTitle('Downgradovat budovu');
+				var label = $('<span>');
+				Game.descriptions.translate('facility', target.facility, label);
+				dialog.setBody($('<div />')
+					.append($('<p>').append(label).append(' (' + (target.level - 1) + ')'))
+					.append(Game.UI.resourceTable(Game.map.contextMenu.downgrades[target.facility][target.level - 1].cost))
+					.append($('<p>').html(Game.map.contextMenu.downgrades[target.facility][target.level - 1].time))
+				);
+				dialog.setSubmit({
+					text: 'Zahájit stavbu', 
+					click: function () {
+						Game.map.contextMenu.hide();
+						Game.utils.signal('downgradeFacility', {'targetId': target['id']}, function () {
+							Game.events.fetchEvents();
+							Game.resources.fetchResources();
+							Game.map.marker.unmarkByType('selected');
+							Game.map.disableField(target);
+						});
+					}
+				});
+				dialog.show();
+			}	
+		},
+		destroyFacility: {
+			title: 'Strhnout budovu',
+			click: function (target) {
+				Game.spinner.show(Game.map.contextMenu.contextMenu);
+				Game.utils.signal('destroyFacility', {'targetId': target['id']}, function () {
+					Game.events.fetchEvents();
+					Game.resources.fetchResources();
+					Game.map.marker.unmarkByType('selected');
+					Game.map.disableField(target);
+					Game.spinner.hide();
+				});
+			}
+		},
+		buildFacility: {
+			title: 'Postavit budovu',
+			click: function (target) {
 				Game.map.contextMenu.hide();
-			});
-		});
-		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Adds the exploration action
-	 * @param field
-	 * @return void
-	 */
-	addExplorationAction: function(from) {
-		var actionDiv = this.basicActionDiv.clone(true).html('Průzkum');
-		actionDiv.click(function(){
-			var dialog = new Game.map.contextMenu.ExplorationDialog();
-			var attackDialog = $('<div />').attr('id', 'attackDialog');
-			dialog.setup(attackDialog, from);
-			Game.map.contextMenu.hide();
-		});
-		this.contextMenu.append(actionDiv);
-	},
-
-	/**
-	 * Adds the cancel action
-	 * @return void
-	 */
-	addCancelAction: function (){
-		var actionDiv = this.basicActionDiv.clone(true).html('Zrušit');
-		actionDiv.click(function(){
-			Game.map.marker.unmarkByType('selected');
-			Game.map.contextMenu.hide();
-		});
-		this.contextMenu.append(actionDiv);
+				var menu = Game.map.contextMenu.contextMenu.clone().html('');
+				$.each(Game.map.contextMenu.facilities, function (name, facility) {
+					var label = $('<span>');
+					Game.descriptions.translate('facility', name, label);
+					var element = $('<a href="#">').html(label).click(function (e) {
+						e.preventDefault();
+						menu.hide();
+						var dialog = new Game.UI.Dialog('facilityDialog');
+						dialog.setTitle('Postavit budovu');
+						dialog.setBody($('<div />')
+							.append(label.clone())
+							.append(Game.UI.resourceTable(Game.map.contextMenu.facilities[name].cost))
+							.append($('<p>').html(Game.map.contextMenu.facilities[name].time))
+						);
+						dialog.setSubmit({
+							text: 'Zahájit stavbu',
+							click: function () {
+								Game.utils.signal('buildFacility', {'targetId': target['id'], 'facility': name}, function (data) {
+								Game.events.fetchEvents();
+								Game.resources.fetchResources();
+								Game.map.marker.unmarkByType('selected');
+								Game.map.disableField(target);
+							});
+							}
+						});
+						dialog.show();
+					});
+					menu.append(element);
+				});
+				$('#mapContainer').append(menu);
+				menu.show();
+			}
+		},
+		leaveField: {
+			title: 'Opustit pole',
+			click: function (target) {
+				Game.spinner.show(Game.map.contextMenu.contextMenu);
+				Game.utils.signal('leaveField', {'targetId': target['id']}, function () {
+					Game.events.fetchEvents();
+					Game.map.marker.unmarkByType('selected');
+					Game.map.disableField(target);
+					Game.spinner.hide();
+				});
+			}
+		}
 	},
 
 	/**
@@ -1036,6 +972,7 @@ Game.map.contextMenu = {
 		});
 
 	},
+	
 	/**
 	 * If field is neighbour of (at least) one clan field, returns true
 	 * @param field
@@ -1068,16 +1005,162 @@ Game.map.contextMenu = {
 	}
 };
 
+Game.UI = {
+	resourceTable: function (price)
+	{
+		var table = $('<table><tr class="header"></tr><tr class="values"></tr></table>');
+		$.each(price, function (resource, cost) {
+			table.find('.header').append($('<th>').html(resource));
+			table.find('.values').append($('<td>').html(cost));
+		});
+		return table;
+	},
+	
+	Dialog: Class({
+		constructor: function (id)
+		{
+			this.id = id;
+			this.element = $('<div />');
+			if (Game.utils.isset(id)) this.element.attr('id', id);
+		},
+		
+		config: {
+			width: 400,
+			height: 250,
+			position: ['center', 'center']
+		},
+		
+		getConfig: function ()
+		{
+			config = this.config;
+			if (Game.utils.isset(this.id) && (data = Game.cookie.get(this.id))) {
+				$.each($.parseJSON(data), function (key, value) {
+					config[key] = value;
+				})
+			}
+			return config;
+		},
+		
+		setConfig: function (key, value)
+		{
+			if (Game.utils.isset(this.id)) {
+				var config = this.getConfig();
+				config[key] = value;
+				Game.cookie.set(this.id, JSON.stringify(config), 7);
+			}
+		},
+		
+		getBody: function ()
+		{
+			return Game.utils.isset(this.body) ? this.body : null;
+		},
+		
+		setBody: function (body)
+		{
+			this.body = body;
+			return this;
+		},
+		
+		getTitle: function ()
+		{
+			return Game.utils.isset(this.title) ? this.title : null;
+		},
+		
+		setTitle: function (title)
+		{
+			this.title = title;
+			return this;
+		},
+		
+		getSubmit: function ()
+		{
+			return Game.utils.isset(this.submit) ? this.submit : null;
+		},
+		
+		setSubmit: function (submit)
+		{
+			this.submit = submit;
+			return this;
+		},
+		
+		show: function ()
+		{
+			var element = this.element;
+			var config = this.getConfig();
+			element.html(this.getBody());
+			var buttons = new Array();
+			if (submit = this.getSubmit()) {
+				buttons.push({
+					text: submit.text,
+					click: function (event, ui) {
+						submit.click(event, ui);
+						$(this).dialog("close");
+					}
+				});
+			}
+			buttons.push({
+				text: 'Zrušit',
+				click: function() {
+					$(this).dialog("close");
+				}
+			});
+			$(element).dialog({
+				title: this.getTitle(),
+				buttons: buttons,
+				width: config.width,
+				height: config.height,
+				position: config.position
+			});
+			$(element).bind('dialogdragstop', {context: this}, function (event, ui) {
+				event.data.context.setConfig('position', $(element).dialog("option", "position"));
+			});
+			$(element).bind('dialogresizestop', {context: this}, function (event, ui) {
+				event.data.context.setConfig('width', $(element).dialog("option", "width"));
+				event.data.context.setConfig('height', $(element).dialog("option", "height"));
+			});
+			$(element).bind('dialogclose', {context: this}, function (event, ui) {
+				event.data.context.closeHandler();
+				$(this).dialog("destroy").remove();
+			});
+			return element;
+		},
+		
+		closeHandler: function () {}
+	})
+}
+
+Game.map.contextMenu.ConstructionDialog = Class({
+	extends: Game.UI.Dialog,
+	
+	constructor: function (id)
+	{
+		Game.map.contextMenu.ConstructionDialog._superClass.constructor.call(this, id);
+	},
+	
+	closeHandler: function ()
+	{
+		Game.map.marker.unmarkByType('selected');
+	}
+});
+
 Game.map.contextMenu.UnitMoveDialog = Class({
-	setup: function (element, origin) {
-		this.element = element;
+	extends: Game.UI.Dialog,
+	
+	constructor: function (id, origin)
+	{
+		Game.map.contextMenu.UnitMoveDialog._superClass.constructor.call(this, id);
 		this.origin = origin;
+	},
+	
+	getBody: function ()
+	{
+		var element = $('<div>');
+		var origin = this.origin;
 		$(element).append('kliknutim vyberte cíl:<div id="coords">Z ['+origin['coordX']+';'+origin['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div><br/>');
-		$(element).append(this.getAddition());
 		var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
 		table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
 		$(element).append(table);
-		$.each(origin['units'], function (key, unit) {
+		$.each(this.origin['units'], function (key, unit) {
 			var tr = $('<tr id="'+unit['id']+'" />');
 			tr.append('<td class="name" style="width:100px">'+key+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
 			table.append(tr);
@@ -1088,45 +1171,22 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 				'cursor' : 'pointer'
 			});
 		});
-		
-		var w = (width = Game.cookie.get('#unitDialogWidth')) !== null ? width : 200;
-		var h = (height = Game.cookie.get('#unitDialogHeight')) !== null ? height : 120;
-		var pos = [
-			(posX = Game.cookie.get('#unitDialogPosX')) !== null ? parseInt(posX) : 'center',
-			(posY = Game.cookie.get('#unitDialogPosY')) !== null ? parseInt(posY) : 'center'
-		];
+		return element;
+	},
+	
+	closeHandler: function ()
+	{
+		Game.map.marker.unmarkByType('selected');
+		Game.map.marker.unmarkByType('target');
+		Game.map.overlayDiv.unbind('click');
+		Game.map.overlayDiv.click({'context': this}, Game.map.openMenu);
+	},
+	
+	show: function ()
+	{
+		var element = Game.map.contextMenu.UnitMoveDialog._superClass.show.call(this);
 		Game.map.overlayDiv.unbind('click');
 		Game.map.overlayDiv.click({'context': this}, this.selectTarget);
-		$(element).dialog({
-			title: this.getTitle(),
-			width: w,
-			height: h,
-
-			buttons: [{
-				text: "Zrušit",
-				click: function() {
-					$(this).dialog("close");
-				}
-			}],
-
-			position: pos,
-			dragStop: function(event, ui){
-				Game.cookie.set('#unitDialogPosX', $(element).dialog("option", "position")[0], 7);
-				Game.cookie.set('#unitDialogPosY', $(element).dialog("option", "position")[1], 7);
-			},
-			resizeStop: function(event, ui) {
-				Game.cookie.set('#unitDialogWidth', $(element).dialog("option", "width"), 7);
-				Game.cookie.set('#unitDialogHeight', $(element).dialog("option", "height"), 7);
-			},
-			close: function(event, ui) {
-				Game.map.marker.unmarkByType('target');
-				Game.map.marker.unmarkByType('selected');
-				Game.map.overlayDiv.unbind('click');
-				Game.map.overlayDiv.click(Game.map.openMenu);
-				Game.map.contextMenu.action = null;
-				$(this).dialog("destroy").remove();
-			}
-		});
 	},
 	
 	getUnitList: function ()
@@ -1147,36 +1207,29 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		return result;
 	},
 	
-	getAddition: function ()
-	{
-		return '';
-	},
-	
 	selectTarget: function (e)
 	{
 		var context = e.data.context;
 		var target = Game.map.determineField(e);
 		context.target = target;
 		if (context.validateTarget(target)) {
-			var targetX = $('#attackDialog #targetX');
-			var targetY = $('#attackDialog #targetY');
-			var element = context.element;
+			var targetX = $('#' + context.id + ' #targetX');
+			var targetY = $('#' + context.id + ' #targetY');
 			Game.map.marker.unmarkByType('target');
 			Game.map.marker.mark(target, 'target');
 			targetX.html(target['coordX']);
 			targetY.html(target['coordY']);
-			$(element).dialog('option', 'buttons', context.getButtons(context).concat([{
-				text: "Zrušit",
-				click: function() {
-					$(this).dialog("close");
-				}
-			}]));
 		}
 	}
 });
 
 Game.map.contextMenu.AttackDialog = Class({
 	extends: Game.map.contextMenu.UnitMoveDialog,
+	
+	constructor: function (id, origin)
+	{
+		Game.map.contextMenu.AttackDialog._superClass.constructor.call(this, id, origin);
+	},
 	
 	validateTarget: function (target)
 	{
@@ -1185,67 +1238,63 @@ Game.map.contextMenu.AttackDialog = Class({
 			&& Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance);
 	},
 	
-	getTitle: function ()
+	title: 'Útok',
+	
+	getBody: function ()
 	{
-		return 'Útok';
+		var body = Game.map.contextMenu.AttackDialog._superClass.getBody.call(this);
+		body.append('Typ útoku: <select id="#type"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>');
+		return body;
 	},
 	
-	getAddition: function ()
-	{
-		return 'Typ útoku: <select id="#type"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>';
-	},
-	
-	getButtons: function (context) {
-		return [{
-			text: "Zaútočit",
-			click: function (e) {
-				Game.spinner.show(context.element);
-				var params = {
-					'originId': context.origin['id'],
-					'targetId': context.target['id'],
-					'type': $('#attackDialog #type').val()
-				};
-				jQuery.extend(params, context.getUnitList());
-				Game.utils.signal('sendAttack', params, function() {
-					Game.events.fetchEvents();
-					Game.spinner.hide();
-					$(context.element).dialog("close");
-				});
-			}
-		}];
+	submit: {
+		text: "Zaútočit",
+		click: function (e) {
+			Game.spinner.show(this.element);
+			var params = {
+				'originId': this.origin['id'],
+				'targetId': this.target['id'],
+				'type': $('#attackDialog #type').val()
+			};
+			jQuery.extend(params, this.getUnitList());
+			Game.utils.signal('sendAttack', params, function () {
+				Game.events.fetchEvents();
+				Game.spinner.hide();
+				$(this.element).dialog("close");
+			});
+		}
 	}
 });
 
 Game.map.contextMenu.ExplorationDialog = Class({
 	extends: Game.map.contextMenu.UnitMoveDialog,
 	
+	constructor: function (id, origin)
+	{
+		Game.map.contextMenu.AttackDialog._superClass.constructor.call(this, id, origin);
+	},
+	
 	validateTarget: function (target)
 	{
 		return target['owner'] == null;
 	},
 	
-	getTitle: function ()
-	{
-		return 'Průzkum';
-	},
+	title: 'Průzkum',
 	
-	getButtons: function (context)
-	{
-		return [{
-			text: "Zahájit průzkum",
-			click: function (e) {
-				Game.spinner.show(context.element);
-				var params = {
-					'originId': context.origin['id'],
-					'targetId': context.target['id']
-				};
-				jQuery.extend(params, context.getUnitList());
-				Game.utils.signal('sendExploration', params, function() {
-					Game.events.fetchEvents();
-					Game.spinner.hide();
-					$(context.element).dialog("close");
-				});
-			}
-		}];
+	submit: {
+		text: "Zahájit průzkum",
+		click: function (e) {
+			Game.spinner.show(this.element);
+			var params = {
+				'originId': this.origin['id'],
+				'targetId': this.target['id']
+			};
+			jQuery.extend(params, this.getUnitList());
+			Game.utils.signal('sendExploration', params, function () {
+				Game.events.fetchEvents();
+				Game.spinner.hide();
+				$(this.element).dialog("close");
+			});
+		}
 	}
 });

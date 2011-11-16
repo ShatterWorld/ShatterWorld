@@ -40,7 +40,7 @@
 	padding: 1px;
 
 }
-#contextMenu {
+.toolbox {
 	background : #5D6555;
 	border : white 1px solid;
 	color : white;
@@ -52,12 +52,12 @@
 	opacity : 0.9;
 }
 
-#contextMenu a {
+.toolbox a {
 	display: block;
 	padding: 3px;
 }
 
-#contextMenu a:hover {
+.toolbox a:hover {
 	background: #ABB99C;
 	color: #000;
 	text-decoration: none;
