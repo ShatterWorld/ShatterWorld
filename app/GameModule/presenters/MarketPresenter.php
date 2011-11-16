@@ -103,7 +103,6 @@ class MarketPresenter extends BasePresenter {
 			$profits['cheap'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
 		}
 
-		//Debugger::barDump($offers);
 		$this->template->offers = $offers;
 		$this->template->time = $time;
 		$this->template->hasEnoughRes = $hasEnoughRes;
@@ -117,7 +116,6 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function handleDeleteOffer ($offerId)
 	{
-		//!!!
 		$this->getOfferService()->delete($this->getOfferRepository()->findOneById($offerId));
 		$this->flashMessage('Staženo z nabídky');
 		$this->redirect('Market:');
@@ -139,7 +137,6 @@ class MarketPresenter extends BasePresenter {
 			$this->flashMessage('Nedostatek surovin');
 		} catch (InsufficientOrdersException $e){
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
-		}RuleViolationException
 		} catch (RuleViolationException $e){
 			$this->flashMessage('Nemáte právo stahovat cizí nabídky', 'error');
 		}
