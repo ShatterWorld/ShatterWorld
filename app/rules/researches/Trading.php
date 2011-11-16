@@ -24,9 +24,9 @@ class Trading extends AbstractRule implements IResearch
 
 	public function getDependencies ()
 	{
-		$res = $this->getContext()->rules->getAll('research');
-
-		return $res;
+		return array(
+			'storage' => 1
+		);
 	}
 
 	public function afterResearch (Entities\Construction $construction)
@@ -34,7 +34,8 @@ class Trading extends AbstractRule implements IResearch
 		# clean cache
 	}
 
-	public function getLevelCap (){
+	public function getLevelCap ()
+	{
 		return 10;
 	}
 
