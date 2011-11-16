@@ -33,12 +33,9 @@ Game.spinner = {
 	{
 		var spinnerClone = this.getSpinner().clone();
 
-		var targetWidth = $(target).css('width');
-		var targetHeight = $(target).css('height');
-
 		spinnerClone.css({
-			'top' : targetHeight.substring(0, targetHeight.length -2)/2 - this.size/2 + 'px',
-			'left' : targetWidth.substring(0, targetWidth.length -2)/2 - this.size/2 + 'px'
+			'top' : parseInt($(target).css('width')) / 2 - this.size / 2 + 'px',
+			'left' : parseInt($(target).css('height')) / 2 - this.size / 2 + 'px'
 		});
 		$(target).append(spinnerClone);
 	},

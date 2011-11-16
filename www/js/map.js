@@ -1090,10 +1090,11 @@ Game.UI = {
 			element.html(this.getBody());
 			var buttons = new Array();
 			if (submit = this.getSubmit()) {
+				var context = this;
 				buttons.push({
 					text: submit.text,
 					click: function (event, ui) {
-						submit.click(event, ui);
+						submit.click(context);
 						$(this).dialog("close");
 					}
 				});
@@ -1249,18 +1250,18 @@ Game.map.contextMenu.AttackDialog = Class({
 	
 	submit: {
 		text: "Zaútočit",
-		click: function (e) {
-			Game.spinner.show(this.element);
+		click: function (context) {
+			Game.spinner.show(context.element);
 			var params = {
-				'originId': this.origin['id'],
-				'targetId': this.target['id'],
+				'originId': context.origin['id'],
+				'targetId': context.target['id'],
 				'type': $('#attackDialog #type').val()
 			};
-			jQuery.extend(params, this.getUnitList());
+			jQuery.extend(params, context.getUnitList());
 			Game.utils.signal('sendAttack', params, function () {
 				Game.events.fetchEvents();
 				Game.spinner.hide();
-				$(this.element).dialog("close");
+				$(context.element).dialog("close");
 			});
 		}
 	}
@@ -1283,17 +1284,17 @@ Game.map.contextMenu.ExplorationDialog = Class({
 	
 	submit: {
 		text: "Zahájit průzkum",
-		click: function (e) {
-			Game.spinner.show(this.element);
+		click: function (context) {
+			Game.spinner.show(context.element);
 			var params = {
-				'originId': this.origin['id'],
-				'targetId': this.target['id']
+				'originId': context.origin['id'],
+				'targetId': context.target['id']
 			};
-			jQuery.extend(params, this.getUnitList());
+			jQuery.extend(params, context.getUnitList());
 			Game.utils.signal('sendExploration', params, function () {
 				Game.events.fetchEvents();
 				Game.spinner.hide();
-				$(this.element).dialog("close");
+				$(context.element).dialog("close");
 			});
 		}
 	}
