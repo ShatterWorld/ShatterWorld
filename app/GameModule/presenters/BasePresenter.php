@@ -24,10 +24,12 @@ abstract class BasePresenter extends \BasePresenter
 			$this->template->orderCount = $this->context->stats->getAvailableOrders($clan);
 			$this->template->reportCount = $this->getReportRepository()->countUnread($clan);
 			$this->template->resources = $this->getResourceRepository()->getResourcesArray($clan);
+			$this->template->events = $this->getEventRepository()->getUpcomingEventsArray($clan);
 			ksort($this->template->resources);
 		} else {
 			$this->template->orderCount = 0;
 			$this->template->reportCount = 0;
+			$this->template->events = array();
 			$this->template->resources = array();
 		}
 		$this->template->orderCap = $this->context->params['game']['stats']['orderCap'];
@@ -77,9 +79,7 @@ abstract class BasePresenter extends \BasePresenter
 	 */
 	public function handleFetchEvents ()
 	{
-		$clan = $this->getPlayerClan();
-		$this->payload->events = $clan ? $this->getEventRepository()->getUpcomingEventsArray($clan) : NULL;
-		$this->sendPayload();
+		$this->invalidateControl('events');
 	}
 
 	public function handleFetchDescriptions ()

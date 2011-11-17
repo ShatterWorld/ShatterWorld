@@ -31,14 +31,14 @@
 		<script type="text/javascript" src="{$basePath}/js/jquery-ui_min.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/jquery.nette.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/netteForms.js" ></script>
+		<script type="text/javascript" src="{$basePath}/js/utils.js"></script>
+		<script type="text/javascript" src="{$basePath}/js/ui.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/cookie.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/descriptions.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/menu.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/flashes.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/resources.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/events.js"></script>
-		<script type="text/javascript" src="{$basePath}/js/countdown.js"></script>
-		<script type="text/javascript" src="{$basePath}/js/utils.js"></script>
 		{/block}
 
 
@@ -90,18 +90,15 @@
 					<span class="text">{$orderCount}/{$orderCap}</span>
 				</div>
 				{/snippet}
-				<div id="countdownBar">
-					<span class="text">Odpočítávání (<span id="countdownCount"></span>)</span>
+				{snippet events}
+				<div id="countdownBar" data-events="{$events|json}">
+					<a href="#" id="showCountdowns"><img src="{$basePath}/images/icons/time.png" /><span class="text">{count($events)}</span></a>
 				</div>
+				{/snippet}
 				<div class="clearer"><span></span></div>
 			</div>
 
-			<div id="countdownDialog">
-			</div>
-
 			<div id="menu">
-
-
 				{if $user->isAllowed('administration')}
 				<div class="submenu">
 					<h3>Testing</h3>
@@ -114,8 +111,6 @@
 
 					</ul>
 				</div>
-
-
 				{/if}
 				<div class="submenu{ifCurrent Clan:*} active{/ifCurrent}">
 					<h3>Klan</h3>
@@ -129,7 +124,6 @@
 
 					</ul>
 				</div>
-
 				{if $presenter->getPlayerClan()}
 					<div class="submenu{ifCurrent Dashboard:*} active{/ifCurrent}">
 						<h3>Novinky</h3>

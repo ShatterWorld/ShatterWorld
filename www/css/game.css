@@ -15,7 +15,7 @@
 	line-height: 24px;
 }
 
-#infoBar #resourceBar img {
+#infoBar img {
 	vertical-align: middle;
 }
 
@@ -26,20 +26,21 @@
 	vertical-align: middle;
 }
 
-#infoBar #countdownBar {
-	cursor: pointer;
-	display: none;
-}
-
-#infoBar #countdownBar:hover {
-	text-decoration: underline;
-}
-
 #countdownDialog {
 	/*color: white;*/
 	display: none;
 	/*padding-left: 15px;
 	margin-bottom: 10px;*/
+}
+
+.countdownTitle {
+	font-weight: bold;
+	width: 90%;
+	vertical-align: top;
+}
+
+.countdownText {
+	text-align: right;
 }
 
 .report {
