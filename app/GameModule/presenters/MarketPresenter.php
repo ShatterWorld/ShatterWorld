@@ -88,8 +88,6 @@ class MarketPresenter extends BasePresenter {
 	public function renderBuy ()
 	{
 		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan());
-		$timeShort = array();
-		$timeCheap = array();
 		$hasEnoughRes = array();
 		$profits = array();
 
@@ -101,20 +99,9 @@ class MarketPresenter extends BasePresenter {
 			$offerRepository = $this->getOfferRepository();
 			$profits['short'][$key] = $offerRepository->getTotalMediatorProfit(Graph::SHORT, $clan, $offer);
 			$profits['cheap'][$key] = $offerRepository->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
-
-			$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $offerRepository->getMediators(Graph::SHORT, $clan, $offer));
-			$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
-			$timeShort[$key] = date("H:i:s", $t);
-
-			$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $offerRepository->getMediators(Graph::CHEAP, $clan, $offer));
-			$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
-			$timeCheap[$key] = date("H:i:s", $t);
-
 		}
 
 		$this->template->offers = $offers;
-		$this->template->timeShort = $timeShort;
-		$this->template->timeCheap = $timeCheap;
 		$this->template->hasEnoughRes = $hasEnoughRes;
 		$this->template->profits = $profits;
 	}
@@ -172,6 +159,32 @@ class MarketPresenter extends BasePresenter {
 		}
 
 		$this->redirect('Market:');
+	}
+
+	/**
+	 * Returns the short time of offer
+	 * @param Entities\Offer
+	 * @return int
+	 */
+	public function getShortTime ($offer)
+	{
+		$clan = $this->getPlayerClan();
+		$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $this->getOfferRepository()->getMediators(Graph::SHORT, $clan, $offer));
+		$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
+		return $t;
+	}
+
+	/**
+	 * Returns the cheap time of offer
+	 * @param Entities\Offer
+	 * @return int
+	 */
+	public function getCheapTime ($offer)
+	{
+		$clan = $this->getPlayerClan();
+		$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $this->getOfferRepository()->getMediators(Graph::CHEAP, $clan, $offer));
+		$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
+		return $t;
 	}
 
 

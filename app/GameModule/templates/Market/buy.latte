@@ -37,7 +37,7 @@
 				<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
 				<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
 
-				<td class="time">{$timeShort[$key]}</td>
+				<td class="time">{$presenter->getShortTime($offer)|time}</td>
 				<td class="tax">{$profits[short][$key]}</td>
 				<td class="action">
 					{if $hasEnoughRes[$key]}
@@ -48,7 +48,7 @@
 				</td>
 
 
-				<td class="time">{$timeCheap[$key]}</td>
+				<td class="time">{$presenter->getCheapTime($offer)|time}</td>
 				<td class="tax">{$profits[cheap][$key]}</td>
 				<td class="action">
 					{if $hasEnoughRes[$key]}

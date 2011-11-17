@@ -36,12 +36,11 @@
 			{?$cap = $research->getLevelCap()}
 
 			{if $lvl < $cap}
-
 				<tr class="row{($i++ % 2) + 1}">
 					<td class="type">{$research->getDescription()}</td>
 					<td class="level">{$lvl}</td>
 					<td class="max">{$cap}</td>
-					<td class="time">{$researchTimes[$key]}</td>
+					<td class="time">{$research->getResearchTime()|time}</td>
 
 					{ifset $running[$key]}
 						{foreach $resources as $resKey => $res}

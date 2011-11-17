@@ -71,7 +71,7 @@
 							{/foreach}
 						</td>
 						<td class="time">
-							{$trainingTimes[$name]}
+							{$unitRules[$name]->getTrainingTime()|time}
 						</td>
 						<td class="amount">
 							{input $name}
@@ -85,8 +85,6 @@
 
 
 			<h2>Celkem</h2>
-			{dump $slots}
-
 			<h3>Volné sloty</h3>
 
 			<table id="slotSum">
