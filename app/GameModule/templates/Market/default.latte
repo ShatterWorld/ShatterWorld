@@ -1,3 +1,8 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/market.css" />
+{/block}
+
 {block #header}
 	Přehled
 {/block}
@@ -6,21 +11,17 @@
 	<h3>Moje nabídky</h3>
 	<table id = "clanOffers">
 		<tr>
-			<th>Kdo</th>
-			<th>Co</th>
-			<th>Kolik</th>
-			<th>Za co</th>
-			<th>Kolik</th>
-			<th>X</th>
+			<th class="owner">Nabízející</th>
+			<th class="offer">Nabídka</th>
+			<th class="demand">Požadavek</th>
+			<th class="action">Stáhnout</th>
 		</tr>
 		{foreach $clanOffers as $offer}
 			<tr>
-				<td>{$offer->owner->name}</td>
-				<td>{$offer->offer}</td>
-				<td>{$offer->offerAmount}</td>
-				<td>{$offer->demand}</td>
-				<td>{$offer->demandAmount}</td>
-				<td><a n:href="deleteOffer! $offer->id">X</a></td>
+				<td class="owner">{$offer->owner->name}</td>
+				<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
+				<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
+				<td class="action"><a n:href="deleteOffer! $offer->id">X</a></td>
 			</tr>
 		{/foreach}
 	</table>
@@ -28,19 +29,18 @@
 	<h3>Probíhající obchody</h3>
 	<table id = "runningShipments">
 		<tr>
-			<th>Kdo</th>
-			<th>Komu</th>
-			<th>Co</th>
-			<th>Kolik</th>
-			<th>Čas</th>
+			<th class="owner">Kdo</th>
+			<th class="target">Komu</th>
+			<th class="cargo">Co</th>
+			<th class="time">Čas</th>
 		</tr>
 		{foreach $runningShipments as $shipment}
 			<tr>
-				<td>{$shipment->origin->owner->name}</td>
-				<td>{$shipment->target->owner->name}</td>
-				<td>{foreach $shipment->cargo as $res => $value}{$res}{/foreach}</td>
-				<td>{foreach $shipment->cargo as $res => $value}{$value}{/foreach}</td>
-				<td>{$shipment->term|date:"d.m.Y H:i"}</td>
+				<td class="owner">{$shipment->origin->owner->name}</td>
+				<td class="target">{$shipment->target->owner->name}</td>
+				<td class="offer"><img src="{$basePath}/images/resources/{foreach $shipment->cargo as $res => $value}{$res}{/foreach}.png"/> {foreach $shipment->cargo as $res => $value}{$value}{/foreach}</td>
+
+				<td class="timeFull">{$shipment->term|date:"d.m.Y H:i"}</td>
 			</tr>
 		{/foreach}
 	</table>

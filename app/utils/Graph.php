@@ -215,6 +215,7 @@ class Graph
 	 */
 	protected function dijkstraVertices ($from)
 	{
+		return $this->dijkstraEdges($from);
 		//init
 		$lengths = array();
 		$prevVertices = array();

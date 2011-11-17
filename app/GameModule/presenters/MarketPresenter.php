@@ -88,7 +88,8 @@ class MarketPresenter extends BasePresenter {
 	public function renderBuy ()
 	{
 		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan());
-		$time = array();
+		$timeShort = array();
+		$timeCheap = array();
 		$hasEnoughRes = array();
 		$profits = array();
 
@@ -97,14 +98,43 @@ class MarketPresenter extends BasePresenter {
 
 		foreach ($offers as $key => $offer){
 			$targetHq = $offer->owner->getHeadquarters();
-			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
+
+			$t = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
+			$h = floor($t / 3600);
+			$t -= $h*3600;
+			$m = floor($t / 60);
+			$t -= $m*60;
+			$s = $t;
+			if ($s < 10){
+				$s = '0'.$s;
+			}
+			if ($m < 10){
+				$m = '0'.$m;
+			}
+			$timeShort[$key] = $h.':'.$m.':'.$s;
+
+			$t = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
+			$h = floor($t / 3600);
+			$t -= $h*3600;
+			$m = floor($t / 60);
+			$t -= $m*60;
+			$s = $t;
+			if ($s < 10){
+				$s = '0'.$s;
+			}
+			if ($m < 10){
+				$m = '0'.$m;
+			}
+			$timeCheap[$key] = $h.':'.$m.':'.$s;
+
 			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
 			$profits['short'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::SHORT, $clan, $offer);
 			$profits['cheap'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
 		}
 
 		$this->template->offers = $offers;
-		$this->template->time = $time;
+		$this->template->timeShort = $timeShort;
+		$this->template->timeCheap = $timeCheap;
 		$this->template->hasEnoughRes = $hasEnoughRes;
 		$this->template->profits = $profits;
 	}
