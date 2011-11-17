@@ -1,21 +1,40 @@
-td{
+td {
 	border-left: 1px solid black;
-	/*text-align: center;*/
 }
 
-.time{
-	width: 140px;
+.time {
+	width: 70px;
 	text-align: center;
 }
 
-.missDep, .missRes, .running{
+.timeFull {
+	width: 160px;
+	text-align: center;
+}
+
+.missDep, .missRes, .running {
 	color: red;
 }
 
-.upgrade a{
+.upgrade a {
 	color: blue;
 }
 
-.research a{
+.research a {
 	color: green;
+}
+
+.cost {
+	width: 20px;
+	text-align: center;
+}
+
+.level, .max {
+	width: 40px;
+	text-align: center;
+}
+
+.action {
+	width: 130px;
+	text-align: right;
 }

@@ -36,10 +36,7 @@
 }
 
 #countdownDialog {
-	/*color: white;*/
 	display: none;
-	/*padding-left: 15px;
-	margin-bottom: 10px;*/
 }
 
 .report {
@@ -59,20 +56,23 @@ table {
 	border-collapse:collapse;
 }
 
-table .row1{
+table .row1 {
 	/*background: blue;*/
 }
 
-table .row2{
+table .row2 {
 	background: #b8b8b8;
 }
 
-table a{
+table a {
 	display: block;
 }
 
-table th{
+table th {
 	font-weight: bold;
 	vertical-align : top;
 }
 
+table tr:hover {
+	background: #ffbe40;
+}
