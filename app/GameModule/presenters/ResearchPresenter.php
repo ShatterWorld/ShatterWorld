@@ -23,6 +23,8 @@ class ResearchPresenter extends BasePresenter {
 	{
 		$this->template->researched = $this->getResearchRepository()->getResearched($this->getPlayerClan());
 		$this->template->all = $this->context->rules->getAll('research');
+		$this->template->running = $this->getConstructionRepository()->getRunningResearches($this->getPlayerClan());
+
 	}
 
 	/**
@@ -33,28 +35,7 @@ class ResearchPresenter extends BasePresenter {
 	{
 		$all = $this->context->rules->getAll('research');
 
-		$researchTimes = array();
-		foreach($all as $key => $res){
-			$t = $res->getResearchTime();
-
-			$h = floor($t / 3600);
-			$t -= $h*3600;
-			$m = floor($t / 60);
-			$t -= $m*60;
-			$s = $t;
-
-			if ($s < 10){
-				$s = '0'.$s;
-			}
-			if ($m < 10){
-				$m = '0'.$m;
-			}
-
-			$researchTimes[$key] = $h.':'.$m.':'.$s;
-		}
-
 		$this->template->researched = $this->getResearchRepository()->getResearched($this->getPlayerClan());
-		$this->template->researchTimes = $researchTimes;
 		$this->template->all = $all;
 		$this->template->running = $this->getConstructionRepository()->getRunningResearches($this->getPlayerClan());
 
@@ -78,6 +59,8 @@ class ResearchPresenter extends BasePresenter {
 			$this->flashMessage('Tento výzkum nemůžete zkoumat', 'error');
 		} catch (InsufficientResourcesException $e) {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 
 		$this->redirect('this');

@@ -1,6 +1,9 @@
 <?php
 namespace Services;
 use Entities;
+use Nette\Diagnostics\Debugger;
+use Exception;
+use RuleViolationException;
 
 class Alliance extends BaseService
 {
@@ -14,7 +17,7 @@ class Alliance extends BaseService
 		}
 		parent::delete($object, $flush);
 	}
-	
+
 	public function addMember (Entities\Alliance $alliance, Entities\Clan $clan)
 	{
 		$this->update($clan, array('alliance' => $alliance, 'allianceApplication' => NULL));
@@ -23,4 +26,62 @@ class Alliance extends BaseService
 			$this->context->model->getFieldService()->invalidateVisibleFields($member->id);
 		}
 	}
+
+	public function declineMember (Entities\Alliance $alliance, Entities\Clan $clan)
+	{
+		throw new Exception();
+	}
+
+	public function leaveAlliance (Entities\Alliance $alliance, Entities\Clan $clan)
+	{
+		if ($clan->alliance == $alliance){
+			$this->update($clan, array('alliance' => NULL));
+			$this->context->model->getFieldService()->invalidateVisibleFields($clan->id);
+
+			$members = $alliance->getMembers();
+			$newLeader = null;
+			$i = 0;
+			foreach ($members as $member) {
+				if ($newLeader === null){
+					$newLeader = $member;
+				}
+				$i++;
+				$this->context->model->getFieldService()->invalidateVisibleFields($member->id);
+			}
+
+			if ($i > 0){
+				$this->update($alliance, array('leader' => $newLeader));
+			}
+			else{
+				$this->delete($alliance);
+			}
+
+		}
+		else{
+			throw new RuleViolationException();
+		}
+	}
+
+	public function fireMember (Entities\Alliance $alliance, Entities\Clan $clan)
+	{
+		if ($alliance !== $clan->alliance){
+			throw new RuleViolationException();
+		}
+
+		$this->update($clan, array('alliance' => NULL));
+		$this->context->model->getFieldService()->invalidateVisibleFields($clan->id);
+		foreach ($alliance->getMembers() as $member) {
+			$this->context->model->getFieldService()->invalidateVisibleFields($member->id);
+		}
+	}
+
+	public function handOverLeadership (Entities\Alliance $alliance, Entities\Clan $clan)
+	{
+		if ($alliance !== $clan->alliance){
+			throw new RuleViolationException();
+		}
+
+		$this->update($alliance, array('leader' => $clan));
+	}
+
 }

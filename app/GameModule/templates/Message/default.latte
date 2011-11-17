@@ -13,16 +13,20 @@
 			<th>Odesílatel</th>
 			<th>Předmět</th>
 			<th>Datum a čas</th>
-			<th>Přečtená</th>
+			<th>Označit jako</th>
 			<th>Smazat</th>
 		</tr>
 		{?$i = 1}
 		{foreach $messages as $message}
 			<tr class="row{($i++ % 2) + 1} {if !$message->read}unread{/if}">
-				<td>{$message->sender->nickname}</td>
-				<td><a href="{link Message:show $message->id}">{$message->subject}</a></td>
+				<td class="sender">{$message->sender->nickname}</td>
+				<td class="subject"><a href="{link Message:show $message->id}">{$message->subject}</a></td>
 				<td class="time">{$message->sentTime|date:"d.m.Y H:i"}</td>
-				<td><a n:href="markRead! $message->id">Přečtená</a></td>
+				{if !$message->read}
+					<td class="markAs"><a n:href="markRead! $message->id">Přečtenou</a></td>
+				{else}
+					<td class="markAs"><a n:href="markUnread! $message->id">Nepřečtenou</a></td>
+				{/if}
 				<td class="delete"><a n:href="deleteByRecipient! $message->id">X</a></td>
 			</tr>
 		{/foreach}

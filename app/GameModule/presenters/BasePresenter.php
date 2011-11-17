@@ -73,6 +73,12 @@ abstract class BasePresenter extends \BasePresenter
 		return $this->getMessageRepository()->getUnreadMsgCount($this->getPlayerClan()->user->id);
 	}
 
+	public function isLeader ()
+	{
+		return $this->getPlayerClan()->getAlliance()->leader === $this->getPlayerClan();
+	}
+
+
 	/**
 	 * Send upcoming events via ajax
 	 * @return void

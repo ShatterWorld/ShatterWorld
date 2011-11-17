@@ -4,17 +4,19 @@
 
 {block #content}
 
-	<table>
-		<tr>
-			<th>Jednotka</th>
-			<th>Množství</th>
-		</tr>
-		{foreach $units as $unit}
+	{if count($units) > 0}
+		<table>
 			<tr>
-				<td>{$unit->type|getDescription}</td>
-				<td>{$unit->count}</td>
+				<th>Jednotka</th>
+				<th>Množství</th>
 			</tr>
-		{/foreach}
-	</table>
+			{foreach $units as $unit}
+				<tr>
+					<td>{$unit->type|getDescription}</td>
+					<td>{$unit->count}</td>
+				</tr>
+			{/foreach}
+		</table>
+	{/if}
 {/block}
 

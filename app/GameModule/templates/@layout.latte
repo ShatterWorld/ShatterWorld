@@ -170,7 +170,17 @@
 					<div class="submenu{ifCurrent Alliance:*} active{/ifCurrent}">
 						<h3>Aliance</h3>
 						<ul>
-							<li><a n:href="Alliance:">Přehled</a></li>
+							{if $presenter->getPlayerClan()->getAlliance()}
+								<li><a n:href="Alliance:">Přehled</a></li>
+								{if $presenter->isLeader()}
+									<li><a n:href="Alliance:applicants">Přjmout členy</a></li>
+									<li><a n:href="Alliance:management">Správa</a></li>
+								{/if}
+								<li><a n:href="Alliance:leave">Vystoupit</a></li>
+							{else}
+								<li><a n:href="Alliance:new">Nová</a></li>
+								<li><a n:href="Alliance:neutral">Přehled</a></li>
+							{/if}
 						</ul>
 					</div>
 

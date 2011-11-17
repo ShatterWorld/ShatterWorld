@@ -63,6 +63,8 @@ class MarketPresenter extends BasePresenter {
 		}
 		catch(InsufficientResourcesException $e){
 			$this->flashMessage('Nedostatek surovin');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 
 		$this->redirect('Market:');
@@ -86,7 +88,6 @@ class MarketPresenter extends BasePresenter {
 	public function renderBuy ()
 	{
 		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan());
-		$time = array();
 		$hasEnoughRes = array();
 		$profits = array();
 
@@ -94,16 +95,13 @@ class MarketPresenter extends BasePresenter {
 		$clanHq = $clan->getHeadquarters();
 
 		foreach ($offers as $key => $offer){
-			$targetHq = $offer->owner->getHeadquarters();
-			$time[$key] = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
 			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
-			$profits['short'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::SHORT, $clan, $offer);
-			$profits['cheap'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
+			$offerRepository = $this->getOfferRepository();
+			$profits['short'][$key] = $offerRepository->getTotalMediatorProfit(Graph::SHORT, $clan, $offer);
+			$profits['cheap'][$key] = $offerRepository->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
 		}
 
-		//Debugger::barDump($offers);
 		$this->template->offers = $offers;
-		$this->template->time = $time;
 		$this->template->hasEnoughRes = $hasEnoughRes;
 		$this->template->profits = $profits;
 	}
@@ -134,8 +132,11 @@ class MarketPresenter extends BasePresenter {
 		}
 		catch(InsufficientResourcesException $e){
 			$this->flashMessage('Nedostatek surovin');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		} catch (RuleViolationException $e){
+			$this->flashMessage('Nemáte právo stahovat cizí nabídky', 'error');
 		}
-
 		$this->redirect('Market:');
 	}
 
@@ -153,9 +154,37 @@ class MarketPresenter extends BasePresenter {
 		}
 		catch(InsufficientResourcesException $e){
 			$this->flashMessage('Nedostatek surovin');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 
 		$this->redirect('Market:');
+	}
+
+	/**
+	 * Returns the short time of offer
+	 * @param Entities\Offer
+	 * @return int
+	 */
+	public function getShortTime ($offer)
+	{
+		$clan = $this->getPlayerClan();
+		$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $this->getOfferRepository()->getMediators(Graph::SHORT, $clan, $offer));
+		$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
+		return $t;
+	}
+
+	/**
+	 * Returns the cheap time of offer
+	 * @param Entities\Offer
+	 * @return int
+	 */
+	public function getCheapTime ($offer)
+	{
+		$clan = $this->getPlayerClan();
+		$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $this->getOfferRepository()->getMediators(Graph::CHEAP, $clan, $offer));
+		$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
+		return $t;
 	}
 
 

@@ -1,6 +1,8 @@
 {block #scripts}
 	{include #parent}
 	<script type="text/javascript" src="{$basePath}/js/units.js"></script>
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/units.css" />
+
 {/block}
 
 {block #header}
@@ -23,18 +25,18 @@
 
 		<table id="trainUnitTable">
 			<tr>
-				<th>Jméno</th>
-				<td>Síla</td>
+				<th class="name">Jméno</th>
+				<th class="strenght">Síla</th>
 				{foreach $resources as $key => $res}
-					<td>
+					<th class="cost {$key}">
 						<img src="{$basePath}/images/resources/{$key}.png"/>
-					</td>
+					</th>
 				{/foreach}
 
-				<td>Sloty</td>
-				<td><img src="{$basePath}/images/icons/time.png"/></td>
-				<td>Množství</td>
-				<td>Max</td>
+				<th class="difficulty">Sloty</th>
+				<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
+				<th class="amount">Množství</th>
+				<th>Max</th>
 			</tr>
 
 			{foreach $form->getControls() as $name => $field}
@@ -50,11 +52,11 @@
 						<th class="name">
 							{label $name /}
 						</th>
-						<td class="force">
+						<td class="strenght">
 							{$unitRules[$name]->getAttack()}/{$unitRules[$name]->getDefense()}
 						</td>
 						{foreach $resources as $key => $res}
-							<td class="costs-{$key}">
+							<td class="cost {$key}">
 								{$cost[$key]}
 							</td>
 						{/foreach}
@@ -68,8 +70,8 @@
 								{?$first = false}
 							{/foreach}
 						</td>
-						<td class="trainingTime">
-							{$trainingTimes[$name]}
+						<td class="time">
+							{$unitRules[$name]->getTrainingTime()|time}
 						</td>
 						<td class="amount">
 							{input $name}
@@ -83,8 +85,6 @@
 
 
 			<h2>Celkem</h2>
-			{dump $slots}
-
 			<h3>Volné sloty</h3>
 
 			<table id="slotSum">

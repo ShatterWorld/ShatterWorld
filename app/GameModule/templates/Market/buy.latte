@@ -1,38 +1,56 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/market.css" />
+{/block}
+
 {block #header}
 	Koupit
 {/block}
 
 {block #content}
-<h3>Nabízené zboží</h3>
 	<table id = "offers">
 		<tr>
-			<th>Kdo</th>
-			<th>Co</th>
-			<th>Kolik</th>
-			<th>Za co</th>
-			<th>Kolik</th>
-			<th>Čas</th>
-			<th>Profit (vzdálenost)</th>
-			<th>Profit (cena)</th>
-			<th>Přijmout (vzádlenost)</th>
-			<th>Přijmout (cena)</th>
+			<th class="owner"></th>
+			<th class="offer"></th>
+			<th class="demand"></th>
+
+			<th class="possibleWay" colspan="3">Nejrychlejší</th>
+			<th class="possibleWay" colspan="3">Nejlevnější</th>
+		</tr>
+
+		<tr>
+			<th class="owner">Nabízející</th>
+			<th class="offer">Nabídka</th>
+			<th class="demand">Požadavek</th>
+
+			<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
+			<th class="tax">Ztráta</th>
+			<th class="action">Přijmout</th>
+
+			<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
+			<th class="tax">Ztráta</th>
+			<th class="action">Přijmout</th>
 		</tr>
 		{foreach $offers as $key => $offer}
 			<tr>
-				<td>{$offer->owner->name}({$offer->owner->id})</td>
-				<td>{$offer->offer}</td><td>{$offer->offerAmount}</td>
-				<td>{$offer->demand}</td><td>{$offer->demandAmount}</td>
-				<td>{$time[$key]}</td>
-				<td>{(-1)*$profits[short][$key]}</td>
-				<td>{(-1)*$profits[cheap][$key]}</td>
-				<td>
+				<td class="owner">{$offer->owner->name}</td>
+				<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
+				<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
+
+				<td class="time">{$presenter->getShortTime($offer)|time}</td>
+				<td class="tax">{$profits[short][$key]}</td>
+				<td class="action">
 					{if $hasEnoughRes[$key]}
 						<a n:href="acceptOfferShort! $offer->id">Ano</a>
 					{else}
 						Nedostatek surovin
 					{/if}
 				</td>
-				<td>
+
+
+				<td class="time">{$presenter->getCheapTime($offer)|time}</td>
+				<td class="tax">{$profits[cheap][$key]}</td>
+				<td class="action">
 					{if $hasEnoughRes[$key]}
 						<a n:href="acceptOfferCheap! $offer->id">Ano</a>
 					{else}

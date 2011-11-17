@@ -2,7 +2,7 @@
 namespace Repositories;
 use Entities;
 use Doctrine;
-
+use RuleViolationException;
 /**
  * Message repository class
  * @author Petr Bělohlávek
@@ -66,5 +66,20 @@ class Message extends BaseRepository
 		return count($messages);
 
 	}
+
+	/**
+	 * Checks permissions
+	 * @param Entities\User
+	 * @param Entities\Message
+	 * @return void
+	 */
+	public function checkPermission ($user, $message)
+	{
+		if (!($message !== null && ($message->recipient == $user || $message->sender == $user))){
+			throw new RuleViolationException();
+		}
+	}
+
+
 
 }

@@ -21,8 +21,9 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 	public function beforeRender ()
 	{
 		$this->template->registerHelper('json', callback($this, 'jsonEncode'));
+		$this->template->registerHelper('time', callback($this, 'getTimeFormat'));
 	}
-	
+
 	protected function createComponentLoginForm ()
 	{
 		$form = new Form;
@@ -61,9 +62,33 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$this->flashMessage("Úspěšně přihlášen");
 		$this->redirect(":Game:Dashboard:");
 	}
-	
+
 	public function jsonEncode ($value)
 	{
 		return Nette\Utils\Json::encode($value);
 	}
+
+	public function getTimeFormat ($t)
+	{
+		$h = floor($t / 3600);
+		$t -= $h*3600;
+		$m = floor($t / 60);
+		$t -= $m*60;
+		$s = $t;
+
+		if ($s < 10){
+			$s = '0'.$s;
+		}
+		if ($m < 10){
+			$m = '0'.$m;
+		}
+
+		return $h.':'.$m.':'.$s;
+
+	}
 }
+
+
+
+
+

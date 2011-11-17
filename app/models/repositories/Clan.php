@@ -53,6 +53,7 @@ class Clan extends BaseRepository
 		return $this->findOneByUser($this->context->user->id);
 	}
 
+
 	/**
 	 * Returns oriented graph where key is clan index, and value distance
 	 * The form $from->$target
@@ -164,4 +165,49 @@ class Clan extends BaseRepository
 	{
 		return new Nette\Caching\Cache($this->context->cacheStorage, 'VisibleClans');
 	}
+
+	/**
+	 * Counts distance between field $a and $b
+	 * @param Entities\Clan
+	 * @param Entities\Clan
+	 * @return integer
+	 */
+	public function calculateDistance ($a, $b)
+	{
+		return $this->context->model->getFieldRepository()->calculateDistance($a->headquarters, $b->headquarters);
+	}
+
+	/**
+	 * Counts the sum of distances fields
+	 * @param Entities\Clan
+	 * @param Entities\Clan
+	 * @param array of Entities\Clan
+	 * @return integer
+	 */
+	public function calculateTotalDistance ($origin, $target, $mediators)
+	{
+		if (count($mediators) <= 0){
+			return $this->calculateDistance($origin, $target);
+		}
+		$distance = 0;
+		$first = true;
+		$prev = null;
+
+		foreach ($mediators as $mediator){
+			if ($first){
+				$first = false;
+				$distance += $this->calculateDistance($origin, $mediator);
+				$prev = $mediator;
+				continue;
+			}
+			$distance += $this->calculateDistance($prev, $mediator);
+			$prev = $mediator;
+		}
+		$distance += $this->calculateDistance($prev, $target);
+		return $distance;
+
+	}
+
+
+
 }
