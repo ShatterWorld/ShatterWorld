@@ -23,4 +23,6 @@ class Alliance extends BaseRepository
 			return array();
 		}
 	}
+
+
 }

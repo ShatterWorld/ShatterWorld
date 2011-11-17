@@ -53,6 +53,7 @@ class Clan extends BaseRepository
 		return $this->findOneByUser($this->context->user->id);
 	}
 
+
 	/**
 	 * Returns oriented graph where key is clan index, and value distance
 	 * The form $from->$target
