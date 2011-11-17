@@ -97,39 +97,19 @@ class MarketPresenter extends BasePresenter {
 		$clanHq = $clan->getHeadquarters();
 
 		foreach ($offers as $key => $offer){
-			$targetHq = $offer->owner->getHeadquarters();
-
-			$t = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
-			$h = floor($t / 3600);
-			$t -= $h*3600;
-			$m = floor($t / 60);
-			$t -= $m*60;
-			$s = $t;
-			if ($s < 10){
-				$s = '0'.$s;
-			}
-			if ($m < 10){
-				$m = '0'.$m;
-			}
-			$timeShort[$key] = $h.':'.$m.':'.$s;
-
-			$t = $this->getFieldRepository()->calculateDistance($clanHq, $targetHq);
-			$h = floor($t / 3600);
-			$t -= $h*3600;
-			$m = floor($t / 60);
-			$t -= $m*60;
-			$s = $t;
-			if ($s < 10){
-				$s = '0'.$s;
-			}
-			if ($m < 10){
-				$m = '0'.$m;
-			}
-			$timeCheap[$key] = $h.':'.$m.':'.$s;
-
 			$hasEnoughRes[$key] = $this->getResourceRepository()->checkResources($clan, array($offer->demand => $offer->demandAmount));
-			$profits['short'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::SHORT, $clan, $offer);
-			$profits['cheap'][$key] = $this->getOfferRepository()->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
+			$offerRepository = $this->getOfferRepository();
+			$profits['short'][$key] = $offerRepository->getTotalMediatorProfit(Graph::SHORT, $clan, $offer);
+			$profits['cheap'][$key] = $offerRepository->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
+
+			$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $offerRepository->getMediators(Graph::SHORT, $clan, $offer));
+			$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
+			$timeShort[$key] = date("H:i:s", $t);
+
+			$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $offerRepository->getMediators(Graph::CHEAP, $clan, $offer));
+			$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
+			$timeCheap[$key] = date("H:i:s", $t);
+
 		}
 
 		$this->template->offers = $offers;

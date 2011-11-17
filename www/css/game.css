@@ -70,7 +70,7 @@ table a {
 
 table th {
 	font-weight: bold;
-	vertical-align : top;
+	vertical-align : middle;
 }
 
 table tr:hover {

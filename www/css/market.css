@@ -1,0 +1,45 @@
+.time {
+	width: 70px;
+	text-align: center;
+	border-left: 1px black solid;
+}
+
+.timeFull {
+	width: 160px;
+	text-align: center;
+}
+
+.tax {
+	width: 40px;
+	text-align: center;
+}
+
+.missDep, .missRes, .running {
+	color: red;
+}
+
+.offerAmount, .demandAmount, .offer, .demand {
+	width: 80px;
+	text-align: center;
+}
+
+.cost {
+	width: 20px;
+	text-align: center;
+}
+
+.level, .max {
+	width: 40px;
+	text-align: center;
+}
+
+.action {
+	width: 70px;
+	text-align: center;
+}
+
+.possibleWay {
+	text-align: center;
+	border-left: 1px black solid;
+	border-bottom: 1px black solid;
+}

@@ -427,7 +427,6 @@ class Field extends BaseRepository
 		}
 	}
 
-
 	/**
 	 * Finds zone of fields which are settled in hexagon ABCDEF (center $S, radius $r i.e. |SA|==|SB|==$r)
 	 * @param Entities\Field
