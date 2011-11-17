@@ -1,9 +1,8 @@
 {block #header}
-	Přehled aliance
+	Přehled aliance {$alliance->name}
 {/block}
 
 {block #content}
-	<h1>{$alliance->name}</h1>
 	<h2>Členové</h2>
 	<table>
 		<tr>
@@ -13,19 +12,5 @@
 			<tr><td>{$member->name}</td></tr>
 		{/foreach}
 	</table>
-	{if count($alliance->applicants) > 0}
-		<h2>Uchazeči o vstup</h2>
-		<table>
-			<tr>
-				<th>Jméno</th>
-				<th></th>
-			</tr>
-			{foreach $alliance->applicants as $applicant}
-				<tr>
-					<td>{$applicant->name}</td>
-					<td><a n:href="accept! $applicant->id">Přijmout</a></td>
-				</tr>
-			{/foreach}
-		</table>
-	{/if}
+
 {/block}

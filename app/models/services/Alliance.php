@@ -2,6 +2,8 @@
 namespace Services;
 use Entities;
 use Nette\Diagnostics\Debugger;
+use Exception;
+use RuleViolationException;
 
 class Alliance extends BaseService
 {
@@ -23,6 +25,11 @@ class Alliance extends BaseService
 		foreach ($alliance->getMembers() as $member) {
 			$this->context->model->getFieldService()->invalidateVisibleFields($member->id);
 		}
+	}
+
+	public function declineMember (Entities\Alliance $alliance, Entities\Clan $clan)
+	{
+		throw new Exception();
 	}
 
 	public function leaveAlliance (Entities\Alliance $alliance, Entities\Clan $clan)
@@ -54,4 +61,27 @@ class Alliance extends BaseService
 			throw new RuleViolationException();
 		}
 	}
+
+	public function fireMember (Entities\Alliance $alliance, Entities\Clan $clan)
+	{
+		if ($alliance !== $clan->alliance){
+			throw new RuleViolationException();
+		}
+
+		$this->update($clan, array('alliance' => NULL));
+		$this->context->model->getFieldService()->invalidateVisibleFields($clan->id);
+		foreach ($alliance->getMembers() as $member) {
+			$this->context->model->getFieldService()->invalidateVisibleFields($member->id);
+		}
+	}
+
+	public function handOverLeadership (Entities\Alliance $alliance, Entities\Clan $clan)
+	{
+		if ($alliance !== $clan->alliance){
+			throw new RuleViolationException();
+		}
+
+		$this->update($alliance, array('leader' => $clan));
+	}
+
 }

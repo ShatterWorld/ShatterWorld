@@ -1,0 +1,22 @@
+{block #header}
+	Přehled aliance {$alliance->name}
+{/block}
+
+{block #content}
+	<h2>Členové</h2>
+	<table>
+		<tr>
+			<th>Jméno</th>
+			<th>Předat vůdcovství</th>
+			<th>Vyloučit</th>
+		</tr>
+		{foreach $alliance->members as $member}
+			<tr>
+				<td>{$member->name}</td>
+				<td><a n:href="handOverLeadership! $member->id">Předat</a></td>
+				<td><a n:href="fire! $member->id">Vyloučit</a></td>
+			</tr>
+		{/foreach}
+	</table>
+
+{/block}
