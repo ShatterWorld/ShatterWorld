@@ -42,7 +42,6 @@ class Alliance extends BaseService
 				$this->context->model->getFieldService()->invalidateVisibleFields($member->id);
 			}
 
-			Debugger::barDump($members);
 			if ($i > 0){
 				$this->update($alliance, array('leader' => $newLeader));
 			}

@@ -2,6 +2,7 @@
 namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 
 class AlliancePresenter extends BasePresenter
 {
@@ -18,7 +19,7 @@ class AlliancePresenter extends BasePresenter
 		$this->template->alliance = $this->getPlayerClan()->getAlliance();
 	}
 
-	public function actionNeutral ()
+	public function actionNew ()
 	{
 		if ($this->getPlayerClan()->getAlliance()) {
 			$this->flashMessage('Už máte alianci', 'error');
@@ -26,7 +27,7 @@ class AlliancePresenter extends BasePresenter
 		}
 	}
 
-	public function actionNew ()
+	public function actionNeutral ()
 	{
 		if ($this->getPlayerClan()->getAlliance()) {
 			$this->flashMessage('Už máte alianci', 'error');
@@ -50,6 +51,8 @@ class AlliancePresenter extends BasePresenter
 	public function handleApply ($id)
 	{
 		$clan = $this->getPlayerClan();
+		//Debugger::barDump($this->getAllianceRepository()->find($id));
+		//throw new Exception();
 		if ($clan->alliance === NULL) {
 			$clan->addApplication($this->getAllianceRepository()->find($id));
 		}

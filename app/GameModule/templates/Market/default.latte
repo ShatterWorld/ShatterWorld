@@ -8,42 +8,45 @@
 {/block}
 
 {block #content}
-	<h3>Moje nabídky</h3>
-	<table id = "clanOffers">
-		<tr>
-			<th class="owner">Nabízející</th>
-			<th class="offer">Nabídka</th>
-			<th class="demand">Požadavek</th>
-			<th class="action">Stáhnout</th>
-		</tr>
-		{foreach $clanOffers as $offer}
+	{if count($clanOffers) > 0}
+		<h3>Moje nabídky</h3>
+		<table id = "clanOffers">
 			<tr>
-				<td class="owner">{$offer->owner->name}</td>
-				<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
-				<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
-				<td class="action"><a n:href="deleteOffer! $offer->id">X</a></td>
+				<th class="owner">Nabízející</th>
+				<th class="offer">Nabídka</th>
+				<th class="demand">Požadavek</th>
+				<th class="action">Stáhnout</th>
 			</tr>
-		{/foreach}
-	</table>
+			{foreach $clanOffers as $offer}
+				<tr>
+					<td class="owner">{$offer->owner->name}</td>
+					<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
+					<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
+					<td class="action"><a n:href="deleteOffer! $offer->id">X</a></td>
+				</tr>
+			{/foreach}
+		</table>
+	{/if}
 
-	<h3>Probíhající obchody</h3>
-	<table id = "runningShipments">
-		<tr>
-			<th class="owner">Kdo</th>
-			<th class="target">Komu</th>
-			<th class="cargo">Co</th>
-			<th class="time">Čas</th>
-		</tr>
-		{foreach $runningShipments as $shipment}
+	{if count($runningShipments) > 0}
+		<h3>Probíhající obchody</h3>
+		<table id = "runningShipments">
 			<tr>
-				<td class="owner">{$shipment->origin->owner->name}</td>
-				<td class="target">{$shipment->target->owner->name}</td>
-				<td class="offer"><img src="{$basePath}/images/resources/{foreach $shipment->cargo as $res => $value}{$res}{/foreach}.png"/> {foreach $shipment->cargo as $res => $value}{$value}{/foreach}</td>
-
-				<td class="timeFull">{$shipment->term|date:"d.m.Y H:i"}</td>
+				<th class="owner">Kdo</th>
+				<th class="target">Komu</th>
+				<th class="cargo">Co</th>
+				<th class="time">Čas</th>
 			</tr>
-		{/foreach}
-	</table>
+			{foreach $runningShipments as $shipment}
+				<tr>
+					<td class="owner">{$shipment->origin->owner->name}</td>
+					<td class="target">{$shipment->target->owner->name}</td>
+					<td class="offer"><img src="{$basePath}/images/resources/{foreach $shipment->cargo as $res => $value}{$res}{/foreach}.png"/> {foreach $shipment->cargo as $res => $value}{$value}{/foreach}</td>
 
+					<td class="timeFull">{$shipment->term|date:"d.m.Y H:i"}</td>
+				</tr>
+			{/foreach}
+		</table>
+	{/if}
 
 {/block}
