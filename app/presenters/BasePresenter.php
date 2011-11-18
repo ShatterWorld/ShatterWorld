@@ -75,16 +75,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		$m = floor($t / 60);
 		$t -= $m*60;
 		$s = $t;
-
-		if ($s < 10){
-			$s = '0'.$s;
-		}
-		if ($m < 10){
-			$m = '0'.$m;
-		}
-
-		return $h.':'.$m.':'.$s;
-
+		return sprintf('%d:%02d:%02d', $h, $m, $s);
 	}
 }
 
