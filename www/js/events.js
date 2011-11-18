@@ -143,7 +143,7 @@ Game.countdown = {
 
 		var countdownFunction = function () {
 			if (timeout < 0){
-				if (Game.utils.isset(Game.map)){
+				if (Game.utils.isset(Game.map) && Game.map.loaded){
 					Game.map.render();
 				}
 				Game.events.refresh();

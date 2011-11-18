@@ -135,8 +135,9 @@ Game.map = {
 	 * Cleans the #map and rerender the map (using db-data)
 	 * @return void
 	 */
-	render : function () {
-
+	render : function () 
+	{
+		Game.map.loaded = false;
 		$('#map').html('');
 		Game.map.tooltip.append('#content');
 
