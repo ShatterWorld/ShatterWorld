@@ -8,57 +8,61 @@
 {/block}
 
 {block #content}
-	<table id = "offers">
-		<tr>
-			<th class="owner"></th>
-			<th class="offer"></th>
-			<th class="demand"></th>
-
-			<th class="possibleWay" colspan="3">Nejrychlejší</th>
-			<th class="possibleWay" colspan="3">Nejlevnější</th>
-		</tr>
-
-		<tr>
-			<th class="owner">Nabízející</th>
-			<th class="offer">Nabídka</th>
-			<th class="demand">Požadavek</th>
-
-			<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
-			<th class="tax">Ztráta</th>
-			<th class="action">Přijmout</th>
-
-			<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
-			<th class="tax">Ztráta</th>
-			<th class="action">Přijmout</th>
-		</tr>
-		{foreach $offers as $key => $offer}
+	{if count($offers) > 0}
+		<table id = "offers">
 			<tr>
-				<td class="owner">{$offer->owner->name}</td>
-				<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
-				<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
+				<th class="owner"></th>
+				<th class="offer"></th>
+				<th class="demand"></th>
 
-				<td class="time">{$presenter->getShortTime($offer)|time}</td>
-				<td class="tax">{$profits[short][$key]}</td>
-				<td class="action">
-					{if $hasEnoughRes[$key]}
-						<a n:href="acceptOfferShort! $offer->id">Ano</a>
-					{else}
-						Nedostatek surovin
-					{/if}
-				</td>
-
-
-				<td class="time">{$presenter->getCheapTime($offer)|time}</td>
-				<td class="tax">{$profits[cheap][$key]}</td>
-				<td class="action">
-					{if $hasEnoughRes[$key]}
-						<a n:href="acceptOfferCheap! $offer->id">Ano</a>
-					{else}
-						Nedostatek surovin
-					{/if}
-				</td>
+				<th class="possibleWay" colspan="3">Nejrychlejší</th>
+				<th class="possibleWay" colspan="3">Nejlevnější</th>
 			</tr>
-		{/foreach}
-	</table>
+
+			<tr>
+				<th class="owner">Nabízející</th>
+				<th class="offer">Nabídka</th>
+				<th class="demand">Požadavek</th>
+
+				<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
+				<th class="tax">Ztráta</th>
+				<th class="action">Přijmout</th>
+
+				<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
+				<th class="tax">Ztráta</th>
+				<th class="action">Přijmout</th>
+			</tr>
+			{foreach $offers as $key => $offer}
+				<tr>
+					<td class="owner">{$offer->owner->name}</td>
+					<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
+					<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
+
+					<td class="time">{$presenter->getShortTime($offer)|time}</td>
+					<td class="tax">{$profits[short][$key]}</td>
+					<td class="action">
+						{if $hasEnoughRes[$key]}
+							<a n:href="acceptOfferShort! $offer->id">Ano</a>
+						{else}
+							Nedostatek surovin
+						{/if}
+					</td>
+
+
+					<td class="time">{$presenter->getCheapTime($offer)|time}</td>
+					<td class="tax">{$profits[cheap][$key]}</td>
+					<td class="action">
+						{if $hasEnoughRes[$key]}
+							<a n:href="acceptOfferCheap! $offer->id">Ano</a>
+						{else}
+							Nedostatek surovin
+						{/if}
+					</td>
+				</tr>
+			{/foreach}
+		</table>
+	{else}
+		<p>Nikdo z tvého okolí nic neprodává. Můžeš sám <a n:href="sell">vytvořit</a> novou nabídku nebo <a n:href="Research:research">zvýšit</a> úroveň pokroku Obchod.</p>
+	{/if}
 
 {/block}

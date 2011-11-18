@@ -4,20 +4,24 @@
 
 {block #content}
 	<p>Tvůj klan ještě není v žádné alianci</p>
-	<h2>Známé aliance</h2>
-	<table>
-		<tr>
-			<th>Jméno</th>
-			<th>Vůdce</th>
-			<th>Akce</th>
-		</tr>
-		{foreach $visibleAlliances as $alliance}
+	{if count($visibleAlliances) > 0}
+		<h2>Známé aliance</h2>
+		<table>
 			<tr>
-				<td>{$alliance->name}</td>
-				<td>{$alliance->leader->name}</td>
-				<td>{if $clan->applications->contains($alliance)}Ucházíte se o vstup{else}<a n:href="apply! $alliance->id">Požádat o vstup</a>{/if}</td>
+				<th>Jméno</th>
+				<th>Vůdce</th>
+				<th>Akce</th>
 			</tr>
-		{/foreach}
-	</table>
-	<a n:href="new">Vytvořit novou alianci</a>
+			{foreach $visibleAlliances as $alliance}
+				<tr>
+					<td>{$alliance->name}</td>
+					<td>{$alliance->leader->name}</td>
+					<td>{if $clan->applications->contains($alliance)}Ucházíte se o vstup{else}<a n:href="apply! $alliance->id">Požádat o vstup</a>{/if}</td>
+				</tr>
+			{/foreach}
+		</table>
+	{else}
+	<p>Neznáš žádné aliance</p>
+	{/if}
+	Můžeš <a n:href="new">vytvořit</a> novou alianci.
 {/block}

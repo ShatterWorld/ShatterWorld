@@ -25,6 +25,8 @@
 				</tr>
 			{/foreach}
 		</table>
+	{else}
+		<p>Ještě není nic vynalezeno. Můžeš <a n:href="research">vynalézt</a></p>
 	{/if}
 
 	{if count($running) > 0}
@@ -44,5 +46,7 @@
 				</tr>
 			{/foreach}
 		</table>
+	{else}
+		<p>Neprobíhá žádný výzkum</p>
 	{/if}
 {/block}

@@ -13,8 +13,13 @@
 		{foreach $alliance->members as $member}
 			<tr>
 				<td>{$member->name}</td>
-				<td><a n:href="handOverLeadership! $member->id">Předat</a></td>
-				<td><a n:href="fire! $member->id">Vyloučit</a></td>
+				{if $member === $alliance->leader}
+					<td></td>
+					<td><a n:href="leave">Opustit alianci</a></td>
+				{else}
+					<td><a n:href="handOverLeadership! $member->id">Předat</a></td>
+					<td><a n:href="fire! $member->id">Vyloučit</a></td>
+				{/if}
 			</tr>
 		{/foreach}
 	</table>

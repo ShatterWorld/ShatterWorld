@@ -4,9 +4,9 @@
 
 {block #content}
 	<table>
-		<tr>
-			<th>Název</th>
-			<td>{$clan->name}</id>
-		</tr>
+		<tr><th>Název</th><td>{$clan->name}</td></tr>
+		{dump $clan}
+		<tr><th>Aliance</th><td>{if $clan->alliance != null}{$clan->alliance->name}{else}bezalianční{/if}</td></tr>
+
 	</table>
 {/block}
