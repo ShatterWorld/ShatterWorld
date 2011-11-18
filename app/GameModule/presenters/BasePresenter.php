@@ -4,6 +4,10 @@ use Nette;
 
 abstract class BasePresenter extends \BasePresenter
 {
+	/**
+	 * Startup
+	 * @return void
+	 */
 	public function startup ()
 	{
 		parent::startup();
@@ -16,6 +20,10 @@ abstract class BasePresenter extends \BasePresenter
 		$this->context->eventService->processPendingEvents();
 	}
 
+	/**
+	 * Before render
+	 * @return void
+	 */
 	public function beforeRender ()
 	{
 		parent::beforeRender();
@@ -35,6 +43,10 @@ abstract class BasePresenter extends \BasePresenter
 		$this->template->orderCap = $this->context->params['game']['stats']['orderCap'];
 	}
 
+	/**
+	 * Logout signal
+	 * @return void
+	 */
 	public function handleLogout ()
 	{
 		$this->getUser()->logout(TRUE);
@@ -42,37 +54,65 @@ abstract class BasePresenter extends \BasePresenter
 		$this->redirect(':Front:Homepage:');
 	}
 
+	/**
+	 * Returns players profile
+	 * @return Entities\Profile
+	 */
 	public function getPlayerProfile ()
 	{
 		return $this->getProfileRepository()->findOneByUser($this->getUser()->getId());
 	}
 
+	/**
+	 * Returns players clan
+	 * @return Entities\Clan
+	 */
 	public function getPlayerClan ()
 	{
 		return $this->getClanRepository()->getPlayerClan();
 	}
 
+	/**
+	 * Returns players units
+	 * @return array of Entities\Unit
+	 */
 	public function getClanUnits ()
 	{
 		return $this->getUnitRepository()->findByOwner($this->getPlayerClan()->getId());
 	}
 
+	/**
+	 * Returns players offers
+	 * @return array of Entities\Offer
+	 */
 	public function getClanOffers ()
 	{
 		return $this->getOfferRepository()->findByOwner($this->getPlayerClan()->getId());
 	}
 
+	/**
+	 * Flash message
+	 * @return void
+	 */
 	public function flashMessage ($message, $type = 'info')
 	{
 		$this->invalidateControl('flashes');
 		parent::flashMessage($message, $type);
 	}
 
+	/**
+	 * Returns count of players unread messages
+	 * @return int
+	 */
 	public function getUnreadMsgCount ()
 	{
 		return $this->getMessageRepository()->getUnreadMsgCount($this->getPlayerClan()->user->id);
 	}
 
+	/**
+	 * Returns true if the clan is the leder of its alliance, false otherwise
+	 * @return bool
+	 */
 	public function isLeader ()
 	{
 		return $this->getPlayerClan()->getAlliance()->leader === $this->getPlayerClan();
@@ -80,7 +120,7 @@ abstract class BasePresenter extends \BasePresenter
 
 
 	/**
-	 * Send upcoming events via ajax
+	 * Signal sending upcoming events via ajax
 	 * @return void
 	 */
 	public function handleFetchEvents ()
@@ -88,6 +128,10 @@ abstract class BasePresenter extends \BasePresenter
 		$this->invalidateControl('events');
 	}
 
+	/**
+	 * Ajax descriptionfetching
+	 * @return void
+	 */
 	public function handleFetchDescriptions ()
 	{
 		$this->payload->descriptions = $this->context->rules->getDescriptions();

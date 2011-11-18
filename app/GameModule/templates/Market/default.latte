@@ -26,6 +26,8 @@
 				</tr>
 			{/foreach}
 		</table>
+	{else}
+		<p>Nemáte žádné nabídky. Můžeš <a n:href="sell">vytvořit</a> novou nabídku</p>
 	{/if}
 
 	{if count($runningShipments) > 0}
@@ -47,6 +49,8 @@
 				</tr>
 			{/foreach}
 		</table>
+	{else}
+		<p>Žádné probíhající obchody.</p>
 	{/if}
 
 {/block}

@@ -9,11 +9,10 @@ use ArraySet;
  * Clan service class
  * @author Petr Bělohlávek
  */
-class Clan extends BaseService 
+class Clan extends BaseService
 {
 	/** @var Nette\Caching\Cache*/
 	protected $cache;
-
 
 	public function __construct ($context, $entityClass)
 	{
@@ -21,11 +20,15 @@ class Clan extends BaseService
 		$this->cache = new Cache($this->context->cacheStorage, 'Map');
 	}
 
+	/**
+	 * Cache getter
+	 * @return Nette\Caching\Cache
+	 */
 	public function getCache ()
 	{
 		return $this->cache;
 	}
-	
+
 	/**
 	 * Increase the number of issued orders for given clan
 	 * @param Entities\Clan
@@ -43,7 +46,7 @@ class Clan extends BaseService
 			throw new InsufficientOrdersException;
 		}
 	}
-	
+
 	public function addApplication (Entities\Clan $clan, Entities\Alliance $alliance, $flush = TRUE)
 	{
 		$clan->addApplication($alliance);
@@ -51,7 +54,7 @@ class Clan extends BaseService
 			$this->entityManager->flush();
 		}
 	}
-	
+
 	/**
 	 * Creates an object as the parent does
 	 * In addition, it assigns N fields to the clan
@@ -116,7 +119,7 @@ class Clan extends BaseService
 		$clan = parent::create($values, $flush);
 
 		$this->context->model->getOrdersService()->create(array('owner' => $clan), FALSE);
-		
+
 		foreach ($found as $foundField){
 			$fieldService->update($foundField, array('owner' => $clan));
 		}
