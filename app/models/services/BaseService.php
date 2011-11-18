@@ -82,6 +82,7 @@ class BaseService extends Nette\Object {
 					}
 				} else {
 					$constructorParams[$param->name] = $values[$param->name];
+					unset($values[$param->name]);
 				}
 			}
 		}
