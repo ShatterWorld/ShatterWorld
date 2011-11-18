@@ -801,7 +801,7 @@ Game.map.contextMenu = {
 			click: function (target) {
 				Game.spinner.show(Game.map.contextMenu.contextMenu);
 				Game.utils.signal('fetchColonisationCost', {'targetId': target.id}, function (data) {
-					var dialog = new Game.UI.Dialog('colonisationDialog');
+					var dialog = new Game.map.contextMenu.ConstructionDialog('colonisationDialog');
 					dialog.setTitle('Kolonizace');
 					dialog.setBody($('<div />')
 						.append(Game.UI.resourceTable(data.cost))
