@@ -5,8 +5,10 @@ Game.UI = {
 	{
 		var table = $('<table><tr class="header"></tr><tr class="values"></tr></table>');
 		$.each(price, function (resource, cost) {
-			table.find('.header').append($('<th>').html(resource));
+			var label = $('<th>');
+			table.find('.header').append(label);
 			table.find('.values').append($('<td>').html(cost));
+			Game.descriptions.translate('resource', resource, label);
 		});
 		return table;
 	},
