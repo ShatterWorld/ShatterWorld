@@ -80,7 +80,7 @@ class AlliancePresenter extends BasePresenter
 	{
 		$clan = $this->getPlayerClan();
 		if ($clan->alliance === NULL) {
-			$clan->addApplication($this->getAllianceRepository()->find($id));
+			$this->getClanService()->addApplication($clan, $this->getAllianceRepository()->find($id));
 			$this->flashMessage('Žádost odeslána');
 		}
 		else{

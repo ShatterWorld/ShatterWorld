@@ -44,6 +44,14 @@ class Clan extends BaseService
 		}
 	}
 	
+	public function addApplication (Entities\Clan $clan, Entities\Alliance $alliance, $flush = TRUE)
+	{
+		$clan->addApplication($alliance);
+		if ($flush) {
+			$this->entityManager->flush();
+		}
+	}
+	
 	/**
 	 * Creates an object as the parent does
 	 * In addition, it assigns N fields to the clan
