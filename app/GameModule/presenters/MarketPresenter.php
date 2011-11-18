@@ -77,6 +77,12 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function renderDefault ()
 	{
+		$clan = $this->getPlayerClan();
+		$stats = $this->context->stats;
+
+		$this->template->merchantSpeed =$stats->getMerchantSpeed($clan);
+		$this->template->tradingRadius =$stats->getTradingRadius($clan);
+		$this->template->clanProfit = $stats->getTradeProfit($clan);
 		$this->template->clanOffers = $this->getClanOffers();
 		$this->template->runningShipments = $this->getShipmentRepository()->getRunningShipments($this->getPlayerClan());
 	}

@@ -8,6 +8,26 @@
 {/block}
 
 {block #content}
+	<table id="overview">
+		<tr>
+			<th>Rychlost obchodníků</th>
+			<td>{$merchantSpeed} polí/sec</td>
+			<td>(Rychlost tvých obchodníků neovlivňuje rychlost dodání zboží do tvého klanu)</td>
+		</tr>
+		<tr>
+			<th>Profit</th>
+			<td>{$clanProfit*100}%</td>
+			<td>(Část zboží, kterou získáš pokud přes tebe projde zboží hráče s nulovou úrovní pokroku Obchod)</td>
+		</tr>
+		<tr>
+			<th>Hloubka obchodu</th>
+			<td>{$tradingRadius} polí</td>
+			<td>(Maximální počet prostředníků, přes které může putovat zboží)</td>
+		</tr>
+	</table>
+
+	<p>Úroveň pokroku Obchod si můžeš zvýšit <a n:href="Research:research">zde</a></p>
+
 	{if count($clanOffers) > 0}
 		<h3>Moje nabídky</h3>
 		<table id = "clanOffers">

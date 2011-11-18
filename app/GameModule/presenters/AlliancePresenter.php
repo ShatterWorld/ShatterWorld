@@ -97,7 +97,7 @@ class AlliancePresenter extends BasePresenter
 		}
 
 		$this->getAllianceService()->addMember($this->getPlayerClan()->alliance, $this->getClanRepository()->find($id));
-		$this->redirect('this');
+		$this->redirect('Alliance:');
 	}
 
 	public function handleDecline ($id)
