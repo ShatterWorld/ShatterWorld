@@ -232,7 +232,8 @@ class StatContainer extends Nette\Object
 	public function getTradingRadius (Entities\Clan $clan)
 	{
 		$baseRadius = $this->context->params['game']['stats']['baseTradingRadius'];
-		return $baseRadius;
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'trading');
+		return $baseRadius + 2 * $level;
 	}
 
 	/**
