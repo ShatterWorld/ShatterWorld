@@ -1116,7 +1116,7 @@ Game.map.contextMenu.AttackDialog = Class({
 	getBody: function ()
 	{
 		var body = Game.map.contextMenu.AttackDialog._superClass.getBody.call(this);
-		body.append('Typ útoku: <select id="#type"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>');
+		body.append('Typ útoku: <select id="attackType"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>');
 		return body;
 	},
 	
@@ -1127,7 +1127,7 @@ Game.map.contextMenu.AttackDialog = Class({
 			var params = {
 				'originId': context.origin['id'],
 				'targetId': context.target['id'],
-				'type': $('#attackDialog #type').val()
+				'type': $('#attackType').val()
 			};
 			jQuery.extend(params, context.getUnitList());
 			Game.utils.signal('sendAttack', params, function () {

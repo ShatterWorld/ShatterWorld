@@ -12,7 +12,7 @@ class Occupation extends Attack
 	
 	public function process (Entities\Event $event, $processor)
 	{
-		$result = parent::process($event);
+		$result = parent::process($event, $processor);
 		$model = $this->getContext()->model;
 		if ($result['totalVictory']) {
 			foreach ($model->getConstructionRepository()->findBy(array('target' => $event->target->id)) as $construction) {
