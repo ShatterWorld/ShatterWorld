@@ -87,8 +87,9 @@ class Offer extends BaseRepository
 
 		$profits = array();
 		$resLeft = $offer->offerAmount;
+		$stats = $this->context->stats;
 		foreach($mediators as $mediator){
-			$profit = floor($resLeft * 0.1);//get const !!!
+			$profit = floor($resLeft * max($stats->getTradeProfit($mediator) - $stats->getTradeProfit($clan), 0));
 			$resLeft -= $profit;
 			$profits[$mediator->id] = $profit;
 		}

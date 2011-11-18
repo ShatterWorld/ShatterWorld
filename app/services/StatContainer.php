@@ -1,4 +1,5 @@
 <?php
+use Nette\Diagnostics\Debugger;
 
 /**
  * A game stat container, which provides access to values which are results of rules interaction
@@ -242,7 +243,8 @@ class StatContainer extends Nette\Object
 	public function getMerchantSpeed (Entities\Clan $clan)
 	{
 		$baseMerchantSpeed = $this->context->params['game']['stats']['baseMerchantSpeed'];
-		return $baseMerchantSpeed;
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'trading');
+		return $baseMerchantSpeed * ($level + 1);
 	}
 
 	/**
@@ -253,7 +255,9 @@ class StatContainer extends Nette\Object
 	public function getTradeProfit (Entities\Clan $clan)
 	{
 		$baseTradeProfit = $this->context->params['game']['stats']['baseTradeProfit'];
-		return $baseTradeProfit;
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'trading');
+		return $baseTradeProfit * pow($level, 2);
 	}
+
 
 }
