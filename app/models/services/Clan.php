@@ -46,7 +46,19 @@ class Clan extends BaseService
 			throw new InsufficientOrdersException;
 		}
 	}
+<<<<<<< HEAD
 
+=======
+	
+	public function addApplication (Entities\Clan $clan, Entities\Alliance $alliance, $flush = TRUE)
+	{
+		$clan->addApplication($alliance);
+		if ($flush) {
+			$this->entityManager->flush();
+		}
+	}
+	
+>>>>>>> b2dcba69c3f581fb9ac7086fca37a19f68c12153
 	/**
 	 * Creates an object as the parent does
 	 * In addition, it assigns N fields to the clan

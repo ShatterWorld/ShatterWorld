@@ -32,15 +32,15 @@ class Research extends AbstractRule implements IEvent
 		}
 		$rule = $this->getContext()->rules->get('research', $event->construction);
 		$rule->afterResearch($event);
-		return array('type' => $event->type, 'level' => $event->level);
+		return array('type' => $event->construction, 'level' => $event->level);
 	}
 
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
-		$rule = $this->getContext()->rules->get('research', $data->type);
+		$rule = $this->getContext()->rules->get('research', $data['type']);
 		return array(
-			ReportItem::create('text', $rule->getDescription())->setHeading('Výzkum dokončen'),
+			ReportItem::create('text', sprintf('Výzkum "%s" (úroveň %d) byl dokončen.', $rule->getDescription(), $data['level']))->setHeading('Výzkum dokončen'),
 		);
 	}
 

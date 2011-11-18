@@ -98,7 +98,6 @@ class Alliance extends BaseEntity
 	public function addApplicant (Clan $clan)
 	{
 		$this->applicants[] = $clan;
-		$clan->getApplications()->add($this);
 	}
 	
 	/**
