@@ -25,7 +25,7 @@ class Food extends AbstractRule implements IResearch
 	public function getDependencies ()
 	{
 		return array(
-			'researchEfficiency' => 1
+			'researchEfficiency' => 1,
 		);
 	}
 
@@ -39,4 +39,8 @@ class Food extends AbstractRule implements IResearch
 		return 10;
 	}
 
+	public function getConflicts ()
+	{
+		return array();
+	}
 }

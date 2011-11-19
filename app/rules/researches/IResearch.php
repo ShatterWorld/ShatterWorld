@@ -42,4 +42,10 @@ interface IResearch extends IRule
 	 */
 	public function getLevelCap ();
 
+	/**
+	 * Get the conflicts of this research
+	 * @return array of $research => $level
+	 */
+	public function getConflicts();
+
 }

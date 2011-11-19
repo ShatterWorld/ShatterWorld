@@ -63,13 +63,20 @@
 								{if $cost[$resKey] > $res[balance]}{?$enoughRes = false}{/if}
 							{/foreach}
 
-							{?$available = true}
+							{?$missingDependency = false}
 							{foreach $research->getDependencies() as $depKey => $dependency}
-								{if !(isset($researched[$depKey]))}{?$available = false}{/if}
+								{if (!isset($researched[$depKey]) || $researched[$depKey]->level < $dependency)}{?$missingDependency = true}{/if}
 							{/foreach}
 
-							{if !$available}
+							{?$conflicts = false}
+							{foreach $research->getConflicts() as $conflictKey => $conflict}
+								{if (isset($researched[$conflictKey]) && $researched[$conflictKey]->level > $conflict)}{?$conflicts = true}{/if}
+							{/foreach}
+
+							{if $missingDependency}
 								<td class="action missDep">Závislosti</td>
+							{elseif $conflicts}
+								<td class="action conflict">Konflikty</td>
 							{elseif !$enoughRes}
 								<td class="action missRes">Suroviny</td>
 							{elseif $lvl == 1}

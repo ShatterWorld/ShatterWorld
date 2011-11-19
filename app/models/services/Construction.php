@@ -7,6 +7,7 @@ use InsufficientResourcesException;
 use InsufficientCapacityException;
 use MultipleConstructionsException;
 use MissingDependencyException;
+use ConflictException;
 use Nette\Diagnostics\Debugger;
 
 class Construction extends Event
@@ -206,8 +207,14 @@ class Construction extends Event
 
 			$researched = $this->context->model->getResearchRepository()->getResearched($clan);
 			foreach ($rule->getDependencies() as $key => $dependency){
-				if (!isset($researched[$key])){
+				if (!isset($researched[$key]) || $researched[$key]->level < $dependency){
 					throw new \MissingDependencyException;
+				}
+			}
+
+			foreach ($rule->getConflicts() as $key => $conflict){
+				if (isset($researched[$key]) && $researched[$key]->level > $conflict){
+					throw new \ConflictException;
 				}
 			}
 

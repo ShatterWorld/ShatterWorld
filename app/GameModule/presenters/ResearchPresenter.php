@@ -6,6 +6,7 @@ use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
 use MissingDependencyException;
+use ConflictException;
 
 
 /**
@@ -63,6 +64,10 @@ class ResearchPresenter extends BasePresenter {
 			$this->flashMessage('Nemáte dostatek surovin', 'error');
 		} catch (InsufficientOrdersException $e){
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		} catch (MissingDependencyException $e){
+			$this->flashMessage('Nemáte některé vyžadované výzkumy', 'error');
+		} catch (ConflictException $e){
+			$this->flashMessage('Konflikt výzkumů', 'error');
 		}
 
 		$this->redirect('this');

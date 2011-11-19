@@ -39,4 +39,8 @@ class Metal extends AbstractRule implements IResearch
 		return 10;
 	}
 
+	public function getConflicts ()
+	{
+		return array();
+	}
 }

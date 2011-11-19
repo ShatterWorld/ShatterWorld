@@ -29,13 +29,14 @@ class ResearchEfficiency extends AbstractRule implements IResearch
 		return array();
 	}
 
-	public function afterResearch (Entities\Construction $construction)
-	{
-		//--?
-	}
+	public function afterResearch (Entities\Construction $construction){}
 
 	public function getLevelCap (){
 		return 10;
 	}
 
+	public function getConflicts ()
+	{
+		return array();
+	}
 }
