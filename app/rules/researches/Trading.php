@@ -19,7 +19,7 @@ class Trading extends AbstractRule implements IResearch
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 36000 * $this->getContext()->stats->getResearchEfficiency($this->getContext()->model->getClanRepository()->getPlayerClan());
+		return $level * 36000;
 	}
 
 	public function getDependencies ()

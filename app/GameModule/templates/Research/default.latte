@@ -8,6 +8,14 @@
 {/block}
 
 {block #content}
+	<table id="overview">
+		<tr>
+			<th>Urychlení výzkumu</th>
+			<td>{100 - $researchEfficiency * 100}%</td>
+			<td>(O kolik procent je tvůj výzkum rychlejsí než bez výzkumu Rychlost výzkumu)</td>
+		</tr>
+	</table>
+
 	{if count($researched) > 0}
 		<h2>Vynalezeno</h2>
 		<table id = "researches">

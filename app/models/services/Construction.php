@@ -222,7 +222,7 @@ class Construction extends Event
 				'type' => 'research',
 				'construction' => $type,
 				'level' => $level,
-				'timeout' => $rule->getResearchTime($level)
+				'timeout' => $rule->getResearchTime($level) * $this->context->stats->getResearchEfficiency($clan)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($clan, $price, FALSE);
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);

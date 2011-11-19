@@ -21,7 +21,7 @@ class ResearchEfficiency extends AbstractRule implements IResearch
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 18000 * $this->getContext()->stats->getResearchEfficiency($this->getContext()->model->getClanRepository()->getPlayerClan());
+		return $level * 18000;
 	}
 
 	public function getDependencies ()

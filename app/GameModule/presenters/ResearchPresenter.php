@@ -21,9 +21,11 @@ class ResearchPresenter extends BasePresenter {
 	 */
 	public function renderDefault ()
 	{
-		$this->template->researched = $this->getResearchRepository()->getResearched($this->getPlayerClan());
+		$clan = $this->getPlayerClan();
+		$this->template->researchEfficiency = $this->getContext()->stats->getResearchEfficiency($clan);
+		$this->template->researched = $this->getResearchRepository()->getResearched($clan);
 		$this->template->all = $this->context->rules->getAll('research');
-		$this->template->running = $this->getConstructionRepository()->getRunningResearches($this->getPlayerClan());
+		$this->template->running = $this->getConstructionRepository()->getRunningResearches($clan);
 
 	}
 
@@ -33,9 +35,11 @@ class ResearchPresenter extends BasePresenter {
 	 */
 	public function renderResearch ()
 	{
-		$this->template->researched = $this->getResearchRepository()->getResearched($this->getPlayerClan());
+		$clan = $this->getPlayerClan();
+		$this->template->researched = $this->getResearchRepository()->getResearched($clan);
+		$this->template->researchEfficiency = $this->getContext()->stats->getResearchEfficiency($clan);
 		$this->template->all = $this->context->rules->getAll('research');
-		$this->template->running = $this->getConstructionRepository()->getRunningResearches($this->getPlayerClan());
+		$this->template->running = $this->getConstructionRepository()->getRunningResearches($clan);
 
 	}
 
