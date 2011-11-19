@@ -3,11 +3,11 @@ namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
 
-class Storage extends AbstractRule implements IResearch
+class ResearchEfficiency extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Skladování';
+		return 'Efektivita výzkumu';
 	}
 
 	public function getCost ($level = 1)
@@ -31,7 +31,7 @@ class Storage extends AbstractRule implements IResearch
 
 	public function afterResearch (Entities\Construction $construction)
 	{
-		$this->getContext()->model->getResourceService()->recalculateStorage($construction->owner, $construction->term);
+		//--?
 	}
 
 	public function getLevelCap (){

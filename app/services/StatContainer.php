@@ -260,5 +260,19 @@ class StatContainer extends Nette\Object
 		return $baseTradeProfit * pow($level, 2);
 	}
 
+	/**
+	 * Get the % profit of the clan
+	 * @param Entities\Clan
+	 * @return float
+	 */
+	public function getResearchEfficiency (Entities\Clan $clan)
+	{
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'researchEfficiency');
+		if ($level == 0){
+			return 1;
+		}
+		return 1 - pow($level, 2)/100;
+	}
+
 
 }

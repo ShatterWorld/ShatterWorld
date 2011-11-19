@@ -28,15 +28,13 @@ class ResearchPresenter extends BasePresenter {
 	}
 
 	/**
-	 * Displays researches
+	 * Displays that can be researched
 	 * @return void
 	 */
 	public function renderResearch ()
 	{
-		$all = $this->context->rules->getAll('research');
-
 		$this->template->researched = $this->getResearchRepository()->getResearched($this->getPlayerClan());
-		$this->template->all = $all;
+		$this->template->all = $this->context->rules->getAll('research');
 		$this->template->running = $this->getConstructionRepository()->getRunningResearches($this->getPlayerClan());
 
 	}
