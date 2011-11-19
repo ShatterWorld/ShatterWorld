@@ -225,7 +225,7 @@ class StatContainer extends Nette\Object
 	}
 
 	/**
-	 * Get the number of mediators the offer can go through
+	 * Returns the number of mediators the offer can go through
 	 * @param Entities\Clan
 	 * @return int
 	 */
@@ -237,7 +237,7 @@ class StatContainer extends Nette\Object
 	}
 
 	/**
-	 * Get the speed of merchants
+	 * Returns the speed of merchants
 	 * @param Entities\Clan
 	 * @return int
 	 */
@@ -249,7 +249,7 @@ class StatContainer extends Nette\Object
 	}
 
 	/**
-	 * Get the % profit of the clan
+	 * Returns the % profit of the clan
 	 * @param Entities\Clan
 	 * @return float
 	 */
@@ -261,7 +261,7 @@ class StatContainer extends Nette\Object
 	}
 
 	/**
-	 * Get the % profit of the clan
+	 * Returns research efficiency
 	 * @param Entities\Clan
 	 * @return float
 	 */
@@ -272,6 +272,22 @@ class StatContainer extends Nette\Object
 			return 1;
 		}
 		return 1 - pow($level, 2)/100;
+	}
+
+	/**
+	 * Returns the production coefficient
+	 * @param Entities\Clan
+	 * @param string
+	 * @return float
+	 */
+	public function getProductionCoefficient (Entities\Clan $clan, $type)
+	{
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, $type);
+
+		if ($level == 0){
+			return 1;
+		}
+		return 1 + pow($level + 1, 2)/100;
 	}
 
 

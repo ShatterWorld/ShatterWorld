@@ -46,6 +46,6 @@ class Research extends AbstractRule implements IEvent
 
 	public function isExclusive ()
 	{
-		return true;
+		return false;
 	}
 }
