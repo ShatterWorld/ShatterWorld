@@ -10,6 +10,11 @@ class Fuel extends AbstractRule implements IResearch
 		return 'Těžba ropy';
 	}
 
+	public function getExplanation ()
+	{
+		return 'Hloubka vrtů';
+	}
+
 	public function getCost ($level = 1)
 	{
 		return array(
@@ -29,6 +34,11 @@ class Fuel extends AbstractRule implements IResearch
 		);
 	}
 
+	public function getConflicts ()
+	{
+		return array();
+	}
+
 	public function afterResearch (Entities\Construction $construction)
 	{
 		$this->getContext()->model->getResourceService()->recalculateProduction($construction->owner, $construction->term);
@@ -37,11 +47,6 @@ class Fuel extends AbstractRule implements IResearch
 	public function getLevelCap ()
 	{
 		return 10;
-	}
-
-	public function getConflicts ()
-	{
-		return array();
 	}
 
 }

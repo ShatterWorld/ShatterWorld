@@ -9,6 +9,13 @@ use Entities;
  */
 interface IResearch extends IRule
 {
+
+	/**
+	 * Get further description of the research
+	 * @return void
+	 */
+	public function getExplanation ();
+
 	/**
 	 * Get the base cost of this research on given level
 	 * @param int
@@ -30,6 +37,12 @@ interface IResearch extends IRule
 	public function getDependencies ();
 
 	/**
+	 * Get the conflicts of this research
+	 * @return array of $research => $level
+	 */
+	public function getConflicts();
+
+	/**
 	 * Anything that should be done after finishing a research
 	 * @param Entities\Construction
 	 * @return void
@@ -42,10 +55,5 @@ interface IResearch extends IRule
 	 */
 	public function getLevelCap ();
 
-	/**
-	 * Get the conflicts of this research
-	 * @return array of $research => $level
-	 */
-	public function getConflicts();
 
 }

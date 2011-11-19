@@ -38,3 +38,9 @@ td {
 	width: 130px;
 	text-align: right;
 }
+
+.explanation {
+	font-style: italic;
+	padding-left: 20px;
+
+}

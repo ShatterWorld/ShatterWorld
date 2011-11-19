@@ -10,6 +10,11 @@ class Trading extends AbstractRule implements IResearch
 		return 'Obchod';
 	}
 
+	public function getExplanation ()
+	{
+		return 'Lepší obchodníci';
+	}
+
 	public function getCost ($level = 1)
 	{
 		return array(
@@ -29,6 +34,11 @@ class Trading extends AbstractRule implements IResearch
 		);
 	}
 
+	public function getConflicts ()
+	{
+		return array();
+	}
+
 	public function afterResearch (Entities\Construction $construction)
 	{
 		# clean cache
@@ -37,11 +47,6 @@ class Trading extends AbstractRule implements IResearch
 	public function getLevelCap ()
 	{
 		return 10;
-	}
-
-	public function getConflicts ()
-	{
-		return array();
 	}
 
 }

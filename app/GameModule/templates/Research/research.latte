@@ -23,8 +23,6 @@
 				<th class="action">Akce</th>
 			</tr>
 
-			{?$i = 1}
-
 			{foreach $all as $key => $research}
 
 				{ifset $researched[$key]}
@@ -37,7 +35,7 @@
 				{?$cap = $research->getLevelCap()}
 
 				{if $lvl < $cap}
-					<tr class="row{($i++ % 2) + 1}">
+					<tr class="row2">
 						<td class="type">{$research->getDescription()}</td>
 						<td class="level">{$lvl}</td>
 						<td class="max">{$cap}</td>
@@ -49,7 +47,7 @@
 									---
 								</td>
 							{/foreach}
-							<td class="action running">Zkoumáno</td>
+							<td class="action running" rowspan="2">Zkoumáno</td>
 						{else}
 							{?$cost}
 							{?$tmpCost = $research->getCost($lvl)}
@@ -74,18 +72,21 @@
 							{/foreach}
 
 							{if $missingDependency}
-								<td class="action missDep">Závislosti</td>
+								<td class="action missDep" rowspan="2">Závislosti</td>
 							{elseif $conflicts}
-								<td class="action conflict">Konflikty</td>
+								<td class="action conflict" rowspan="2">Konflikty</td>
 							{elseif !$enoughRes}
-								<td class="action missRes">Suroviny</td>
+								<td class="action missRes" rowspan="2">Suroviny</td>
 							{elseif $lvl == 1}
-								<td class="action research"><a href="{link research! $key}">Vyzkoumat</a></td>
+								<td class="action research" rowspan="2"><a href="{link research! $key}">Vyzkoumat</a></td>
 							{else}
-								<td class="action upgrade"><a href="{link research! $key}">Vylepšit</a></td>
+								<td class="action upgrade" rowspan="2"><a href="{link research! $key}">Vylepšit</a></td>
 							{/if}
 						{/ifset}
 
+					</tr>
+					<tr class="row1">
+						<td class="explanation" colspan="{5+count($resources)-1}">{$research->getExplanation()}</td>
 					</tr>
 				{/if}
 			{/foreach}

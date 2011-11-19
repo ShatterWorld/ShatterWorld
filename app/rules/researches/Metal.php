@@ -10,6 +10,11 @@ class Metal extends AbstractRule implements IResearch
 		return 'Těžba kovu';
 	}
 
+	public function getExplanation ()
+	{
+		return 'Nové krumpáče';
+	}
+
 	public function getCost ($level = 1)
 	{
 		return array(
@@ -29,6 +34,11 @@ class Metal extends AbstractRule implements IResearch
 		);
 	}
 
+	public function getConflicts ()
+	{
+		return array();
+	}
+
 	public function afterResearch (Entities\Construction $construction)
 	{
 		$this->getContext()->model->getResourceService()->recalculateProduction($construction->owner, $construction->term);
@@ -39,8 +49,4 @@ class Metal extends AbstractRule implements IResearch
 		return 10;
 	}
 
-	public function getConflicts ()
-	{
-		return array();
-	}
 }

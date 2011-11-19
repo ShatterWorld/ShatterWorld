@@ -10,6 +10,11 @@ class ResearchEfficiency extends AbstractRule implements IResearch
 		return 'Efektivita výzkumu';
 	}
 
+	public function getExplanation ()
+	{
+		return 'Nové vybavení laboratoří';
+	}
+
 	public function getCost ($level = 1)
 	{
 		return array(
@@ -29,14 +34,15 @@ class ResearchEfficiency extends AbstractRule implements IResearch
 		return array();
 	}
 
+	public function getConflicts ()
+	{
+		return array();
+	}
+
 	public function afterResearch (Entities\Construction $construction){}
 
 	public function getLevelCap (){
 		return 10;
 	}
 
-	public function getConflicts ()
-	{
-		return array();
-	}
 }
