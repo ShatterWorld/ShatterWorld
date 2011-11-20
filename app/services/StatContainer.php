@@ -60,9 +60,11 @@ class StatContainer extends Nette\Object
 	 */
 	protected function getColonisationCoefficient (Entities\Field $target, Entities\Clan $clan)
 	{
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'colonisationEfficiency');
+
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
 		$count = $this->context->model->getFieldRepository()->getTerritorySize($clan) + $this->context->model->getConstructionRepository()->getColonisationCount($clan);
-		return $distance * $count;
+		return $distance * $count * (1 - pow($level, 2) / 100);
 	}
 
 	/**
@@ -102,8 +104,10 @@ class StatContainer extends Nette\Object
 	 */
 	protected function getExplorationCoefficient (Entities\Field $target, Entities\Clan $clan)
 	{
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'explorationEfficiency');
+
 		$distance = $this->context->model->getFieldRepository()->calculateDistance($clan->getHeadquarters(), $target);
-		return $distance - 1;
+		return ($distance - 1) * (1 - pow($level, 2) / 100);
 	}
 
 	/**
