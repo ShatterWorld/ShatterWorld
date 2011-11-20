@@ -4,7 +4,7 @@ use Nette;
 use Nette\Caching\Cache;
 use Nette\Application\UI\Form;
 
-class MapPresenter extends BasePresenter 
+class MapPresenter extends BasePresenter
 {
 	protected function createComponentGenerateMapForm ()
 	{
@@ -20,6 +20,7 @@ class MapPresenter extends BasePresenter
 		$this->getFieldService()->deleteAll(TRUE);
 		$this->getFieldRepository()->getVisibleFieldsCache()->clean(array(Cache::ALL => TRUE));
 		$this->getClanRepository()->getVisibleClansCache()->clean(array(Cache::ALL => TRUE));
+		$this->getClanRepository()->getClanGraphCache()->clean(array(Cache::ALL => TRUE));
 		$this->getClanService()->getCache()->clean(array(Cache::ALL => TRUE));
 		$this->getFieldService()->createMap();
 		$this->flashMessage('Nová mapa byla vygenerována');

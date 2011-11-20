@@ -46,7 +46,10 @@ class StatContainer extends Nette\Object
 	 */
 	public function getVisibilityRadius (Entities\Clan $clan)
 	{
-		return $this->context->params['game']['stats']['baseLOS'];
+		$baseReconnaissance = $this->context->params['game']['stats']['baseLOS'];
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'reconnaissance');
+		return $baseReconnaissance + $level;
+
 	}
 
 	/**
@@ -289,6 +292,5 @@ class StatContainer extends Nette\Object
 		}
 		return 1 + pow($level + 1, 2)/100;
 	}
-
 
 }
