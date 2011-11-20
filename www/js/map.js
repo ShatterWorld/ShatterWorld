@@ -804,10 +804,8 @@ Game.map.contextMenu = {
 				Game.utils.signal('fetchColonisationCost', {'targetId': target.id}, function (data) {
 					var dialog = new Game.map.contextMenu.ConstructionDialog('colonisationDialog');
 					dialog.setTitle('Kolonizace');
-					dialog.setBody($('<div />')
-						.append(Game.UI.resourceTable(data.cost))
-						.append($('<p>').html(data.time))
-					);
+					dialog.setBody('Kolonizace');
+					dialog.setCost(data.cost, data.time);
 					dialog.setSubmit({
 						text: 'Zahájit kolonizaci',
 						click: function () {
@@ -846,11 +844,8 @@ Game.map.contextMenu = {
 				dialog.setTitle('Vylepšit budovu');
 				var label = $('<span>');
 				Game.descriptions.translate('facility', target.facility, label);
-				dialog.setBody($('<div />')
-					.append($('<p>').append(label).append(' (' + (target.level + 1) + ')'))
-					.append(Game.UI.resourceTable(Game.map.contextMenu.upgrades[target.facility][target.level + 1].cost))
-					.append($('<p>').html(Game.map.contextMenu.upgrades[target.facility][target.level + 1].time))
-				);
+				dialog.setBody($('<span>').append(label).append(' (' + (target.level + 1) + ')'));
+				dialog.setCost(Game.map.contextMenu.upgrades[target.facility][target.level + 1].cost, Game.map.contextMenu.upgrades[target.facility][target.level + 1].time);
 				dialog.setSubmit({
 					text: 'Zahájit stavbu', 
 					click: function () {
@@ -873,11 +868,8 @@ Game.map.contextMenu = {
 				dialog.setTitle('Downgradovat budovu');
 				var label = $('<span>');
 				Game.descriptions.translate('facility', target.facility, label);
-				dialog.setBody($('<div />')
-					.append($('<p>').append(label).append(' (' + (target.level - 1) + ')'))
-					.append(Game.UI.resourceTable(Game.map.contextMenu.downgrades[target.facility][target.level - 1].cost))
-					.append($('<p>').html(Game.map.contextMenu.downgrades[target.facility][target.level - 1].time))
-				);
+				dialog.setBody(label);
+				dialog.setCost(Game.map.contextMenu.downgrades[target.facility][target.level - 1].cost, Game.map.contextMenu.downgrades[target.facility][target.level - 1].time);
 				dialog.setSubmit({
 					text: 'Zahájit stavbu', 
 					click: function () {
@@ -917,13 +909,10 @@ Game.map.contextMenu = {
 					var element = $('<a href="#">').html(label).click(function (e) {
 						e.preventDefault();
 						menu.hide();
-						var dialog = new Game.UI.Dialog('facilityDialog');
+						var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
 						dialog.setTitle('Postavit budovu');
-						dialog.setBody($('<div />')
-							.append(label.clone())
-							.append(Game.UI.resourceTable(Game.map.contextMenu.facilities[name].cost))
-							.append($('<p>').html(Game.map.contextMenu.facilities[name].time))
-						);
+						dialog.setBody(label.clone());
+						dialog.setCost(Game.map.contextMenu.facilities[name].cost, Game.map.contextMenu.facilities[name].time);
 						dialog.setSubmit({
 							text: 'Zahájit stavbu',
 							click: function () {
@@ -1009,6 +998,20 @@ Game.map.contextMenu.ConstructionDialog = Class({
 	constructor: function (id)
 	{
 		Game.map.contextMenu.ConstructionDialog._superClass.constructor.call(this, id);
+	},
+	
+	setCost: function (cost, time)
+	{
+		this.cost = cost;
+		this.time = time;
+	},
+	
+	getBody: function ()
+	{
+		return $('<div />')
+			.append($('<p>').html(this.body))
+			.append(Game.UI.resourceTable(this.cost))
+			.append(Game.UI.timeTable(this.time));
 	},
 	
 	closeHandler: function ()

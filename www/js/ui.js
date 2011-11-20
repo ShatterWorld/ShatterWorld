@@ -13,6 +13,12 @@ Game.UI = {
 		return table;
 	},
 	
+	timeTable: function (time)
+	{
+		var formattedTime = Game.utils.formatTime(time);
+		return $('<table>').append($('<tr>').append($('<th>').html('Čas'), $('<td>').html(formattedTime)));
+	},
+	
 	Dialog: Class({
 		constructor: function (id)
 		{

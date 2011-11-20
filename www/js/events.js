@@ -151,24 +151,7 @@ Game.countdown = {
 				clearInterval(interval);
 				return;
 			}
-			var t = timeout;
-
-			var h = Math.floor(t / 3600);
-			t -= h*3600;
-			var m = Math.floor(t / 60);
-			t -= m*60;
-			var s = t;
-
-			if (s < 10){
-				s = '0' + s;
-			}
-			if (m < 10){
-				m = '0' + m;
-			}
-
-			var time = h + ':' + m + ':' + s;
-
-			$(timeTd).html(time);
+			$(timeTd).html(Game.utils.formatTime(timeout));
 			timeout--;
 		};
 		countdownFunction();

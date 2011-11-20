@@ -58,6 +58,24 @@ Game.utils = {
 		});
 	},
 
+	formatTime: function (time)
+	{
+		var h = Math.floor(time / 3600);
+		time -= h*3600;
+		var m = Math.floor(time / 60);
+		time -= m*60;
+		var s = time;
+
+		if (s < 10){
+			s = '0' + s;
+		}
+		if (m < 10){
+			m = '0' + m;
+		}
+
+		return h + ':' + m + ':' + s;
+	},
+	
 	/**
 	 * Returns true if the variable isnt undefined or null
 	 * @param object
