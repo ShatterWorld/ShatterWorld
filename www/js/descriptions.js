@@ -44,26 +44,28 @@ Game.descriptions = {
 	 * @param object/string
 	 * @return void
 	 */
-	translate : function (type, key, selector){
-		if (this.isFetching || this.data == null){
-			this.callbackStack.push(function(){
-				var trans = Game.descriptions.data[type][key];
-				if (Game.utils.isset(trans) && trans !== 'undefined') {
+	translate : function (type, key, selector, attr)
+	{
+		var callback = function () {
+			var trans = Game.descriptions.data[type][key];
+			if (Game.utils.isset(trans) && trans !== 'undefined') {
+				if (attr) {
+					$(selector).attr(attr, trans);
+				} else {
 					$(selector).html(trans);
+				}
+			} else {
+				if (attr) {
+					$(selector).attr(attr, key);
 				} else {
 					$(selector).html(key);
 				}
-			});
-
-		}
-		else{
-			var trans = Game.descriptions.data[type][key];
-			if (Game.utils.isset(trans) && trans !== 'undefined') {
-				$(selector).html(trans);
-			} else {
-				$(selector).html(key);
 			}
-
+		};
+		if (this.isFetching || this.data == null){
+			this.callbackStack.push(callback);
+		} else {
+			callback();
 		}
 
 
