@@ -1014,6 +1014,14 @@ Game.map.contextMenu.ConstructionDialog = Class({
 			.append(Game.UI.timeTable(this.time));
 	},
 	
+	show: function ()
+	{
+		Game.map.contextMenu.ConstructionDialog._superClass.show.call(this);
+		if (!Game.resources.hasSufficientResources(this.cost)) {
+			$(this.element).parent().find('.submitButton').button('disable');
+		}
+	},
+	
 	closeHandler: function ()
 	{
 		Game.map.marker.unmarkByType('selected');

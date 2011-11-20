@@ -33,7 +33,7 @@ Game.UI = {
 			position: ['center', 'center']
 		},
 		
-		showButtons: true,
+		hasButtons: true,
 		
 		getConfig: function ()
 		{
@@ -112,7 +112,7 @@ Game.UI = {
 			});
 			$(element).dialog({
 				title: this.getTitle(),
-				buttons: this.showButtons ? buttons : [],
+				buttons: this.hasButtons ? buttons : [],
 				width: config.width,
 				height: config.height,
 				position: config.position
@@ -128,6 +128,9 @@ Game.UI = {
 				event.data.context.closeHandler(event.data.context);
 				$(this).dialog("destroy").remove();
 			});
+			if (this.hasButtons && submit) {
+				$(element).parent().find('button').first().addClass('submitButton');
+			}
 			return element;
 		},
 		

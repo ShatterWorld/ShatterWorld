@@ -30,7 +30,7 @@ Game.countdown = {
 		}
 		this.dialog = new Game.UI.Dialog('countdownDialog');
 		this.dialog.setTitle('Odpočítávání');
-		this.dialog.showButtons = false;
+		this.dialog.hasButtons = false;
 		this.dialog.table = $('<table>');
 		var empty = true;
 		$.each(data, function(key, event) {
