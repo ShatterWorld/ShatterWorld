@@ -36,10 +36,10 @@ Game.utils = {
 	{
 		var position = context.offset();
 
-		return({
+		return {
 			x: Math.floor( globalX - position.left ),
 			y: Math.floor( globalY - position.top )
-		});
+		};
 	},
 
 	/**
@@ -52,10 +52,10 @@ Game.utils = {
 	localToGlobal : function(context, localX, localY){
 		var position = context.offset();
 
-		return({
+		return {
 			x: Math.floor( localX + position.left ),
 			y: Math.floor( localY + position.top )
-		});
+		};
 	},
 
 	formatTime: function (time)
@@ -66,10 +66,10 @@ Game.utils = {
 		time -= m*60;
 		var s = time;
 
-		if (s < 10){
+		if (s < 10) {
 			s = '0' + s;
 		}
-		if (m < 10){
+		if (m < 10) {
 			m = '0' + m;
 		}
 
