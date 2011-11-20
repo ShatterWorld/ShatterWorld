@@ -9,6 +9,7 @@ Game.UI = {
 		$.each(price, function (resource, cost) {
 			if (cost > 0) {
 				var label = $('<th>');
+				label.append($('<img />').attr({src: basePath + '/images/resources/' + resource + '.png'}));
 				header.append(label);
 				var value = $('<td>').html(cost);
 				var pair = {};
@@ -17,7 +18,7 @@ Game.UI = {
 					value.addClass('resourceInsufficient');
 				}
 				values.append(value);
-				Game.descriptions.translate('resource', resource, label);
+				Game.descriptions.translate('resource', resource, $(label).children('img'), 'title');
 			}
 		});
 		table.append(header, values);
