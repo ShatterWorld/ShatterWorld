@@ -42,5 +42,13 @@ td {
 .explanation {
 	font-style: italic;
 	padding-left: 20px;
+}
 
+h2 {
+	text-decoration: underline;
+	font-weight: bold;
+}
+
+table {
+	margin-bottom: 30px;
 }
