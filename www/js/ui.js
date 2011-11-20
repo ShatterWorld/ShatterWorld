@@ -3,13 +3,24 @@ var Game = Game || {};
 Game.UI = {
 	resourceTable: function (price)
 	{
-		var table = $('<table><tr class="header"></tr><tr class="values"></tr></table>');
+		var table = $('<table>');
+		var header = $('<tr>');
+		var values = $('<tr>');
 		$.each(price, function (resource, cost) {
-			var label = $('<th>');
-			table.find('.header').append(label);
-			table.find('.values').append($('<td>').html(cost));
-			Game.descriptions.translate('resource', resource, label);
+			if (cost > 0) {
+				var label = $('<th>');
+				header.append(label);
+				var value = $('<td>').html(cost);
+				var pair = {};
+				pair[resource] = cost;
+				if (!Game.resources.hasSufficientResources(pair)) {
+					value.addClass('resourceInsufficient');
+				}
+				values.append(value);
+				Game.descriptions.translate('resource', resource, label);
+			}
 		});
+		table.append(header, values);
 		return table;
 	},
 	

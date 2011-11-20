@@ -40,7 +40,7 @@ a:hover {
 	border-bottom: 1px solid #000;
 }
 
-.resourceFull {
+.resourceFull, .resourceInsufficient {
 	color: #ff0000;
 }
 
