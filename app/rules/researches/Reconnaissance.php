@@ -18,7 +18,8 @@ class Reconnaissance extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 500
+			'fuel' => pow($level, 2) * 700,
+			'stone' => pow($level, 2) * 200
 		);
 	}
 
@@ -41,14 +42,12 @@ class Reconnaissance extends AbstractRule implements IResearch
 
 	public function afterResearch (Entities\Construction $construction)
 	{
-
 		$arr = $this->getContext()->model->getFieldRepository()->getVisibleFieldsCache();
 		unset($arr[$construction->owner->id]);
 		$arr = $this->getContext()->model->getClanRepository()->getVisibleClansCache();
 		unset($arr[$construction->owner->id]);
 		$arr = $this->getContext()->model->getClanRepository()->getClanGraphCache();
 		unset($arr[$construction->owner->id]);
-
 	}
 
 	public function getLevelCap ()

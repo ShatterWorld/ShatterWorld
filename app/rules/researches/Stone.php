@@ -18,7 +18,10 @@ class Stone extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'stone' => pow($level, 2) * 500
+			'food' => pow($level, 2) * 400,
+			'stone' => pow($level, 2) * 600,
+			'metal' => pow($level, 2) * 400,
+			'fuel' => pow($level, 2) * 400
 		);
 	}
 

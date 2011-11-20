@@ -18,7 +18,8 @@ class Trading extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 500
+			'food' => pow($level, 2) * 500,
+			'fuel' => $level > 3 ? pow($level, 2) * 350 : 0
 		);
 	}
 

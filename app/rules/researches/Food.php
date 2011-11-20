@@ -18,7 +18,10 @@ class Food extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 500
+			'food' => pow($level, 2) * 600,
+			'stone' => pow($level, 2) * 400,
+			'metal' => pow($level, 2) * 400,
+			'fuel' => pow($level, 2) * 400
 		);
 	}
 
