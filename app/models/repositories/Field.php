@@ -324,8 +324,12 @@ class Field extends BaseRepository
 		$map = $this->getIndexedMapIds();
 
 		$visibleFields = new ArraySet();
+		$depths = new ArraySet();
 		foreach ($baseFields as $field) {
-			foreach ($this->getFieldNeighbours($field, $this->context->stats->getVisibilityRadius($field->owner), $map) as $neighbour) {
+			if (!$depths->offsetExists($field->owner->id)){
+				$depths->addElement($field->owner->id, $this->context->stats->getVisibilityRadius($field->owner));
+			}
+			foreach ($this->getFieldNeighbours($field, $depths->offsetGet($field->owner->id), $map) as $neighbour) {
 				$id = intval($neighbour);
 				$visibleFields->addElement($id, $id);
 			}
