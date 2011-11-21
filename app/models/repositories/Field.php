@@ -323,17 +323,15 @@ class Field extends BaseRepository
 		$baseFields = $qb->getQuery()->getResult();
 		$map = $this->getIndexedMapIds();
 
-		$visibleFields = array();
+		$visibleFields = new ArraySet();
 		foreach ($baseFields as $field) {
 			foreach ($this->getFieldNeighbours($field, $this->context->stats->getVisibilityRadius($field->owner), $map) as $neighbour) {
 				$id = intval($neighbour);
-				if (!array_search($id, $visibleFields)) {
-					$visibleFields[] = $id;
-				}
+				$visibleFields->addElement($id, $id);
 			}
 
 		}
-		return $visibleFields;
+		return $visibleFields->toArray();
 	}
 
 	/**
