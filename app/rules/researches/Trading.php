@@ -42,7 +42,8 @@ class Trading extends AbstractRule implements IResearch
 
 	public function afterResearch (Entities\Construction $construction)
 	{
-		# clean cache
+		$arr = $this->getContext()->model->getClanRepository()->getClanGraphCache();
+		unset($arr[$construction->owner->id]);
 	}
 
 	public function getLevelCap ()
