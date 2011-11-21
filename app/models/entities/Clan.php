@@ -53,7 +53,7 @@ class Clan extends BaseEntity {
 	 * @var Entities\Orders
 	 */
 	private $orders;
-	
+
 	/**
 	 * @Column(type = "boolean")
 	 * @var bool
@@ -184,6 +184,17 @@ class Clan extends BaseEntity {
 	{
 		$alliance->addApplicant($this);
 		$this->applications[] = $alliance;
+	}
+
+	/**
+	 * Remove an alliance application
+	 * @param Entities\Alliance
+	 * @return void
+	 */
+	public function removeApplication (Alliance $alliance)
+	{
+		$alliance->removeApplicant($this);
+		$this->applications->removeElement($alliance);
 	}
 
 	/**

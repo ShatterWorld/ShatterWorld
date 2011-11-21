@@ -14,26 +14,26 @@ class Alliance extends BaseEntity
 	 * @var string
 	 */
 	private $name;
-	
+
 	/**
 	 * @OneToMany(targetEntity = "Entities\Clan", mappedBy = "alliance")
 	 * @var Doctrine\Common\Collections\ArrayCollection
 	 */
 	private $members;
-	
+
 	/**
 	 * @ManyToMany(targetEntity = "Entities\Clan", mappedBy = "applications")
 	 * @var Doctrine\Common\Collections\ArrayCollection
 	 */
 	private $applicants;
-	
+
 	/**
 	 * @OneToOne(targetEntity = "Entities\Clan")
 	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\Clan
 	 */
 	private $leader;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -42,7 +42,7 @@ class Alliance extends BaseEntity
 		$this->members = new Doctrine\Common\Collections\ArrayCollection();
 		$this->applicants = new Doctrine\Common\Collections\ArrayCollection();
 	}
-	
+
 	/**
 	 * Name getter
 	 * @return string
@@ -51,7 +51,7 @@ class Alliance extends BaseEntity
 	{
 		return $this->name;
 	}
-	
+
 	/**
 	 * Name setter
 	 * @param string
@@ -61,7 +61,7 @@ class Alliance extends BaseEntity
 	{
 		$this->name = $name;
 	}
-	
+
 	/**
 	 * Members getter
 	 * @return Doctrine\Common\Collections\ArrayCollection
@@ -70,7 +70,7 @@ class Alliance extends BaseEntity
 	{
 		return $this->members;
 	}
-	
+
 	/**
 	 * Add an alliance member
 	 * @param Entities\Clan
@@ -80,7 +80,7 @@ class Alliance extends BaseEntity
 	{
 		$member->setAlliance($this);
 	}
-	
+
 	/**
 	 * Applicants getter
 	 * @return Doctrine\Common\Collections\ArrayCollection
@@ -89,7 +89,7 @@ class Alliance extends BaseEntity
 	{
 		return $this->applicants;
 	}
-	
+
 	/**
 	 * Add an applicant
 	 * @param Entities\Clan
@@ -99,7 +99,17 @@ class Alliance extends BaseEntity
 	{
 		$this->applicants[] = $clan;
 	}
-	
+
+	/**
+	 * Remove an applicant
+	 * @param Entities\Clan
+	 * @return void
+	 */
+	public function removeApplicant (Clan $clan)
+	{
+		$this->applicants->removeElement($clan);
+	}
+
 	/**
 	 * Leader getter
 	 * @return Entities\Clan
@@ -108,7 +118,7 @@ class Alliance extends BaseEntity
 	{
 		return $this->leader;
 	}
-	
+
 	/**
 	 * Leader setter
 	 * @param Entities\Clan

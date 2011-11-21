@@ -27,11 +27,6 @@ class Alliance extends BaseService
 		}
 	}
 
-	public function declineMember (Entities\Alliance $alliance, Entities\Clan $clan)
-	{
-		throw new Exception();
-	}
-
 	public function leaveAlliance (Entities\Alliance $alliance, Entities\Clan $clan)
 	{
 		if ($clan->alliance == $alliance){

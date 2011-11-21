@@ -224,6 +224,7 @@ class Graph
 		$lengths[$from] = 0;
 
 		$verArr = $this->vertices->toArray();
+		Debugger::barDump($vertices);
 
 		// alg
 		while(count($vertices) > 0){
@@ -233,6 +234,14 @@ class Graph
 
 			foreach($neighbours as $key => $neighbour){
 				if (isset($lengths[$u])){
+
+					Debugger::barDump($u);
+					Debugger::barDump(gettype($u));
+					Debugger::barDump($verArr);
+					Debugger::barDump($verArr[$u]);
+					Debugger::barDump(-log($verArr[$u]));
+					Debugger::barDump($a = '-------');
+
 					$x = -log($verArr[$u]);
 					$potentialLength = $lengths[$u] + $x;
 					if(!isset($lengths[$key]) || $potentialLength < $lengths[$key]){

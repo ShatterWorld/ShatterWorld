@@ -107,13 +107,9 @@ class AlliancePresenter extends BasePresenter
 			$this->redirect('Alliance:');
 		}
 
-		try{
-			$this->getAllianceService()->declineMember($this->getPlayerClan()->alliance, $this->getClanRepository()->find($id));
-			$this->flashMessage('Nový klan posílil naše řady');
-		}
-		catch (Exception $e){
-			$this->flashMessage('Edituj AlliService decline()', 'error');
-		}
+		$this->getClanRepository()->find($id)->removeApplication($this->getPlayerClan()->alliance);
+		$this->flashMessage('Přihláška smazána');
+
 		$this->redirect('this');
 	}
 
