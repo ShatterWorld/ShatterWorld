@@ -152,7 +152,7 @@ class Clan extends BaseRepository
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('o.id')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')
-			->where($qb->expr()->in('f.id', $this->context->model->getFieldRepository()->getVisibleFieldsIds($clan, $this->context->stats->getVisibilityRadius($clan))))
+			->where($qb->expr()->in('f.id', $this->context->model->getFieldRepository()->getVisibleFieldsIds($clan)))
 			->groupBy('o.id');
 		return array_map(function ($val) {return $val['id'];}, $qb->getQuery()->getArrayResult());
 	}

@@ -11,7 +11,7 @@ class Alliance extends BaseRepository
 			->from('Entities\Field', 'f')
 			->innerJoin('f.owner', 'o')
 			->innerJoin('o.alliance', 'a')
-			->where($qb->expr()->in('f.id', $this->context->model->getFieldRepository()->getVisibleFieldsIds($clan, $this->context->stats->getVisibilityRadius($clan))))
+			->where($qb->expr()->in('f.id', $this->context->model->getFieldRepository()->getVisibleFieldsIds($clan)))
 			->groupBy('a.id');
 		$alliances = array_map(function ($value) {return $value['id'];}, $qb->getQuery()->getResult());
 		if ($alliances) {

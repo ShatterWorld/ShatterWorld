@@ -45,6 +45,13 @@ class Field extends BaseRepository
 		return $result;
 	}
 
+	/**
+	 * Field by [x;y] coords
+	 * @param int
+	 * @param int
+	 * @param array of int
+	 * @return Entities\Field
+	 */
 	public function findIdByCoords ($x, $y, &$map = array())
 	{
 		$mapSize = $this->context->params['game']['map']['size'];
@@ -78,6 +85,11 @@ class Field extends BaseRepository
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
+	/**
+	 * Get the clan facilities
+	 * @param Entities\Clan
+	 * @return array of Entities\Facility
+	 */
 	public function getClanFacilities (Entities\Clan $clan)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
@@ -94,6 +106,11 @@ class Field extends BaseRepository
 		return $result;
 	}
 
+	/**
+	 * Get the clan available facility changes
+	 * @param Entities\Clan
+	 * @return
+	 */
 	public function getAvailableFacilityChanges (Entities\Clan $clan)
 	{
 		$qb = $this->createQueryBuilder('f');
@@ -273,18 +290,22 @@ class Field extends BaseRepository
 	/**
 	 * Finds fields which are visible for the player
 	 * @param Entities\Clan
-	 * @param integer
 	 * @return ArraySet of Entities\Field
 	 */
-	public function getVisibleFields (Entities\Clan $clan, $depth)
+	public function getVisibleFields (Entities\Clan $clan)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
-		$qb->where($qb->expr()->in('f.id', $this->getVisibleFieldsIds($clan, $depth)));
+		$qb->where($qb->expr()->in('f.id', $this->getVisibleFieldsIds($clan)));
 		return $qb->getQuery()->getResult();
 	}
 
-	protected function computeVisibleFields (Entities\Clan $clan, $depth)
+	/**
+	 * Finds fields which are visible for the player
+	 * @param Entities\Clan
+	 * @return ArraySet of Entities\Field
+	 */
+	protected function computeVisibleFields (Entities\Clan $clan)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('f')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o');
@@ -304,12 +325,13 @@ class Field extends BaseRepository
 
 		$visibleFields = array();
 		foreach ($baseFields as $field) {
-			foreach ($this->getFieldNeighbours($field, $depth, $map) as $neighbour) {
+			foreach ($this->getFieldNeighbours($field, $this->context->stats->getVisibilityRadius($field->owner), $map) as $neighbour) {
 				$id = intval($neighbour);
 				if (!array_search($id, $visibleFields)) {
 					$visibleFields[] = $id;
 				}
 			}
+
 		}
 		return $visibleFields;
 	}
@@ -317,15 +339,14 @@ class Field extends BaseRepository
 	/**
 	 * Finds visible fields' id's
 	 * @param Entities\Clan
-	 * @param integer
 	 * @return array of integers
 	 */
-	public function getVisibleFieldsIds (Entities\Clan $clan, $depth)
+	public function getVisibleFieldsIds (Entities\Clan $clan)
 	{
 		$cache = $this->getVisibleFieldsCache();
 		$ids = $cache->load($clan->id);
 		if ($ids === NULL) {
-			$ids = $this->computeVisibleFields($clan, $depth);
+			$ids = $this->computeVisibleFields($clan);
 			$cache->save($clan->id, $ids);
 		}
 		return $ids;
@@ -334,12 +355,11 @@ class Field extends BaseRepository
 	/**
 	 * Finds visible fields and returns them as the 2d array of integers (their coords)
 	 * @param Entities\Clan
-	 * @param integer
 	 * @return 2d array of integers
 	 */
-	public function getVisibleFieldsArray (Entities\Clan $clan, $depth)
+	public function getVisibleFieldsArray (Entities\Clan $clan)
 	{
-		$ids = $this->getVisibleFieldsIds($clan, $depth);
+		$ids = $this->getVisibleFieldsIds($clan);
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a')
 			->where($qb->expr()->in('f.id', $ids));
