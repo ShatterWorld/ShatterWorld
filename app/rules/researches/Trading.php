@@ -2,6 +2,7 @@
 namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
+use Nette\Caching\Cache;
 
 class Trading extends AbstractRule implements IResearch
 {
@@ -42,8 +43,11 @@ class Trading extends AbstractRule implements IResearch
 
 	public function afterResearch (Entities\Construction $construction)
 	{
-		$arr = $this->getContext()->model->getClanRepository()->getClanGraphCache();
-		unset($arr[$construction->owner->id]);
+		$cache = $this->getContext()->model->getClanRepository()->getClanGraphCache();
+		$id = $construction->owner->id;
+		$cache->clean(array(
+			Cache::TAGS => array("observer/$id"),
+		));
 	}
 
 	public function getLevelCap ()

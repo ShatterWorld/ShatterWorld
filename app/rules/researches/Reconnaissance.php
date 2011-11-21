@@ -2,6 +2,7 @@
 namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
+use Nette\Caching\Cache;
 
 class Reconnaissance extends AbstractRule implements IResearch
 {
@@ -46,8 +47,12 @@ class Reconnaissance extends AbstractRule implements IResearch
 		unset($arr[$construction->owner->id]);
 		$arr = $this->getContext()->model->getClanRepository()->getVisibleClansCache();
 		unset($arr[$construction->owner->id]);
-		$arr = $this->getContext()->model->getClanRepository()->getClanGraphCache();
-		unset($arr[$construction->owner->id]);
+
+		$cache = $this->getContext()->model->getClanRepository()->getClanGraphCache();
+		$id = $construction->owner->id;
+		$cache->clean(array(
+			Cache::TAGS => array("observer/$id"),
+		));
 	}
 
 	public function getLevelCap ()

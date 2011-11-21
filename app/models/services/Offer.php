@@ -74,9 +74,9 @@ class Offer extends BaseService {
 	public function create ($values, $flush = TRUE)
 	{
 		if($this->context->model->getResourceRepository()->checkResources($values['owner'], array($values['offer'] => $values['offerAmount']))){
-			parent::create($values, $flush);
 			$this->context->model->getResourceService()->pay($values['owner'], array($values['offer'] => $values['offerAmount']));
 			$this->context->model->getClanService()->issueOrder($values['owner'], FALSE);
+			parent::create($values, $flush);
 		}
 		else{
 			throw new InsufficientResourcesException();
