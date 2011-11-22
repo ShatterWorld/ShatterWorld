@@ -69,7 +69,11 @@ abstract class BasePresenter extends \BasePresenter
 	public function handleSwitchClan ($clanId)
 	{
 		$model = $this->getContext()->model;
-		$model->getUserService()->update($model->getUserRepository()->getActiveUser(), array('activeClan' => $model->getClanRepository()->find($clanId)));
+		$clan = $model->getClanRepository()->find($clanId);
+		$user = $model->getUserRepository()->getActiveUser();
+		if ($clan->user === $user) {
+			$model->getUserService()->update($user, array('activeClan' => $clan));
+		}
 		$this->redirect('this');
 	}
 	
