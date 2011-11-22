@@ -54,6 +54,25 @@ abstract class BasePresenter extends \BasePresenter
 		$this->redirect(':Front:Homepage:');
 	}
 
+	protected function createComponentChooseClanForm ()
+	{
+		$form = new Nette\Application\UI\Form;
+		$clans = array();
+		foreach ($this->getContext()->model->getUserRepository()->getActiveUser()->getClans() as $clan) {
+			$clans[$clan->id] = $clan->name;
+		}
+		$form->addSelect('clan', NULL, $clans);
+		$form['clan']->setValue($this->getPlayerClan()->id);
+		return $form;
+	}
+	
+	public function handleSwitchClan ($clanId)
+	{
+		$model = $this->getContext()->model;
+		$model->getUserService()->update($model->getUserRepository()->getActiveUser(), array('activeClan' => $model->getClanRepository()->find($clanId)));
+		$this->redirect('this');
+	}
+	
 	/**
 	 * Returns players profile
 	 * @return Entities\Profile

@@ -37,6 +37,7 @@
 		<script type="text/javascript" src="{$basePath}/js/descriptions.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/menu.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/flashes.js"></script>
+		<script type="text/javascript" src="{$basePath}/js/switchClan.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/resources.js"></script>
 		<script type="text/javascript" src="{$basePath}/js/events.js"></script>
 		{/block}
@@ -58,6 +59,11 @@
 		{/snippet}
 		<div id="frame">
 			<div id="userBar">
+				<div id="chooseClan">
+				{form chooseClanForm}
+				{input clan}
+				{/form}
+				</div>
 				<a href="{link Profile:}" class="caption">{$user->identity->nickname}:</a>
 				{if $user->isAllowed('administration')}<a href="{link :Admin:Dashboard:}">Administrace</a> | {/if}
 				<a href="{link logout!}">Odhlásit se</a>

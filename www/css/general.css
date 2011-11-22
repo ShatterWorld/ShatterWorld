@@ -57,6 +57,10 @@ a:hover {
 	position: relative;
 }
 
+#chooseClan {
+	float: left;
+}
+
 #footer {
 	background: url('../images/bar-bottom.png');
 	margin-top: 15px;

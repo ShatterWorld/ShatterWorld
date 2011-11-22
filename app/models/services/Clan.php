@@ -135,7 +135,7 @@ class Clan extends BaseService
 			), FALSE);
 		}
 		$this->entityManager->flush();
-		$this->context->model->getUserService->update($values['owner'], array('activeClan' => $clan));
+		$this->context->model->getUserService->update($values['user'], array('activeClan' => $clan));
 		return $clan;
 	}
 
@@ -147,16 +147,6 @@ class Clan extends BaseService
 	 */
 	public function delete ($object, $flush = TRUE)
 	{
-		$object->setAllianceApplication(NULL);
-		if ($object->alliance && $object->alliance->leader === $object) {
-			$this->context->model->getAllianceService()->delete($object->alliance);
-		}
-		foreach ($this->context->model->getOfferRepository()->findByOwner($object->id) as $offer) {
-			$this->context->model->getOfferService()->delete($offer);
-		}
-		foreach ($object->getFields() as $field) {
-			$field->setOwner(NULL);
-		}
 		$object->deleted = TRUE;
 		if ($flush) {
 			$this->entityManager->flush();
