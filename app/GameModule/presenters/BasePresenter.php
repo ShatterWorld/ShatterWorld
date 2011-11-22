@@ -146,6 +146,7 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		$user = $this->getService('userService')->create(
 			array(
+				'login' => Nette\Utils\Strings::random(),
 				'nickname' => Nette\Utils\Strings::random(),
 				'email' => 'test@test.com',
 				'password' => '123456',
@@ -168,6 +169,7 @@ abstract class BasePresenter extends \BasePresenter
 		for($i = 0; $i < 10; $i++){
 		$user = $this->getService('userService')->create(
 			array(
+				'login' => Nette\Utils\Strings::random(),
 				'nickname' => Nette\Utils\Strings::random(),
 				'email' => 'test@test.com',
 				'password' => '123456',
@@ -189,6 +191,7 @@ abstract class BasePresenter extends \BasePresenter
 		for($i = 0; $i < 100; $i++){
 		$user = $this->getService('userService')->create(
 			array(
+				'login' => Nette\Utils\Strings::random(),
 				'nickname' => Nette\Utils\Strings::random(),
 				'email' => 'test@test.com',
 				'password' => '123456',

@@ -10,8 +10,11 @@ class SignupPresenter extends BasePresenter
 
 		$form = new Form;
 
-		$form->addText('nickname', 'Login')
+		$form->addText('login', 'Přihlašovací jméno')
 			->setRequired('Zadejte prosím unikátní login');
+
+		$form->addText('nickname', 'Herní jméno')
+			->setRequired('Zadejte prosím unikátní přezdívku');
 
 		$form->addText('email', 'E-mail')
 			->setRequired('Zadejte prosím platný e-mail')

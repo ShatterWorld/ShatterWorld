@@ -3,10 +3,10 @@ use Nette\Security\Identity;
 use Nette\Security\AuthenticationException;
 
 class Authenticator extends Nette\Object implements Nette\Security\IAuthenticator {
-	
+
 	/** @var Services\BaseService */
 	protected $userService;
-	
+
 	/**
 	 * Constructor
 	 * @param Services\BaseService
@@ -15,7 +15,7 @@ class Authenticator extends Nette\Object implements Nette\Security\IAuthenticato
 	{
 		$this->userService = $userService;
 	}
-	
+
 	/**
 	 * Get the repository of User entities
 	 * @return Doctrine\ORM\EntityRepository
@@ -24,7 +24,7 @@ class Authenticator extends Nette\Object implements Nette\Security\IAuthenticato
 	{
 		return $this->userService->getRepository();
 	}
-	
+
 	/**
 	 * Validate credentials against the model
 	 * @param array
@@ -33,8 +33,8 @@ class Authenticator extends Nette\Object implements Nette\Security\IAuthenticato
 	 */
 	public function authenticate (array $credentials)
 	{
-		list($nickname, $password) = $credentials;
-		$record = $this->getUserRepository()->findOneByNickname($nickname);
+		list($login, $password) = $credentials;
+		$record = $this->getUserRepository()->findOneByLogin($login);
 		if (!$record) {
 			throw new AuthenticationException('User does not exist', self::IDENTITY_NOT_FOUND);
 		}
