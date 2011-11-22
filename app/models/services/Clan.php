@@ -77,10 +77,9 @@ class Clan extends BaseService
 
 		$lastHqId = $this->cache->load('lastHqId');
 		$lastHq = null;
-		if ($lastHqId === null){
+		if ($lastHqId === null) {
 			$lastHq =  $S;
-		}
-		else{
+		} else {
 			$lastHq =  $fieldRepository->find($lastHqId);
 		}
 
@@ -88,7 +87,7 @@ class Clan extends BaseService
 		$fieldRepository->sortByDistance($neutralHexagonsCenters, $S);
 
 		$found = new ArraySet();
-		foreach ($neutralHexagonsCenters as $center){
+		foreach ($neutralHexagonsCenters as $center) {
 			$finalized = false;
 
 			$found = new ArraySet();
@@ -110,7 +109,7 @@ class Clan extends BaseService
 		}
 
 		$headq = null;
-		foreach ($found as $foundField){
+		foreach ($found as $foundField) {
 			$headq = $foundField;
 			break;
 		}
@@ -120,7 +119,7 @@ class Clan extends BaseService
 
 		$this->context->model->getOrdersService()->create(array('owner' => $clan), FALSE);
 
-		foreach ($found as $foundField){
+		foreach ($found as $foundField) {
 			$fieldService->update($foundField, array('owner' => $clan));
 		}
 		$this->cache->save('lastHqId', $headq->id);
@@ -136,6 +135,7 @@ class Clan extends BaseService
 			), FALSE);
 		}
 		$this->entityManager->flush();
+		$this->context->model->getUserService->update($values['owner'], array('activeClan' => $clan));
 		return $clan;
 	}
 

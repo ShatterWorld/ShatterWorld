@@ -50,7 +50,8 @@ class Clan extends BaseRepository
 	 */
 	public function getPlayerClan ()
 	{
-		return $this->findOneByUser($this->context->user->id);
+		$user = $this->context->model->getUserRepository()->getActiveUser();
+		return $user->getActiveClan();
 	}
 
 

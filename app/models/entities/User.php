@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * An application user entity
- * @Entity
+ * @Entity(repositoryClass = "Repositories\User")
  * @author Jan "Teyras" Buchar
  */
 class User extends BaseEntity {
@@ -37,6 +37,12 @@ class User extends BaseEntity {
 	 * @var string
 	 */
 	private $role;
+	
+	/**
+	 * @OneToOne(targetEntity = "Entities\Clan")
+	 * @var Entities\Clan
+	 */
+	private $activeClan;
 
 	/**
 	 * Calculate a salted hash of the password
@@ -143,5 +149,24 @@ class User extends BaseEntity {
 	public function setRole ($role)
 	{
 		$this->role = $role;
+	}
+	
+	/**
+	 * Active clan getter
+	 * @return Entities\Clan
+	 */
+	public function getActiveClan ()
+	{
+		return $this->activeClan;
+	}
+	
+	/**
+	 * Active clan setter
+	 * @param Entities\Clan
+	 * @return void
+	 */
+	public function setActiveClan (Clan $activeClan)
+	{
+		$this->activeClan = $activeClan;
 	}
 }
