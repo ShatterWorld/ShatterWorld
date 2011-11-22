@@ -10,9 +10,10 @@ class User extends BaseRepository
 	public function getActiveUser ()
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('u', 'a', 'c')
+		$qb->select('u', 'a', 'c', 'o')
 			->from($this->getEntityName(), 'u')
 			->leftJoin('u.activeClan', 'a')
+			->innerJoin('a.orders', 'o')
 			->leftJoin('u.clans', 'c');
 		$qb->where($qb->expr()->eq('u.id', '?1'));
 		$qb->setParameter(1, $this->context->user->id);

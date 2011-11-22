@@ -10,7 +10,8 @@ use Nette;
 
 class Clan extends BaseRepository
 {
-	/* Cache of clan graphs
+	/** 
+	 * Cache of clan graphs
 	 * @var Nette\Caching\Cache
 	 */
 	protected $clanGraphCache;
@@ -25,23 +26,6 @@ class Clan extends BaseRepository
 			$this->clanGraphCache = new Cache($this->context->cacheStorage, 'ClanGraph');
 		}
 		return $this->clanGraphCache;
-	}
-
-	/**
-	 * Returns a clan specified by user given
-	 * @param Entities\User
-	 * @return Entities\Clan
-	 */
-	public function findOneByUser ($user)
-	{
-		$qb = $this->getEntityManager()->createQueryBuilder()
-			->select('c', 'o')->from($this->getEntityName(), 'c')->innerJoin('c.orders', 'o');
-		$qb->where($qb->expr()->eq('c.user', $user));
-		try {
-			return $qb->getQuery()->useResultCache(true)->getSingleResult();
-		} catch (Doctrine\ORM\NoResultException $e) {
-			return NULL;
-		}
 	}
 
 	/**
