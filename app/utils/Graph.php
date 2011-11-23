@@ -202,8 +202,11 @@ class Graph
 		$profitSum = array(); // vertexId => length
 		$prevVertices = array();  // i => vertexId
 		$vertices = $this->getVerticesIds(); // i => vertexId
-		$verticesProfit = $this->vertices->toArray(); // vertexId => profit
-
+		$verticesProfitTmp = $this->vertices->toArray(); // vertexId => profit
+		$verticesProfit = array();
+		foreach ($verticesProfitTmp as $key => $item){
+			$verticesProfit[$key] = $item;
+		}
 		$prevVertices[$from] = null;
 		$profitSum[$from] = 0;
 
