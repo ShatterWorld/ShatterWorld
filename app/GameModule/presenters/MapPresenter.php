@@ -33,7 +33,10 @@ class MapPresenter extends BasePresenter
 			$rule = $this->context->rules->get('facility', $facility);
 			$facilities[$facility] = array();
 			$facilities[$facility]['cost'] = $rule->getConstructionCost(1);
-			$facilities[$facility]['time'] = $rule->getConstructionTime(1);
+			foreach ($facilities[$facility]['cost'] as $key => $res){
+				$facilities[$facility]['cost'][$key] = floor($facilities[$facility]['cost'][$key] * $this->context->stats->getConstructionCoefficient($this->getPlayerClan()));
+			}
+			$facilities[$facility]['time'] = floor($rule->getConstructionTime(1) * $this->context->stats->getConstructionCoefficient($this->getPlayerClan()));
 		}
 		$this->payload->facilities = $facilities;
 		$changes = $this->getFieldRepository()->getAvailableFacilityChanges($this->getPlayerClan());
@@ -70,8 +73,12 @@ class MapPresenter extends BasePresenter
 	{
 		$target = $this->getFieldRepository()->find($targetId);
 		$clan = $this->getPlayerClan();
-		$this->payload->cost = $this->context->stats->getColonisationCost($target, $clan);
-		$this->payload->time = $this->context->stats->getColonisationTime($target, $clan);
+		$cost = $this->context->stats->getColonisationCost($target, $clan);
+		foreach ($cost as $key => $res){
+			$cost[$key] = floor($cost[$key] * $this->context->stats->getConstructionCoefficient($clan));
+		}
+		$this->payload->cost = $cost;
+		$this->payload->time = floor($this->context->stats->getColonisationTime($target, $clan) * $this->context->stats->getConstructionCoefficient($this->getPlayerClan()));
 		$this->sendPayload();
 	}
 
