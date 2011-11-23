@@ -107,10 +107,12 @@ class Clan extends BaseRepository
 
 			$fifo->deleteElement($dealer->id);
 		}
-
-		$this->getClanGraphCache()->save($clan->id, $graph, array(
+		$this->getClanGraphCache()->save($clan->id, $graph); //!!!
+/*
+ *
+		$this->getClanGraphCache()->save($clan->id, $graph, array( // doesnt work
 			Cache::TAGS => array_map(function ($id) {return "observer/$id";}, $graph->getVerticesIds())
-		));
+		));*/
 
 		return $graph;
 	}

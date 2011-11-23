@@ -140,42 +140,6 @@ class Graph
 		return $this->edges;
 	}
 
-
-	/**
-	 * Returns and unset the smallest element
-	 * @param *array of int
-	 * @return int
-	 */
-	protected function popSmallest(&$arr){
-
-		//Debugger::barDump($arr);
-		$value = null;
-		$key = null;
-		foreach($arr as $arrKey => $item){
-			if($value === null || $item < $value){
-				$value = $item;
-				$key = $arrKey;
-
-			}
-		}
-		unset($arr[$key]);
-		return $value;
-	}
-
-	/**
-	 * Returns the array of ids of all vertices which can be accessed from vertice id given
-	 * @param int
-	 * @return array of int
-	 */
-	protected function getNeighbours ($from){
-		//Debugger::barDump($from);
-		$neighbours = array();
-		foreach($this->edges[$from] as $key => $value){
-			$neighbours[$key] = $value;
-		}
-		return $neighbours;
-	}
-
 	/**
 	 * Finds shortest paths from given vertice to all other vertices
 	 * @param int
@@ -184,27 +148,46 @@ class Graph
 	protected function dijkstraEdges ($from)
 	{
 		//init
-		$lengths = array();
-		$prevVertices = array();
-		$vertices = $this->getVerticesIds();
+		$lengths = array(); // vertexId => length
+		$prevVertices = array();  // i => vertexId
+		$vertices = $this->getVerticesIds(); // i => vertexId
+
 		$prevVertices[$from] = null;
 		$lengths[$from] = 0;
 
 		// alg
-		while(count($vertices) > 0){
-			$u = $this->popSmallest($vertices);//id
-			$neighbours = $this->getNeighbours($u);
-			foreach($neighbours as $key => $neighbour){
-				if (isset($lengths[$u])){
-					$potentialLength = $lengths[$u] + $neighbour;
-					if(!isset($lengths[$key]) || $potentialLength < $lengths[$key]){
-						$lengths[$key] = $potentialLength;
-						$prevVertices[$key] = $u;
+		while(count($vertices) > 0){ // while some vertices remain
+			$minValue = null;
+			$minKey = null;
+			foreach($vertices as $i => $vertexKey){ //pop the one with shortest path
+				if (isset($lengths[$vertexKey])){
+					if($minValue === null || $lengths[$vertexKey] < $minValue){
+						$minValue = $lengths[$vertexKey];
+						$minKey = $i;
+					}
+				}
+			}
+			if($minValue === null || $minKey === null){ //or pop random
+				reset($vertices);
+				list($minKey, $minValue) = each($vertices);
+			}
+			$u = $vertices[$minKey];
+			unset($vertices[$minKey]);
+
+			if (isset($lengths[$u])){
+				$neighbours = array();
+				foreach($this->edges[$u] as $key => $distance){ // get distances of neighbours
+					$neighbours[$key] = $distance;
+				}
+				foreach($neighbours as $neighbourId => $neighbourDistance){
+					$potentialLength = $lengths[$u] + $neighbourDistance;
+					if(!isset($lengths[$neighbourId]) || $potentialLength < $lengths[$neighbourId]){ // check better route
+						$lengths[$neighbourId] = $potentialLength;
+						$prevVertices[$neighbourId] = $u;
 					}
 				}
 			}
 		}
-
 		return $prevVertices;
 	}
 
@@ -215,43 +198,50 @@ class Graph
 	 */
 	protected function dijkstraVertices ($from)
 	{
-		return $this->dijkstraEdges($from);
 		//init
-		$lengths = array();
-		$prevVertices = array();
-		$vertices = $this->getVerticesIds();
-		$prevVertices[$from] = null;
-		$lengths[$from] = 0;
+		$profitSum = array(); // vertexId => length
+		$prevVertices = array();  // i => vertexId
+		$vertices = $this->getVerticesIds(); // i => vertexId
+		$verticesProfit = $this->vertices->toArray(); // vertexId => profit
 
-		$verArr = $this->vertices->toArray();
-		Debugger::barDump($vertices);
+		$prevVertices[$from] = null;
+		$profitSum[$from] = 0;
 
 		// alg
-		while(count($vertices) > 0){
+		while(count($vertices) > 0){ // while some vertices remain
+			$minValue = null;
+			$minKey = null;
+			foreach($vertices as $i => $vertexKey){ // pop the one with lowest profit
+				if (isset($profitSum[$vertexKey])){
+					if($minValue === null || $profitSum[$vertexKey] < $minValue){
+						$minValue = $profitSum[$vertexKey];
+						$minKey = $i;
+					}
+				}
+			}
+			if($minValue === null || $minKey === null){ //or pop random
+				reset($vertices);
+				list($minKey, $minValue) = each($vertices);
+			}
+			$u = $vertices[$minKey];
+			unset($vertices[$minKey]);
 
-			$u = $this->popSmallest($vertices);//id
-			$neighbours = $this->getNeighbours($u);
-
-			foreach($neighbours as $key => $neighbour){
-				if (isset($lengths[$u])){
-
-					Debugger::barDump($u);
-					Debugger::barDump(gettype($u));
-					Debugger::barDump($verArr);
-					Debugger::barDump($verArr[$u]);
-					Debugger::barDump(-log($verArr[$u]));
-					Debugger::barDump($a = '-------');
-
-					$x = -log($verArr[$u]);
-					$potentialLength = $lengths[$u] + $x;
-					if(!isset($lengths[$key]) || $potentialLength < $lengths[$key]){
-						$lengths[$key] = $potentialLength;
-						$prevVertices[$key] = $u;
+			if (isset($profitSum[$u])){
+				$neighbours = array();
+				foreach($this->edges[$u] as $key => $distance){ // get profits of neighbours
+					$profit = $verticesProfit[$key];
+					$neighbours[$key] = $profit == 0 ? 0.01 : 1000-log($profit);
+				}
+				foreach($neighbours as $neighbourId => $neighbourDistance){
+					$potentialLength = $profitSum[$u] + $neighbourDistance;
+					if(!isset($profitSum[$neighbourId]) || $potentialLength < $profitSum[$neighbourId]){ // check better route
+						$profitSum[$neighbourId] = $potentialLength;
+						$prevVertices[$neighbourId] = $u;
 					}
 				}
 			}
 		}
-		//Debugger::barDump($prevVertices);
+
 		return $prevVertices;
 	}
 
@@ -264,8 +254,7 @@ class Graph
 	 */
 	public function getPath ($pathType, $from, $to)
 	{
-		/* needs prev. routes saving (by $from)
-		 * +even caching the whole graph*/
+		/* needs prev. routes saving (by $from)*/
 		if ($pathType === self::SHORT){
 			$routes = $this->dijkstraEdges($from);
 		}
