@@ -14,17 +14,16 @@ class User extends BaseRepository
 		$qb->select('u', 'a', 'c', 'o')
 			->from($this->getEntityName(), 'u')
 			->leftJoin('u.activeClan', 'a')
-			->innerJoin('a.orders', 'o')
+			->leftJoin('a.orders', 'o')
 			->leftJoin('u.clans', 'c');
 		$qb->where($qb->expr()->eq('u.id', '?1'));
 		$qb->setParameter(1, $this->context->user->id);
 		$query = $qb->getQuery();
 		$query->useResultCache(TRUE);
 		try {
-			$result = $query->getSingleResult();
+			return $query->getSingleResult();
 		} catch (NoResultException $e) {
-			$result = NULL;
+			return NULL;
 		}
-		return NULL;
 	}
 }

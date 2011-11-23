@@ -35,7 +35,7 @@ class Clan extends BaseRepository
 	public function getPlayerClan ()
 	{
 		$user = $this->context->model->getUserRepository()->getActiveUser();
-		return $user->getActiveClan();
+		return $user ? $user->getActiveClan() : NULL;
 	}
 
 

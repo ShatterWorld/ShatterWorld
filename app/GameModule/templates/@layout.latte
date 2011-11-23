@@ -59,7 +59,7 @@
 		{/snippet}
 		<div id="frame">
 			<div id="userBar">
-				<div id="chooseClan">
+				<div id="chooseClan" n:if="$presenter->getPlayerClan()">
 				{form chooseClanForm}
 				{input clan}
 				{/form}
