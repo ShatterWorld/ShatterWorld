@@ -1,5 +1,6 @@
 <?php
 namespace Repositories;
+use Doctrine\ORM\NoResultException;
 
 class User extends BaseRepository
 {
@@ -19,6 +20,11 @@ class User extends BaseRepository
 		$qb->setParameter(1, $this->context->user->id);
 		$query = $qb->getQuery();
 		$query->useResultCache(TRUE);
-		return $query->getSingleResult();
+		try {
+			$result = $query->getSingleResult();
+		} catch (NoResultException $e) {
+			$result = NULL;
+		}
+		return NULL;
 	}
 }
