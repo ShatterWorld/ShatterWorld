@@ -57,6 +57,14 @@ class Alliance extends BaseService
 		}
 	}
 
+	public function declineApplication (Entities\Alliance $alliance, Entities\Clan $clan, $flush = TRUE)
+	{
+		$clan->removeApplication($alliance);
+		if ($flush) {
+			$this->entityManager->flush();
+		}
+	}
+	
 	public function fireMember (Entities\Alliance $alliance, Entities\Clan $clan)
 	{
 		if ($alliance !== $clan->alliance){

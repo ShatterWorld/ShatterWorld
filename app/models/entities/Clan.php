@@ -16,8 +16,8 @@ class Clan extends BaseEntity {
 	private $name;
 
 	/**
-	 * @ManyToOne(targetEntity = "Entities\User")
-	 * JoinColumn(onDelete = "CASCADE")
+	 * @ManyToOne(targetEntity = "Entities\User", inversedBy = "clans")
+	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\User
 	 */
 	private $user;

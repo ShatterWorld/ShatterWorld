@@ -1,9 +1,10 @@
 <?php
 namespace Entities;
+use Doctrine;
 
 /**
  * An application user entity
- * @Entity
+ * @Entity(repositoryClass = "Repositories\User")
  * @author Jan "Teyras" Buchar
  */
 class User extends BaseEntity {
@@ -37,7 +38,27 @@ class User extends BaseEntity {
 	 * @var string
 	 */
 	private $role;
+	
+	/**
+	 * @OneToMany(targetEntity = "Entities\Clan", mappedBy = "user")
+	 * @var Doctrine\Common\Collections\ArrayCollection
+	 */
+	private $clans;
+	
+	/**
+	 * @OneToOne(targetEntity = "Entities\Clan")
+	 * @var Entities\Clan
+	 */
+	private $activeClan;
 
+	/**
+	 * Constructor
+	 */
+	public function __construct ()
+	{
+		$this->clans = new Doctrine\Common\Collections\ArrayCollection();
+	}
+	
 	/**
 	 * Calculate a salted hash of the password
 	 * @param string
@@ -143,5 +164,33 @@ class User extends BaseEntity {
 	public function setRole ($role)
 	{
 		$this->role = $role;
+	}
+	
+	/**
+	 * Clans getter
+	 * @return Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function getClans ()
+	{
+		return $this->clans;
+	}
+	
+	/**
+	 * Active clan getter
+	 * @return Entities\Clan
+	 */
+	public function getActiveClan ()
+	{
+		return $this->activeClan;
+	}
+	
+	/**
+	 * Active clan setter
+	 * @param Entities\Clan
+	 * @return void
+	 */
+	public function setActiveClan (Clan $activeClan)
+	{
+		$this->activeClan = $activeClan;
 	}
 }

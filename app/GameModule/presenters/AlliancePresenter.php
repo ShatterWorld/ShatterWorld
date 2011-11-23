@@ -107,7 +107,7 @@ class AlliancePresenter extends BasePresenter
 			$this->redirect('Alliance:');
 		}
 
-		$this->getClanRepository()->find($id)->removeApplication($this->getPlayerClan()->alliance);
+		$this->getAllianceService()->declineApplication($this->getPlayerClan()->alliance, $this->getClanRepository()->find($id));
 		$this->flashMessage('Přihláška smazána');
 
 		$this->redirect('this');
