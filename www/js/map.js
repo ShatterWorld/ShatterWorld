@@ -888,14 +888,26 @@ Game.map.contextMenu = {
 		destroyFacility: {
 			title: 'Strhnout budovu',
 			click: function (target) {
-				Game.spinner.show(Game.map.contextMenu.contextMenu);
-				Game.utils.signal('destroyFacility', {'targetId': target['id']}, function () {
-					Game.events.refresh();
-					Game.resources.fetchResources();
-					Game.map.marker.unmarkByType('selected');
-					Game.map.disableField(target);
-					Game.spinner.hide();
+				var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
+				dialog.setTitle('Strhnout budovu');
+				var label = $('<span>');
+				Game.descriptions.translate('facility', target.facility, label);
+				dialog.setBody(label);
+				dialog.setCost(Game.map.contextMenu.demolitions[target.facility][target.level].cost, Game.map.contextMenu.demolitions[target.facility][target.level].time);
+				dialog.setSubmit({
+					text: 'Zahájit demolici', 
+					click: function () {
+						Game.map.contextMenu.hide();
+						Game.utils.signal('destroyFacility', {'targetId': target['id']}, function () {
+							Game.events.refresh();
+							Game.resources.fetchResources();
+							Game.map.marker.unmarkByType('selected');
+							Game.map.disableField(target);
+							Game.spinner.hide();
+						});
+					}
 				});
+				dialog.show();
 			}
 		},
 		buildFacility: {
