@@ -239,7 +239,7 @@ class StatContainer extends Nette\Object
 	public function getTradingRadius (Entities\Clan $clan)
 	{
 		$baseRadius = $this->context->params['game']['stats']['baseTradingRadius'];
-		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'trading');
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'tradeRoutes');
 		return $baseRadius + 2 * $level;
 	}
 
@@ -251,7 +251,7 @@ class StatContainer extends Nette\Object
 	public function getMerchantSpeed (Entities\Clan $clan)
 	{
 		$baseMerchantSpeed = $this->context->params['game']['stats']['baseMerchantSpeed'];
-		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'trading');
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'tradeRoutes');
 		return $baseMerchantSpeed * ($level + 1);
 	}
 
@@ -263,7 +263,7 @@ class StatContainer extends Nette\Object
 	public function getTradeProfit (Entities\Clan $clan)
 	{
 		$baseTradeProfit = $this->context->params['game']['stats']['baseTradeProfit'];
-		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'trading');
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'tradeProfit');
 		return $baseTradeProfit * pow($level, 2);
 	}
 
@@ -295,6 +295,21 @@ class StatContainer extends Nette\Object
 			return 1;
 		}
 		return 1 + pow($level + 1, 2)/100;
+	}
+
+	/**
+	 * Returns the construction coefficient
+	 * @param Entities\Clan
+	 * @return float
+	 */
+	public function getConstructionCoefficient (Entities\Clan $clan)
+	{
+		$level = $this->context->model->getResearchRepository()->getResearchLevel($clan, 'constructionTechnology');
+
+		if ($level == 0){
+			return 1;
+		}
+		return 1 - pow($level, 2)/100;
 	}
 
 }
