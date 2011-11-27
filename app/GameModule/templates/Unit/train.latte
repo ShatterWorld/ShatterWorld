@@ -25,17 +25,17 @@
 
 		<table id="trainUnitTable">
 			<tr>
-				<th class="name">Jméno</th>
-				<th class="strenght">Síla</th>
+				<th>Jméno</th>
+				<th>Síla</th>
 				{foreach $resources as $key => $res}
 					<th class="cost {$key}">
 						<img src="{$basePath}/images/resources/{$key}.png"/>
 					</th>
 				{/foreach}
 
-				<th class="difficulty">Sloty</th>
-				<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
-				<th class="amount">Množství</th>
+				<th>Sloty</th>
+				<th><img src="{$basePath}/images/icons/time.png"/></th>
+				<th>Množství</th>
 				<th>Max</th>
 			</tr>
 
@@ -52,7 +52,7 @@
 						<th class="name">
 							{label $name /}
 						</th>
-						<td class="strenght">
+						<td class="strength">
 							{$unitRules[$name]->getAttack()}/{$unitRules[$name]->getDefense()}
 						</td>
 						{foreach $resources as $key => $res}
