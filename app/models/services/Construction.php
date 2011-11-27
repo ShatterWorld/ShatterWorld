@@ -113,7 +113,7 @@ class Construction extends Event
 				'target' => $field,
 				'owner' => $field->owner,
 				'type' => 'facilityDemolition',
-				'construction' => $level > 0 ? 'downgrade' : 'demolition',
+				'construction' => $field->facility,
 				'level' => $level,
 				'timeout' => floor($rule->getDemolitionTime($field->level, $level) * $this->context->stats->getConstructionCoefficient($clan))
 			), FALSE);
