@@ -48,7 +48,7 @@
 						{ifset $tmpCost[$key]}{?$cost[$key] = $tmpCost[$key]}{/ifset}
 					{/foreach}
 
-					<tr class="unit" data-costs="{$cost|json}" data-difficulty="{$unitRules[$name]->getDifficulty()|json}">
+					<tr class="unit" data-cost="{$cost|json}" data-difficulty="{$unitRules[$name]->getDifficulty()|json}">
 						<th class="name">
 							{label $name /}
 						</th>

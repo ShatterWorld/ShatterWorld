@@ -27,18 +27,6 @@ Game.resources = {
 	initialized: false,
 
 	/**
-	 * Stack of waiting trans. functions
-	 * @var array of functions
-	 */
-	callbackStack : new Array(),
-
-	/**
-	 * True if fetching is in progress, false otherwise
-	 * @var boolean
-	 */
-	isFetching : false,
-
-	/**
 	 * Sets up data attributes etc.
 	 * @return void
 	 */
@@ -54,7 +42,6 @@ Game.resources = {
 	 */
 	update: function ()
 	{
-
 		if (Game.utils.isset(this.intervals)) {
 			$.each(this.intervals, function (key, interval) {
 				clearInterval(interval);
@@ -71,11 +58,6 @@ Game.resources = {
 				var balance = Game.resources.data[resource].balance;
 				var storage = Game.resources.data[resource].storage;
 				$(span).children('.balance').html(Math.floor(balance));
-/*
-				$(span).children('.balance').fadeOut(250, function() {
-					$(this).html(Math.floor(balance)).fadeIn(250);
-				});
-*/
 				if (balance >= storage) {
 					$(span).children('.balance').addClass('resourceFull');
 					return;
@@ -104,7 +86,7 @@ Game.resources = {
 
 			incrementFunction();
 
-			if(period != 0){
+			if (period != 0) {
 				Game.resources.intervals.push(setInterval(incrementFunction, period));
 			}
 		})
@@ -116,7 +98,6 @@ Game.resources = {
 	 */
 	fetchResources: function ()
 	{
-		this.isFetching = true;
 		data = $('#resourceBar').data('resources');
 		if (data === null) {
 			return;
@@ -128,14 +109,13 @@ Game.resources = {
 		} else {
 			this.update();
 		}
-
-		this.isFetching = false;
-
-		while (fnc = this.callbackStack.pop()){
-			fnc();
-		}
 	},
 
+	getBalance: function (resource)
+	{
+		return this.data[resource].balance
+	},
+	
 	/**
 	 * Checks if player has enought resources
 	 * @param array
@@ -150,110 +130,7 @@ Game.resources = {
 			}
 		})
 		return valid;
-	},
-
-	/**
-	 * Prints the count of available units ready to be trained into the selector, depanding on their costs
-	 * @param array of int
-	 * @param array of int
-	 * @param array of int
-	 * @param array of int
-	 * @param String/Object
-	 * @return void
-	 */
-	printAvailableUnitCount : function (costs, totalCosts, slots, availableSlots, selector){
-
-
-		if (this.isFetching){
-			this.callbackStack.push(function(){
-
-				var min = null;
-				$.each(slots, function(key, slot){
-					if(Game.utils.isset(availableSlots[key])){
-						var actCount = Math.floor(availableSlots[key]/slot);
-						if(Game.utils.isset(min)){
-							min = (actCount < min) ? actCount : min;
-						}
-						else{
-							min = actCount;
-						}
-					}
-					else{
-						min = 0;
-						return false;
-					}
-
-				});
-
-				$.each(costs, function(key, cost){
-
-					if(Game.utils.isset(Game.resources.data[key].balance)){
-						var actCount = Math.floor((Game.resources.data[key].balance - (Game.utils.isset(totalCosts[key]) ? totalCosts[key] : 0)) / cost);
-						if(Game.utils.isset(min)){
-							min = (actCount < min) ? actCount : min;
-						}
-						else{
-							min = actCount;
-						}
-					}
-					else{
-						min = 0;
-						return false;
-					}
-
-				});
-
-
-				$(selector).html(min);
-			});
-
-		}
-		else{
-			var min = null;
-			$.each(slots, function(key, slot){
-				if(Game.utils.isset(availableSlots[key])){
-					var actCount = Math.floor(availableSlots[key]/slot);
-					if(Game.utils.isset(min)){
-						min = (actCount < min) ? actCount : min;
-					}
-					else{
-						min = actCount;
-					}
-				}
-				else{
-					min = 0;
-					return false;
-				}
-
-			});
-
-			$.each(costs, function(key, cost){
-
-				if(Game.utils.isset(Game.resources.data[key].balance)){
-					var actCount = Math.floor((Game.resources.data[key].balance - (Game.utils.isset(totalCosts[key]) ? totalCosts[key] : 0)) / cost);
-					if(Game.utils.isset(min)){
-						min = (actCount < min) ? actCount : min;
-					}
-					else{
-						min = actCount;
-					}
-				}
-				else{
-					min = 0;
-					return false;
-				}
-
-			});
-
-
-			$(selector).html(min);
-
-		}
-
-
-	},
-
-
+	}
 };
 
 

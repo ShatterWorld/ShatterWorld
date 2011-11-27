@@ -34,18 +34,29 @@ Game.units = {
 	setMaximumAmount: function (){
 		var maxTds = $('#trainUnitTable .max');
 
-		$.each(maxTds, function(key, td){
-			var cost = $(td).parent().data()['costs'];
-			var countSpan = $('<span />').html('');
-			$(td).html('(');
-			$(td).append(countSpan);
-			$(td).append(')');
-
-			var slots = $(td).parent().data()['difficulty'];
-			Game.resources.printAvailableUnitCount(cost, Game.units.totalCosts, slots, Game.units.availableSlots, countSpan);
-
+		$.each(maxTds, function(key, td) {
+			var cost = $(td).parent().data()['cost'];
+			var difficulty = $(td).parent().data()['difficulty'];
+			var slots = Game.units.availableSlots;
+			var amount = null;
+			
+			$.each(difficulty, function (slot, count) {
+				var available = 0;
+				if (Game.utils.isset(slots[slot])) {
+					available = Math.floor(slots[slot] / count);
+				}
+				amount = Game.utils.isset(amount) ? Math.min(amount, available) : available;
+			});
+			$.each(cost, function (resource, count) {
+				var available = 0;
+				if (Game.utils.isset(Game.resources.getBalance(resource))) {
+					available = Math.floor(Game.resources.getBalance(resource) / count);
+				}
+				amount = Game.utils.isset(amount) ? Math.min(amount, available) : available;
+			});
+			$(td).html('(' + (Game.utils.isset(amount) ? amount : 0) + ')');
 			$(td).click(function(){
-				$(td).parent().children('.amount').children('input').val(countSpan.html());
+				$(td).parent().children('.amount').children('input').val(amount);
 				Game.units.inputChange();
 			});
 			$(td).css({
@@ -63,7 +74,7 @@ Game.units = {
 		var maxTds = $('#trainUnitTable .amount');
 		this.totalCosts = {};
 		$.each(maxTds, function(key, td){
-			$.each($(td).parent().data()['costs'], function (resource, cost) {
+			$.each($(td).parent().data()['cost'], function (resource, cost) {
 				if (!Game.utils.isset(Game.units.totalCosts[resource])) {
 					Game.units.totalCosts[resource] = 0;
 				}
