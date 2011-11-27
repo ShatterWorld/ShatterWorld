@@ -56,7 +56,7 @@ Game.units = {
 			});
 			$(td).html('(' + (Game.utils.isset(amount) ? amount : 0) + ')');
 			$(td).click(function(){
-				$(td).parent().children('.amount').children('input').val(amount);
+				$(td).parent().children('.amount').children('input').val(Game.utils.isset(amount) ? amount : 0);
 				Game.units.inputChange();
 			});
 			$(td).css({
