@@ -52,28 +52,28 @@ Game.resources = {
 		var period;
 
 		$.each(this.data, function (resource, value) {
-			var span = $('#resourceBar #' + resource + ' .text');
+			var element = $('#resourceBar .' + resource);
 			var incrementFunction = function () {
 				var production = Game.resources.data[resource].production;
 				var balance = Game.resources.data[resource].balance;
 				var storage = Game.resources.data[resource].storage;
-				$(span).children('.balance').html(Math.floor(balance));
+				$(element).find('.balance').html(Math.floor(balance));
 				if (balance >= storage) {
-					$(span).children('.balance').addClass('resourceFull');
+					$(element).find('.balance').addClass('resourceFull');
 					return;
 				} else {
-					$(span).children('.balance').removeClass('resourceFull');
+					$(element).find('.balance').removeClass('resourceFull');
 				}
 
 				if (balance < 0) {
 					period = 0;
-					$(span).children('.balance').html('0');
+					$(element).find('.balance').html('0');
 					return;
 				} else if (production == 0) {
 					period = 0;
 					return;
 				} else {
-					period = 1000/Math.abs(production);
+					period = 1000 / Math.abs(production);
 				}
 
 				if (production < 0) {
@@ -117,7 +117,7 @@ Game.resources = {
 	},
 	
 	/**
-	 * Checks if player has enought resources
+	 * Checks if player has enough resources
 	 * @param array
 	 * @return boolean
 	 */
@@ -136,4 +136,24 @@ Game.resources = {
 
 $(document).ready(function(){
 	Game.resources.fetchResources();
+	$('#resourceBar .text').live('mouseenter', function (e) {
+		var element = $(this).parent().find('.tooltip.' + $(this).attr('id'));
+		$(element).css({
+			display: 'block',
+			left: e.pageX + 10,
+			top: e.pageY + 20
+		});
+	});
+	$('#resourceBar .text').live('mousemove', function (e) {
+		var element = $(this).parent().find('.tooltip.' + $(this).attr('id'));
+		$(element).css({
+			left: e.pageX + 10,
+			top: e.pageY + 20
+		});
+	});
+	$('#resourceBar .text').live('mouseleave', function (e) {
+		$(this).parent().find('.tooltip.' + $(this).attr('id')).css({
+			display: 'none'
+		});
+	});
 });

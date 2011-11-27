@@ -29,7 +29,6 @@ a:hover {
 #frame {
 	width: 900px;
 	background: #5D6555;
-	position: relative;
 }
 
 #infoBar {
@@ -54,7 +53,6 @@ a:hover {
 #userBar {
 	background: url('../images/bar-top.png');
 	text-align: right;
-	position: relative;
 }
 
 #chooseClan {
@@ -66,7 +64,6 @@ a:hover {
 	margin-top: 15px;
 	text-align: center;
 	border-top: 1px solid #000;
-	position: relative;
 }
 
 #footer img {
@@ -76,7 +73,6 @@ a:hover {
 #menu {
 	width: 200px;
 	float: left;
-	position: relative;
 }
 
 .submenu a {
@@ -134,7 +130,6 @@ a:hover {
 	border: solid #000;
 	border-width: 1px 0px;
 	height: 120px;
-	position: relative;
 }
 
 #banner a {
@@ -150,7 +145,6 @@ a:hover {
 	background: #cdcdcd;
 	float: right;
 	margin-right: 12px;
-	position: relative;
 }
 
 

@@ -76,24 +76,35 @@
 				{snippet resources}
 				<div id="resourceBar" data-resources="{$resources|json}">
 					{foreach $resources as $resource => $data}
-					<span class="text" id="{$resource}">
+					<span class="text {$resource}" id="{$resource}">
 						<img src="{$basePath}/images/resources/{$resource}.png" />
 						<span class="text">
 							<span class="balance{if $data['balance'] >= $data['storage']} resourceFull{/if}">{intval($data['balance'])}</span>/<span class="storage">{$data['storage']}</span>
-							 (<span class="production">{if $data['production'] > 0}+{/if}{intval($data['production'] * 3600)}</span>)
 						</span>
 					</span>
+					{?$rule = $resourceRules[$resource]}
+					<div class="tooltip {$resource}">
+						<h4>{$rule->getDescription()}</h4>
+						<table>
+						<tr><th>Zůstatek</th><td class="balance">{intval($data['balance'])}</td></tr>
+						<tr><th>Kapacita skladu</th><td class="storage">{intval($data['storage'])}</td></tr>
+						<tr><th>Produkce za hodinu</th><td class="production">{if $data['production'] > 0}+{/if}{intval($data['production'] * 3600)}</td></tr>
+						</table>
+					</div>
 					{/foreach}
 				</div>
 				{/snippet}
 				{snippet reports}
 				<div id="reportBar" n:if="$reportCount > 0">
-					<a n:href="Report:" class="text">{$reportCount}</a>
+					<span class="text">
+						<img src="{$basePath}/images/icons/reports.png" />
+						<a n:href="Report:" class="text">{$reportCount}</a>
+					</span>
 				</div>
 				{/snippet}
 				{snippet orders}
 				<div id="orderBar">
-					<span class="text">{$orderCount}/{$orderCap}</span>
+					<span class="text"><img src="{$basePath}/images/icons/orders.png" />{$orderCount}/{$orderCap}</span>
 				</div>
 				{/snippet}
 				{snippet events}
