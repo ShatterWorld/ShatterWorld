@@ -134,26 +134,6 @@ Game.resources = {
 };
 
 
-$(document).ready(function(){
+$(document).ready(function () {
 	Game.resources.fetchResources();
-	$('#resourceBar .text').live('mouseenter', function (e) {
-		var element = $(this).parent().find('.tooltip.' + $(this).attr('id'));
-		$(element).css({
-			display: 'block',
-			left: e.pageX + 10,
-			top: e.pageY + 20
-		});
-	});
-	$('#resourceBar .text').live('mousemove', function (e) {
-		var element = $(this).parent().find('.tooltip.' + $(this).attr('id'));
-		$(element).css({
-			left: e.pageX + 10,
-			top: e.pageY + 20
-		});
-	});
-	$('#resourceBar .text').live('mouseleave', function (e) {
-		$(this).parent().find('.tooltip.' + $(this).attr('id')).css({
-			display: 'none'
-		});
-	});
 });
