@@ -47,6 +47,7 @@ class User extends BaseEntity {
 	
 	/**
 	 * @OneToOne(targetEntity = "Entities\Clan")
+	 * @JoinColumn(onDelete = "SET NULL")
 	 * @var Entities\Clan
 	 */
 	private $activeClan;
