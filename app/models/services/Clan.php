@@ -83,8 +83,11 @@ class Clan extends BaseService
 			$lastHq =  $fieldRepository->find($lastHqId);
 		}
 
+		Debugger::barDump($lastHq);
 		$neutralHexagonsCenters = $fieldRepository->findNeutralHexagons($lastHq, $playerDistance, $map);
+		//Debugger::barDump($neutralHexagonsCenters);
 		$fieldRepository->sortByDistance($neutralHexagonsCenters, $S);
+
 
 		$found = new ArraySet();
 		foreach ($neutralHexagonsCenters as $center) {
@@ -108,11 +111,8 @@ class Clan extends BaseService
 			}
 		}
 
-		$headq = null;
-		foreach ($found as $foundField) {
-			$headq = $foundField;
-			break;
-		}
+		$foundArr = $found->toArray();
+		$headq = array_pop($foundArr);
 
 		$values['headquarters'] = $headq;
 		$clan = parent::create($values, $flush);

@@ -406,23 +406,32 @@ class Field extends BaseRepository
 	public function findNeutralHexagons($S, $playerDistance, &$map = null)
 	{
 		$foundCenters = array();
-		$circuit = $this->findCircuit($S, $playerDistance+3, $map);
+		$i = $playerDistance;
 
-		foreach($circuit as $field){
-			if($field->owner == null){
-				$neighbours = $this->getFieldNeighbours($field, $playerDistance+1, $map);
-				$add = true;
 
-				foreach($neighbours as $neighbour){
-					if($neighbour->owner !== null){
-						$add = false;
-						break;
+		while (count($foundCenters) <= 0){
+			$circuit = $this->findCircuit($S, $i+2, $map);
+			Debugger::barDump($circuit);
+
+			foreach($circuit as $field){
+				if($field->owner == null){
+					$neighbours = $this->getFieldNeighbours($field, $i, $map);
+					$add = true;
+
+					foreach($neighbours as $neighbour){
+						if($neighbour->owner !== null){
+							$add = false;
+							break;
+						}
+					}
+					if ($add){
+						$foundCenters[] = $field;
+						//Debugger::barDump($field);
 					}
 				}
-				if ($add){
-					$foundCenters[] = $field;
-				}
 			}
+
+			$i++;
 		}
 		return $foundCenters;
 	}
