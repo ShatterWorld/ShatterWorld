@@ -28,7 +28,7 @@ Game.events = {
 			Game.events.startCountdown(row.children('.countdown'), this.remainingTime);
 			var x = this.x;
 			var y = this.y;
-			if (Game.map.loaded) {
+			if (Game.utils.isset(Game.map) && Game.map.loaded) {
 				row.mouseenter(function () {
 					Game.map.marker.mark(Game.map.getField(x, y), 'focus');
 				});
