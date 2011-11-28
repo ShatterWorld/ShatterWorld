@@ -76,14 +76,14 @@
 				{snippet resources}
 				<div id="resourceBar" data-resources="{$resources|json}">
 					{foreach $resources as $resource => $data}
-					<span class="text {$resource}" id="{$resource}">
+					<span class="text hasTooltip {$resource}" id="{$resource}">
 						<img src="{$basePath}/images/resources/{$resource}.png" />
 						<span class="text">
 							<span class="balance{if $data['balance'] >= $data['storage']} resourceFull{/if}">{intval($data['balance'])}</span>/<span class="storage">{$data['storage']}</span>
 						</span>
 					</span>
 					{?$rule = $resourceRules[$resource]}
-					<div class="tooltip {$resource}">
+					<div class="tooltip {$resource}" data-for="{$resource}">
 						<h4>{$rule->getDescription()}</h4>
 						<table>
 						<tr><th>Zůstatek</th><td class="balance">{intval($data['balance'])}</td></tr>
