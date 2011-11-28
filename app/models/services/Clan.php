@@ -83,8 +83,9 @@ class Clan extends BaseService
 			$lastHq =  $fieldRepository->find($lastHqId);
 		}
 
+		Debugger::barDump($lastHq);
 		$neutralHexagonsCenters = $fieldRepository->findNeutralHexagons($lastHq, $playerDistance, $map);
-		Debugger::barDump($neutralHexagonsCenters);
+		//Debugger::barDump($neutralHexagonsCenters);
 		$fieldRepository->sortByDistance($neutralHexagonsCenters, $S);
 
 

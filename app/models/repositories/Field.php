@@ -408,15 +408,14 @@ class Field extends BaseRepository
 		$foundCenters = array();
 		$i = $playerDistance;
 
-		//while (count($foundCenters <= 0)){
-			$circuit = $this->findCircuit($S, $i+3, $map);
+
+		while (count($foundCenters) <= 0){
+			$circuit = $this->findCircuit($S, $i+2, $map);
 			Debugger::barDump($circuit);
 
 			foreach($circuit as $field){
 				if($field->owner == null){
-					//Debugger::barDump($field);
-					$neighbours = $this->getFieldNeighbours($field, $i+1, $map);
-					//Debugger::barDump($neighbours);
+					$neighbours = $this->getFieldNeighbours($field, $i, $map);
 					$add = true;
 
 					foreach($neighbours as $neighbour){
@@ -433,7 +432,7 @@ class Field extends BaseRepository
 			}
 
 			$i++;
-		//}
+		}
 		return $foundCenters;
 	}
 
