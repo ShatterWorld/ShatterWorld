@@ -117,14 +117,23 @@ Game.map = {
 
 	/**
 	 * Pushes new field to this.disabledFields, markes it, prevent the native click action, displays type
-	 * @param Field
+	 * @param function returning field
 	 * @param String
 	 * @return void
 	 */
-	disableField : function(field, type){
-		this.disabledFields.push(field);
-		field.element.attr('data-disabled', type);
-		Game.map.marker.mark(field, 'disabled');
+	disableField : function (getter, type)
+	{
+		var disable = function () {
+			var field = getter();
+			Game.map.disabledFields.push(field);
+			field.element.attr('data-disabled', type);
+			Game.map.marker.mark(field, 'disabled');
+		}
+		if (this.loaded) {
+			disable();
+		} else {
+			this.disabledFieldsStack.push(disable);
+		}
 	},
 
 	getField : function (x, y) {
@@ -488,8 +497,8 @@ Game.map = {
 
 			Game.map.loaded = true;
 
-			while (f = Game.map.disabledFieldsStack.pop()) {
-				Game.map.disableField(Game.map.map[f.x][f.y], f.type);
+			while (fnc = Game.map.disabledFieldsStack.pop()) {
+				fnc();
 			}
 
 			/**

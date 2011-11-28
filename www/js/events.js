@@ -26,16 +26,20 @@ Game.events = {
 		$.each(this.getEvents(), function () {
 			var row = $('#countdown_' + this.id);
 			Game.events.startCountdown(row.children('.countdown'), this.remainingTime);
-			var x = this.x;
-			var y = this.y;
-			if (Game.utils.isset(Game.map) && Game.map.loaded) {
-				row.mouseenter(function () {
-					Game.map.marker.mark(Game.map.getField(x, y), 'focus');
-				});
-				row.mouseleave(function () {
-					Game.map.marker.unmarkByType('focus');
-					Game.map.disableField(Game.map.getField(x, y));
-				});
+			if (Game.utils.isset(Game.map)) {
+				if (this.target) {
+					var x = this.target.x;
+					var y = this.target.y;
+					var getTarget = function () { return Game.map.getField(x, y); };
+					Game.map.disableField(getTarget, this.type);
+					row.mouseenter(function () {
+						Game.map.marker.mark(getTarget(), 'focus');
+					});
+					row.mouseleave(function () {
+						Game.map.marker.unmarkByType('focus');
+						Game.map.disableField(getTarget);
+					});
+				}
 			}
 		});
 	},
