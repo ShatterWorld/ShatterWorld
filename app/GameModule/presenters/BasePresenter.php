@@ -33,7 +33,13 @@ abstract class BasePresenter extends \BasePresenter
 			$this->template->reportCount = $this->getReportRepository()->countUnread($clan);
 			$this->template->resources = $this->getResourceRepository()->getResourcesArray($clan);
 			$this->template->resourceRules = $this->context->rules->getAll('resource');
-			$this->template->events = $this->getEventRepository()->getUpcomingEventsArray($clan);
+			$this->template->events = $this->getEventRepository()->findUpcomingEvents($clan);
+			$this->template->eventData = array_map(function ($event) {
+				$result = $event->toArray();
+				$result['target'] = $event->target->toArray();
+				return $result;
+			}, $this->template->events);
+			$this->template->eventRules = $this->context->rules->getAll('event');
 			ksort($this->template->resources);
 		} else {
 			$this->template->orderCount = 0;

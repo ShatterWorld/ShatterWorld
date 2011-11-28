@@ -24,6 +24,11 @@ class UnitReturn extends AbstractRule implements IEvent
 		return TRUE;
 	}
 	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Návrat jednotek z %s do %s', $event->origin->getCoords(), $event->target->getCoords());
+	}
+	
 	public function formatReport (Entities\Report $report)
 	{
 		return array();

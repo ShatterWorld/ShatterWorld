@@ -28,6 +28,15 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 			(($event->target->facility === $event->construction || ($event->target->facility === NULL && $event->level === 1)) && $event->target->level === ($event->level - 1));
 	}
 	
+	public function getExplanation (Entities\Event $event)
+	{
+		if ($event->level) {
+			return sprintf('Stavba budovy %s (%d) na poli %s', $this->getContext()->rules->get('facility', $event->construction)->getDescription(), $event->level, $event->target->getCoords());
+		} else {
+			return sprintf('Stavba budovy %s na poli %s', $this->getContext()->rules->get('facility', $event->construction)->getDescription(), $event->target->getCoords());
+		}
+	}
+	
 	public function formatReport (Entities\Report $report)
 	{
 		$facility = $this->getContext()->rules->get('facility', $report->event->construction)->getDescription();

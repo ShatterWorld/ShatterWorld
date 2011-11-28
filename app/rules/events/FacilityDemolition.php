@@ -28,6 +28,15 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 		return $event->target->owner == $clan && ($event->level === 0 || ($event->target->level - 1 === $event->level));
 	}
 	
+	public function getExplanation (Entities\Event $event)
+	{
+		if ($event->level) {
+			return sprintf('Downgrade budovy %s (%d) na poli %s', $this->getContext()->rules->get('facility', $event->construction)->getDescription(), $event->level, $event->target->getCoords());
+		} else {
+			return sprintf('Demolice budovy %s na poli %s', $this->getContext()->rules->get('facility', $event->construction)->getDescription(), $event->target->getCoords());
+		}
+	}
+	
 	public function formatReport (Entities\Report $report)
 	{
 		$facility = $this->getContext()->rules->get('facility', $report->event->construction)->getDescription();

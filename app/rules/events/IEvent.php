@@ -25,8 +25,15 @@ interface IEvent extends \Rules\IRule {
 	
 	/**
 	 * Formats report data into an array
-	 * @param object
+	 * @param Entities\Report
 	 * @return array of ReportItem
 	 */
 	public function formatReport (Entities\Report $report);
+	
+	/**
+	 * Get a description of the upcoming event
+	 * @param Entities\Event
+	 * @return string
+	 */
+	public function getExplanation (Entities\Event $event);
 }

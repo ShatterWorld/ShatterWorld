@@ -40,6 +40,11 @@ class Occupation extends Attack
 		return $message;
 	}
 	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Dobyvačný útok na %s', $event->target->getCoords());
+	}
+	
 	public function isValid (Entities\Event $event)
 	{
 		if (parent::isValid($event)) {

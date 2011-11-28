@@ -24,6 +24,11 @@ class Abandonment extends AbstractRule implements IConstruction
 		return $event->target->owner === $event->owner;
 	}
 	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Opuštění pole %s', $event->target->getCoords());
+	}
+	
 	public function formatReport (Entities\Report $report)
 	{
 		return array(

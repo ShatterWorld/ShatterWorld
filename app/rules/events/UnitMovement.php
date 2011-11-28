@@ -21,6 +21,11 @@ class UnitMovement extends AbstractRule implements IEvent
 		return $event->target->owner == $event->origin->owner;
 	}
 	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Přesun jednotek');
+	}
+	
 	public function formatReport (Entities\Report $report)
 	{
 		return array();

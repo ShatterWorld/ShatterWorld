@@ -47,6 +47,11 @@ class Exploration extends AbstractRule implements IEvent
 		}
 		return $event->target->owner === NULL;
 	}
+	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Průzkum pole %s', $event->target->getCoords());
+	}
 
 	public function formatReport (Entities\Report $report)
 	{

@@ -21,6 +21,11 @@ class Shipment extends AbstractRule implements IEvent
 	{
 		return true;
 	}
+	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Zásilka surovin do %s', $event->target->getCoords());
+	}
 
 	public function formatReport (Entities\Report $report)
 	{

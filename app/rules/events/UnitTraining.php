@@ -30,6 +30,11 @@ class UnitTraining extends AbstractRule implements IConstruction
 		);
 	}
 	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Výcvik jednotek');
+	}
+	
 	public function isExclusive ()
 	{
 		return FALSE;

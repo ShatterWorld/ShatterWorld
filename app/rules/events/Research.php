@@ -34,6 +34,11 @@ class Research extends AbstractRule implements IEvent
 		$rule->afterResearch($event);
 		return array('type' => $event->construction, 'level' => $event->level);
 	}
+	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Výzkum %s', $this->getContext()->rules->get('research', $event->construction)->getDescription());
+	}
 
 	public function formatReport (Entities\Report $report)
 	{

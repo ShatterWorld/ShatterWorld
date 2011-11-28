@@ -87,6 +87,15 @@ abstract class Event extends BaseEntity {
 	}
 	
 	/**
+	 * Get time left to the term of the event
+	 * @return int
+	 */
+	public function getRemainingTime ()
+	{
+		return max($this->term->format('U') - date('U'), 0);
+	}
+	
+	/**
 	 * Term setter
 	 * @param DateTime
 	 * @return void

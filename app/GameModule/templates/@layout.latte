@@ -109,8 +109,16 @@
 				</div>
 				{/snippet}
 				{snippet events}
-				<div id="countdownBar" data-events="{$events|json}">
-					<a href="#" id="showCountdowns"><img src="{$basePath}/images/icons/time.png" /><span class="text">{count($events)}</span></a>
+				<div id="countdownBar" data-events="{$eventData|json}" class="hasTooltip">
+					<img src="{$basePath}/images/icons/time.png" /><span class="text">{count($events)}</span>
+				</div>
+				<div id="countdownTooltip" class="tooltip" data-for="countdownBar">
+					<table>
+						<tr n:foreach="$events as $event" id="countdown_{$event->id}">
+							<th>{$eventRules[$event->type]->getExplanation($event)}</th>
+							<td class="countdown">{$event->getRemainingTime()|time}</td>
+						</tr>
+					</table>
 				</div>
 				{/snippet}
 				<div class="clearer"><span></span></div>

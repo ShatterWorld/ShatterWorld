@@ -18,6 +18,11 @@ class Pillaging extends Attack
 		return $result;
 	}
 	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Loupeživý útok na %s', $event->target->getCoords());
+	}
+	
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;

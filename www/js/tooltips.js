@@ -1,7 +1,8 @@
 $(document).ready(function () {
 	var set = $('.hasTooltip');
 	var getTooltipElement = function (selector) {
-		return $('.tooltip[data-for="' + $(selector).attr('id') + '"]');
+		var tooltip = $('.tooltip[data-for="' + $(selector).attr('id') + '"]');
+		return !tooltip.data('fixed') ? tooltip : $();
 	};
 	$(set).live('mouseenter', function (e) {
 		getTooltipElement(this).css({

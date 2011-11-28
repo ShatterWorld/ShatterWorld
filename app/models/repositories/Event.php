@@ -23,8 +23,13 @@ class Event extends BaseRepository {
 		$qb->setParameter(2, $lockTimeout);
 		return $qb->getQuery()->getResult();
 	}
-
-	public function getUpcomingEventsArray (Entities\Clan $clan)
+	
+	/**
+	 * Finds upcoming events that are relevant to given clan
+	 * @param Entities\Clan 
+	 * @return array of Entities\Event
+	 */
+	public function findUpcomingEvents (Entities\Clan $clan)
 	{
 		$now = new \DateTime;
 		$qb = $this->getEntityManager()->createQueryBuilder();
@@ -36,18 +41,8 @@ class Event extends BaseRepository {
 		))->orderBy('e.term');
 		$qb->setParameter(1, $clan->id);
 		$qb->setParameter(2, FALSE);
-		$query = $qb->getQuery();
-		$result = array();
-		foreach ($query->getResult() as $key => $event) {
-			$result[$key] = $event->toArray();
-			$result[$key]['countdown'] = max($event->term->format('U') - date('U'), 0);
-			if ($event->target) {
-				$result[$key]['target'] = $event->target->toArray();
-			}
-		}
-		return $result;
+		return $qb->getQuery()->getResult();
 	}
-
 }
 
 

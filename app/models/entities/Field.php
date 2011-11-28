@@ -88,11 +88,11 @@ class Field extends BaseEntity {
 
 	/**
 	 * Coordinates getter
-	 * @return array
+	 * @return string
 	 */
 	public function getCoords ()
 	{
-		return array($this->coordX, $this->coordY);
+		return sprintf('[%d;%d]', $this->coordX, $this->coordY);
 	}
 
 	/**

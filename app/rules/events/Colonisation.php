@@ -39,7 +39,12 @@ class Colonisation extends AbstractRule implements IConstruction
 			ReportItem::create('text', 'Úspěšně jsme připojili další území k našemu teritoriu!')
 		);
 	}
-
+	
+	public function getExplanation (Entities\Event $event)
+	{
+		return sprintf('Kolonizace pole %s', $event->target->getCoords());
+	}
+	
 	public function isExclusive ()
 	{
 		return TRUE;
