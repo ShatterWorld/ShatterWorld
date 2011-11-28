@@ -8,6 +8,14 @@ use MultipleConstructionsException;
 
 class MapPresenter extends BasePresenter
 {
+	public function actionTest ()
+	{
+		if ($this->getPlayerClan()->user->role !== 'admin'){
+			$this->flashMessage('Nemáte oprávnění vidět tuto mapu', 'error');
+			$this->redirect('Map:');
+		}
+	}
+
 	public function renderDefault ()
 	{
 		$this->template->clan = $this->getPlayerClan();
@@ -20,11 +28,12 @@ class MapPresenter extends BasePresenter
 	public function handleFetchMap ()
 	{
 		$clan = $this->getPlayerClan();
-		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan, $this->context->stats->getVisibilityRadius($clan));
+		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan);
 		$this->payload->clanId = $this->getPlayerClan()->id;
 		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
 		$this->sendPayload();
 	}
+
 
 	public function handleFetchFacilities ()
 	{

@@ -40,7 +40,7 @@ Game.map = {
 	 * Returns the width of #mapContainer
 	 * @return int
 	 */
-	getMapContainerWidth : function () 
+	getMapContainerWidth : function ()
 	{
 		return parseInt($('#mapContainer').css('width'));
 	},
@@ -49,7 +49,7 @@ Game.map = {
 	 * Returns the height of #mapContainer
 	 * @return int
 	 */
-	getMapContainerHeight : function () 
+	getMapContainerHeight : function ()
 	{
 		return parseInt($('#mapContainer').css('height'));
 	},
@@ -131,11 +131,145 @@ Game.map = {
 		return this.map[x][y];
 	},
 
+
+	/**
+	 * Calculates somehow x-position of the field
+	 * @param field
+	 * @return integer
+	 */
+	calculateTestXPos : function (field) {
+		return (field['coordX'] * 7) + (field['coordY'] * 7);
+	},
+
+	/**
+	 * Calculates somehow y-position of the field
+	 * @param field
+	 * @return integer
+	 */
+	calculateTestYPos : function (field) {
+		return (field['coordX'] * -2) + (field['coordY'] * 2);
+	},
+
+
+	/**
+	 * The test width of field
+	 * @var integer
+	 */
+	testFieldWidth : 6,
+
+	/**
+	 * The test height of field
+	 * @var integer
+	 */
+	testFieldHeight : 4,
+
+	/**
+	 * testing render
+	 */
+	testRender : function ()
+	{
+
+		/**
+		 * ajax that gets JSON data of visibleFields
+		 */
+		$.get('?do=fetchMap', function(data) {
+			Game.map.map = data['fields'];
+			Game.map.clan = data['clanId'];
+			Game.map.alliance = data['allianceId'];
+
+			/**
+			 * finds the center and calculate dX and dY
+			 */
+			$.each(data['fields'], function(rowKey, row) {
+				$.each(row, function(key, field) {
+					if(field['owner'] != null){
+						if (Game.map.clan == field['owner']['id']){
+							if(field['facility'] != null){
+								if (field['facility'] == 'headquarters'){
+									var posX = Game.map.calculateTestXPos(field);
+									var posY = Game.map.calculateTestYPos(field);
+									Game.map.dX = posX - Game.map.getMapContainerWidth()/2 + Game.map.testFieldWidth/2;
+									Game.map.dY = posY - Game.map.getMapContainerHeight()/2 + 2*Game.map.testFieldHeight;
+									return false;
+								}
+							}
+
+						}
+					}
+
+				});
+			});
+
+			/**
+			 * checks negative coords. of fields, slides them and sets scrollX and scrollY
+			 */
+			$.each(data['fields'], function(rowKey, row) {
+				$.each(row, function(key, field) {
+					if(Game.map.calculateTestXPos(field) - Game.map.dX < 0){
+						Game.map.dX -= Game.map.testFieldWidth;
+						Game.map.scrollX += Game.map.testFieldWidth;
+					}
+					if(Game.map.calculateTestYPos(field) - Game.map.dY < 0){
+						Game.map.dY -= Game.map.testFieldHeight;
+						Game.map.scrollY += Game.map.testFieldHeight;
+					}
+
+				});
+			});
+
+			$.each(data['fields'], function(rowKey, row) {
+				$.each(row, function(key, field) {
+
+					var posX = Game.map.calculateTestXPos(field) - Game.map.dX;
+					var posY = Game.map.calculateTestYPos(field) - Game.map.dY;
+					var z = field['coordX']*field['coordY'];
+
+					var borderType = 'neutral';
+
+					var img = "other";
+					if(field['owner'] === null){
+						img = "neutral";
+					}
+					else if(Game.map.clan == field['owner']['id']){
+						img = "mine";
+					}
+					else{
+						img = "other";
+					}
+
+
+
+					var background = "url('"+basePath+"/images/fields/hex_test_"+img+".png')";
+					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
+					//var divStyle = 'width: '+testFieldWidth+'px; height: '+testFieldHeight+'px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
+					var divStyle = 'width: 6px; height: 4px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
+					div.attr('style', divStyle);
+
+					$('#map').append(div);
+
+				});
+
+				/**
+				 * slides the sliders
+				 */
+				$('#mapContainer').scrollLeft(Game.map.scrollX);
+				$('#mapContainer').scrollTop(Game.map.scrollY);
+			});
+
+			var canvasWidth = Game.map.maxXPos + Game.map.testFieldWidth;
+			var canvasHeight = Game.map.maxYPos + Game.map.testFieldHeight;
+			Game.map.overlayDiv = $('<div id="overlay">');
+			Game.map.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight, 'position' : 'absolute', 'left' : 0, 'top' : 0});
+			$('#map').append(Game.map.overlayDiv);
+			Game.map.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
+		});
+	},
+
 	/**
 	 * Cleans the #map and rerender the map (using db-data)
 	 * @return void
 	 */
-	render : function () 
+	render : function ()
 	{
 		Game.map.loaded = false;
 		$('#map').html('');
@@ -416,7 +550,7 @@ Game.map = {
 		});
 	},
 
-	openMenu: function (e) 
+	openMenu: function (e)
 	{
 		var field = Game.map.determineField(e);
 		if (field) {
@@ -432,7 +566,7 @@ Game.map = {
 			}
 		}
 	},
-	
+
 	determineField : function (e)
 	{
 		var local = Game.utils.globalToLocal(Game.map.overlayDiv, e.pageX, e.pageY);
@@ -498,7 +632,7 @@ Game.map.marker = {
 		focus: 'blue',
 		hover: 'white'
 	},
-	
+
 	/**
 	 * Marks the given fields with given valid color
 	 * @param object/string
@@ -514,7 +648,7 @@ Game.map.marker = {
 
 		var x = parseInt(field.element.css('left'));
 		var y = parseInt(field.element.css('top'));
-		
+
 		var ellipse = Game.map.overlay.ellipse(x+30, y+20, 30, 20); //left,top,x-axis, y-axis
 		ellipse.id = 'marker-' + $(field.element).attr('id');
 
@@ -774,7 +908,7 @@ Game.map.contextMenu = {
 			Game.map.marker.unmarkByType('selected');
 			Game.map.contextMenu.hide();
 		}});
-		
+
 		$.each(actions, function () {
 			var element = $('<a href="#">').html(this.title).click({action: this}, function (e) {
 				e.preventDefault();
@@ -785,7 +919,7 @@ Game.map.contextMenu = {
 		})
 
 	},
-	
+
 	/**
 	 * Hides context menu
 	 * @return void
@@ -820,7 +954,7 @@ Game.map.contextMenu = {
 					dialog.show();
 					Game.spinner.hide();
 				});
-				
+
 			}
 		},
 		exploration: {
@@ -847,7 +981,7 @@ Game.map.contextMenu = {
 				dialog.setBody($('<span>').append(label).append(' (' + (target.level + 1) + ')'));
 				dialog.setCost(Game.map.contextMenu.upgrades[target.facility][target.level + 1].cost, Game.map.contextMenu.upgrades[target.facility][target.level + 1].time);
 				dialog.setSubmit({
-					text: 'Zahájit stavbu', 
+					text: 'Zahájit stavbu',
 					click: function () {
 						Game.map.contextMenu.hide();
 						Game.utils.signal('upgradeFacility', {'targetId': target['id']}, function () {
@@ -871,7 +1005,7 @@ Game.map.contextMenu = {
 				dialog.setBody(label);
 				dialog.setCost(Game.map.contextMenu.downgrades[target.facility][target.level - 1].cost, Game.map.contextMenu.downgrades[target.facility][target.level - 1].time);
 				dialog.setSubmit({
-					text: 'Zahájit stavbu', 
+					text: 'Zahájit stavbu',
 					click: function () {
 						Game.map.contextMenu.hide();
 						Game.utils.signal('downgradeFacility', {'targetId': target['id']}, function () {
@@ -883,7 +1017,7 @@ Game.map.contextMenu = {
 					}
 				});
 				dialog.show();
-			}	
+			}
 		},
 		destroyFacility: {
 			title: 'Strhnout budovu',
@@ -895,7 +1029,7 @@ Game.map.contextMenu = {
 				dialog.setBody(label);
 				dialog.setCost(Game.map.contextMenu.demolitions[target.facility][target.level].cost, Game.map.contextMenu.demolitions[target.facility][target.level].time);
 				dialog.setSubmit({
-					text: 'Zahájit demolici', 
+					text: 'Zahájit demolici',
 					click: function () {
 						Game.map.contextMenu.hide();
 						Game.utils.signal('destroyFacility', {'targetId': target['id']}, function () {
@@ -971,7 +1105,7 @@ Game.map.contextMenu = {
 		});
 
 	},
-	
+
 	/**
 	 * If field is neighbour of (at least) one clan field, returns true
 	 * @param field
@@ -1006,18 +1140,18 @@ Game.map.contextMenu = {
 
 Game.map.contextMenu.ConstructionDialog = Class({
 	extends: Game.UI.Dialog,
-	
+
 	constructor: function (id)
 	{
 		Game.map.contextMenu.ConstructionDialog._superClass.constructor.call(this, id);
 	},
-	
+
 	setCost: function (cost, time)
 	{
 		this.cost = cost;
 		this.time = time;
 	},
-	
+
 	getBody: function ()
 	{
 		return $('<div />')
@@ -1025,7 +1159,7 @@ Game.map.contextMenu.ConstructionDialog = Class({
 			.append(Game.UI.resourceTable(this.cost))
 			.append(Game.UI.timeTable(this.time));
 	},
-	
+
 	show: function ()
 	{
 		Game.map.contextMenu.ConstructionDialog._superClass.show.call(this);
@@ -1033,7 +1167,7 @@ Game.map.contextMenu.ConstructionDialog = Class({
 			$(this.element).parent().find('.submitButton').button('disable');
 		}
 	},
-	
+
 	closeHandler: function ()
 	{
 		Game.map.marker.unmarkByType('selected');
@@ -1042,13 +1176,13 @@ Game.map.contextMenu.ConstructionDialog = Class({
 
 Game.map.contextMenu.UnitMoveDialog = Class({
 	extends: Game.UI.Dialog,
-	
+
 	constructor: function (id, origin)
 	{
 		Game.map.contextMenu.UnitMoveDialog._superClass.constructor.call(this, id);
 		this.origin = origin;
 	},
-	
+
 	getBody: function ()
 	{
 		var element = $('<div>');
@@ -1070,7 +1204,7 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		});
 		return element;
 	},
-	
+
 	closeHandler: function ()
 	{
 		Game.map.marker.unmarkByType('selected');
@@ -1078,20 +1212,20 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		Game.map.overlayDiv.unbind('click');
 		Game.map.overlayDiv.click({'context': this}, Game.map.openMenu);
 	},
-	
+
 	show: function ()
 	{
 		var element = Game.map.contextMenu.UnitMoveDialog._superClass.show.call(this);
 		Game.map.overlayDiv.unbind('click');
 		Game.map.overlayDiv.click({'context': this}, this.selectTarget);
 	},
-	
+
 	getUnitList: function ()
 	{
 		var inputs = $('#units .count input');
 		var trs = $('#units tr');
 		var result = {};
-		
+
 		$.each(inputs, function(key, input){
 			var unitCount = $(input).val();
 
@@ -1103,7 +1237,7 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		});
 		return result;
 	},
-	
+
 	selectTarget: function (e)
 	{
 		var context = e.data.context;
@@ -1122,28 +1256,28 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 
 Game.map.contextMenu.AttackDialog = Class({
 	extends: Game.map.contextMenu.UnitMoveDialog,
-	
+
 	constructor: function (id, origin)
 	{
 		Game.map.contextMenu.AttackDialog._superClass.constructor.call(this, id, origin);
 	},
-	
+
 	validateTarget: function (target)
 	{
-		return !(target['owner'] !== null && Game.map.clan !== null && target['owner']['id'] == Game.map.clan) 
-			&& !(target['owner'] !== null && target['owner']['alliance'] !== null 
+		return !(target['owner'] !== null && Game.map.clan !== null && target['owner']['id'] == Game.map.clan)
+			&& !(target['owner'] !== null && target['owner']['alliance'] !== null
 			&& Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance);
 	},
-	
+
 	title: 'Útok',
-	
+
 	getBody: function ()
 	{
 		var body = Game.map.contextMenu.AttackDialog._superClass.getBody.call(this);
 		body.append('Typ útoku: <select id="attackType"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>');
 		return body;
 	},
-	
+
 	submit: {
 		text: "Zaútočit",
 		click: function (context) {
@@ -1165,19 +1299,19 @@ Game.map.contextMenu.AttackDialog = Class({
 
 Game.map.contextMenu.ExplorationDialog = Class({
 	extends: Game.map.contextMenu.UnitMoveDialog,
-	
+
 	constructor: function (id, origin)
 	{
 		Game.map.contextMenu.AttackDialog._superClass.constructor.call(this, id, origin);
 	},
-	
+
 	validateTarget: function (target)
 	{
 		return target['owner'] == null;
 	},
-	
+
 	title: 'Průzkum',
-	
+
 	submit: {
 		text: "Zahájit průzkum",
 		click: function (context) {
