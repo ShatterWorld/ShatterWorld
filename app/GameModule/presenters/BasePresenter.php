@@ -30,6 +30,7 @@ abstract class BasePresenter extends \BasePresenter
 		$clan = $this->getPlayerClan();
 		if ($clan !== null){
 			$this->template->orderCount = $this->context->stats->getAvailableOrders($clan);
+			$this->template->orderTimeout = $this->context->stats->getOrderTimeout();
 			$this->template->reportCount = $this->getReportRepository()->countUnread($clan);
 			$this->template->resources = $this->getResourceRepository()->getResourcesArray($clan);
 			$this->template->resourceRules = $this->context->rules->getAll('resource');
@@ -156,8 +157,18 @@ abstract class BasePresenter extends \BasePresenter
 	public function handleFetchEvents ()
 	{
 		$this->invalidateControl('events');
+		$this->invalidateControl('reports');
 	}
 
+	/**
+	 * Signal sending order count via ajax
+	 * @return void
+	 */
+	public function handleFetchOrders ()
+	{
+		$this->invalidateControl('orders');
+	}
+	
 	/**
 	 * Ajax descriptionfetching
 	 * @return void

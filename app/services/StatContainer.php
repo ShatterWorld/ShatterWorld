@@ -40,6 +40,17 @@ class StatContainer extends Nette\Object
 	}
 
 	/**
+	 * Get the time remaining until another order is received
+	 * @return int
+	 */
+	public function getOrderTimeout ()
+	{
+		$now = new \DateTime();
+		$orderTime = $this->context->params['game']['stats']['orderTime'];
+		return $orderTime - (($now->format('U') - $this->context->params['game']['start']->format('U')) % $orderTime);
+	}
+	
+	/**
 	 * Returns how many fields in the distance can the clan see from its territory
 	 * @param Entities\Clan
 	 * @return int

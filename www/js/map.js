@@ -124,7 +124,7 @@ Game.map = {
 	disableField : function (getter, type)
 	{
 		var disable = function () {
-			var field = getter();
+			var field = typeof(getter) == 'function' ? getter() : getter;
 			Game.map.disabledFields.push(field);
 			field.element.attr('data-disabled', type);
 			Game.map.marker.mark(field, 'disabled');
