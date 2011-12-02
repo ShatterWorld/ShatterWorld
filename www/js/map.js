@@ -383,7 +383,17 @@ Game.map = {
 							}
 						}
 					}
-					div.append(text);
+
+					if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
+						if (field['facility'] !== null && field['facility'] == 'headquarters'){
+							var img = $('<img src="' + basePath + '/images/facilities/' + field['facility'] + '.png"/>');
+							img.css({
+								'margin' : '10px'
+							});
+							div.append(img);
+						}
+					}
+					//div.append(text);
 					field.element = div;
 					$('#map').append(div);
 
