@@ -385,11 +385,8 @@ Game.map = {
 					}
 
 					if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
-						if (field['facility'] !== null && field['facility'] == 'headquarters'){
+						if (field['facility'] !== null){
 							var img = $('<img src="' + basePath + '/images/facilities/' + field['facility'] + '.png"/>');
-							img.css({
-								'margin' : '10px'
-							});
 							div.append(img);
 						}
 					}
