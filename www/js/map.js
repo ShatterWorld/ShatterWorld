@@ -660,7 +660,7 @@ Game.map.marker = {
 			this.markers[type] = {};
 		}
 
-		$(field.element).attr('class', 'markedField'+type);
+		$(field.element).addClass('markedField' + type);
 
 		var x = parseInt(field.element.css('left'));
 		var y = parseInt(field.element.css('top'));
