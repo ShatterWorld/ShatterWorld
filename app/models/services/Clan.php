@@ -38,7 +38,7 @@ class Clan extends BaseService
 	 */
 	public function issueOrder (Entities\Clan $clan, $flush = TRUE)
 	{
-		if ($this->context->stats->getAvailableOrders($clan) > 0) {
+		if ($this->context->stats->orders->getAvailableOrders($clan) > 0) {
 			$this->context->model->getOrdersService()->update($clan->orders, array(
 				'issued' => $clan->orders->issued + 1
 			), $flush);

@@ -384,12 +384,14 @@ Game.map = {
 						}
 					}
 
+<<<<<<< HEAD
 					/*if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
 						if (field['facility'] !== null && field['facility'] == 'headquarters'){
+=======
+					if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
+						if (field['facility'] !== null){
+>>>>>>> d3e63b3c82e537a43b3906138f41f8b2c6565142
 							var img = $('<img src="' + basePath + '/images/facilities/' + field['facility'] + '.png"/>');
-							img.css({
-								'margin' : '10px'
-							});
 							div.append(img);
 						}
 					}*/
@@ -663,7 +665,7 @@ Game.map.marker = {
 			this.markers[type] = {};
 		}
 
-		$(field.element).attr('class', 'markedField'+type);
+		$(field.element).addClass('markedField' + type);
 
 		var x = parseInt(field.element.css('left'));
 		var y = parseInt(field.element.css('top'));

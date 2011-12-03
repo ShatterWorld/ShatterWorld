@@ -18,7 +18,7 @@ class UnitPresenter extends BasePresenter
 	public function renderTrain ()
 	{
 		$slots = array();
-		$totalSlots = $this->context->stats->getTotalUnitSlots($this->getPlayerClan());
+		$totalSlots = $this->context->stats->units->getSlots($this->getPlayerClan());
 		foreach ($this->context->rules->getAll('facility') as $name => $rule) {
 			if ($rule instanceof IConstructionFacility) {
 				$slots[$name] = $rule;

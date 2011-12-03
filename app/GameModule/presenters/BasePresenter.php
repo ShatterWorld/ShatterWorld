@@ -29,8 +29,8 @@ abstract class BasePresenter extends \BasePresenter
 		parent::beforeRender();
 		$clan = $this->getPlayerClan();
 		if ($clan !== null){
-			$this->template->orderCount = $this->context->stats->getAvailableOrders($clan);
-			$this->template->orderTimeout = $this->context->stats->getOrderTimeout();
+			$this->template->orderCount = $this->context->stats->orders->getAvailableOrders($clan);
+			$this->template->orderTimeout = $this->context->stats->orders->getTimeout();
 			$this->template->reportCount = $this->getReportRepository()->countUnread($clan);
 			$this->template->resources = $this->getResourceRepository()->getResourcesArray($clan);
 			$this->template->resourceRules = $this->context->rules->getAll('resource');

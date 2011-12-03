@@ -23,7 +23,6 @@ common:
 		stats:
 			baseLOS: 5
 			baseColonisationTime: 30
-			baseExplorationTime: 120
 			minExplorationCoefficient: 1
 			maxExplorationCoefficient: 1.5
 			baseAbandonmentTime: 60

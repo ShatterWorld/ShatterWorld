@@ -45,8 +45,9 @@ class Resource extends BaseService
 
 	public function recalculateProduction (Entities\Clan $clan, $term = NULL)
 	{
-		$production = $this->context->stats->getResourcesProduction($clan);
+		$production = $this->context->stats->resources->getProduction($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
+<<<<<<< HEAD
 
 			if (isset($production[$account->type])){
 				$newProduction = $production[$account->type] * $this->context->stats->getProductionCoefficient($clan, $account->type);
@@ -62,6 +63,9 @@ class Resource extends BaseService
 				$rule->processExhaustion($clan, -$newProduction);
 			}
 
+=======
+			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0, $term ?: new \DateTime());
+>>>>>>> d3e63b3c82e537a43b3906138f41f8b2c6565142
 		}
 		$this->entityManager->flush();
 
@@ -69,7 +73,7 @@ class Resource extends BaseService
 
 	public function recalculateStorage (Entities\Clan $clan, $term = NULL)
 	{
-		$storage = $this->context->stats->getResourceStorage($clan);
+		$storage = $this->context->stats->resources->getStorage($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
 			$account->setStorage($storage, $term ?: new \DateTime());
 		}

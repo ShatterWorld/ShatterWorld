@@ -38,17 +38,15 @@ class MapPresenter extends BasePresenter
 	public function handleFetchFacilities ()
 	{
 		$facilities = array();
-		foreach ($this->context->stats->getAvailableFacilities($this->getPlayerClan()) as $facility) {
-			$rule = $this->context->rules->get('facility', $facility);
+		$stats = $this->context->stats->construction;
+		$clan = $this->getPlayerClan();
+		foreach ($stats->getAvailableFacilities($this->getPlayerClan()) as $facility) {
 			$facilities[$facility] = array();
-			$facilities[$facility]['cost'] = $rule->getConstructionCost(1);
-			foreach ($facilities[$facility]['cost'] as $key => $res){
-				$facilities[$facility]['cost'][$key] = floor($facilities[$facility]['cost'][$key] * $this->context->stats->getConstructionCoefficient($this->getPlayerClan()));
-			}
-			$facilities[$facility]['time'] = floor($rule->getConstructionTime(1) * $this->context->stats->getConstructionCoefficient($this->getPlayerClan()));
+			$facilities[$facility]['cost'] = $stats->getConstructionCost($clan, $facility, 1);
+			$facilities[$facility]['time'] = $stats->getConstructionTime($clan, $facility, 1);
 		}
 		$this->payload->facilities = $facilities;
-		$changes = $this->getFieldRepository()->getAvailableFacilityChanges($this->getPlayerClan());
+		$changes = $this->getFieldRepository()->getAvailableFacilityChanges($clan);
 		$this->payload->upgrades = $changes['upgrades'];
 		$this->payload->downgrades = $changes['downgrades'];
 		$this->payload->demolitions = $changes['demolitions'];
@@ -82,12 +80,9 @@ class MapPresenter extends BasePresenter
 	{
 		$target = $this->getFieldRepository()->find($targetId);
 		$clan = $this->getPlayerClan();
-		$cost = $this->context->stats->getColonisationCost($target, $clan);
-		foreach ($cost as $key => $res){
-			$cost[$key] = floor($cost[$key] * $this->context->stats->getConstructionCoefficient($clan));
-		}
+		$cost = $this->context->stats->colonisation->getCost($target, $clan);
 		$this->payload->cost = $cost;
-		$this->payload->time = floor($this->context->stats->getColonisationTime($target, $clan) * $this->context->stats->getConstructionCoefficient($this->getPlayerClan()));
+		$this->payload->time = $this->context->stats->colonisation->getTime($target, $clan);
 		$this->sendPayload();
 	}
 

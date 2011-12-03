@@ -17,6 +17,12 @@
 
 .field {
 	cursor: pointer;
+	vertical-align: middle;
+}
+
+.field img {
+	margin: 3px auto;
+	display: block;
 }
 
 #navigDiv {
