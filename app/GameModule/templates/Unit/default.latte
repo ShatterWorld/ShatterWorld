@@ -9,11 +9,13 @@
 			<tr>
 				<th>Jednotka</th>
 				<th>Množství</th>
+				<th>Pozice</th>
 			</tr>
 			{foreach $units as $unit}
 				<tr>
 					<td>{$unit->type|getDescription}</td>
 					<td>{$unit->count}</td>
+					<td>{$unit->location->getCoords()}</td>
 				</tr>
 			{/foreach}
 		</table>
