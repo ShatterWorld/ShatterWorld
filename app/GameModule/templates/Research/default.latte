@@ -24,9 +24,8 @@
 				<th class="level">Level</th>
 				<th class="max">Max</th>
 			</tr>
-			{?$i = 1}
 			{foreach $researched as $research}
-				<tr class="row{($i++ % 2) + 1}">
+				<tr class="row{$iterator->even ? 1 : 2} data">
 					<td class="type">{$all[$research->type]->getDescription()}</td>
 					<td class="level">{$research->level}</td>
 					<td class="max">{$all[$research->type]->getLevelCap()}</td>
@@ -45,9 +44,8 @@
 				<th class="level">Level</th>
 				<th class="max"><img src="{$basePath}/images/icons/time.png"/></th>
 			</tr>
-			{?$i = 1}
 			{foreach $running as $research}
-				<tr class="row{($i++ % 2) + 1}">
+				<tr class="row{$iterator->even ? 1 : 2} data">
 					<td class="type">{$all[$research->construction]->getDescription()}</td>
 					<td class="level">{$research->level}</td>
 					<td class="timeFull">{$research->term|date:"d.m.Y H:i"}</td>

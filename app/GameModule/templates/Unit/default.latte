@@ -12,7 +12,7 @@
 				<th>Pozice</th>
 			</tr>
 			{foreach $units as $unit}
-				<tr>
+				<tr class="data">
 					<td>{$unit->type|getDescription}</td>
 					<td>{$unit->count}</td>
 					<td>{$unit->location->getCoords()}</td>

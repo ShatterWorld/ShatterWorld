@@ -127,7 +127,7 @@
 				</div>
 				<div id="countdownTooltip" class="tooltip" data-for="countdownBar">
 					<table>
-						<tr n:foreach="$events as $event" id="countdown_{$event->id}">
+						<tr n:foreach="$events as $event" id="countdown_{$event->id}" class="data">
 							<th>{$eventRules[$event->type]->getExplanation($event)}</th>
 							<td class="countdown">{$event->getRemainingTime()|time}</td>
 						</tr>

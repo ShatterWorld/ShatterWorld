@@ -38,7 +38,7 @@
 				<th class="action">Stáhnout</th>
 			</tr>
 			{foreach $clanOffers as $offer}
-				<tr>
+				<tr class="data">
 					<td class="owner">{$offer->owner->name}</td>
 					<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
 					<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
@@ -60,7 +60,7 @@
 				<th class="time">Čas</th>
 			</tr>
 			{foreach $runningShipments as $shipment}
-				<tr>
+				<tr class="data">
 					<td class="owner">{$shipment->origin->owner->name}</td>
 					<td class="target">{$shipment->target->owner->name}</td>
 					<td class="offer"><img src="{$basePath}/images/resources/{foreach $shipment->cargo as $res => $value}{$res}{/foreach}.png"/> {foreach $shipment->cargo as $res => $value}{$value}{/foreach}</td>

@@ -92,6 +92,6 @@ table th {
 	vertical-align : middle;
 }
 
-table tr:hover {
+table tr.data:hover {
 	background: #ffbe40;
 }
