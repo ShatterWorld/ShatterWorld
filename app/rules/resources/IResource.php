@@ -9,4 +9,10 @@ interface IResource extends IRule
 	 * @return int
 	 */
 	public function getInitialAmount ();
+
+	/**
+	 * Process exhaustion
+	 * @return void
+	 */
+	public function processExhaustion ($clan, $loss);
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Services;
 use Entities;
+use Nette\Diagnostics\Debugger;
 
 class Resource extends BaseService
 {
@@ -46,9 +47,25 @@ class Resource extends BaseService
 	{
 		$production = $this->context->stats->resources->getProduction($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
+
+			if (isset($production[$account->type])){
+				$newProduction = $production[$account->type] * $this->context->stats->getProductionCoefficient($clan, $account->type);
+			}
+			else{
+				$newProduction = 0;
+			}
+
+			$account->setProduction($newProduction, $term ?: new \DateTime());
+
+			if ($newProduction < 0){
+				$rule = $this->context->rules->get('resource', $account->type);
+				$rule->processExhaustion($clan, -$newProduction);
+			}
+
 			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0, $term ?: new \DateTime());
 		}
 		$this->entityManager->flush();
+
 	}
 
 	public function recalculateStorage (Entities\Clan $clan, $term = NULL)

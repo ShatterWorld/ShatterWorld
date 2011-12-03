@@ -1,6 +1,7 @@
 <?php
 namespace Services;
 use Entities;
+use Nette\Diagnostics\Debugger;
 
 class Unit extends BaseService
 {
@@ -21,7 +22,7 @@ class Unit extends BaseService
 		$this->entityManager->flush();
 		$this->context->model->getResourceService()->recalculateProduction($owner, $term);
 	}
-	
+
 	public function removeUnits ($owner, Entities\Field $location, $list, $term = NULL)
 	{
 		foreach ($list as $type => $count) {
@@ -37,7 +38,7 @@ class Unit extends BaseService
 		$this->entityManager->flush();
 		$this->context->model->getResourceService()->recalculateProduction($owner, $term);
 	}
-	
+
 	public function moveUnits (Entities\Field $target, Entities\Clan $owner, $list)
 	{
 		foreach ($list as $unit) {
@@ -51,11 +52,18 @@ class Unit extends BaseService
 		}
 		$this->entityManager->flush();
 	}
-	
+
 	public function delete ($object, $flush = TRUE)
 	{
 		$object->move = NULL;
 		$object->location = NULL;
 		parent::delete($object, $flush);
+	}
+
+	public function setupExhaustionTimer ($clan, $loss)
+	{
+		$units = $this->getRepository()->getClanUnits($clan);
+		//set timer
+
 	}
 }

@@ -13,4 +13,10 @@ class Food extends AbstractRule implements IResource
 	{
 		return 500;
 	}
+
+	public function processExhaustion ($clan, $loss)
+	{
+		$this->getContext()->model->getUnitService()->setupExhaustionTimer($clan, $loss);
+	}
+
 }
