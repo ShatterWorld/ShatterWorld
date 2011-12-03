@@ -56,15 +56,9 @@ class Resource extends BaseService
 			}
 
 			$account->setProduction($newProduction, $term ?: new \DateTime());
-
-			if ($newProduction < 0){
-				$rule = $this->context->rules->get('resource', $account->type);
-				$rule->processExhaustion($clan, -$newProduction);
-			}
-
-			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0, $term ?: new \DateTime());
 		}
 		$this->entityManager->flush();
+		$this->checkExhaustion($clan);
 
 	}
 
@@ -75,5 +69,17 @@ class Resource extends BaseService
 			$account->setStorage($storage, $term ?: new \DateTime());
 		}
 		$this->entityManager->flush();
+	}
+
+	protected function checkExhaustion ($clan)
+	{
+		$production = $this->context->stats->resources->getProduction($clan);
+		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
+			if ($production[$account->type] < 0){
+				$production = $this->context->model->getConstructionService()->startResourceExhaustion($clan, $account, $production[$account->type]);
+			}
+		}
+
+
 	}
 }
