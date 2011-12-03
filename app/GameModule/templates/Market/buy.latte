@@ -33,7 +33,7 @@
 				<th class="action">Přijmout</th>
 			</tr>
 			{foreach $offers as $key => $offer}
-				<tr>
+				<tr class="data">
 					<td class="owner">{$offer->owner->name}</td>
 					<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
 					<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
