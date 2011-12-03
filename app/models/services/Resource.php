@@ -47,7 +47,6 @@ class Resource extends BaseService
 	{
 		$production = $this->context->stats->resources->getProduction($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
-<<<<<<< HEAD
 
 			if (isset($production[$account->type])){
 				$newProduction = $production[$account->type] * $this->context->stats->getProductionCoefficient($clan, $account->type);
@@ -63,9 +62,7 @@ class Resource extends BaseService
 				$rule->processExhaustion($clan, -$newProduction);
 			}
 
-=======
 			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0, $term ?: new \DateTime());
->>>>>>> d3e63b3c82e537a43b3906138f41f8b2c6565142
 		}
 		$this->entityManager->flush();
 
