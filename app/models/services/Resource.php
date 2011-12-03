@@ -52,9 +52,7 @@ class Resource extends BaseService
 				$production[$account->type] = 0;
 			}
 
-<<<<<<< HEAD
 			$account->setProduction($newProduction, $term ?: new \DateTime());
-=======
 			$account->setProduction($production[$account->type], $term ?: new \DateTime());
 
 			if ($production[$account->type] < 0){
@@ -63,7 +61,6 @@ class Resource extends BaseService
 			}
 
 			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0, $term ?: new \DateTime());
->>>>>>> 0a25e036247ff9d640536b12af05616c9d6cacd6
 		}
 		$this->entityManager->flush();
 		$this->checkExhaustion($clan);
