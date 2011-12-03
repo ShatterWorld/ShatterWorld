@@ -13,4 +13,12 @@ class Unit extends BaseRepository
 			'move' => NULL
 		));
 	}
+
+	public function getClanUnits (Entities\Clan $owner)
+	{
+		return $this->findBy(array(
+			'owner' => $owner->id,
+			'move' => NULL
+		));
+	}
 }
