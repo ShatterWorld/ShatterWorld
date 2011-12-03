@@ -125,15 +125,15 @@ class Field extends BaseRepository
 			'demolitions' => array()
 		);
 		foreach ($qb->getQuery()->getResult() as $field) {
-			$rule = $this->context->rules->get('facility', $field->facility);
+			$stats = $this->context->stats->construction;
 			if ($field->level < $this->context->params['game']['stats']['facilityLevelCap']) {
 				if (!isset($result['upgrades'][$field->facility])) {
 					$result['upgrades'][$field->facility] = array();
 				}
 				$level = $field->level + 1;
 				$info = array();
-				$info['cost'] = $rule->getConstructionCost($level);
-				$info['time'] = $rule->getConstructionTime($level);
+				$info['cost'] = $stats->getConstructionCost($clan, $field->facility, $level);
+				$info['time'] = $stats->getConstructionTime($clan, $field->facility, $level);
 				$result['upgrades'][$field->facility][$level] = $info;
 			}
 			if ($field->level > 1) {
@@ -142,16 +142,16 @@ class Field extends BaseRepository
 				}
 				$level = $field->level - 1;
 				$info = array();
-				$info['cost'] = $rule->getDemolitionCost($field->level, $level);
-				$info['time'] = $rule->getDemolitionTime($field->level, $level);
+				$info['cost'] = $stats->getDemolitionCost($clan, $field->facility, $field->level, $level);
+				$info['time'] = $stats->getDemolitionTime($clan, $field->facility, $field->level, $level);
 				$result['downgrades'][$field->facility][$level] = $info;
 			}
 			if (!isset($result['demolitions'][$field->facility])) {
 				$result['demolitions'][$field->facility] = array();
 			}
 			$info = array();
-			$info['cost'] = $rule->getDemolitionCost($field->level, 0);
-			$info['time'] = $rule->getDemolitionTime($field->level, 0);
+			$info['cost'] = $stats->getDemolitionCost($clan, $field->facility, $field->level, 0);
+			$info['time'] = $stats->getDemolitionTime($clan, $field->facility, $field->level, 0);
 			$result['demolitions'][$field->facility][$field->level] = $info;
 		}
 		return $result;
@@ -327,7 +327,7 @@ class Field extends BaseRepository
 		$depths = new ArraySet();
 		foreach ($baseFields as $field) {
 			if (!$depths->offsetExists($field->owner->id)){
-				$depths->addElement($field->owner->id, $this->context->stats->getVisibilityRadius($field->owner));
+				$depths->addElement($field->owner->id, $this->context->stats->visibility->getRadius($field->owner));
 			}
 			foreach ($this->getFieldNeighbours($field, $depths->offsetGet($field->owner->id), $map) as $neighbour) {
 				$id = intval($neighbour);

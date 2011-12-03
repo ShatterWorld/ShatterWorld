@@ -39,10 +39,7 @@ class Construction extends Event
 	 */
 	public function startColonisation (Entities\Field $target, Entities\Clan $clan)
 	{
-		$cost = $this->context->stats->getColonisationCost($target, $clan);
-		foreach ($cost as $key => $res){
-			$cost[$key] = floor($cost[$key] * $this->context->stats->getConstructionCoefficient($clan));
-		}
+		$cost = $this->context->stats->colonisation->getCost($target, $clan);
 
 		if ($this->context->model->getResourceRepository()->checkResources($clan, $cost)) {
 			$this->create(array(
@@ -50,7 +47,7 @@ class Construction extends Event
 				'target' => $target,
 				'origin' => $clan->getHeadquarters(),
 				'type' => 'colonisation',
-				'timeout' => floor($this->context->stats->getColonisationTime($target, $clan) * $this->context->stats->getConstructionCoefficient($clan))
+				'timeout' => floor($this->context->stats->colonisation->getTime($target, $clan))
 			), FALSE);
 			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);
@@ -71,22 +68,19 @@ class Construction extends Event
 	public function startFacilityConstruction (Entities\Field $field, $facility, $level = 1)
 	{
 		$clan = $field->owner;
-		$rule = $this->context->rules->get('facility', $facility);
-		$price = $rule->getConstructionCost($level);
-		foreach ($price as $key => $res){
-			$price[$key] = floor($price[$key] * $this->context->stats->getConstructionCoefficient($clan));
-		}
-		if ($this->context->model->getResourceRepository()->checkResources($field->owner, $price)) {
+		$stats = $this->context->stats->construction;
+		$price = $stats->getConstructionCost($clan, $facility, $level);
+		if ($this->context->model->getResourceRepository()->checkResources($clan, $price)) {
 			$this->create(array(
 				'target' => $field,
 				'owner' => $field->owner,
 				'type' => 'facilityConstruction',
 				'construction' => $facility,
 				'level' => $level,
-				'timeout' => floor($rule->getConstructionTime($level) * $this->context->stats->getConstructionCoefficient($clan))
+				'timeout' => $stats->getConstructionTime($clan, $facility, $level)
 			), FALSE);
-			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
-			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
+			$this->context->model->getResourceService()->pay($clan, $price, FALSE);
+			$this->context->model->getClanService()->issueOrder($clan, FALSE);
 			$this->entityManager->flush();
 		} else {
 			throw new InsufficientResourcesException;
@@ -103,11 +97,8 @@ class Construction extends Event
 	public function startFacilityDemolition (Entities\Field $field, $level = 0)
 	{
 		$clan = $field->owner;
-		$rule = $this->context->rules->get('facility', $field->facility);
-		$price = $rule->getDemolitionCost($field->level, $level);
-		foreach ($price as $key => $res){
-			$price[$key] = floor($price[$key] * $this->context->stats->getConstructionCoefficient($clan));
-		}
+		$stats = $this->context->stats->construction;
+		$price = $stats->getDemolitionCost($clan, $field->facility, $field->level, $level);
 		if ($this->context->model->getResourceRepository()->checkResources($field->owner, $price)) {
 			$this->create(array(
 				'target' => $field,
@@ -115,7 +106,7 @@ class Construction extends Event
 				'type' => 'facilityDemolition',
 				'construction' => $field->facility,
 				'level' => $level,
-				'timeout' => floor($rule->getDemolitionTime($field->level, $level) * $this->context->stats->getConstructionCoefficient($clan))
+				'timeout' => $stats->getDemolitionTime($clan, $field->facility, $field->level, $level)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
 			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
@@ -137,7 +128,7 @@ class Construction extends Event
 			'target' => $field,
 			'owner' => $field->owner,
 			'type' => 'abandonment',
-			'timeout' => floor($this->context->stats->getAbandonmentTime($field->level) * $this->context->stats->getConstructionCoefficient($clan))
+			'timeout' => $this->context->stats->construction->getAbandonmentTime($field->level)
 		), FALSE);
 		$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
 		$this->entityManager->flush();
@@ -182,7 +173,7 @@ class Construction extends Event
 		if (!$this->context->model->getResourceRepository()->checkResources($clan, $price)) {
 			throw new InsufficientResourcesException;
 		}
-		$availableSlots = $this->context->stats->getTotalUnitSlots($clan);
+		$availableSlots = $this->context->stats->units->getSlots($clan);
 		foreach ($difficulty as $slot => $amount) {
 			if (!isset($availableSlots[$slot]) || $availableSlots[$slot] < $amount) {
 				throw new InsufficientCapacityException;
@@ -214,8 +205,9 @@ class Construction extends Event
 			$level = $research->level + 1;
 		}
 
+		$stats = $this->context->stats->research;
 		$rule = $this->context->rules->get('research', $type);
-		$price = $rule->getCost($level);
+		$price = $stats->getCost($clan, $type, $level);
 		if ($this->context->model->getResourceRepository()->checkResources($clan, $price)) {
 
 			$researched = $this->context->model->getResearchRepository()->getResearched($clan);
@@ -242,13 +234,12 @@ class Construction extends Event
 				'type' => 'research',
 				'construction' => $type,
 				'level' => $level,
-				'timeout' => $rule->getResearchTime($level) * $this->context->stats->getResearchEfficiency($clan)
+				'timeout' => $stats->getTime($clan, $type, $level)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($clan, $price, FALSE);
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);
 			$this->entityManager->flush();
-		}
-		else {
+		} else {
 			throw new InsufficientResourcesException;
 		}
 

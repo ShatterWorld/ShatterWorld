@@ -44,16 +44,16 @@ class Resource extends BaseService
 
 	public function recalculateProduction (Entities\Clan $clan, $term = NULL)
 	{
-		$production = $this->context->stats->getResourcesProduction($clan);
+		$production = $this->context->stats->resources->getProduction($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
-			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] * $this->context->stats->getProductionCoefficient($clan, $account->type): 0, $term ?: new \DateTime());
+			$account->setProduction(isset($production[$account->type]) ? $production[$account->type] : 0, $term ?: new \DateTime());
 		}
 		$this->entityManager->flush();
 	}
 
 	public function recalculateStorage (Entities\Clan $clan, $term = NULL)
 	{
-		$storage = $this->context->stats->getResourceStorage($clan);
+		$storage = $this->context->stats->resources->getStorage($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
 			$account->setStorage($storage, $term ?: new \DateTime());
 		}

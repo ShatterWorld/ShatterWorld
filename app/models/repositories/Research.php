@@ -2,7 +2,6 @@
 namespace Repositories;
 use Entities;
 use Doctrine;
-use Nette\Diagnostics\Debugger;
 
 /**
  * Research repository class
@@ -15,7 +14,7 @@ class Research extends BaseRepository
 	 * @param Entities\Clan
 	 * @return array of Entities\Research
 	 */
-	public function getResearched ($clan)
+	public function getResearched (Entities\Clan $clan)
 	{
 		$result = $this->findByOwner($clan->id);
 		$indexedRes = array();
@@ -32,10 +31,21 @@ class Research extends BaseRepository
 	 * @param string
 	 * @return Entities\Research
 	 */
-	public function getClanResearch ($clan, $type)
+	public function getClanResearch (Entities\Clan $clan, $type)
 	{
-		$result = $this->findOneBy(array('owner' => $clan->id, 'type' => $type));
-		return $result;
+		$qb = $this->createQueryBuilder('r');
+		$qb->where($qb->expr()->andX(
+			$qb->expr()->eq('r.owner', '?0'),
+			$qb->expr()->eq('r.type', '?1')
+		));
+		$qb->setParameters(array($clan->id, $type));
+		$query = $qb->getQuery();
+		$query->useResultCache(true);
+		try {
+			return $query->getSingleResult();
+		} catch (Doctrine\ORM\NoResultException $e) {
+			return null;
+		}
 	}
 	/**
 	 * Returns the level of research
@@ -43,7 +53,7 @@ class Research extends BaseRepository
 	 * @param string
 	 * @return int
 	 */
-	public function getResearchLevel ($clan, $type)
+	public function getResearchLevel (Entities\Clan $clan, $type)
 	{
 		$research = $this->getClanResearch($clan, $type);
 

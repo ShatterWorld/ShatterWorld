@@ -18,8 +18,8 @@ class Offer extends BaseRepository
 	 */
 	public function findReachable ($clan)
 	{
-		$stats = $this->context->stats;
-		$depth = $stats->getTradingRadius($clan);
+		$stats = $this->context->stats->trading;
+		$depth = $stats->getRadius($clan);
 
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('o', 'c', 'h')->from($this->getEntityName(), 'o')
@@ -87,9 +87,9 @@ class Offer extends BaseRepository
 
 		$profits = array();
 		$resLeft = $offer->offerAmount;
-		$stats = $this->context->stats;
+		$stats = $this->context->stats->trading;
 		foreach($mediators as $mediator){
-			$profit = floor($resLeft * max($stats->getTradeProfit($mediator) - $stats->getTradeProfit($clan), 0));
+			$profit = floor($resLeft * max($stats->getProfit($mediator) - $stats->getProfit($clan), 0));
 			$resLeft -= $profit;
 			$profits[$mediator->id] = $profit;
 		}

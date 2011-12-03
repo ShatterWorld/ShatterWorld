@@ -78,11 +78,11 @@ class MarketPresenter extends BasePresenter {
 	public function renderDefault ()
 	{
 		$clan = $this->getPlayerClan();
-		$stats = $this->context->stats;
+		$stats = $this->context->stats->trading;
 
-		$this->template->merchantSpeed =$stats->getMerchantSpeed($clan);
-		$this->template->tradingRadius =$stats->getTradingRadius($clan);
-		$this->template->clanProfit = $stats->getTradeProfit($clan);
+		$this->template->merchantSpeed = $stats->getMerchantSpeed($clan);
+		$this->template->tradingRadius = $stats->getRadius($clan);
+		$this->template->clanProfit = $stats->getProfit($clan);
 		$this->template->clanOffers = $this->getClanOffers();
 		$this->template->runningShipments = $this->getShipmentRepository()->getRunningShipments($this->getPlayerClan());
 	}
@@ -176,7 +176,7 @@ class MarketPresenter extends BasePresenter {
 	{
 		$clan = $this->getPlayerClan();
 		$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $this->getOfferRepository()->getMediators(Graph::SHORT, $clan, $offer));
-		$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
+		$t = floor($d / $this->context->stats->trading->getMerchantSpeed($offer->owner));
 		return $t;
 	}
 
@@ -189,7 +189,7 @@ class MarketPresenter extends BasePresenter {
 	{
 		$clan = $this->getPlayerClan();
 		$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $this->getOfferRepository()->getMediators(Graph::CHEAP, $clan, $offer));
-		$t = floor($d / $this->context->stats->getMerchantSpeed($offer->owner));
+		$t = floor($d / $this->context->stats->trading->getMerchantSpeed($offer->owner));
 		return $t;
 	}
 

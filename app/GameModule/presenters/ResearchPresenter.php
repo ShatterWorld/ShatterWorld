@@ -13,9 +13,8 @@ use ConflictException;
  * A message presenter
  * @author Petr Bělohlávek
  */
-class ResearchPresenter extends BasePresenter {
-
-
+class ResearchPresenter extends BasePresenter 
+{
 	/**
 	 * Displays researches the clan has already researched
 	 * @return void
@@ -23,7 +22,7 @@ class ResearchPresenter extends BasePresenter {
 	public function renderDefault ()
 	{
 		$clan = $this->getPlayerClan();
-		$this->template->researchEfficiency = $this->getContext()->stats->getResearchEfficiency($clan);
+		$this->template->researchEfficiency = $this->getContext()->stats->research->getEfficiency($clan);
 		$this->template->researched = $this->getResearchRepository()->getResearched($clan);
 		$this->template->all = $this->context->rules->getAll('research');
 		$this->template->running = $this->getConstructionRepository()->getRunningResearches($clan);
@@ -38,7 +37,7 @@ class ResearchPresenter extends BasePresenter {
 	{
 		$clan = $this->getPlayerClan();
 		$this->template->researched = $this->getResearchRepository()->getResearched($clan);
-		$this->template->researchEfficiency = $this->getContext()->stats->getResearchEfficiency($clan);
+		$this->template->researchEfficiency = $this->getContext()->stats->research->getEfficiency($clan);
 		$this->template->all = $this->context->rules->getAll('research');
 		$this->template->running = $this->getConstructionRepository()->getRunningResearches($clan);
 
