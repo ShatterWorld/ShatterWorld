@@ -17,7 +17,7 @@ class ModelContainer extends Nette\Object
 		$this->context = $context;
 	}
 	
-	public function getService ($name)
+	public function & getService ($name)
 	{
 		$namespace = $this->context->params['doctrine']['entityNamespace'];
 		if (!Nette\Utils\Strings::startsWith($name, $namespace)) {
@@ -35,7 +35,7 @@ class ModelContainer extends Nette\Object
 		return $this->services[$name];
 	}
 	
-	public function getRepository ($name)
+	public function & getRepository ($name)
 	{
 		if (!isset($this->repositories[$name])) {
 			$this->repositories[$name] = $this->getService($name)->getRepository();
@@ -43,8 +43,7 @@ class ModelContainer extends Nette\Object
 		return $this->repositories[$name];
 	}
 	
-	/** TODO: Results in notice: only variable references should be returned by reference */
-	public function &__get ($name)
+	public function & __get ($name)
 	{
 		if (Strings::endsWith($name, 'Service')) {
 			return $this->getService(substr($name, 0, -7));
