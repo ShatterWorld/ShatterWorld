@@ -27,4 +27,10 @@ interface IQuest extends IRule
 	 * @return void
 	 */
 	public function processRewards (Entities\Clan $clan);
+	
+	/**
+	 * Get the score value of this quest
+	 * @return int
+	 */
+	public function getValue ();
 }
