@@ -245,4 +245,27 @@ class Construction extends Event
 
 	}
 
+	/**
+	 * Start exhaustion timer
+	 * @param Entities\Clan
+	 * @param array of int
+	 * @param int
+	 * @return void
+	 */
+	public function startResourceExhaustion (Entities\Clan $clan, $account, $production)
+	{
+		//delete/update previous timers
+
+		$time = floor($account->balance / $production);
+		$this->create(array(
+			'owner' => $clan,
+			'target' => $clan->getHeadquarters(),
+			//'origin' => $clan->getHeadquarters(),
+			'type' => 'resourceExhaustion',
+			'timeout' => $time
+		), FALSE);
+
+		$this->entityManager->flush();
+	}
+
 }

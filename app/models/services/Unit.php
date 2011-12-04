@@ -62,8 +62,52 @@ class Unit extends BaseService
 
 	public function setupExhaustionTimer ($clan, $loss)
 	{
+		$resources = $this->context->model->getResourceRepository()->getResourcesArray($clan);
+		//delete previous ex. timers
+
+		//cout new ones
 		$units = $this->getRepository()->getClanUnits($clan);
-		//set timer
+
+		//sort units
+		$rules = $this->context->rules;
+		usort($units, function ($a, $b) use ($rules){
+			$aUpkeep = $rules->get('units', $a->type)->getUpkeep();
+			$bUpkeep = $rules->get('units', $b->type)->getUpkeep();
+			if ($aUpkeep == $bUpkeep) return 0;
+			return ($aUpkeep < $bUpkeep) ? -1 : 1;
+		});
+
+
+		//determine
+		$production = -$resources['food']['production'];
+		$time = floor($resources['food']['balance'] / $production);
+
+		foreach($units as $unit){
+			if ($production <= 0){
+				break;
+			}
+
+			$upkeep = $rules->get('units', $unit->type)->getUpkeep();
+			$count = min($units->count, floor($production / $upkeep));
+
+			//set timer
+			$production -= $upkeep * $count;
+
+		}
+
 
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
