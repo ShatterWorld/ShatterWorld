@@ -2,7 +2,7 @@
 namespace Stats;
 use Nette;
 
-class AbstractStat 
+abstract class AbstractStat 
 {
 	/** @var Nette\DI\Container */
 	private $context;
