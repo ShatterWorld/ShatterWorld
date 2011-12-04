@@ -41,6 +41,7 @@ common:
 			resource: Rules\Resources
 			event: Rules\Events
 			research: Rules\Researches
+			quest: Rules\Quests
 
 	doctrine:
 		proxyDir: %tempDir%/proxies
