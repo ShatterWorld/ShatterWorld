@@ -65,8 +65,10 @@ class RuleLoader extends Nette\Object
 	public function getAll ($type)
 	{
 		$result = array();
-		foreach ($this->index[$type] as $rule) {
-			$result[lcfirst($rule)] = $this->get($type, $rule);
+		if (isset($this->index[$type])) {
+			foreach ($this->index[$type] as $rule) {
+				$result[lcfirst($rule)] = $this->get($type, $rule);
+			}
 		}
 		return $result;
 	}
