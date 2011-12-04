@@ -14,7 +14,7 @@ class Metal extends AbstractRule implements IResource
 		return 300;
 	}
 
-	public function processExhaustion ($clan, $loss)
+	public function processExhaustion ($clan)
 	{
 
 	}

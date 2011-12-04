@@ -12,7 +12,8 @@ interface IResource extends IRule
 
 	/**
 	 * Process exhaustion
+	 * @param Entities\Clan
 	 * @return void
 	 */
-	public function processExhaustion ($clan, $loss);
+	public function processExhaustion ($clan);
 }

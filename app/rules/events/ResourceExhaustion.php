@@ -13,9 +13,8 @@ class ResourceExhaustion extends AbstractRule implements IEvent
 
 	public function process (Entities\Event $event, $processor)
 	{
-		//count and kill
-
-		//$this->getContext()->model->getResourceService()->increase($event->target->owner, $event->cargo);
+		$resourceRule = $this->getContext()->rules->get('resources', $event->construction);
+		$resourceRule->processExhaustion($event->owner);
 		return array();
 	}
 
@@ -26,11 +25,16 @@ class ResourceExhaustion extends AbstractRule implements IEvent
 
 	public function getExplanation (Entities\Event $event)
 	{
-		return sprintf('Vyření jednotek na nedostatek surovin');
+		return sprintf('Vymření jednotek na nedostatek surovin');
 	}
 
 	public function formatReport (Entities\Report $report)
 	{
 		return array();
+	}
+
+	public function isExclusive ()
+	{
+		return false;
 	}
 }
