@@ -23,7 +23,7 @@ class Unit extends BaseService
 		$this->context->model->getResourceService()->recalculateProduction($owner, $term);
 	}
 
-	public function removeUnits ($owner, Entities\Field $location, $list, $term = NULL)
+	public function removeUnits ($owner, Entities\Field $location, $list, $term = NULL, $flush = TRUE)
 	{
 		foreach ($list as $type => $count) {
 			if ($unit = $this->getRepository()->findUnit($owner, $location, $type)) {
@@ -35,8 +35,9 @@ class Unit extends BaseService
 				}
 			}
 		}
-		$this->entityManager->flush();
-		$this->context->model->getResourceService()->recalculateProduction($owner, $term);
+		if ($flush) {
+			$this->context->model->getResourceService()->recalculateProduction($owner, $term);
+		}
 	}
 
 	public function moveUnits (Entities\Field $target, Entities\Clan $owner, $list)
@@ -61,16 +62,3 @@ class Unit extends BaseService
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

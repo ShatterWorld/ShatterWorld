@@ -13,9 +13,4 @@ class Stone extends AbstractRule implements IResource
 	{
 		return 300;
 	}
-
-	public function processExhaustion ($clan)
-	{
-
-	}
 }
