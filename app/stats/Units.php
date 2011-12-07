@@ -1,5 +1,6 @@
 <?php
 namespace Stats;
+use Rules;
 use Entities;
 
 class Units extends AbstractStat
@@ -7,7 +8,7 @@ class Units extends AbstractStat
 	public function getSlots (Entities\Clan $clan)
 	{
 		$result = array();
-		foreach ($this->getContext()->model->getFieldRepository()->findByOwner($clan->id) as $clanField) {
+		foreach ($this->getContext()->model->fieldRepository->findByOwner($clan->id) as $clanField) {
 			$facility = $clanField->facility;
 			if ($facility !== NULL) {
 				$rule = $this->getContext()->rules->get('facility', $facility);
