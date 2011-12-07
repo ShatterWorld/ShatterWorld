@@ -590,6 +590,22 @@ Game.map = {
 		var breaker = false;
 		var result = null;
 		var map = Game.map.map;
+// 		var a = mouseX + Game.map.dX + Game.map.fieldWidth;
+// 		var b = mouseY + Game.map.dY;
+// 		y = ((a * 20) / 43 + b) / 39;
+// 		x = (19 * Math.floor(y) - b) / 20; // Can you solve linear systems of equations, you son of a peach?
+// 		x = Math.ceil(x); y = Math.floor(y);
+// 		var dX = mouseX - Game.map.calculateXPos(x);
+// 		var dY = -(mouseY - Game.map.calculateYPos(y)); // More comfortable for analythic geometry
+// 		var field = map[x][y];
+// 		if ((4 * dX + 3 * dY - 172) > 0) { // Hardcore f**king analythic geometry
+// 			result = Game.utils.isset(map[field.coordX + 1]) ? map[field.coordX + 1][field.coordY] : null;
+// 		} else if ((4 * dX - 3 * dY - 292) > 0) { // More hardcore f**king analythic geometry
+// 			result = map[field.coordX][field.coordY + 1];
+// 		} else {
+// 			result = field;
+// 		}
+		
 		$.each(Game.map.fieldsByCoords, function(xKey, x){
 			if (xKey > mouseX - Game.map.fieldWidth && xKey < mouseX){
 				$.each(x, function(yKey, field){
