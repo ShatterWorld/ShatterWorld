@@ -609,10 +609,11 @@ Game.map = {
 		if (0 < 4*(mouseX) - 3*(mouseY) + c){
 			idX++;
 		}
-
-		c = (-4) * (posX + 46) - 3 * (posY + 20); // posX +60, but +46 fits better
-		if (0 < 4*(mouseX) + 3*(mouseY) + c){
-			idY++;
+		else{
+			c = (-4) * (posX + 46) - 3 * (posY + 20); // posX +60, but +46 fits better
+			if (0 < 4*(mouseX) + 3*(mouseY) + c){
+				idY++;
+			}
 		}
 
 		if (!Game.utils.isset(map[idX]) || !Game.utils.isset(map[idX][idY])){
