@@ -46,6 +46,7 @@ class Resource extends BaseService
 	public function recalculateProduction (Entities\Clan $clan, $term = NULL)
 	{
 		$production = $this->context->stats->resources->getProduction($clan);
+		$this->entityManager->flush();
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
 
 			if (!isset($production[$account->type])){

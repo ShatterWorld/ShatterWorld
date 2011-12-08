@@ -1,8 +1,9 @@
 <?php
 namespace Rules\Resources;
 use Rules\AbstractRule;
+use Entities;
 
-class Fuel extends AbstractRule implements IResource
+class Fuel extends AbstractRule implements IExhaustableResource
 {
 	public function getDescription ()
 	{
@@ -14,8 +15,18 @@ class Fuel extends AbstractRule implements IResource
 		return 300;
 	}
 
-	public function processExhaustion ($clan)
+	public function processExhaustion (Entities\Event $event)
 	{
 
+	}
+
+	public function getExhaustionExplanation ()
+	{
+		return "Vyčerpání paliva";
+	}
+	
+	public function formatExhaustionReport (Entities\Report $report)
+	{
+		return array();
 	}
 }

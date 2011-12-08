@@ -1,9 +1,10 @@
 <?php
 namespace Rules\Resources;
+use Entities;
 use Rules\AbstractRule;
 use Nette\Diagnostics\Debugger;
 
-class Food extends AbstractRule implements IResource
+class Food extends AbstractRule implements IExhaustableResource
 {
 	public function getDescription ()
 	{
@@ -15,51 +16,45 @@ class Food extends AbstractRule implements IResource
 		return 500;
 	}
 
-	public function processExhaustion ($clan)
+	public function processExhaustion (Entities\Event $event)
 	{
-		Debugger::barDump($a="pE");
-		//count and kill
-
+		$clan = $event->owner;
 		$resources = $this->getContext()->model->getResourceRepository()->getResourcesArray($clan);
-
-		//cout new ones
 		$units = $this->getContext()->model->getUnitRepository()->getClanUnits($clan);
 
-		//sort units
 		$rules = $this->getContext()->rules;
-		usort($units, function ($a, $b) use ($rules){
+		//sort units in reverse order
+		usort($units, function ($a, $b) use ($rules) {
 			$aUpkeep = $rules->get('unit', $a->type)->getUpkeep();
 			$bUpkeep = $rules->get('unit', $b->type)->getUpkeep();
-			if ($aUpkeep == $bUpkeep) return 0;
-			return ($aUpkeep < $bUpkeep) ? -1 : 1;
+			return (isset($bUpkeep['food']) ? $bUpkeep['food'] : 0)
+				- (isset($aUpkeep['food']) ? $aUpkeep['food'] : 0);
 		});
 
-
-		//determine
 		$production = -$resources['food']['production'];
 		$time = floor($resources['food']['balance'] / $production);
-
-		foreach($units as $unit){
-			if ($production <= 0){
+		foreach ($units as $unit) {
+			if ($production <= 0) {
 				break;
 			}
-
 			$upkeep = $rules->get('unit', $unit->type)->getUpkeep();
-
-			if ($upkeep['food'] <= 0){
+			if ($upkeep['food'] <= 0) {
 				continue;
 			}
-
-			Debugger::barDump($unit->count);
-			Debugger::barDump(floor($production / $upkeep['food']));
-			$count = min($unit->count, floor($production / $upkeep['food']));
-			$production -= $upkeep['food'] * $count;
-
-			//kill
-			$this->getContext()->model->getUnitService()->removeUnits($clan, $unit->location, array($unit->type, $count));
+			$unkept = min($unit->count, ceil($production / $upkeep['food']));
+			$production -= $upkeep['food'] * $unkept;
+			$this->getContext()->model->unitService->removeUnits($clan, $unit->location, array($unit->type => $unkept), $event->term, FALSE);
 		}
-
-
+		$this->getContext()->model->resourceService->recalculateProduction($event->owner, $event->term);
 	}
 
+	public function getExhaustionExplanation ()
+	{
+		return "Hladomor";
+	}
+	
+	public function formatExhaustionReport (Entities\Report $report)
+	{
+		return array();
+	}
 }
