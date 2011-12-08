@@ -582,51 +582,45 @@ Game.map = {
 		}
 	},
 
+	/**
+	 * Return the field
+	 * @param Event
+	 * @return Field
+	 */
 	determineField : function (e)
 	{
 		var local = Game.utils.globalToLocal(Game.map.overlayDiv, e.pageX, e.pageY);
-		var mouseX = local['x'];
-		var mouseY = local['y'];
-		var breaker = false;
-		var result = null;
 		var map = Game.map.map;
-// 		var a = mouseX + Game.map.dX + Game.map.fieldWidth;
-// 		var b = mouseY + Game.map.dY;
-// 		y = ((a * 20) / 43 + b) / 39;
-// 		x = (19 * Math.floor(y) - b) / 20; // Can you solve linear systems of equations, you son of a peach?
-// 		x = Math.ceil(x); y = Math.floor(y);
-// 		var dX = mouseX - Game.map.calculateXPos(x);
-// 		var dY = -(mouseY - Game.map.calculateYPos(y)); // More comfortable for analythic geometry
-// 		var field = map[x][y];
-// 		if ((4 * dX + 3 * dY - 172) > 0) { // Hardcore f**king analythic geometry
-// 			result = Game.utils.isset(map[field.coordX + 1]) ? map[field.coordX + 1][field.coordY] : null;
-// 		} else if ((4 * dX - 3 * dY - 292) > 0) { // More hardcore f**king analythic geometry
-// 			result = map[field.coordX][field.coordY + 1];
-// 		} else {
-// 			result = field;
-// 		}
-		
-		$.each(Game.map.fieldsByCoords, function(xKey, x){
-			if (xKey > mouseX - Game.map.fieldWidth && xKey < mouseX){
-				$.each(x, function(yKey, field){
-					if (yKey > mouseY - Game.map.fieldHeight && yKey < mouseY){
-						var dX = mouseX - xKey;
-						var dY = -(mouseY - yKey); // More comfortable for analythic geometry
-						if ((4 * dX + 3 * dY - 172) > 0) { // Hardcore f**king analythic geometry
-							result = Game.utils.isset(map[field.coordX + 1]) ? map[field.coordX + 1][field.coordY] : null;
-						} else if ((4 * dX - 3 * dY - 292) > 0) { // More hardcore f**king analythic geometry
-							result = map[field.coordX][field.coordY + 1];
-						} else {
-							result = field;
-						}
-						breaker = true;
-					}
-					if (breaker) return false;
-				});
-				if (breaker) return false;
-			}
-		});
-		return result !== undefined ? result : null;
+		var mouseX = local['x'] + Game.map.dX;
+		var mouseY = local['y'] + Game.map.dY -18;
+
+		var idY = (mouseY + (20/43)*mouseX) / 39;
+		var idX = Math.floor(mouseX/43 - idY);
+		idY = Math.floor(idY);
+
+		if (!Game.utils.isset(map[idX]) || !Game.utils.isset(map[idX][idY])){
+			return null;
+		}
+
+		var posX = Game.map.calculateXPos(map[idX][idY]);
+		var posY = Game.map.calculateYPos(map[idX][idY]);
+
+		var c = (-4) * (posX + 57) + 3 * posY; // posX +60, but +57 fits better
+		if (0 < 4*(mouseX) - 3*(mouseY) + c){
+			idX++;
+		}
+
+		c = (-4) * (posX + 46) - 3 * (posY + 20); // posX +60, but +46 fits better
+		if (0 < 4*(mouseX) + 3*(mouseY) + c){
+			idY++;
+		}
+
+		if (!Game.utils.isset(map[idX]) || !Game.utils.isset(map[idX][idY])){
+			return null;
+		}
+
+		return map[idX][idY];
+
 	},
 
 	/**
