@@ -71,7 +71,7 @@ abstract class Attack extends AbstractRule implements IEvent
 	protected function returnAttackingUnits (Entities\Event $event, $processor, $loot = NULL)
 	{
 		if ($loot) {
-			$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot);
+			$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, $event->term);
 		}
 		$processor->queueEvent($this->getContext()->model->getMoveService()->startUnitReturn(
 			$event->target,

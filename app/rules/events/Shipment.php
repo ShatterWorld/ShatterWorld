@@ -13,7 +13,7 @@ class Shipment extends AbstractRule implements IEvent
 
 	public function process (Entities\Event $event, $processor)
 	{
-		$this->getContext()->model->getResourceService()->increase($event->target->owner, $event->cargo);
+		$this->getContext()->model->getResourceService()->increase($event->target->owner, $event->cargo, $event->term);
 		return array();
 	}
 

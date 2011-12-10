@@ -19,8 +19,8 @@ class Occupation extends Attack
 				$construction->failed = TRUE;
 			}
 			if ($loot = $result['attacker']['loot']) {
-				$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, FALSE);
-				$this->getContext()->model->getResourceService()->increase($event->owner, $loot, FALSE);
+				$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, $event->term, FALSE);
+				$this->getContext()->model->getResourceService()->increase($event->owner, $loot, $event->term, FALSE);
 			}
 			$event->target->owner = $event->owner;
 		} else {

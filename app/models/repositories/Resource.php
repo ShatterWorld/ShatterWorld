@@ -21,8 +21,8 @@ class Resource extends BaseRepository
 		$qb->where($qb->expr()->eq('r.clan', $clan->id));
 		$result = array();
 		foreach ($qb->getQuery()->getResult() as $resource) {
-			$row = array();
 			$resource->settleBalance();
+			$row = array();
 			$row['balance'] = $resource->balance;
 			$row['production'] = $resource->production;
 			$row['storage'] = $resource->storage;
@@ -31,11 +31,11 @@ class Resource extends BaseRepository
 		return $result;
 	}
 	
-	public function checkResources (Entities\Clan $clan, $price)
+	public function checkResources (Entities\Clan $clan, $price, $term = NULL)
 	{
 		$resources = $this->findResourcesByClan($clan);
 		foreach ($price as $resource => $cost) {
-			if (!$resources[$resource]->has($cost)) {
+			if (!$resources[$resource]->has($cost, $term)) {
 				return FALSE;
 			}
 		}

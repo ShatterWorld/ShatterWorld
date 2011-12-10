@@ -25,7 +25,7 @@ class Offer extends BaseService {
 
 			$time = array('offer' => 60, 'demand' => 60);
 
-			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount), FALSE);
+			$this->context->model->getResourceService()->pay($targetClan, array($offer->demand => $offer->demandAmount), NULL, FALSE);
 			$this->update($offer, array('sold' => true), FALSE);
 
 			$this->context->model->getShipmentService()->create(array( //owner->target
@@ -77,8 +77,7 @@ class Offer extends BaseService {
 			$this->context->model->getResourceService()->pay($values['owner'], array($values['offer'] => $values['offerAmount']));
 			$this->context->model->getClanService()->issueOrder($values['owner'], FALSE);
 			parent::create($values, $flush);
-		}
-		else{
+		} else {
 			throw new InsufficientResourcesException();
 		}
 	}
@@ -89,14 +88,14 @@ class Offer extends BaseService {
 	 * @param bool
 	 * @return void
 	 */
-	public function delete ($object, $flush = TRUE){
+	public function delete ($object, $flush = TRUE)
+	{
 		$clan = $this->context->model->getClanRepository()->getPlayerClan();
 		if ($clan->id == $object->owner->id){
 			$this->context->model->getResourceService()->increase($object->owner, array($object->offer => $object->offerAmount));
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);
 			parent::delete($object, $flush);
-		}
-		else{
+		} else {
 			throw new RuleViolationException();
 		}
 

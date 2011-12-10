@@ -14,7 +14,7 @@ class UnitReturn extends AbstractRule implements IEvent
 	{
 		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
 		if ($event->cargo) {
-			$this->getContext()->model->getResourceService()->increase($event->owner, $event->cargo);
+			$this->getContext()->model->getResourceService()->increase($event->owner, $event->cargo, $event->term);
 		}
 		return array();
 	}

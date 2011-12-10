@@ -12,15 +12,16 @@ class Resource extends BaseService
 	 * @throws InsufficientResourcesException
 	 * @return void
 	 */
-	public function pay (Entities\Clan $clan, $price, $flush = TRUE)
+	public function pay (Entities\Clan $clan, $price, $term = NULL, $flush = TRUE)
 	{
-		if (!$this->getRepository()->checkResources($clan, $price)) {
+		if (!$this->getRepository()->checkResources($clan, $price, $term)) {
 			throw new \InsufficientResourcesException;
 		}
 		$resources = $this->getRepository()->findResourcesByClan($clan);
 		foreach ($price as $resource => $cost) {
 			$resources[$resource]->pay($cost);
 		}
+		$this->checkExhaustion($clan, $term);
 		if ($flush) {
 			$this->entityManager->flush();
 		}
@@ -32,12 +33,13 @@ class Resource extends BaseService
 	 * @param array of $resource => $amount
 	 * @return void
 	 */
-	public function increase (Entities\Clan $clan, $payment, $flush = TRUE)
+	public function increase (Entities\Clan $clan, $payment, $term = NULL, $flush = TRUE)
 	{
 		$resources = $this->getRepository()->findResourcesByClan($clan);
 		foreach ($payment as $resource => $amount) {
 			$resources[$resource]->increase($amount);
 		}
+		$this->checkExhaustion($clan, $term);
 		if ($flush) {
 			$this->entityManager->flush();
 		}
@@ -48,21 +50,13 @@ class Resource extends BaseService
 		$production = $this->context->stats->resources->getProduction($clan);
 		$this->entityManager->flush();
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
-
 			if (!isset($production[$account->type])){
 				$production[$account->type] = 0;
 			}
-
 			$account->setProduction($production[$account->type], $term ?: new \DateTime());
-
-			/*if ($production[$account->type] < 0){
-				$rule = $this->context->rules->get('resource', $account->type);
-				$this->context->model->getConstructionService()->startResourceExhaustion($clan, $account);
-			}*/
-
 		}
 		$this->entityManager->flush();
-		$this->checkExhaustion($clan);
+		$this->checkExhaustion($clan, $term);
 
 	}
 
@@ -75,15 +69,39 @@ class Resource extends BaseService
 		$this->entityManager->flush();
 	}
 
-	protected function checkExhaustion ($clan)
+	protected function checkExhaustion (Entities\Clan $clan, $term = NULL)
 	{
 		$production = $this->context->stats->resources->getProduction($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
 			if ($production[$account->type] < 0){
-				$production = $this->context->model->getConstructionService()->startResourceExhaustion($clan, $account);
+				$production = $this->startExhaustionCountdown($clan, $account, $term);
 			}
 		}
-
-
+	}
+	
+	protected function startExhaustionCountdown (Entities\Clan $clan, Entities\Resource $resource, $term = NULL, $flush = TRUE)
+	{
+		$resource->settleBalance($term);
+		$time = floor($resource->balance / (-$resource->production));
+		$term = $term ?: new \DateTime();
+		if (!($countdown = $this->context->model->constructionRepository->findOneBy(array(
+			'owner' => $clan->id,
+			'type' => 'resourceExhaustion',
+			'construction' => $resource->type,
+			'processed' => FALSE
+		)))) {
+			$countdown = $this->context->model->constructionService->create(array(
+				'owner' => $clan,
+				'target' => $clan->getHeadquarters(),
+				'type' => 'resourceExhaustion',
+				'construction' => $resource->type,
+				'timeout' => $time
+			), FALSE);
+			$countdown->setTimeout();
+		}
+		$countdown->setTimeout($time, $term);
+		if ($flush) {
+			$this->entityManager->flush();
+		}
 	}
 }

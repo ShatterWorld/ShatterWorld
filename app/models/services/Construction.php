@@ -49,7 +49,7 @@ class Construction extends Event
 				'type' => 'colonisation',
 				'timeout' => floor($this->context->stats->colonisation->getTime($target, $clan))
 			), FALSE);
-			$this->context->model->getResourceService()->pay($clan, $cost, FALSE);
+			$this->context->model->getResourceService()->pay($clan, $cost, NULL, FALSE);
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);
 			$this->entityManager->flush();
 		} else {
@@ -79,7 +79,7 @@ class Construction extends Event
 				'level' => $level,
 				'timeout' => $stats->getConstructionTime($clan, $facility, $level)
 			), FALSE);
-			$this->context->model->getResourceService()->pay($clan, $price, FALSE);
+			$this->context->model->getResourceService()->pay($clan, $price, NULL, FALSE);
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);
 			$this->entityManager->flush();
 		} else {
@@ -108,7 +108,7 @@ class Construction extends Event
 				'level' => $level,
 				'timeout' => $stats->getDemolitionTime($clan, $field->facility, $field->level, $level)
 			), FALSE);
-			$this->context->model->getResourceService()->pay($field->owner, $price, FALSE);
+			$this->context->model->getResourceService()->pay($field->owner, $price, NULL, FALSE);
 			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
 			$this->entityManager->flush();
 		} else {
@@ -186,7 +186,7 @@ class Construction extends Event
 			'construction' => Json::encode($list),
 			'timeout' => $timeout
 		), FALSE);
-		$this->context->model->getResourceService()->pay($clan, $price, FALSE);
+		$this->context->model->getResourceService()->pay($clan, $price, NULL, FALSE);
 		$this->context->model->getClanService()->issueOrder($clan, FALSE);
 		$this->entityManager->flush();
 	}
@@ -236,7 +236,7 @@ class Construction extends Event
 				'level' => $level,
 				'timeout' => $stats->getTime($clan, $type, $level)
 			), FALSE);
-			$this->context->model->getResourceService()->pay($clan, $price, FALSE);
+			$this->context->model->getResourceService()->pay($clan, $price, NULL, FALSE);
 			$this->context->model->getClanService()->issueOrder($clan, FALSE);
 			$this->entityManager->flush();
 		} else {

@@ -109,9 +109,9 @@ class Resource extends BaseEntity
 	 * @param float
 	 * @return bool
 	 */
-	public function has ($amount)
+	public function has ($amount, $term = NULL)
 	{
-		$this->settleBalance();
+		$this->settleBalance($term);
 		return $this->balance >= $amount;
 	}
 	
