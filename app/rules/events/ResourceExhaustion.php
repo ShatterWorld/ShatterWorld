@@ -30,7 +30,7 @@ class ResourceExhaustion extends AbstractRule implements IEvent
 
 	public function formatReport (Entities\Report $report)
 	{
-		return $this->getContext()->rules->get('resource', $report->data->resource)->formatExhaustionReport($report);
+		return $this->getContext()->rules->get('resource', $report->data['resource'])->formatExhaustionReport($report);
 	}
 
 	public function isExclusive ()
