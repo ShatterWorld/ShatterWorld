@@ -22,6 +22,9 @@ class Resources extends AbstractStat
 	public function getProduction (Entities\Clan $clan)
 	{
 		$result = array();
+		foreach (array_keys($this->getContext->rules->getAll('resource')) as $resource) {
+			$result[$resource] = 0;
+		}
 		foreach ($this->getContext()->model->getFieldRepository()->findByOwner($clan->id) as $field) {
 			if ($field->facility) {
 				$production = $this->getContext()->rules->get('facility', $field->facility)->getProduction($field->level);
@@ -31,22 +34,14 @@ class Resources extends AbstractStat
 					if (array_key_exists($resource, $fieldBonus)) {
 						$modifier = $modifier + $fieldBonus[$resource] / 100;
 					}
-					if (array_key_exists($resource, $result)) {
-						$result[$resource] = $result[$resource] + $modifier * $value;
-					} else {
-						$result[$resource] = $modifier * $value;
-					}
+					$result[$resource] = $result[$resource] + $modifier * $value;
 				}
 			}
 		}
 		foreach ($this->getContext()->model->getUnitRepository()->findByOwner($clan->id) as $unit) {
 			$rule = $this->getContext()->rules->get('unit', $unit->type);
 			foreach ($rule->getUpkeep() as $resource => $amount) {
-				if (array_key_exists($resource, $result)) {
-					$result[$resource] = $result[$resource] - $amount * $unit->count;
-				} else {
-					$result[$resource] = (-1) * $amount * $unit->count;
-				}
+				$result[$resource] = $result[$resource] - $amount * $unit->count;
 			}
 		}
 		return $result;
