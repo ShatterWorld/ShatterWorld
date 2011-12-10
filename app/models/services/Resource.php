@@ -94,10 +94,8 @@ class Resource extends BaseService
 				'owner' => $clan,
 				'target' => $clan->getHeadquarters(),
 				'type' => 'resourceExhaustion',
-				'construction' => $resource->type,
-				'timeout' => $time
+				'construction' => $resource->type
 			), FALSE);
-			$countdown->setTimeout();
 		}
 		$countdown->setTimeout($time, $term);
 		if ($flush) {
