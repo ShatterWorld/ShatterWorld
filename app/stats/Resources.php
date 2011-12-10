@@ -13,7 +13,7 @@ class Resources extends AbstractStat
 		}
 		return 1 + pow($level + 1, 2)/100;
 	}
-	
+
 	/**
 	 * Get given clan's production of resources
 	 * @param Entities\Clan
@@ -22,7 +22,7 @@ class Resources extends AbstractStat
 	public function getProduction (Entities\Clan $clan)
 	{
 		$result = array();
-		foreach (array_keys($this->getContext->rules->getAll('resource')) as $resource) {
+		foreach (array_keys($this->getContext()->rules->getAll('resource')) as $resource) {
 			$result[$resource] = 0;
 		}
 		foreach ($this->getContext()->model->getFieldRepository()->findByOwner($clan->id) as $field) {

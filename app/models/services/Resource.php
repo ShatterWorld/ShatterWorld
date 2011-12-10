@@ -72,13 +72,14 @@ class Resource extends BaseService
 	protected function checkExhaustion (Entities\Clan $clan, $term = NULL)
 	{
 		$production = $this->context->stats->resources->getProduction($clan);
+		Debugger::barDump($production);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
 			if ($production[$account->type] < 0){
 				$production = $this->startExhaustionCountdown($clan, $account, $term);
 			}
 		}
 	}
-	
+
 	protected function startExhaustionCountdown (Entities\Clan $clan, Entities\Resource $resource, $term = NULL, $flush = TRUE)
 	{
 		$resource->settleBalance($term);
