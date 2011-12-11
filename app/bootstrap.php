@@ -40,3 +40,4 @@ $application = $container->application;
 //$application->catchExceptions = TRUE;
 $application->errorPresenter = 'Error';
 $application->run();
+// $container->model->resourceService->recalculateProduction($container->model->clanRepository->getPlayerClan());

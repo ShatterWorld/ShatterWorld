@@ -28,27 +28,25 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		parent::beforeRender();
 		$clan = $this->getPlayerClan();
-		$this->template->orderTimeout = $this->context->stats->orders->getTimeout();
-		$this->template->eventData = array_map(function ($event) {
-		if ($clan !== null){
-			$this->template->orderCount = $this->context->stats->orders->getAvailableOrders($clan);
-			$this->template->reportCount = $this->getReportRepository()->countUnread($clan);
-			$this->template->resources = $this->getResourceRepository()->getResourcesArray($clan);
-			$this->template->resourceRules = $this->context->rules->getAll('resource');
-			$this->template->events = $this->getEventRepository()->findUpcomingEvents($clan);
-				$result = $event->toArray();
-				$result['target'] = $event->target->toArray();
-				return $result;
-			}, $this->template->events);
-			$this->template->eventRules = $this->context->rules->getAll('event');
-			ksort($this->template->resources);
-		} else {
-			$this->template->orderCount = 0;
-			$this->template->reportCount = 0;
-			$this->template->events = array();
-			$this->template->resources = array();
-		}
+		
+		$this->template->orderCount = $clan ? $this->context->stats->orders->getAvailableOrders($clan) : 0;
 		$this->template->orderCap = $this->context->params['game']['stats']['orderCap'];
+		$this->template->orderTimeout = $this->context->stats->orders->getTimeout();
+		
+		$this->template->reportCount = $clan ? $this->getReportRepository()->countUnread($clan) : 0;
+		
+		$this->template->resources = $clan ? $this->getResourceRepository()->getResourcesArray($clan) : array();
+		$this->template->resourceRules = $clan ? $this->context->rules->getAll('resource') : array();
+		
+		$this->template->events = $clan ? $this->getEventRepository()->findUpcomingEvents($clan) : array();
+		$this->template->eventData = $clan ? array_map(function ($event) {
+			$result = $event->toArray();
+			$result['target'] = $event->target->toArray();
+			return $result;
+		}, $this->template->events) : array();
+		$this->template->eventRules = $this->context->rules->getAll('event');
+		
+		ksort($this->template->resources);
 	}
 
 	/**
