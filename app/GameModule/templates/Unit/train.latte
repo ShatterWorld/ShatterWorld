@@ -74,7 +74,11 @@
 							{$unitRules[$name]->getTrainingTime()|time}
 						</td>
 						<td class="amount">
-							{input $name}
+							{if $template->getUnitLevel($name) > 0}
+								{input $name}
+							{else}
+								<input type="text" disabled/>
+							{/if}
 						</td>
 						<td class="max"></td>
 					</tr>

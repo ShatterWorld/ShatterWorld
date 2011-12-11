@@ -35,6 +35,7 @@ class UnitPresenter extends BasePresenter
 			$resources[$name] = $rule;
 		}
 
+		$this->template->registerHelper('getUnitLevel', callback($this, 'getUnitLevel'));
 		$this->template->registerHelper('getUnitAttack', callback($this, 'getUnitAttack'));
 		$this->template->registerHelper('getUnitDefense', callback($this, 'getUnitDefense'));
 		$this->template->resourceRules = $resources;
@@ -45,9 +46,7 @@ class UnitPresenter extends BasePresenter
 
 	protected function createComponentTrainUnitForm ()
 	{
-
 		$form = new Form;
-
 		$units = $this->context->rules->getAll('unit');
 
 		foreach ($units as $name => $unit){
@@ -58,10 +57,6 @@ class UnitPresenter extends BasePresenter
 		}
 
 		$form->addSubmit('send', 'Trénovat');
-
-		//$form->setTranslator($translator);
-
-
 		$form->onSuccess[] = callback($this, 'submitTrainUnitForm');
 
 		return $form;
@@ -86,6 +81,8 @@ class UnitPresenter extends BasePresenter
 
 		} catch (InsufficientOrdersException $e){
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		} catch (RuleViolationException $e){
+			$this->flashMessage('Tuto jednotku nemáte vyzkoumanou', 'error');
 		}
 
 		$this->redirect('Unit:Train');
@@ -94,6 +91,11 @@ class UnitPresenter extends BasePresenter
 	public function getUnitDescription ($type)
 	{
 		return $this->context->rules->get('unit', $type)->getDescription();
+	}
+
+	public function getUnitLevel ($unitName)
+	{
+		return $this->context->stats->units->getUnitLevel($this->getPlayerClan(), $unitName);
 	}
 
 	public function getUnitAttack ($unitName)

@@ -151,6 +151,9 @@ class Construction extends Event
 		}
 		$list = array_filter($list);
 		foreach ($list as $type => $count) {
+			if ($this->context->stats->units->getUnitLevel($clan, $type) <= 0){
+				throw new RuleViolationException;
+			}
 			$rule = $this->context->rules->get('unit', $type);
 			foreach ($rule->getCost() as $resource => $cost) {
 				if (array_key_exists($resource, $price)) {
