@@ -8,7 +8,7 @@ use Entities;
 abstract class Attack extends AbstractRule implements IEvent
 {
 	protected $attackingUnits;
-	
+
 	protected function evaluateBattle (Entities\Event $event)
 	{
 		$result = array(
@@ -31,14 +31,14 @@ abstract class Attack extends AbstractRule implements IEvent
 		foreach ($event->getUnits() as $unit) {
 			$rule = $this->getContext()->rules->get('unit', $unit->type);
 			$result['attacker']['units'][$unit->type] = $unit->count;
-			$attackerPower = $attackerPower + $unit->count * $rule->getAttack();
-			$attackerDefense = $attackerDefense + $unit->count * $rule->getDefense();
+			$attackerPower = $attackerPower + $unit->count * $this->getContext()->stats->units->getUnitAttack($event->owner, $unit->type);
+			$attackerDefense = $attackerDefense + $unit->count * $this->getContext()->stats->units->getUnitDefense($event->owner, $unit->type);
 		}
 		foreach ($event->target->getUnits() as $unit) {
 			$rule = $this->getContext()->rules->get('unit', $unit->type);
 			$result['defender']['units'][$unit->type] = $unit->count;
-			$defenderPower = $defenderPower + $unit->count * $rule->getAttack();
-			$defenderDefense = $defenderDefense + $unit->count * $rule->getDefense();
+			$defenderPower = $defenderPower + $unit->count * $this->getContext()->stats->units->getUnitAttack($event->target->owner, $unit->type);
+			$defenderDefense = $defenderDefense + $unit->count * $this->getContext()->stats->units->getUnitDefense($event->target->owner, $unit->type);
 		}
 		$attackerCasualtiesCoefficient = $defenderDefense > 0 ? 1 - tanh($attackerPower / (5 * $defenderDefense)) : 0;
 		$defenderCasualtiesCoefficient = $defenderDefense > 0 ? tanh(2 * $attackerPower / $defenderDefense) : 1;
@@ -67,7 +67,7 @@ abstract class Attack extends AbstractRule implements IEvent
 		}
 		return $result;
 	}
-	
+
 	protected function returnAttackingUnits (Entities\Event $event, $processor, $loot = NULL)
 	{
 		if ($loot) {
@@ -82,7 +82,7 @@ abstract class Attack extends AbstractRule implements IEvent
 			$event->term
 		));
 	}
-	
+
 	public function process (Entities\Event $event, $processor)
 	{
 		$model = $this->getContext()->model;
@@ -97,14 +97,14 @@ abstract class Attack extends AbstractRule implements IEvent
 		}
 		return $result;
 	}
-	
+
 	public function isValid (Entities\Event $event)
 	{
-		return $event->target->owner !== NULL && 
-			$event->target->owner !== $event->owner && 
+		return $event->target->owner !== NULL &&
+			$event->target->owner !== $event->owner &&
 			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance);
 	}
-	
+
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;

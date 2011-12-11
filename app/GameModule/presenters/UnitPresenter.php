@@ -12,6 +12,8 @@ class UnitPresenter extends BasePresenter
 	public function renderDefault ()
 	{
 		$this->template->registerHelper('getDescription', callback($this, 'getUnitDescription'));
+		$this->template->registerHelper('getUnitAttack', callback($this, 'getUnitAttack'));
+		$this->template->registerHelper('getUnitDefense', callback($this, 'getUnitDefense'));
 		$this->template->units = $this->getClanUnits();
 	}
 
@@ -33,6 +35,8 @@ class UnitPresenter extends BasePresenter
 			$resources[$name] = $rule;
 		}
 
+		$this->template->registerHelper('getUnitAttack', callback($this, 'getUnitAttack'));
+		$this->template->registerHelper('getUnitDefense', callback($this, 'getUnitDefense'));
 		$this->template->resourceRules = $resources;
 		$this->template->unitRules = $this->context->rules->getAll('unit');
 		$this->template->slots = $slots;
@@ -90,5 +94,15 @@ class UnitPresenter extends BasePresenter
 	public function getUnitDescription ($type)
 	{
 		return $this->context->rules->get('unit', $type)->getDescription();
+	}
+
+	public function getUnitAttack ($unitName)
+	{
+		return $this->context->stats->units->getUnitAttack($this->getPlayerClan(), $unitName);
+	}
+
+	public function getUnitDefense ($unitName)
+	{
+		return $this->context->stats->units->getUnitDefense($this->getPlayerClan(), $unitName);
 	}
 }

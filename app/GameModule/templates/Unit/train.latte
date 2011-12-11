@@ -53,7 +53,7 @@
 							{label $name /}
 						</th>
 						<td class="strength">
-							{$unitRules[$name]->getAttack()}/{$unitRules[$name]->getDefense()}
+							{$name|getUnitAttack}/{$name|getUnitDefense}
 						</td>
 						{foreach $resources as $key => $res}
 							<td class="cost {$key}">

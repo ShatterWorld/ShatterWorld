@@ -14,7 +14,7 @@ class Research extends AbstractStat
 		$level = $this->getContext()->model->getResearchRepository()->getResearchLevel($clan, 'researchEfficiency');
 		return 1 - pow($level, 2)/100;
 	}
-	
+
 	public function getCost (Entities\Clan $clan, $research, $level)
 	{
 		$rule = $this->getContext()->rules->get('research', $research);
@@ -24,7 +24,7 @@ class Research extends AbstractStat
 		}
 		return $price;
 	}
-	
+
 	public function getTime (Entities\Clan $clan, $research, $level)
 	{
 		$rule = $this->getContext()->rules->get('research', $research);
