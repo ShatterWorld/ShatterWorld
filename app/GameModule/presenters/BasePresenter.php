@@ -28,14 +28,14 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		parent::beforeRender();
 		$clan = $this->getPlayerClan();
+		$this->template->orderTimeout = $this->context->stats->orders->getTimeout();
+		$this->template->eventData = array_map(function ($event) {
 		if ($clan !== null){
 			$this->template->orderCount = $this->context->stats->orders->getAvailableOrders($clan);
-			$this->template->orderTimeout = $this->context->stats->orders->getTimeout();
 			$this->template->reportCount = $this->getReportRepository()->countUnread($clan);
 			$this->template->resources = $this->getResourceRepository()->getResourcesArray($clan);
 			$this->template->resourceRules = $this->context->rules->getAll('resource');
 			$this->template->events = $this->getEventRepository()->findUpcomingEvents($clan);
-			$this->template->eventData = array_map(function ($event) {
 				$result = $event->toArray();
 				$result['target'] = $event->target->toArray();
 				return $result;
@@ -73,7 +73,7 @@ abstract class BasePresenter extends \BasePresenter
 		$form['clan']->setValue($this->getPlayerClan()->id);
 		return $form;
 	}
-	
+
 	public function handleSwitchClan ($clanId)
 	{
 		$model = $this->getContext()->model;
@@ -84,7 +84,7 @@ abstract class BasePresenter extends \BasePresenter
 		}
 		$this->redirect('this');
 	}
-	
+
 	/**
 	 * Returns players profile
 	 * @return Entities\Profile
@@ -168,7 +168,7 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		$this->invalidateControl('orders');
 	}
-	
+
 	/**
 	 * Ajax descriptionfetching
 	 * @return void

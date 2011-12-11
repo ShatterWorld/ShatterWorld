@@ -134,6 +134,20 @@ class Clan extends BaseService
 				'clearance' => $now
 			), FALSE);
 		}
+
+		$this->getContext()->model->getResearchService()->create(array(
+			'type' => 'militia',
+			'owner' => $clan,
+			'level' => 1
+		), FALSE);
+
+		$this->getContext()->model->getResearchService()->create(array(
+			'type' => 'footman',
+			'owner' => $clan,
+			'level' => 1
+		), FALSE);
+
+
 		$this->entityManager->flush();
 		$this->context->model->getUserService()->update($clan->user, array('activeClan' => $clan));
 		return $clan;
