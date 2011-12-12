@@ -10,11 +10,6 @@ class Fuel extends AbstractRule implements IExhaustableResource
 		return 'Palivo';
 	}
 
-	public function getInitialAmount ()
-	{
-		return 300;
-	}
-
 	public function processExhaustion (Entities\Event $event)
 	{
 

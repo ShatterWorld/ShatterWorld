@@ -8,9 +8,4 @@ class Metal extends AbstractRule implements IResource
 	{
 		return 'Kov';
 	}
-
-	public function getInitialAmount ()
-	{
-		return 300;
-	}
 }

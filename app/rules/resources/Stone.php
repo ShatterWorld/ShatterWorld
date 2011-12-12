@@ -8,9 +8,4 @@ class Stone extends AbstractRule implements IResource
 	{
 		return 'Kámen';
 	}
-
-	public function getInitialAmount ()
-	{
-		return 300;
-	}
 }

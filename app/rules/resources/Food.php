@@ -11,11 +11,6 @@ class Food extends AbstractRule implements IExhaustableResource
 		return 'Jídlo';
 	}
 
-	public function getInitialAmount ()
-	{
-		return 500;
-	}
-
 	public function processExhaustion (Entities\Event $event)
 	{
 		$clan = $event->owner;

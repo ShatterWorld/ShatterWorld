@@ -124,29 +124,35 @@ class Clan extends BaseService
 		}
 		$this->cache->save('lastHqId', $headq->id);
 
+		$initial = $this->context->params['game']['initial'];
 		$now = new \DateTime();
+		
 		foreach ($this->context->rules->getAll('resource') as $type => $rule) {
 			$this->context->model->getResourceService()->create(array(
 				'clan' => $clan,
 				'type' => lcfirst($type),
-				'balance' => $rule->getInitialAmount(),
+				'balance' => $initial['resources']['type'],
 				'storage' => $this->context->params['game']['stats']['baseStorage'],
 				'clearance' => $now
 			), FALSE);
 		}
-
-		$this->context->model->getResearchService()->create(array(
-			'type' => 'militia',
-			'owner' => $clan,
-			'level' => 1
-		), FALSE);
-
-		$this->context->model->getResearchService()->create(array(
-			'type' => 'footman',
-			'owner' => $clan,
-			'level' => 1
-		), FALSE);
-
+		
+		foreach ($initial['units'] as $unit => $count) {
+			$this->context->model->unitService->create(array(
+				'type' => $unit,
+				'count' => $count,
+				'location' => $headq,
+				'owner' => $clan
+			), FALSE);
+		}
+		
+		foreach ($initial['researches'] as $research => $level) {
+			$this->context->model->getResearchService()->create(array(
+				'type' => $research,
+				'owner' => $clan,
+				'level' => $level
+			), FALSE);
+		}
 
 		$this->entityManager->flush();
 		$this->context->model->getUserService()->update($clan->user, array('activeClan' => $clan));
