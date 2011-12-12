@@ -1,0 +1,48 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/quests.css" />
+{/block}
+
+{block #header}
+	Úkoly - přehled
+{/block}
+
+{block #content}
+
+	{if count($active) > 0}
+		<h3>Aktivní</h3>
+		<table id = "active">
+			<tr>
+				<th class="type">Úkol</th>
+				<th class="level">Úroveň</th>
+			</tr>
+			{foreach $active as $quest}
+				<tr class="row{$iterator->even ? 1 : 2} data">
+					<td class="type">{$all[$quest->type]->getDescription()}</td>
+					<td class="level">{$quest->level}</td>
+				</tr>
+			{/foreach}
+		</table>
+	{else}
+		<p>Nemáte aktivní úkoly</p>
+	{/if}
+
+	{if count($completed) > 0}
+		<h3>Aktivní</h3>
+		<table id = "completed">
+			<tr>
+				<th class="type">Úkol</th>
+				<th class="level">Úroveň</th>
+			</tr>
+			{foreach $completed as $quest}
+				<tr class="row{$iterator->even ? 1 : 2} data">
+					<td class="type">{$all[$quest->type]->getDescription()}</td>
+					<td class="level">{$quest->level}</td>
+				</tr>
+			{/foreach}
+		</table>
+	{else}
+		<p>Nemáte dokončené úkoly</p>
+	{/if}
+
+{/block}
