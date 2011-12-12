@@ -3,16 +3,16 @@ namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
 
-class HeavyVehicle extends AbstractRule implements IResearch
+class ColonisationEfficiency extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Obrněné vozidlo';
+		return 'Efektivita kolonizace';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Vylepšení technologií obrněného vozidla';
+		return 'Lepší osadníci, nižší náklady, rychlejší osídlení';
 	}
 
 	public function getCost ($level = 1)
@@ -45,5 +45,9 @@ class HeavyVehicle extends AbstractRule implements IResearch
 		return 10;
 	}
 
-}
+	public function getCategory ()
+	{
+		return 'administration';
+	}
 
+}

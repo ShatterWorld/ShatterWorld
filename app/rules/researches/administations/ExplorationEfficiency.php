@@ -3,24 +3,24 @@ namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
 
-class Militia extends AbstractRule implements IResearch
+class ExplorationEfficiency extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Domobrana';
+		return 'Efektivita průzkumu';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Vylepšení technologií domobrany';
+		return 'Rychlejší průzkum, nižší náklady etc';
 	}
 
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 300,
-			'stone' => pow($level, 2) * 300,
-			'metal' => pow($level, 2) * 300
+			'food' => pow($level, 3) * 300,
+			'stone' => pow($level, 3) * 300,
+			'metal' => pow($level, 3) * 300
 		);
 	}
 
@@ -45,5 +45,9 @@ class Militia extends AbstractRule implements IResearch
 		return 10;
 	}
 
-}
+	public function getCategory ()
+	{
+		return 'administration';
+	}
 
+}

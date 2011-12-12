@@ -13,7 +13,7 @@ use ConflictException;
  * A message presenter
  * @author Petr Bělohlávek
  */
-class ResearchPresenter extends BasePresenter 
+class ResearchPresenter extends BasePresenter
 {
 	/**
 	 * Displays researches the clan has already researched
@@ -22,8 +22,14 @@ class ResearchPresenter extends BasePresenter
 	public function renderDefault ()
 	{
 		$clan = $this->getPlayerClan();
+		$researched = array();
+		foreach ($this->getResearchRepository()->getResearched($clan) as $key => $research){
+			//Debugger::barDump($key);
+			$researched[$this->context->rules->get('research', $key)->getCategory()][$key] = $research;
+		}
+
 		$this->template->researchEfficiency = $this->getContext()->stats->research->getEfficiency($clan);
-		$this->template->researched = $this->getResearchRepository()->getResearched($clan);
+		$this->template->researched = $researched;
 		$this->template->all = $this->context->rules->getAll('research');
 		$this->template->running = $this->getConstructionRepository()->getRunningResearches($clan);
 
@@ -35,10 +41,15 @@ class ResearchPresenter extends BasePresenter
 	 */
 	public function renderResearch ()
 	{
+		$all = array();
+		foreach ($this->context->rules->getAll('research') as $key => $research){
+			$all[$research->getCategory()][$key] = $research;
+		}
+
 		$clan = $this->getPlayerClan();
 		$this->template->researched = $this->getResearchRepository()->getResearched($clan);
 		$this->template->researchEfficiency = $this->getContext()->stats->research->getEfficiency($clan);
-		$this->template->all = $this->context->rules->getAll('research');
+		$this->template->all = $all;
 		$this->template->running = $this->getConstructionRepository()->getRunningResearches($clan);
 
 	}

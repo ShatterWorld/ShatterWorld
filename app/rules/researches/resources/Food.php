@@ -3,25 +3,25 @@ namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
 
-class Fuel extends AbstractRule implements IResearch
+class Food extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Těžba ropy';
+		return 'Farmaření';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Hloubka vrtů';
+		return 'Zvýšení industrializace farem';
 	}
 
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 400,
+			'food' => pow($level, 2) * 600,
 			'stone' => pow($level, 2) * 400,
 			'metal' => pow($level, 2) * 400,
-			'fuel' => pow($level, 2) * 600
+			'fuel' => pow($level, 2) * 400
 		);
 	}
 
@@ -33,7 +33,7 @@ class Fuel extends AbstractRule implements IResearch
 	public function getDependencies ()
 	{
 		return array(
-			'researchEfficiency' => 1
+			'researchEfficiency' => 1,
 		);
 	}
 
@@ -52,4 +52,8 @@ class Fuel extends AbstractRule implements IResearch
 		return 10;
 	}
 
+	public function getCategory ()
+	{
+		return 'resource';
+	}
 }

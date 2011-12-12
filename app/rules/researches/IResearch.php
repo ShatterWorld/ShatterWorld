@@ -55,5 +55,11 @@ interface IResearch extends IRule
 	 */
 	public function getLevelCap ();
 
+	/**
+	 * Returns the category of the research
+	 * @return string
+	 */
+	public function getCategory ();
+
 
 }

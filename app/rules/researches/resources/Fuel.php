@@ -3,16 +3,16 @@ namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
 
-class Metal extends AbstractRule implements IResearch
+class Fuel extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Těžba kovu';
+		return 'Těžba ropy';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Nové krumpáče';
+		return 'Hloubka vrtů';
 	}
 
 	public function getCost ($level = 1)
@@ -20,8 +20,8 @@ class Metal extends AbstractRule implements IResearch
 		return array(
 			'food' => pow($level, 2) * 400,
 			'stone' => pow($level, 2) * 400,
-			'metal' => pow($level, 2) * 600,
-			'fuel' => pow($level, 2) * 400
+			'metal' => pow($level, 2) * 400,
+			'fuel' => pow($level, 2) * 600
 		);
 	}
 
@@ -52,4 +52,8 @@ class Metal extends AbstractRule implements IResearch
 		return 10;
 	}
 
+	public function getCategory ()
+	{
+		return 'resource';
+	}
 }

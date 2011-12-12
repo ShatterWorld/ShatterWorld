@@ -18,20 +18,23 @@
 
 	<h2>Dokončené výzkumy</h2>
 	{if count($researched) > 0}
-		<table id = "researches">
-			<tr>
-				<th class="type">Typ</th>
-				<th class="level">Level</th>
-				<th class="max">Max</th>
-			</tr>
-			{foreach $researched as $research}
-				<tr class="row{$iterator->even ? 1 : 2} data">
-					<td class="type">{$all[$research->type]->getDescription()}</td>
-					<td class="level">{$research->level}</td>
-					<td class="max">{$all[$research->type]->getLevelCap()}</td>
+		{foreach $researched as $categoryKey => $category}
+			<h3>{$categoryKey}</h3>
+			<table id = "researches">
+				<tr>
+					<th class="type">Výzkum</th>
+					<th class="level">Úroveň</th>
+					<th class="max">Max</th>
 				</tr>
-			{/foreach}
-		</table>
+				{foreach $category as $research}
+					<tr class="row{$iterator->even ? 1 : 2} data">
+						<td class="type">{$all[$research->type]->getDescription()}</td>
+						<td class="level">{$research->level}</td>
+						<td class="max">{$all[$research->type]->getLevelCap()}</td>
+					</tr>
+				{/foreach}
+			</table>
+		{/foreach}
 	{else}
 		<p>Ještě není nic vynalezeno. Můžeš <a n:href="research">vynalézt</a></p>
 	{/if}
@@ -40,9 +43,9 @@
 	{if count($running) > 0}
 		<table id = "running">
 			<tr>
-				<th class="type">Typ</th>
-				<th class="level">Level</th>
-				<th class="max"><img src="{$basePath}/images/icons/time.png"/></th>
+				<th class="type">Výzkum</th>
+				<th class="level">Úroveň</th>
+				<th class="timeFull"><img src="{$basePath}/images/icons/time.png"/></th>
 			</tr>
 			{foreach $running as $research}
 				<tr class="row{$iterator->even ? 1 : 2} data">

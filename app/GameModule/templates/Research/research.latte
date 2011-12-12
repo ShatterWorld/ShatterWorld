@@ -9,90 +9,93 @@
 
 {block #content}
 	{if count($all) > 0}
-		<table id = "researches">
-			<tr>
-				<th class="type">Typ</th>
-				<th class="level">Level</th>
-				<th class="max">Max</th>
-				<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
-				{foreach $resources as $key => $res}
-					<td class="cost {$key}">
-						<img src="{$basePath}/images/resources/{$key}.png"/>
-					</td>
-				{/foreach}
-				<th class="action">Akce</th>
-			</tr>
+		{foreach $all as $categoryKey => $category}
+			<h3>{$categoryKey}</h3>
+			<table id = "researches">
+				<tr>
+					<th class="type">Výzkum</th>
+					<th class="level">Úroveň</th>
+					<th class="max">Max</th>
+					<th class="time"><img src="{$basePath}/images/icons/time.png"/></th>
+					{foreach $resources as $key => $res}
+						<td class="cost {$key}">
+							<img src="{$basePath}/images/resources/{$key}.png"/>
+						</td>
+					{/foreach}
+					<th class="action">Akce</th>
+				</tr>
 
-			{foreach $all as $key => $research}
+				{foreach $category as $key => $research}
 
-				{ifset $researched[$key]}
-					{?$lvl = $researched[$key]->level + 1}
-				{elseifset $running[$key]}
-					{?$lvl = $running[$key]->level + 1}
-				{else}
-					{?$lvl = 1}
-				{/ifset}
-				{?$cap = $research->getLevelCap()}
+					{ifset $researched[$key]}
+						{?$lvl = $researched[$key]->level + 1}
+					{elseifset $running[$key]}
+						{?$lvl = $running[$key]->level + 1}
+					{else}
+						{?$lvl = 1}
+					{/ifset}
+					{?$cap = $research->getLevelCap()}
 
-				{if $lvl < $cap}
-					<tr class="row2">
-						<td class="type">{$research->getDescription()}</td>
-						<td class="level">{$lvl}</td>
-						<td class="max">{$cap}</td>
-						<td class="time">{$researchEfficiency * $research->getResearchTime()|time}</td>
+					{if $lvl < $cap}
+						<tr class="row2">
+							<td class="type">{$research->getDescription()}</td>
+							<td class="level">{$lvl}</td>
+							<td class="max">{$cap}</td>
+							<td class="time">{$researchEfficiency * $research->getResearchTime()|time}</td>
 
-						{ifset $running[$key]}
-							{foreach $resources as $resKey => $res}
-								<td class="cost {$resKey}">
-									---
-								</td>
-							{/foreach}
-							<td class="action running" rowspan="2">Zkoumáno</td>
-						{else}
-							{?$cost}
-							{?$tmpCost = $research->getCost($lvl)}
-							{?$enoughRes = true}
-							{foreach $resources as $resKey => $res}
-								{?$cost[$resKey] = 0}
-								{ifset $tmpCost[$resKey]}{?$cost[$resKey] = $tmpCost[$resKey]}{/ifset}
-								<td class="cost {$resKey}">
-									{$cost[$resKey]}
-								</td>
-								{if $cost[$resKey] > $res[balance]}{?$enoughRes = false}{/if}
-							{/foreach}
-
-							{?$missingDependency = false}
-							{foreach $research->getDependencies() as $depKey => $dependency}
-								{if (!isset($researched[$depKey]) || $researched[$depKey]->level < $dependency)}{?$missingDependency = true}{/if}
-							{/foreach}
-
-							{?$conflicts = false}
-							{foreach $research->getConflicts() as $conflictKey => $conflict}
-								{if (isset($researched[$conflictKey]) && $researched[$conflictKey]->level > $conflict)}{?$conflicts = true}{/if}
-							{/foreach}
-
-							{if $missingDependency}
-								<td class="action missDep" rowspan="2">Závislosti</td>
-							{elseif $conflicts}
-								<td class="action conflict" rowspan="2">Konflikty</td>
-							{elseif !$enoughRes}
-								<td class="action missRes" rowspan="2">Suroviny</td>
-							{elseif $lvl == 1}
-								<td class="action research" rowspan="2"><a href="{link research! $key}">Vyzkoumat</a></td>
+							{ifset $running[$key]}
+								{foreach $resources as $resKey => $res}
+									<td class="cost {$resKey}">
+										---
+									</td>
+								{/foreach}
+								<td class="action running" rowspan="2">Zkoumáno</td>
 							{else}
-								<td class="action upgrade" rowspan="2"><a href="{link research! $key}">Vylepšit</a></td>
-							{/if}
-						{/ifset}
+								{?$cost}
+								{?$tmpCost = $research->getCost($lvl)}
+								{?$enoughRes = true}
+								{foreach $resources as $resKey => $res}
+									{?$cost[$resKey] = 0}
+									{ifset $tmpCost[$resKey]}{?$cost[$resKey] = $tmpCost[$resKey]}{/ifset}
+									<td class="cost {$resKey}">
+										{$cost[$resKey]}
+									</td>
+									{if $cost[$resKey] > $res[balance]}{?$enoughRes = false}{/if}
+								{/foreach}
 
-					</tr>
-					<tr class="row1">
-						<td class="explanation" colspan="{5+count($resources)-1}">{$research->getExplanation()}</td>
-					</tr>
-				{/if}
-			{/foreach}
+								{?$missingDependency = false}
+								{foreach $research->getDependencies() as $depKey => $dependency}
+									{if (!isset($researched[$depKey]) || $researched[$depKey]->level < $dependency)}{?$missingDependency = true}{/if}
+								{/foreach}
+
+								{?$conflicts = false}
+								{foreach $research->getConflicts() as $conflictKey => $conflict}
+									{if (isset($researched[$conflictKey]) && $researched[$conflictKey]->level > $conflict)}{?$conflicts = true}{/if}
+								{/foreach}
+
+								{if $missingDependency}
+									<td class="action missDep" rowspan="2">Závislosti</td>
+								{elseif $conflicts}
+									<td class="action conflict" rowspan="2">Konflikty</td>
+								{elseif !$enoughRes}
+									<td class="action missRes" rowspan="2">Suroviny</td>
+								{elseif $lvl == 1}
+									<td class="action research" rowspan="2"><a href="{link research! $key}">Vyzkoumat</a></td>
+								{else}
+									<td class="action upgrade" rowspan="2"><a href="{link research! $key}">Vylepšit</a></td>
+								{/if}
+							{/ifset}
+
+						</tr>
+						<tr class="row1">
+							<td class="explanation" colspan="{5+count($resources)-1}">{$research->getExplanation()}</td>
+						</tr>
+					{/if}
+				{/foreach}
 
 
-		</table>
+			</table>
+		{/foreach}
 	{else}
 		<p>Nic k vyzkoumání</p>
 	{/if}

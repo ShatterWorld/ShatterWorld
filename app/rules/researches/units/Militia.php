@@ -3,16 +3,16 @@ namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
 
-class Artillery extends AbstractRule implements IResearch
+class Militia extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Artilérie';
+		return 'Domobrana';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Vylepšení technologií artilérie';
+		return 'Vylepšení technologií domobrany';
 	}
 
 	public function getCost ($level = 1)
@@ -45,5 +45,9 @@ class Artillery extends AbstractRule implements IResearch
 		return 10;
 	}
 
+	public function getCategory ()
+	{
+		return 'unit';
+	}
 }
 

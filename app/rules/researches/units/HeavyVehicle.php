@@ -3,24 +3,24 @@ namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
 
-class ExplorationEfficiency extends AbstractRule implements IResearch
+class HeavyVehicle extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Efektivita průzkumu';
+		return 'Obrněné vozidlo';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Rychlejší průzkum, nižší náklady etc';
+		return 'Vylepšení technologií obrněného vozidla';
 	}
 
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 3) * 300,
-			'stone' => pow($level, 3) * 300,
-			'metal' => pow($level, 3) * 300
+			'food' => pow($level, 2) * 300,
+			'stone' => pow($level, 2) * 300,
+			'metal' => pow($level, 2) * 300
 		);
 	}
 
@@ -45,4 +45,9 @@ class ExplorationEfficiency extends AbstractRule implements IResearch
 		return 10;
 	}
 
+	public function getCategory ()
+	{
+		return 'unit';
+	}
 }
+

@@ -2,26 +2,25 @@
 namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
+use Nette\Caching\Cache;
 
-class Food extends AbstractRule implements IResearch
+class TradeProfit extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Farmaření';
+		return 'Profit z obchodu';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Zvýšení industrializace farem';
+		return 'Procentuální zisk ze zboží, které přejde přes tvoje území';
 	}
 
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 600,
-			'stone' => pow($level, 2) * 400,
-			'metal' => pow($level, 2) * 400,
-			'fuel' => pow($level, 2) * 400
+			'food' => pow($level, 2) * 500,
+			'fuel' => $level > 3 ? pow($level, 2) * 350 : 0
 		);
 	}
 
@@ -33,7 +32,7 @@ class Food extends AbstractRule implements IResearch
 	public function getDependencies ()
 	{
 		return array(
-			'researchEfficiency' => 1,
+			'storage' => 1
 		);
 	}
 
@@ -44,12 +43,21 @@ class Food extends AbstractRule implements IResearch
 
 	public function afterResearch (Entities\Construction $construction)
 	{
-		$this->getContext()->model->getResourceService()->recalculateProduction($construction->owner, $construction->term);
+		$cache = $this->getContext()->model->getClanRepository()->getClanGraphCache();
+		$id = $construction->owner->id;
+		$cache->clean(array(
+			Cache::TAGS => array("observer/$id"),
+		));
 	}
 
 	public function getLevelCap ()
 	{
 		return 10;
+	}
+
+	public function getCategory ()
+	{
+		return 'economy';
 	}
 
 }

@@ -2,25 +2,26 @@
 namespace Rules\Researches;
 use Rules\AbstractRule;
 use Entities;
-use Nette\Caching\Cache;
 
-class TradeProfit extends AbstractRule implements IResearch
+class Metal extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Profit z obchodu';
+		return 'Těžba kovu';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Procentuální zisk ze zboží, které přejde přes tvoje území';
+		return 'Nové krumpáče';
 	}
 
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 500,
-			'fuel' => $level > 3 ? pow($level, 2) * 350 : 0
+			'food' => pow($level, 2) * 400,
+			'stone' => pow($level, 2) * 400,
+			'metal' => pow($level, 2) * 600,
+			'fuel' => pow($level, 2) * 400
 		);
 	}
 
@@ -32,7 +33,7 @@ class TradeProfit extends AbstractRule implements IResearch
 	public function getDependencies ()
 	{
 		return array(
-			'storage' => 1
+			'researchEfficiency' => 1
 		);
 	}
 
@@ -43,11 +44,7 @@ class TradeProfit extends AbstractRule implements IResearch
 
 	public function afterResearch (Entities\Construction $construction)
 	{
-		$cache = $this->getContext()->model->getClanRepository()->getClanGraphCache();
-		$id = $construction->owner->id;
-		$cache->clean(array(
-			Cache::TAGS => array("observer/$id"),
-		));
+		$this->getContext()->model->getResourceService()->recalculateProduction($construction->owner, $construction->term);
 	}
 
 	public function getLevelCap ()
@@ -55,4 +52,8 @@ class TradeProfit extends AbstractRule implements IResearch
 		return 10;
 	}
 
+	public function getCategory ()
+	{
+		return 'resource';
+	}
 }
