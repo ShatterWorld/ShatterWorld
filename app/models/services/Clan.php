@@ -83,7 +83,7 @@ class Clan extends BaseService
 			$lastHq =  $fieldRepository->find($lastHqId);
 		}
 
-		Debugger::barDump($lastHq);
+		//Debugger::barDump($lastHq);
 		$neutralHexagonsCenters = $fieldRepository->findNeutralHexagons($lastHq, $playerDistance, $map);
 		//Debugger::barDump($neutralHexagonsCenters);
 		$fieldRepository->sortByDistance($neutralHexagonsCenters, $S);
@@ -135,13 +135,13 @@ class Clan extends BaseService
 			), FALSE);
 		}
 
-		$this->getContext()->model->getResearchService()->create(array(
+		$this->context->model->getResearchService()->create(array(
 			'type' => 'militia',
 			'owner' => $clan,
 			'level' => 1
 		), FALSE);
 
-		$this->getContext()->model->getResearchService()->create(array(
+		$this->context->model->getResearchService()->create(array(
 			'type' => 'footman',
 			'owner' => $clan,
 			'level' => 1

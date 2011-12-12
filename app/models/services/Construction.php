@@ -63,6 +63,7 @@ class Construction extends Event
 	 * @param string
 	 * @param int
 	 * @throws InsufficientResourcesException
+	 * @throws MissingDependencyException
 	 * @return void
 	 */
 	public function startFacilityConstruction (Entities\Field $field, $facility, $level = 1)
@@ -70,6 +71,14 @@ class Construction extends Event
 		$clan = $field->owner;
 		$stats = $this->context->stats->construction;
 		$price = $stats->getConstructionCost($clan, $facility, $level);
+
+		$rule = $this->context->rules->get('facility', $facility);
+		foreach ($rule->getDependencies() as $dependence => $level){
+			if ($this->context->model->getResearchRepository()->getResearchLevel($field->owner, $dependence) < $level){
+				throw new MissingDependencyException;
+			}
+		}
+
 		if ($this->context->model->getResourceRepository()->checkResources($clan, $price)) {
 			$this->create(array(
 				'target' => $field,

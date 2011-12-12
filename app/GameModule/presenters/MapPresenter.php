@@ -139,6 +139,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		} catch (InsufficientOrdersException $e){
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		} catch (MissingDependencyException $e){
+			$this->flashMessage('Nemáte vyzkoumáno vše potřebné', 'error');
 		}
 	}
 
@@ -179,6 +181,8 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
 		} catch (InsufficientOrdersException $e){
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		} catch (MissingDependencyException $e){
+			$this->flashMessage('Nemáte vyzkoumáno vše potřebné', 'error');
 		}
 	}
 
