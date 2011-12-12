@@ -55,6 +55,9 @@ common:
 			
 			researches:
 				militia: 1
+			
+			quests:
+				- foodGathering
 
 	doctrine:
 		proxyDir: %tempDir%/proxies

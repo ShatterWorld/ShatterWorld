@@ -127,11 +127,11 @@ class Clan extends BaseService
 		$initial = $this->context->params['game']['initial'];
 		$now = new \DateTime();
 		
-		foreach ($this->context->rules->getAll('resource') as $type => $rule) {
+		foreach ($initial['resources'] as $resource => $balance) {
 			$this->context->model->getResourceService()->create(array(
 				'clan' => $clan,
-				'type' => lcfirst($type),
-				'balance' => $initial['resources']['type'],
+				'type' => $resource,
+				'balance' => $balance,
 				'storage' => $this->context->params['game']['stats']['baseStorage'],
 				'clearance' => $now
 			), FALSE);
@@ -151,6 +151,14 @@ class Clan extends BaseService
 				'type' => $research,
 				'owner' => $clan,
 				'level' => $level
+			), FALSE);
+		}
+		
+		foreach ($initial['quests'] as $quest) {
+			$this->context->model->questService->create(array(
+				'type' => $quest,
+				'owner' => $clan,
+				'start' => $now,
 			), FALSE);
 		}
 

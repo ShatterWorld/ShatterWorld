@@ -3,7 +3,7 @@ namespace Entities;
 
 /**
  * An entity representing a finished or progressing quest
- * @Entity
+ * @Entity(repositoryClass = "Repositories\Quest")
  * @author Jan "Teyras" Buchar
  */
 class Quest extends BaseEntity
@@ -15,10 +15,22 @@ class Quest extends BaseEntity
 	private $type;
 	
 	/**
+	 * @Column(type = "integer")
+	 * @var int
+	 */
+	private $level;
+	
+	/**
 	 * @Column(type = "boolean")
 	 * @var bool
 	 */
 	private $completed;
+	
+	/**
+	 * @Column(type = "boolean")
+	 * @var bool
+	 */
+	private $failed;
 	
 	/**
 	 * @Column(type = "datetime")
@@ -28,6 +40,7 @@ class Quest extends BaseEntity
 	
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan")
+	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\Clan
 	 */
 	private $owner;
@@ -38,15 +51,17 @@ class Quest extends BaseEntity
 	 * @param string
 	 * @param DateTime
 	 */
-	public function __construct (Clan $owner, $type, $start = NULL)
+	public function __construct (Clan $owner, $type, $level = 1, $start = NULL)
 	{
 		$this->owner = $owner;
 		$this->type = $type;
+		$this->level = $level;
 		if (!$start) {
 			$start = new \DateTime();
 		}
 		$this->start = $start;
 		$this->completed = FALSE;
+		$this->failed = FALSE;
 	}
 	
 	/**
@@ -56,6 +71,15 @@ class Quest extends BaseEntity
 	public function getType ()
 	{
 		return $this->type;
+	}
+	
+	/**
+	 * Level getter
+	 * @return int
+	 */
+	public function getLevel ()
+	{
+		return $this->level;
 	}
 	
 	/**
@@ -75,6 +99,25 @@ class Quest extends BaseEntity
 	public function setCompleted ($completed)
 	{
 		$this->completed = $completed;
+	}
+	
+	/**
+	 * Has the player failed to complete the quest?
+	 * @return bool
+	 */
+	public function isFailed ()
+	{
+		return $this->failed;
+	}
+	
+	/**
+	 * Fail setter
+	 * @param bool
+	 * @return void
+	 */
+	public function setFailed ($failed)
+	{
+		$this->failed = $failed;
 	}
 	
 	/**

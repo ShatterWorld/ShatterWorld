@@ -13,24 +13,32 @@ interface IQuest extends IRule
 	 * Get quests the player has to complete before being able to start this quest
 	 * @return array
 	 */
-	public function getDependencies ();
+	public function getDependencies ($level = 1);
 	
 	/**
 	 * Verify if the conditions for completing this quest have been satisfied
+	 * @param Entities\Quest
+	 * @param DateTime
 	 * @return bool
 	 */
-	public function isCompleted (Entities\Quest $quest);
+	public function isCompleted (Entities\Quest $quest, $term);
 	
 	/**
 	 * Reward a clan for completing this quest
-	 * @param Entities\Clan
+	 * @param Entities\Quest
 	 * @return void
 	 */
-	public function processRewards (Entities\Clan $clan);
+	public function processCompletion (Entities\Quest $quest);
 	
 	/**
 	 * Get the score value of this quest
 	 * @return int
 	 */
-	public function getValue ();
+	public function getValue ($level = 1);
+	
+	/**
+	 * Get this quest's maximal level
+	 * @return int
+	 */
+	public function getLevelCap ();
 }
