@@ -4,6 +4,7 @@ use Rules\AbstractRule;
 use ReportItem;
 use DataRow;
 use Entities;
+use Nette\Diagnostics\Debugger;
 
 abstract class Attack extends AbstractRule implements IEvent
 {
@@ -29,17 +30,20 @@ abstract class Attack extends AbstractRule implements IEvent
 		$defenderPower = 0;
 		$defenderDefense = 0;
 		foreach ($event->getUnits() as $unit) {
-			$rule = $this->getContext()->rules->get('unit', $unit->type);
 			$result['attacker']['units'][$unit->type] = $unit->count;
 			$attackerPower = $attackerPower + $unit->count * $this->getContext()->stats->units->getUnitAttack($event->owner, $unit->type);
 			$attackerDefense = $attackerDefense + $unit->count * $this->getContext()->stats->units->getUnitDefense($event->owner, $unit->type);
 		}
 		foreach ($event->target->getUnits() as $unit) {
-			$rule = $this->getContext()->rules->get('unit', $unit->type);
 			$result['defender']['units'][$unit->type] = $unit->count;
 			$defenderPower = $defenderPower + $unit->count * $this->getContext()->stats->units->getUnitAttack($event->target->owner, $unit->type);
 			$defenderDefense = $defenderDefense + $unit->count * $this->getContext()->stats->units->getUnitDefense($event->target->owner, $unit->type);
 		}
+
+		$fieldRule = $this->getContext()->rules->get('field', $event->target->type);
+		$facilityRule = $this->getContext()->rules->get('facility', $event->target->facility);
+		$defenderDefense *= (1 + $fieldRule->getDefenceBonus()) * (1 + $facilityRule);
+
 		$attackerCasualtiesCoefficient = $defenderDefense > 0 ? 1 - tanh($attackerPower / (5 * $defenderDefense)) : 0;
 		$defenderCasualtiesCoefficient = $defenderDefense > 0 ? tanh(2 * $attackerPower / $defenderDefense) : 1;
 		foreach ($event->getUnits() as $unit) {

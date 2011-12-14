@@ -3,7 +3,7 @@ namespace Rules\Fields;
 use Rules\AbstractRule;
 use Nette;
 
-class Mountain extends AbstractRule implements IField 
+class Mountain extends AbstractRule implements IField
 {
 	public function getDescription ()
 	{
@@ -14,12 +14,12 @@ class Mountain extends AbstractRule implements IField
 	{
 		return 3;
 	}
-	
+
 	public function getOilProbability ()
 	{
 		return 0;
 	}
-	
+
 	public function getProductionBonuses ()
 	{
 		return array(
@@ -28,4 +28,10 @@ class Mountain extends AbstractRule implements IField
 			'stone' => 60
 		);
 	}
+
+	public function getDefenceBonus ()
+	{
+		return 0.5;
+	}
+
 }

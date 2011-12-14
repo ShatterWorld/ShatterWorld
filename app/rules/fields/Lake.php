@@ -14,12 +14,12 @@ class Lake extends AbstractRule implements IField
 	{
 		return 3;
 	}
-	
+
 	public function getOilProbability ()
 	{
 		return 0;
 	}
-	
+
 	public function getProductionBonuses ()
 	{
 		return array(
@@ -29,4 +29,10 @@ class Lake extends AbstractRule implements IField
 			'metal' => -90
 		);
 	}
+
+	public function getDefenceBonus ()
+	{
+		return -0.2;
+	}
+
 }

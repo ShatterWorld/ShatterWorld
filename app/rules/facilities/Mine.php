@@ -43,4 +43,9 @@ class Mine extends AbstractRule implements IFacility
 			'metal' => $level / 100
 		);
 	}
+
+	public function getDefenceBonus ()
+	{
+		return 0;
+	}
 }

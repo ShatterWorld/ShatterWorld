@@ -14,12 +14,12 @@ class Barren extends AbstractRule implements IField
 	{
 		return 7;
 	}
-	
+
 	public function getOilProbability ()
 	{
 		return 0;
 	}
-	
+
 	public function getProductionBonuses ()
 	{
 		return array(
@@ -27,5 +27,10 @@ class Barren extends AbstractRule implements IField
 			'fuel' => -40,
 			'metal' => -40
 		);
+	}
+
+	public function getDefenceBonus ()
+	{
+		return 0.2;
 	}
 }

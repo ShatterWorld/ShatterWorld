@@ -14,12 +14,12 @@ class Plain extends AbstractRule implements IField
 	{
 		return 4;
 	}
-	
+
 	public function getOilProbability ()
 	{
 		return 0;
 	}
-	
+
 	public function getProductionBonuses ()
 	{
 		return array(
@@ -29,4 +29,10 @@ class Plain extends AbstractRule implements IField
 			'stone' => -10
 		);
 	}
+
+	public function getDefenceBonus ()
+	{
+		return 0;
+	}
+
 }

@@ -31,7 +31,12 @@ class MineField extends AbstractRule implements IFacility
 
 	public function getDemolitionCost ($from, $level = 0)
 	{
-		return array();
+		return array(
+			'stone' => $level * 1000 + 500,
+			'metal' => $level * 1000 + 500,
+			'fuel' => $level * 1000 + 500,
+			'food' => $level * 1000 + 500
+		);
 	}
 
 	public function getDemolitionTime ($from, $level = 0)
@@ -42,5 +47,10 @@ class MineField extends AbstractRule implements IFacility
 	public function getProduction ($level = 1)
 	{
 		return array();
+	}
+
+	public function getDefenceBonus ()
+	{
+		return 0;
 	}
 }

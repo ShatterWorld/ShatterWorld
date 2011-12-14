@@ -14,12 +14,12 @@ class Forest extends AbstractRule implements IField
 	{
 		return 5;
 	}
-	
+
 	public function getOilProbability ()
 	{
 		return 0;
 	}
-	
+
 	public function getProductionBonuses ()
 	{
 		return array(
@@ -28,5 +28,10 @@ class Forest extends AbstractRule implements IField
 			'metal' => -30,
 			'stone' => -20
 		);
+	}
+
+	public function getDefenceBonus ()
+	{
+		return 0;
 	}
 }

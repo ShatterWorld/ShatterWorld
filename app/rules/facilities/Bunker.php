@@ -44,4 +44,9 @@ class Bunker extends AbstractRule implements IFacility
 	{
 		return array();
 	}
+
+	public function getDefenceBonus ()
+	{
+		return 1;
+	}
 }

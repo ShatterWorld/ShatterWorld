@@ -14,12 +14,12 @@ class Moor extends AbstractRule implements IField
 	{
 		return 4;
 	}
-	
+
 	public function getOilProbability ()
 	{
 		return 0;
 	}
-	
+
 	public function getProductionBonuses ()
 	{
 		return array(
@@ -28,4 +28,10 @@ class Moor extends AbstractRule implements IField
 			'metal' => -40
 		);
 	}
+
+	public function getDefenceBonus ()
+	{
+		return 0;
+	}
+
 }
