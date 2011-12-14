@@ -52,6 +52,15 @@ class Move extends Event
 	}
 	
 	/**
+	 * Get clans that are relevant to this event
+	 * @return array of Entities\Clan
+	 */
+	public function getObservers ()
+	{
+		return array($this->owner, $this->target->owner);
+	}
+	
+	/**
 	 * Origin getter
 	 * @return Entities\Field
 	 */
