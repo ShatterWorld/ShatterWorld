@@ -20,7 +20,7 @@ class Quest extends BaseRepository
 			FALSE
 		));
 		$query = $qb->getQuery();
-		$query->useResultCache(TRUE);
+// 		$query->useResultCache(TRUE);
 		return $query->getResult();
 	}
 

@@ -1,6 +1,7 @@
 <?php
 namespace Rules\Quests;
 use Rules\AbstractRule;
+use Entities;
 
 class FoodGathering extends AbstractRule
 {

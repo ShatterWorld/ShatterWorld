@@ -52,13 +52,14 @@ class Event extends BaseService
 					$this->context->model->getReportService()->create(array(
 						'event' => $event,
 						'data' => $report
-					));
+					), FALSE);
 				} else {
 					$this->update($event, array('failed' => TRUE), FALSE);
 				}
 				$this->update($event, array('processed' => TRUE), FALSE);
 			}
 		}
+		$this->context->model->questService->processCompletion($this->context->model->clanRepository->getPlayerClan(), $now);
 		$this->entityManager->flush();
 	}
 	

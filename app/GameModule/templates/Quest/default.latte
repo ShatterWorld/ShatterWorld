@@ -48,7 +48,7 @@
 					<td class="level">{$quest->level}</td>
 					<td class="max">{$all[$quest->type]->getLevelCap()}</td>
 					<td class="value">{$all[$quest->type]->getValue($quest->level)}</td>
-					{?$totalValue = $all[$quest->type]->getValue($quest->level)}
+					{?$totalValue = $totalValue + $all[$quest->type]->getValue($quest->level)}
 				</tr>
 			{/foreach}
 		</table>
