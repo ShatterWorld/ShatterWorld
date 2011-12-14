@@ -15,11 +15,15 @@
 			<tr>
 				<th class="type">Úkol</th>
 				<th class="level">Úroveň</th>
+				<th class="level">Max</th>
+				<th class="level">Body</th>
 			</tr>
 			{foreach $active as $quest}
 				<tr class="row{$iterator->even ? 1 : 2} data">
 					<td class="type">{$all[$quest->type]->getDescription()}</td>
 					<td class="level">{$quest->level}</td>
+					<td class="max">{$all[$quest->type]->getLevelCap()}</td>
+					<td class="value">{$all[$quest->type]->getValue()}</td>
 				</tr>
 			{/foreach}
 		</table>
@@ -28,19 +32,26 @@
 	{/if}
 
 	{if count($completed) > 0}
-		<h3>Aktivní</h3>
+		<h3>Dokončené</h3>
 		<table id = "completed">
 			<tr>
 				<th class="type">Úkol</th>
 				<th class="level">Úroveň</th>
+				<th class="level">Max</th>
+				<th class="level">Body</th>
 			</tr>
+			{?$totalValue = 0}
 			{foreach $completed as $quest}
 				<tr class="row{$iterator->even ? 1 : 2} data">
 					<td class="type">{$all[$quest->type]->getDescription()}</td>
 					<td class="level">{$quest->level}</td>
+					<td class="max">{$all[$quest->type]->getLevelCap()}</td>
+					<td class="value">{$all[$quest->type]->getValue()}</td>
+					{?$totalValue = $all[$quest->type]->getValue()}
 				</tr>
 			{/foreach}
 		</table>
+		<h3>Celkem za úkoly: {$totalValue}b.
 	{else}
 		<p>Nemáte dokončené úkoly</p>
 	{/if}
