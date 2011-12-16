@@ -19,11 +19,14 @@
 				<th class="level">Body</th>
 			</tr>
 			{foreach $active as $quest}
-				<tr class="row{$iterator->even ? 1 : 2} data">
+				<tr class="row2 data">
 					<td class="type">{$all[$quest->type]->getDescription()}</td>
 					<td class="level">{$quest->level}</td>
 					<td class="max">{$all[$quest->type]->getLevelCap()}</td>
 					<td class="value">{$all[$quest->type]->getValue($quest->level)}</td>
+				</tr>
+				<tr class="row1">
+					<td class="explanation" colspan="4">{$all[$quest->type]->getExplanation($quest->level)}</td>
 				</tr>
 			{/foreach}
 		</table>
