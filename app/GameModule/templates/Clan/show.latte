@@ -1,0 +1,31 @@
+{block #header}
+	Přehled klanu
+{/block}
+
+{block #content}
+	{ifset $clan}
+		<table>
+			<tr>
+				<th>Název</th>
+				<td>{$clan->name}</td>
+			</tr>
+			<tr>
+				<th>Aliance</th>
+				<td>{if $clan->alliance != null}{$clan->alliance->name}{else}bezalianční{/if}</td>
+			</tr>
+			<tr>
+				<th>Hráč</th>
+				<td>
+					{ifset $profile}
+						<a n:href="Profile:show $profile->id">{$clan->user->nickname}</a>
+					{else}
+						{$clan->user->nickname}
+					{/ifset}
+				</td>
+			</tr>
+
+		</table>
+	{else}
+		Klan nenalezen
+	{/ifset}
+{/block}

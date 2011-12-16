@@ -18,7 +18,7 @@
 		{?$i = 1}
 		{foreach $messages as $message}
 			<tr class="row{($i++ % 2) + 1}">
-				<td>{$message->recipient->nickname}</td>
+				<td><a n:href="Profile:show $message->recipient->id">{$message->recipient->nickname}</a></td>
 				<td><a href="{link Message:show $message->id}">{$message->subject}</a></td>
 				<td class="time">{$message->sentTime|date:"d.m.Y H:i"}</td>
 				<td class="delete"><a n:href="deleteBySender! $message->id">X</a></td>

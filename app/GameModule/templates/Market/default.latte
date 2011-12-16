@@ -39,7 +39,7 @@
 			</tr>
 			{foreach $clanOffers as $offer}
 				<tr class="data">
-					<td class="owner">{$offer->owner->name}</td>
+					<td class="owner"><a n:href="Clan:show $offer->owner->id">{$offer->owner->name}</a></td>
 					<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
 					<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
 					<td class="action"><a n:href="deleteOffer! $offer->id">X</a></td>
@@ -61,8 +61,8 @@
 			</tr>
 			{foreach $runningShipments as $shipment}
 				<tr class="data">
-					<td class="owner">{$shipment->origin->owner->name}</td>
-					<td class="target">{$shipment->target->owner->name}</td>
+					<td class="owner"><a n:href="Clan:show $shipment->owner->id">{$shipment->origin->owner->name}</a></td>
+					<td class="target"><a n:href="Clan:show $shipment->target->owner->id">{$shipment->target->owner->name}</a></td>
 					<td class="offer"><img src="{$basePath}/images/resources/{foreach $shipment->cargo as $res => $value}{$res}{/foreach}.png"/> {foreach $shipment->cargo as $res => $value}{$value}{/foreach}</td>
 
 					<td class="timeFull">{$shipment->term|date:"d.m.Y H:i"}</td>

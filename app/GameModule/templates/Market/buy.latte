@@ -34,7 +34,7 @@
 			</tr>
 			{foreach $offers as $key => $offer}
 				<tr class="data">
-					<td class="owner">{$offer->owner->name}</td>
+					<td class="owner"><a n:href="Clan:show $offer->owner->id">{$offer->owner->name}</a></td>
 					<td class="offer"><img src="{$basePath}/images/resources/{$offer->offer}.png"/> {$offer->offerAmount}</td>
 					<td class="demand"><img src="{$basePath}/images/resources/{$offer->demand}.png"/> {$offer->demandAmount}</td>
 

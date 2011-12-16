@@ -2,21 +2,54 @@
 namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Diagnostics\Debugger;
 
 
 /**
- * A ClanPresenter
+ * Clan Presenter
  * @author Petr Bělohlávek
  */
 class ClanPresenter extends BasePresenter {
 
 	/**
-	* Redirects if user has no clan, otherwise displays his clan
+	*
 	* @return void
 	*/
-	public function renderDefault ()
+	public function actionDefault ()
 	{
-		$this->template->clan = $this->getPlayerClan();
+		$this->redirect('Clan:show', $this->getPlayerClan()->id);
+	}
+
+	/**
+	* Show action
+	* @param int
+	* @return void
+	*/
+	public function actionShow ($clanId = null)
+	{
+		if ($clanId === null){
+			$this->redirect('Clan:show', $this->getPlayerClan()->id);
+		}
+	}
+
+	/**
+	* Show render
+	* @param int
+	* @return void
+	*/
+	public function renderShow ($clanId)
+	{
+		if ($clan = $this->context->model->getClanRepository()->findOneById($clanId)){
+			$playerClan = $this->getPlayerClan();
+
+			if (!($clan->id === $playerClan->id || $clan->alliance && $playerClan->alliance && $clan->alliance->id === $playerClan->alliance->id)){
+				//if not yours or alliance (maybe hide sth)
+			}
+			$this->template->clan = $clan;
+			if ($profile = $this->context->model->getProfileRepository()->findOneByUser($clan->user->id)){
+				$this->template->profile = $profile;
+			}
+		}
 	}
 
 	/**

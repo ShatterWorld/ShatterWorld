@@ -12,7 +12,7 @@
 			</tr>
 			{foreach $alliance->applicants as $applicant}
 				<tr>
-					<td>{$applicant->name}</td>
+					<td><a n:href="Clan:show $applicant->id">{$applicant->name}</a></td>
 					<td><a n:href="accept! $applicant->id">Přijmout</a></td>
 					<td><a n:href="decline! $applicant->id">Odmítnout</a></td>
 				</tr>

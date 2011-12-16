@@ -12,7 +12,7 @@
 		</tr>
 		{foreach $alliance->members as $member}
 			<tr>
-				<td>{$member->name}</td>
+				<td><a n:href="Clan:show $member->id">{$member->name}</a></td>
 				{if $member === $alliance->leader}
 					<td></td>
 					<td><a n:href="leave">Opustit alianci</a></td>
