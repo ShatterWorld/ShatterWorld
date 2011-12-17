@@ -58,83 +58,99 @@
 			</div>
 		{/if}
 		{/snippet}
+
+
 		<div id="frame">
-			<div id="userBar">
-				<div id="chooseClan" n:if="$presenter->getPlayerClan()">
-				{form chooseClanForm}
-				{input clan}
-				{/form}
-				</div>
-				<a href="{link Profile:}" class="caption">{$user->identity->nickname}:</a>
-				{if $user->isAllowed('administration')}<a href="{link :Admin:Dashboard:}">Administrace</a> | {/if}
-				<a href="{link logout!}">Odhlásit se</a>
-			</div>
 
 			<div id="banner">
+				<div id="userBar">
+
+					<div id="chooseClan" n:if="$presenter->getPlayerClan()">
+						{form chooseClanForm}
+							{input clan}
+						{/form}
+					</div>
+
+					<a href="{link Profile:}" class="caption">{$user->identity->nickname}:</a>
+					{if $user->isAllowed('administration')}
+						<a href="{link :Admin:Dashboard:}">Administrace</a> |
+					{/if}
+					<a href="{link logout!}">Odhlásit se</a>
+				</div>
+
+				<div id="bannerMenu">
+					Nastavení | Wiki | Návod | O projektu | Přispějte | Výhody | Účet
+				</div>
+
 			</div>
 
 			<div id="infoBar">
 				{snippet resources}
-				<div id="resourceBar" data-resources="{$resources|json}">
-					{foreach $resources as $resource => $data}
-					<span class="text hasTooltip {$resource}" id="{$resource}">
-						<img src="{$basePath}/images/resources/{$resource}.png" />
+					<div id="resourceBar" data-resources="{$resources|json}">
+						{foreach $resources as $resource => $data}
+							<span class="text hasTooltip {$resource}" id="{$resource}">
+								<img src="{$basePath}/images/resources/{$resource}.png" />
+								<span class="text">
+									<span class="balance{if $data['balance'] >= $data['storage']} resourceFull{/if}">{intval($data['balance'])}</span>/<span class="storage">{$data['storage']}</span>
+								</span>
+							</span>
+							{?$rule = $resourceRules[$resource]}
+							<div class="tooltip {$resource}" data-for="{$resource}">
+								<h4>{$rule->getDescription()}</h4>
+								<table>
+									<tr><th>Zůstatek</th><td class="balance">{intval($data['balance'])}</td></tr>
+									<tr><th>Kapacita skladu</th><td class="storage">{intval($data['storage'])}</td></tr>
+									<tr><th>Produkce za hodinu</th><td class="production">{if $data['production'] > 0}+{/if}{intval($data['production'] * 3600)}</td></tr>
+								</table>
+							</div>
+						{/foreach}
+					</div>
+				{/snippet}
+
+				{snippet reports}
+					<div id="reportBar" class="hasTooltip" n:if="$reportCount > 0">
 						<span class="text">
-							<span class="balance{if $data['balance'] >= $data['storage']} resourceFull{/if}">{intval($data['balance'])}</span>/<span class="storage">{$data['storage']}</span>
+							<img src="{$basePath}/images/icons/reports.png" />
+							<a n:href="Report:" class="text">{$reportCount}</a>
 						</span>
-					</span>
-					{?$rule = $resourceRules[$resource]}
-					<div class="tooltip {$resource}" data-for="{$resource}">
-						<h4>{$rule->getDescription()}</h4>
+					</div>
+					<div class="tooltip" data-for="reportBar">
 						<table>
-						<tr><th>Zůstatek</th><td class="balance">{intval($data['balance'])}</td></tr>
-						<tr><th>Kapacita skladu</th><td class="storage">{intval($data['storage'])}</td></tr>
-						<tr><th>Produkce za hodinu</th><td class="production">{if $data['production'] > 0}+{/if}{intval($data['production'] * 3600)}</td></tr>
+						<tr><th>Nepřečtená hlášení</th><td>{$reportCount}</td></tr>
 						</table>
 					</div>
-					{/foreach}
-				</div>
 				{/snippet}
-				{snippet reports}
-				<div id="reportBar" class="hasTooltip" n:if="$reportCount > 0">
-					<span class="text">
-						<img src="{$basePath}/images/icons/reports.png" />
-						<a n:href="Report:" class="text">{$reportCount}</a>
-					</span>
-				</div>
-				<div class="tooltip" data-for="reportBar">
-					<table>
-					<tr><th>Nepřečtená hlášení</th><td>{$reportCount}</td></tr>
-					</table>
-				</div>
-				{/snippet}
+
 				{snippet orders}
-				<div id="orderBar" class="hasTooltip" data-nextorder="{$orderTimeout}">
-					<span class="text"><img src="{$basePath}/images/icons/orders.png" />{$orderCount}/{$orderCap}</span>
-				</div>
-				<div class="tooltip" id="orderTooltip" data-for="orderBar">
-					<table>
-					<tr><th>Rozkazy k vydání</th><td>{$orderCount}</td></tr>
-					<tr><th>Maximum rozkazů</th><td>{$orderCap}</td></tr>
-					<tr><th>Další rozkaz</th><td class="countdown">{$orderTimeout|time}</td></tr>
-					</table>
-				</div>
+					<div id="orderBar" class="hasTooltip" data-nextorder="{$orderTimeout}">
+						<span class="text"><img src="{$basePath}/images/icons/orders.png" />{$orderCount}/{$orderCap}</span>
+					</div>
+					<div class="tooltip" id="orderTooltip" data-for="orderBar">
+						<table>
+						<tr><th>Rozkazy k vydání</th><td>{$orderCount}</td></tr>
+						<tr><th>Maximum rozkazů</th><td>{$orderCap}</td></tr>
+						<tr><th>Další rozkaz</th><td class="countdown">{$orderTimeout|time}</td></tr>
+						</table>
+					</div>
 				{/snippet}
+
 				{snippet events}
-				<div id="countdownBar" data-events="{$eventData|json}" class="hasTooltip">
-					<img src="{$basePath}/images/icons/time.png" /><span class="text">{count($events)}</span>
-				</div>
-				<div id="countdownTooltip" class="tooltip" data-for="countdownBar">
-					<table>
-						<tr n:foreach="$events as $event" id="countdown_{$event->id}" class="data">
-							<th>{$eventRules[$event->type]->getExplanation($event)}</th>
-							<td class="countdown">{$event->getRemainingTime()|time}</td>
-						</tr>
-					</table>
-				</div>
+					<div id="countdownBar" data-events="{$eventData|json}" class="hasTooltip">
+						<img src="{$basePath}/images/icons/time.png" /><span class="text">{count($events)}</span>
+					</div>
+					<div id="countdownTooltip" class="tooltip" data-for="countdownBar">
+						<table>
+							<tr n:foreach="$events as $event" id="countdown_{$event->id}" class="data">
+								<th>{$eventRules[$event->type]->getExplanation($event)}</th>
+								<td class="countdown">{$event->getRemainingTime()|time}</td>
+							</tr>
+						</table>
+					</div>
 				{/snippet}
+
 				<div class="clearer"><span></span></div>
 			</div>
+
 
 			<div id="menu">
 				{if $user->isAllowed('administration')}

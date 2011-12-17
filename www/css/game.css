@@ -4,6 +4,13 @@
 	position: relative;
 }
 
+#infoBar {
+	margin-bottom:10px;
+	/*position:absolute;
+	bottom:0px;
+	left:0px;*/
+}
+
 #infoBar #resourceBar{
 	color: white;
 	float: left;
@@ -27,10 +34,14 @@
 	vertical-align: middle;
 }
 
+#resourceBar {
+	margin-left:100px;
+}
 #resourceBar .text {
 	cursor: pointer;
 }
 
+/*--------------------------*/
 #infoBar .tooltip {
 	background : #5D6555;
 	color : white;
