@@ -5,7 +5,8 @@
 }
 
 #infoBar {
-	margin-bottom:10px;
+	margin-top:5px;
+	margin-bottom:5px;
 	/*position:absolute;
 	bottom:0px;
 	left:0px;*/
@@ -14,7 +15,7 @@
 #infoBar #resourceBar{
 	color: white;
 	float: left;
-	margin-left: 15px;
+	/*margin-left: 15px;*/
 }
 
 #infoBar .text {
@@ -34,11 +35,9 @@
 	vertical-align: middle;
 }
 
-#resourceBar {
-	margin-left:100px;
-}
 #resourceBar .text {
 	cursor: pointer;
+	margin-right:5px;
 }
 
 /*--------------------------*/
