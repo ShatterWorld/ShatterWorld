@@ -27,7 +27,7 @@ class Food extends AbstractRule implements IExhaustableResource
 		});
 
 		$production = -$resources['food']['production'];
-		$time = floor($resources['food']['balance'] / $production);
+		//$time = floor($resources['food']['balance'] / $production);
 		foreach ($units as $unit) {
 			if ($production <= 0) {
 				break;
@@ -47,7 +47,7 @@ class Food extends AbstractRule implements IExhaustableResource
 	{
 		return "Hladomor";
 	}
-	
+
 	public function formatExhaustionReport (Entities\Report $report)
 	{
 		return array();
