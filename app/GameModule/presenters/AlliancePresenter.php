@@ -8,7 +8,45 @@ use RuleViolationException;
 
 class AlliancePresenter extends BasePresenter
 {
+	/**
+	* Show players clan
+	* @return void
+	*/
 	public function actionDefault ()
+	{
+		$this->redirect('Alliance:show', $this->getClanAlliance()->id);
+	}
+
+	/**
+	* Show action
+	* @param int
+	* @return void
+	*/
+	public function actionShow ($allianceId = null)
+	{
+		if ($allianceId === null){
+			$this->redirect('Alliance:show', $this->getClanAlliance()->id);
+		}
+	}
+
+	/**
+	* Show render
+	* @param int
+	* @return void
+	*/
+	public function renderShow ($allianceId)
+	{
+		if ($alliance = $this->context->model->getAllianceRepository()->findOneById($allianceId)){
+			$playerAlliance = $this->getClanAlliance();
+
+			if ($alliance->id !== $playerAlliance->id){
+				//if not yours alliance (hide sth)
+			}
+			$this->template->alliance = $alliance;
+
+		}
+	}
+/*	public function actionDefault ()
 	{
 		if (!$this->getPlayerClan()->getAlliance()) {
 			$this->flashMessage('Nemáte ještě alianci', 'error');
@@ -19,7 +57,7 @@ class AlliancePresenter extends BasePresenter
 	public function renderDefault ()
 	{
 		$this->template->alliance = $this->getPlayerClan()->getAlliance();
-	}
+	}*/
 
 	public function actionNew ()
 	{

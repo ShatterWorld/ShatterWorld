@@ -28,16 +28,16 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		parent::beforeRender();
 		$clan = $this->getPlayerClan();
-		
+
 		$this->template->orderCount = $clan ? $this->context->stats->orders->getAvailableOrders($clan) : 0;
 		$this->template->orderCap = $this->context->params['game']['stats']['orderCap'];
 		$this->template->orderTimeout = $this->context->stats->orders->getTimeout();
-		
+
 		$this->template->reportCount = $clan ? $this->getReportRepository()->countUnread($clan) : 0;
-		
+
 		$this->template->resources = $clan ? $this->getResourceRepository()->getResourcesArray($clan) : array();
 		$this->template->resourceRules = $clan ? $this->context->rules->getAll('resource') : array();
-		
+
 		$this->template->events = $clan ? $this->getEventRepository()->findUpcomingEvents($clan) : array();
 		$this->template->eventData = $clan ? array_map(function ($event) {
 			$result = $event->toArray();
@@ -45,7 +45,7 @@ abstract class BasePresenter extends \BasePresenter
 			return $result;
 		}, $this->template->events) : array();
 		$this->template->eventRules = $this->context->rules->getAll('event');
-		
+
 		ksort($this->template->resources);
 	}
 
@@ -99,6 +99,15 @@ abstract class BasePresenter extends \BasePresenter
 	public function getPlayerClan ()
 	{
 		return $this->getClanRepository()->getPlayerClan();
+	}
+
+	/**
+	 * Returns clan alliance
+	 * @return Entities\Clan
+	 */
+	public function getClanAlliance ()
+	{
+		return $this->getPlayerClan()->alliance;
 	}
 
 	/**

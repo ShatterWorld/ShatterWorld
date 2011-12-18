@@ -12,7 +12,7 @@ use Nette\Diagnostics\Debugger;
 class ClanPresenter extends BasePresenter {
 
 	/**
-	*
+	* Show players clan
 	* @return void
 	*/
 	public function actionDefault ()
