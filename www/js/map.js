@@ -1379,7 +1379,9 @@ Game.map.contextMenu.SpyDialog = Class({
 				'originId': context.origin['id'],
 				'targetId': context.target['id'],
 				//'type': $('#attackType').val()
-				'type': 'spy'
+				'type': 'spy',
+				'spy':$('input #spy').val()
+
 			};
 			jQuery.extend(params, context.getUnitList());
 			Game.utils.signal('sendSpy', params, function () {

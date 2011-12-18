@@ -37,7 +37,6 @@ class Spy extends AbstractRule implements IEvent
 			)
 		);
 
-		Debugger::barDump($event->getUnits());
 		$attackerSpyCount = 0;
 		foreach($event->getUnits() as $unit){
 			if($unit->type === 'spy'){

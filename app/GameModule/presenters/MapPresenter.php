@@ -78,8 +78,6 @@ class MapPresenter extends BasePresenter
 
 	public function handleSendSpy ($originId, $targetId, $type)
 	{
-		$type='spy';
-
 		$args = $this->request->params;
 		$units = array();
 		foreach ($args as $key => $arg) {
