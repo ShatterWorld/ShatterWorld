@@ -33,30 +33,6 @@ a:hover {
 	background: black;
 }
 
-#infoBar {
-	/*background: #31362D;*/
-	width: 100%;
-	line-height: 24px;
-	/*margin-bottom:15px;*/
-	/*border-bottom: 1px solid #000;*/
-}
-
-.resourceFull, .resourceInsufficient {
-	color: #ff0000;
-}
-
-#userBar, #footer {
-	line-height: 25px;
-	padding: 0px 5px;
-	height: 25px;
-	color: #ccc;
-}
-
-#userBar {
-	text-align: right;
-	padding-top:18px;
-}
-
 #chooseClan {
 	float: left;
 	margin-left: 315px;
@@ -64,10 +40,10 @@ a:hover {
 
 #footer {
 	background: url('../images/bar-small-bottom1.png') repeat-x;
+	color: #ccc;
 	margin-top: 10px;
 	text-align: center;
 	line-height:20px;
-	/*border-top: 1px solid #000;*/
 }
 
 #footer img {
@@ -77,10 +53,6 @@ a:hover {
 #menu {
 	width: 170px;
 	float: left;
-}
-
-.submenu a {
-	color: white;
 }
 
 .submenu {
@@ -119,6 +91,7 @@ a:hover {
 
 .submenu li a{
 	display: block;
+	color: #ccc;
 }
 
 .submenu li a:hover{
@@ -126,7 +99,7 @@ a:hover {
 }
 
 #header {
-	color: white;
+	color: #ccc;
 	padding: 0px 5px;
 	line-height: 20px;
 	background: url('../images/bar-small-bottom1.png') repeat-x center;
@@ -135,14 +108,14 @@ a:hover {
 
 #banner {
 	background: url('../images/banner2.png') no-repeat;
-	/*border: solid #000;
-	border-width: 1px 0px;*/
 	height: 82px;
 	position: relative;
+	margin-bottom:5px;
+
 }
 
 #banner a {
-	color: white;
+	color: #ccc;
 	text-decoration: none;
 	font-weight: bold;
 
@@ -152,16 +125,14 @@ a:hover {
 	position:absolute;
 	right:0px;
 	bottom:5px;
-	color: white;
+	color: #ccc;
 }
 
 #container {
-	width: 705px;
 	min-height:400px;
 	border: 1px solid #000;
 	background: #cdcdcd;
 	float: right;
-	/*margin-right: 12px;*/
 }
 
 

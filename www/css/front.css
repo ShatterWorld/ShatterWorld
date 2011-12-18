@@ -1,10 +1,11 @@
 #leftcenter {
 	float : left;
+	width: 705px;
 }
 
 #right {
 	float : right;
-	width : 200px;
+	width : 170px;
 }
 
 #content {
@@ -15,6 +16,10 @@
 
 
 #container {
-	width: 495px;
+	width: 510px;
 	margin-right: 0px;
+}
+
+#loginSubmenu label{
+	color:#ccc;
 }

@@ -1,21 +1,33 @@
+#container {
+	width: 705px;
+}
+
 #content {
 	text-align: justify;
 	padding: 5px 15px;
 	position: relative;
 }
 
+.resourceFull, .resourceInsufficient {
+	color: #ff0000;
+}
+
+#userBar {
+	line-height: 25px;
+	color: #ccc;
+	text-align: right;
+	padding-top:18px;
+}
+
 #infoBar {
-	margin-top:5px;
+	width: 100%;
+	line-height: 24px;
 	margin-bottom:5px;
-	/*position:absolute;
-	bottom:0px;
-	left:0px;*/
 }
 
 #infoBar #resourceBar{
-	color: white;
+	color: #ccc;
 	float: left;
-	/*margin-left: 15px;*/
 }
 
 #infoBar .text {
@@ -29,7 +41,7 @@
 }
 
 #infoBar #countdownBar, #infoBar #reportBar, #infoBar #orderBar {
-	color: white;
+	color: #ccc;
 	float: right;
 	margin-right: 15px;
 	vertical-align: middle;
