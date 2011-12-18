@@ -146,7 +146,7 @@ Game.map = {
 	 * @param field
 	 * @return integer
 	 */
-	calculateTestXPos : function (field) {
+	calculateMinimisedXPos : function (field) {
 		return (field['coordX'] * 7) + (field['coordY'] * 7);
 	},
 
@@ -155,27 +155,27 @@ Game.map = {
 	 * @param field
 	 * @return integer
 	 */
-	calculateTestYPos : function (field) {
+	calculateMinimisedYPos : function (field) {
 		return (field['coordX'] * -2) + (field['coordY'] * 2);
 	},
 
 
 	/**
-	 * The test width of field
+	 * The minimised width of field
 	 * @var integer
 	 */
-	testFieldWidth : 6,
+	minimisedFieldWidth : 6,
 
 	/**
-	 * The test height of field
+	 * The minimised height of field
 	 * @var integer
 	 */
-	testFieldHeight : 4,
+	minimisedFieldHeight : 4,
 
 	/**
-	 * testing render
+	 * minimiseding render
 	 */
-	testRender : function ()
+	minimisedRender : function ()
 	{
 
 		/**
@@ -195,10 +195,10 @@ Game.map = {
 						if (Game.map.clan == field['owner']['id']){
 							if(field['facility'] != null){
 								if (field['facility'] == 'headquarters'){
-									var posX = Game.map.calculateTestXPos(field);
-									var posY = Game.map.calculateTestYPos(field);
-									Game.map.dX = posX - Game.map.getMapContainerWidth()/2 + Game.map.testFieldWidth/2;
-									Game.map.dY = posY - Game.map.getMapContainerHeight()/2 + 2*Game.map.testFieldHeight;
+									var posX = Game.map.calculateMinimisedXPos(field);
+									var posY = Game.map.calculateMinimisedYPos(field);
+									Game.map.dX = posX - Game.map.getMapContainerWidth()/2 + Game.map.minimisedFieldWidth/2;
+									Game.map.dY = posY - Game.map.getMapContainerHeight()/2 + 2*Game.map.minimisedFieldHeight;
 									return false;
 								}
 							}
@@ -214,13 +214,13 @@ Game.map = {
 			 */
 			$.each(data['fields'], function(rowKey, row) {
 				$.each(row, function(key, field) {
-					if(Game.map.calculateTestXPos(field) - Game.map.dX < 0){
-						Game.map.dX -= Game.map.testFieldWidth;
-						Game.map.scrollX += Game.map.testFieldWidth;
+					if(Game.map.calculateMinimisedXPos(field) - Game.map.dX < 0){
+						Game.map.dX -= Game.map.minimisedFieldWidth;
+						Game.map.scrollX += Game.map.minimisedFieldWidth;
 					}
-					if(Game.map.calculateTestYPos(field) - Game.map.dY < 0){
-						Game.map.dY -= Game.map.testFieldHeight;
-						Game.map.scrollY += Game.map.testFieldHeight;
+					if(Game.map.calculateMinimisedYPos(field) - Game.map.dY < 0){
+						Game.map.dY -= Game.map.minimisedFieldHeight;
+						Game.map.scrollY += Game.map.minimisedFieldHeight;
 					}
 
 				});
@@ -229,8 +229,8 @@ Game.map = {
 			$.each(data['fields'], function(rowKey, row) {
 				$.each(row, function(key, field) {
 
-					var posX = Game.map.calculateTestXPos(field) - Game.map.dX;
-					var posY = Game.map.calculateTestYPos(field) - Game.map.dY;
+					var posX = Game.map.calculateMinimisedXPos(field) - Game.map.dX;
+					var posY = Game.map.calculateMinimisedYPos(field) - Game.map.dY;
 					var z = field['coordX']*field['coordY'];
 
 					var borderType = 'neutral';
@@ -248,9 +248,9 @@ Game.map = {
 
 
 
-					var background = "url('"+basePath+"/images/fields/hex_test_"+img+".png')";
+					var background = "url('"+basePath+"/images/fields/hex_minimised_"+img+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
-					//var divStyle = 'width: '+testFieldWidth+'px; height: '+testFieldHeight+'px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
+					//var divStyle = 'width: '+minimisedFieldWidth+'px; height: '+minimisedFieldHeight+'px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
 					var divStyle = 'width: 6px; height: 4px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
 					div.attr('style', divStyle);
 
@@ -265,8 +265,8 @@ Game.map = {
 				$('#mapContainer').scrollTop(Game.map.scrollY);
 			});
 
-			var canvasWidth = Game.map.maxXPos + Game.map.testFieldWidth;
-			var canvasHeight = Game.map.maxYPos + Game.map.testFieldHeight;
+			var canvasWidth = Game.map.maxXPos + Game.map.minimisedFieldWidth;
+			var canvasHeight = Game.map.maxYPos + Game.map.minimisedFieldHeight;
 			Game.map.overlayDiv = $('<div id="overlay">');
 			Game.map.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight, 'position' : 'absolute', 'left' : 0, 'top' : 0});
 			$('#map').append(Game.map.overlayDiv);

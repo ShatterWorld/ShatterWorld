@@ -1,0 +1,19 @@
+{block #header}
+	Přehled aliance{ifset $alliance} {$alliance->name}{/ifset}
+{/block}
+
+{block #content}
+	{ifset $alliance}
+		<h2>Členové</h2>
+		<table>
+			<tr>
+				<th>Jméno</th>
+			</tr>
+			{foreach $alliance->members as $member}
+				<tr><td><a n:href="Clan:show $member->id">{$member->name}</a></td></tr>
+			{/foreach}
+		</table>
+	{else}
+		Aliance neexistuje
+	{/ifset}
+{/block}
