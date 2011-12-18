@@ -33,23 +33,23 @@
 }
 
 #navig {
-	background: #5D6555;
-	color: white;
-	border: 1px solid white;
+	background: #414143;
+	color: #ccc;
+	border: 1px solid #ccc;
 	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";/*IE*/
 	-moz-opacity: 0.9; /*Old mozzila*/
 	opacity: 0.9;/*Others*/
-
 }
+
 #navig td {
 	cursor: pointer;
 	padding: 1px;
-
 }
+
 .toolbox {
-	background : #5D6555;
-	border : white 1px solid;
-	color : white;
+	background : #414143;
+	border : #ccc 1px solid;
+	color : #ccc;
 	padding : 5px;
 	width : 150px;
 	position : absolute;
@@ -59,6 +59,7 @@
 }
 
 .toolbox a {
+	color: #ccc;
 	display: block;
 	padding: 3px;
 }
@@ -70,9 +71,9 @@
 }
 
 #fieldInfo {
-	background : #5D6555;
-	color : white;
-	border : 1px solid white;
+	background : #414143;
+	color : #ccc;
+	border : 1px solid #ccc;
 	padding : 3px;
 	min-width : 180px;
 	position : absolute;
@@ -81,3 +82,4 @@
 	-moz-opacity : 0.9;
 	opacity : 0.9;
 }
+

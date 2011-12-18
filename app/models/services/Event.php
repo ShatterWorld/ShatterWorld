@@ -6,19 +6,19 @@ use RuleViolationException;
 class Event extends BaseService
 {
 	const LOCK_TIMEOUT = 30;
-	
+
 	/**
 	 * A queue of events to be processed
 	 * @var array
 	 */
 	protected $eventQueue;
-	
+
 	/**
 	 * Event processing time
 	 * @var DateTime
 	 */
 	protected $eventTime;
-	
+
 	public function processPendingEvents ()
 	{
 		$userId = $this->context->user->id;
@@ -59,10 +59,13 @@ class Event extends BaseService
 				$this->update($event, array('processed' => TRUE), FALSE);
 			}
 		}
-		$this->context->model->questService->processCompletion($this->context->model->clanRepository->getPlayerClan(), $now);
+
+		if($clan = $this->context->model->clanRepository->getPlayerClan()){
+			$this->context->model->questService->processCompletion($clan, $now);
+		}
 		$this->entityManager->flush();
 	}
-	
+
 	/**
 	 * Add an event to the event processing queue if it is to be processed
 	 * @param Entities\Event
@@ -80,7 +83,7 @@ class Event extends BaseService
 			$this->eventQueue = array_merge($precessors, $successors);
 		}
 	}
-	
+
 	public function create ($values, $flush = TRUE)
 	{
 		$event = parent::create($values, FALSE);

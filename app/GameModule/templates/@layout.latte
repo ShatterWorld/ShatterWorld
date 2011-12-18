@@ -79,7 +79,15 @@
 				</div>
 
 				<div id="bannerMenu">
-					Nastavení | Wiki | Návod | O projektu | Přispějte | Výhody | Účet
+					<ul>
+						<li><a href="">Nastavení</a> |</li>
+						<li><a href="">Wiki</a> |</li>
+						<li><a href="">Návod</a> |</li>
+						<li><a href="">O projektu</a> |</li>
+						<li><a href="">Přispějte</a> |</li>
+						<li><a href="">Výhody</a> |</li>
+						<li><a href="">Účet</li>
+					</ul>
 				</div>
 
 			</div>
@@ -175,7 +183,7 @@
 					</ul>
 				</div>
 
-				<div class="submenu{ifCurrent (Clan|Alliance|Profile):*} active{/ifCurrent}{ifCurrent Alliance:*} active{/ifCurrent}{ifCurrent Profile:*} active{/ifCurrent}">
+				<div class="submenu{ifCurrent Clan:*} active{/ifCurrent}{ifCurrent Alliance:*} active{/ifCurrent}{ifCurrent Profile:*} active{/ifCurrent}">
 					<h3>Klan</h3>
 					<ul>
 						{if !$presenter->getPlayerClan()}
@@ -187,7 +195,7 @@
 
 						<li>----------------</li>
 
-						{if $presenter->getPlayerClan()->getAlliance()}
+						{if $presenter->getPlayerClan() && $presenter->getPlayerClan()->getAlliance()}
 							<li><a n:href="Alliance:">Aliance</a></li>
 							{if $presenter->isLeader()}
 								<li><a n:href="Alliance:applicants">Přjmout členy</a></li>
@@ -217,10 +225,8 @@
 					<div class="submenu{ifCurrent Map:*} active{/ifCurrent}">
 						<h3>Mapa</h3>
 						<ul class="tmp">
-							<li><a href="{link Map:}">Zobrazit</a></li>
-							{if $user->isAllowed('administration')}
-								<li><a href="{link Map:minimised}">Minimalizovaná</a></li>
-							{/if}
+							<li><a href="{link Map:}">Podrobná</a></li>
+							<li><a href="{link Map:minimised}">Minimalizovaná</a></li>
 						</ul>
 					</div>
 

@@ -11,12 +11,10 @@
 
 body {
 	background: url('../images/background3.png') black no-repeat center 130px;
-	/*background: black*/
 }
 
 a {
 	color: #66b301;
-	text-decoration: none;
 }
 
 a:hover {
@@ -64,7 +62,6 @@ a:hover {
 
 .submenu ul {
 	list-style-type: none;
-	/*margin-left: 12px;*/
 }
 
 .submenu h3 {
@@ -76,7 +73,7 @@ a:hover {
 	cursor: pointer;
 }
 
-.submenu h3 a{
+.submenu h3 a {
 	color:white;
 }
 
@@ -91,6 +88,7 @@ a:hover {
 
 .submenu li a{
 	display: block;
+	text-decoration: none;
 	color: #ccc;
 }
 
@@ -107,18 +105,19 @@ a:hover {
 }
 
 #banner {
-	background: url('../images/banner2.png') no-repeat;
+	background: url('../images/banner1.png') no-repeat;
 	height: 82px;
 	position: relative;
 	margin-bottom:5px;
-
 }
 
 #banner a {
 	color: #ccc;
 	text-decoration: none;
-	font-weight: bold;
+}
 
+#banner a:hover {
+	text-decoration: underline;
 }
 
 #bannerMenu {
@@ -128,11 +127,23 @@ a:hover {
 	color: #ccc;
 }
 
+#bannerMenu ul {
+	list-style-type: none;
+}
+
+#bannerMenu ul li {
+	display:inline;
+}
+
 #container {
 	min-height:400px;
 	border: 1px solid #000;
-	background: #cdcdcd;
+	background: #dfdfdf;
 	float: right;
 }
 
-
+#content {
+	text-align: justify;
+	position: relative;
+	padding: 5px 15px;
+}

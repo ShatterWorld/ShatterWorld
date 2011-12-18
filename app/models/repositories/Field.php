@@ -400,18 +400,17 @@ class Field extends BaseRepository
 	 * The hexagons are chosen only if $playerDistance fields around are neutral.
 	 * @param Entities\Field
 	 * @param int
+	 * @param int
 	 * @param array of Entities\Field
 	 * @return array of Entities\Field
 	 */
-	public function findNeutralHexagons($S, $playerDistance, &$map = null)
+	public function findNeutralHexagons($S, $playerDistance, $mapSize, &$map = null)
 	{
 		$foundCenters = array();
 		$i = $playerDistance;
 
-
 		while (count($foundCenters) <= 0){
 			$circuit = $this->findCircuit($S, $i+2, $map);
-			Debugger::barDump($circuit);
 
 			foreach($circuit as $field){
 				if($field->owner == null){
@@ -426,9 +425,9 @@ class Field extends BaseRepository
 					}
 					if ($add){
 						$foundCenters[] = $field;
-						//Debugger::barDump($field);
 					}
 				}
+
 			}
 
 			$i++;

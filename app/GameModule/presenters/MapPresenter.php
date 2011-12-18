@@ -76,6 +76,31 @@ class MapPresenter extends BasePresenter
 		}
 	}
 
+	public function handleSendSpy ($originId, $targetId, $type)
+	{
+		$type='spy';
+
+		$args = $this->request->params;
+		$units = array();
+		foreach ($args as $key => $arg) {
+			if (is_numeric($key)) {
+				$units[$key] = $arg;
+			}
+		}
+		$origin = $this->getFieldRepository()->find($originId);
+		$target = $this->getFieldRepository()->find($targetId);
+		try {
+			$this->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), $type, $units);
+			$this->invalidateControl('orders');
+			$this->invalidateControl('events');
+			$this->flashMessage('Špionáž zahájena');
+		} catch (RuleViolationException $e) {
+			$this->flashMessage('Taková špionáž není možná', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		}
+	}
+
 	public function handleFetchColonisationCost ($targetId)
 	{
 		$target = $this->getFieldRepository()->find($targetId);

@@ -84,7 +84,7 @@ class Clan extends BaseService
 		}
 
 		//Debugger::barDump($lastHq);
-		$neutralHexagonsCenters = $fieldRepository->findNeutralHexagons($lastHq, $playerDistance, $map);
+		$neutralHexagonsCenters = $fieldRepository->findNeutralHexagons($lastHq, $playerDistance, $mapSize, $map);
 		//Debugger::barDump($neutralHexagonsCenters);
 		$fieldRepository->sortByDistance($neutralHexagonsCenters, $S);
 
@@ -126,7 +126,7 @@ class Clan extends BaseService
 
 		$initial = $this->context->params['game']['initial'];
 		$now = new \DateTime();
-		
+
 		foreach ($initial['resources'] as $resource => $balance) {
 			$this->context->model->getResourceService()->create(array(
 				'clan' => $clan,
@@ -136,7 +136,7 @@ class Clan extends BaseService
 				'clearance' => $now
 			), FALSE);
 		}
-		
+
 		foreach ($initial['units'] as $unit => $count) {
 			$this->context->model->unitService->create(array(
 				'type' => $unit,
@@ -145,7 +145,7 @@ class Clan extends BaseService
 				'owner' => $clan
 			), FALSE);
 		}
-		
+
 		foreach ($initial['researches'] as $research => $level) {
 			$this->context->model->getResearchService()->create(array(
 				'type' => $research,
@@ -153,7 +153,7 @@ class Clan extends BaseService
 				'level' => $level
 			), FALSE);
 		}
-		
+
 		foreach ($initial['quests'] as $quest) {
 			$this->context->model->questService->create(array(
 				'type' => $quest,

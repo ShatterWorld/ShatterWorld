@@ -901,6 +901,7 @@ Game.map.contextMenu = {
 			if (field['units'] != null) {
 				actions.push(this.actions.attack);
 				actions.push(this.actions.exploration);
+				actions.push(this.actions.spy);
 			}
 			if (field['facility'] !== null) {
 				if (field['facility'] !== 'headquarters') {
@@ -994,6 +995,13 @@ Game.map.contextMenu = {
 			title: 'Útok',
 			click: function (origin) {
 				var dialog = new Game.map.contextMenu.AttackDialog('attackDialog', origin);
+				dialog.show();
+			}
+		},
+		spy: {
+			title: 'Špionáž',
+			click: function (origin) {
+				var dialog = new Game.map.contextMenu.SpyDialog('spyDialog', origin);
 				dialog.show();
 			}
 		},
@@ -1315,6 +1323,66 @@ Game.map.contextMenu.AttackDialog = Class({
 			};
 			jQuery.extend(params, context.getUnitList());
 			Game.utils.signal('sendAttack', params, function () {
+				Game.events.refresh();
+				Game.spinner.hide();
+				$(context.element).dialog("close");
+			});
+		}
+	}
+});
+
+Game.map.contextMenu.SpyDialog = Class({
+	extends: Game.map.contextMenu.UnitMoveDialog,
+
+	constructor: function (id, origin)
+	{
+		Game.map.contextMenu.SpyDialog._superClass.constructor.call(this, id, origin);
+	},
+
+	validateTarget: function (target)
+	{
+		return !(target['owner'] !== null && Game.map.clan !== null && target['owner']['id'] == Game.map.clan)
+			&& !(target['owner'] !== null && target['owner']['alliance'] !== null
+			&& Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance);
+	},
+
+	title: 'Špionáž',
+
+	getBody: function ()
+	{
+		var element = $('<div>');
+		var origin = this.origin;
+		$(element).append('kliknutim vyberte cíl:<div id="coords">Z ['+origin['coordX']+';'+origin['coordY']+'] do [<span id="targetX">?</span>;<span id="targetY">?</span>]</div><br/>');
+		var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
+		table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
+		$(element).append(table);
+		var tr = $('<tr id="spy" />');
+		tr.append('<td class="name" style="width:100px">Špion</td><td class="count"><input type="text" size="5" name="spy" /></td><td class="max" style="width:50px; text-align:right">('+5/*Game.utils.isset(this.origin['units']['spy']['count'])?this.origin['units']['spy']['count']:0*/+')</td>');
+		table.append(tr);
+		tr.children('.max').click(function(){
+			tr.children('.count').children('input').val(unit['count']);
+		})
+		.css({
+			'cursor' : 'pointer'
+		});
+		return element;
+		//var body = Game.map.contextMenu.AttackDialog._superClass.getBody.call(this);
+		//body.append('Typ útoku: <select id="attackType"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>');
+		//return body;
+	},
+
+	submit: {
+		text: "Poslat",
+		click: function (context) {
+			Game.spinner.show(context.element);
+			var params = {
+				'originId': context.origin['id'],
+				'targetId': context.target['id'],
+				//'type': $('#attackType').val()
+				'type': 'spy'
+			};
+			jQuery.extend(params, context.getUnitList());
+			Game.utils.signal('sendSpy', params, function () {
 				Game.events.refresh();
 				Game.spinner.hide();
 				$(context.element).dialog("close");

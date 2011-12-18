@@ -19,7 +19,9 @@ td {
 }
 
 .unread, .unread a{
-	color: red;
 	font-weight: bold;
 }
 
+table a {
+	/*color:white;*/
+}

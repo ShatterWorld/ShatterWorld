@@ -2,12 +2,6 @@
 	width: 705px;
 }
 
-#content {
-	text-align: justify;
-	padding: 5px 15px;
-	position: relative;
-}
-
 .resourceFull, .resourceInsufficient {
 	color: #ff0000;
 }
@@ -25,7 +19,7 @@
 	margin-bottom:5px;
 }
 
-#infoBar #resourceBar{
+#infoBar #resourceBar {
 	color: #ccc;
 	float: left;
 }
@@ -54,7 +48,7 @@
 
 /*--------------------------*/
 #infoBar .tooltip {
-	background : #5D6555;
+	background : #414143;
 	color : white;
 	border : 1px solid white;
 	padding : 3px;
