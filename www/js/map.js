@@ -1333,12 +1333,11 @@ Game.map.contextMenu.AttackDialog = Class({
 
 Game.map.contextMenu.SpyDialog = Class({
 
-	extends: Game.UI.Dialog,
+	extends: Game.map.contextMenu.UnitMoveDialog,
 
 	constructor: function (id, origin)
 	{
 		Game.map.contextMenu.SpyDialog._superClass.constructor.call(this, id, origin);
-		this.origin = origin;
 	},
 
 	validateTarget: function (target)
@@ -1358,6 +1357,9 @@ Game.map.contextMenu.SpyDialog = Class({
 		var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
 		table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
 		$(element).append(table);
+		var unit = {
+			count: 5
+		};
 		var tr = $('<tr id="spy" />');
 		tr.append('<td class="name" style="width:100px">Špion</td><td class="count"><input type="text" size="5" name="spy" /></td><td class="max" style="width:50px; text-align:right">('+5/*Game.utils.isset(this.origin['units']['spy']['count'])?this.origin['units']['spy']['count']:0*/+')</td>');
 		table.append(tr);
@@ -1368,9 +1370,6 @@ Game.map.contextMenu.SpyDialog = Class({
 			'cursor' : 'pointer'
 		});
 		return element;
-		//var body = Game.map.contextMenu.AttackDialog._superClass.getBody.call(this);
-		//body.append('Typ útoku: <select id="attackType"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>');
-		//return body;
 	},
 
 	submit: {
@@ -1379,7 +1378,7 @@ Game.map.contextMenu.SpyDialog = Class({
 			Game.spinner.show(context.element);
 
 			var unitId;
-			$.each(this.origin['units'], function (key, unit) {
+			$.each(context.origin['units'], function (key, unit) {
 				if (key === 'spy'){
 					unitId = unit['id'];
 					return false;
@@ -1389,7 +1388,6 @@ Game.map.contextMenu.SpyDialog = Class({
 			var params = {
 				'originId': context.origin['id'],
 				'targetId': context.target['id'],
-				//'type': $('#attackType').val()
 				'type': 'spy',
 				unitId: $('input #spy').val()
 
