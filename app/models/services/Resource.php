@@ -1,6 +1,7 @@
 <?php
 namespace Services;
 use Entities;
+use Rules;
 use Nette\Diagnostics\Debugger;
 
 class Resource extends BaseService
@@ -73,10 +74,26 @@ class Resource extends BaseService
 	{
 		$production = $this->context->stats->resources->getProduction($clan);
 		foreach ($this->getRepository()->findByClan($clan->id) as $account) {
-			if ($production[$account->type] < 0){
-				$production = $this->startExhaustionCountdown($clan, $account, $term);
+			if ($this->context->rules->get('resource', $account->type) instanceof Rules\Resources\IExhaustableResource) {
+				if ($production[$account->type] < 0){
+					$production = $this->startExhaustionCountdown($clan, $account, $term);
+				} else {
+					if ($countdown = $this->getExhaustionCountdown($clan, $account->type)) {
+						$this->context->model->constructionService->delete($countdown);
+					}
+				}
 			}
 		}
+	}
+
+	protected function getExhaustionCountdown (Entities\Clan $clan, $resource)
+	{
+		return $this->context->model->constructionRepository->findOneBy(array(
+			'owner' => $clan->id,
+			'type' => 'resourceExhaustion',
+			'construction' => $resource,
+			'processed' => FALSE
+		));
 	}
 
 	protected function startExhaustionCountdown (Entities\Clan $clan, Entities\Resource $resource, $term = NULL, $flush = TRUE)
@@ -86,12 +103,7 @@ class Resource extends BaseService
 
 		$time = floor($resource->balance / (-$production[$resource->type]));
 		$term = $term ?: new \DateTime();
-		if (!($countdown = $this->context->model->constructionRepository->findOneBy(array(
-			'owner' => $clan->id,
-			'type' => 'resourceExhaustion',
-			'construction' => $resource->type,
-			'processed' => FALSE
-		)))) {
+		if (!($countdown = $this->getExhaustionCountdown($clan, $resource->type))) {
 			$countdown = $this->context->model->constructionService->create(array(
 				'owner' => $clan,
 				'target' => $clan->getHeadquarters(),
