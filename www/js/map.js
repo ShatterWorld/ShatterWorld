@@ -1332,11 +1332,13 @@ Game.map.contextMenu.AttackDialog = Class({
 });
 
 Game.map.contextMenu.SpyDialog = Class({
-	extends: Game.map.contextMenu.UnitMoveDialog,
+
+	extends: Game.UI.Dialog,
 
 	constructor: function (id, origin)
 	{
 		Game.map.contextMenu.SpyDialog._superClass.constructor.call(this, id, origin);
+		this.origin = origin;
 	},
 
 	validateTarget: function (target)
@@ -1375,12 +1377,21 @@ Game.map.contextMenu.SpyDialog = Class({
 		text: "Poslat",
 		click: function (context) {
 			Game.spinner.show(context.element);
+
+			var unitId;
+			$.each(this.origin['units'], function (key, unit) {
+				if (key === 'spy'){
+					unitId = unit['id'];
+					return false;
+				}
+			});
+
 			var params = {
 				'originId': context.origin['id'],
 				'targetId': context.target['id'],
 				//'type': $('#attackType').val()
 				'type': 'spy',
-				'spy':$('input #spy').val()
+				unitId: $('input #spy').val()
 
 			};
 			jQuery.extend(params, context.getUnitList());

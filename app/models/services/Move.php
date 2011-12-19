@@ -1,6 +1,7 @@
 <?php
 namespace Services;
 use Entities;
+use Nette\Diagnostics\Debugger;
 
 class Move extends Event
 {
@@ -35,10 +36,12 @@ class Move extends Event
 				}
 			}
 		}
+		Debugger::fireLog($units);
+		Debugger::fireLog($time);
 		$move->setTimeout($time, $now);
 		return $move;
 	}
-	
+
 	public function startUnitMovement (Entities\Field $origin, Entities\Field $target, Entities\Clan $owner, $type, $units, $cargo = array(), $now = NULL, $flush = TRUE)
 	{
 		$move = $this->startMovement($origin, $target, $owner, $type, $units, $cargo, $now);
@@ -48,7 +51,7 @@ class Move extends Event
 		}
 		return $move;
 	}
-	
+
 	public function startUnitReturn (Entities\Field $origin, Entities\Field $target, Entities\Clan $owner, $units, $cargo = array(), $now = NULL, $flush = TRUE)
 	{
 		$move = $this->startMovement($origin, $target, $owner, 'unitReturn', $units, $cargo, $now);

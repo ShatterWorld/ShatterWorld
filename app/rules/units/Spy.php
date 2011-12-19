@@ -32,8 +32,8 @@ class Spy extends AbstractRule implements IUnit
 	public function getCost ()
 	{
 		return array(
-			'food' => 1800,
-			'metal' => 1500
+			'food' => 180,
+			'metal' => 150
 		);
 	}
 
