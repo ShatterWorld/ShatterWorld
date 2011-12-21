@@ -10,7 +10,9 @@
 }
 
 body {
-	background: url('../images/prague.png') black no-repeat center 80px;
+	background: url('../images/prague.png') #000 no-repeat 80px;
+	background-attachment: fixed;
+	background-position: center bottom;
 }
 
 a {
