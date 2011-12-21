@@ -21,4 +21,16 @@ class Unit extends BaseRepository
 			'move' => NULL
 		));
 	}
+
+	public function getTotalUnitCount ($owner, $unitName)
+	{
+		$clanUnits = $this->findOneBy(array(
+			'owner' => $owner->id,
+			'type' => $unitName,
+			'move' => NULL
+		));
+
+		return count($clanUnits);
+
+	}
 }
