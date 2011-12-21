@@ -55,8 +55,8 @@ class Spy extends AbstractRule implements IEvent
 			}
 		}
 
-		$attackerPower = $attackerSpyCount * $this->getContext()->stats->units->getSpyForce($event->owner, 'spy');
-		$defenderPower = $defenderSpyCount * $this->getContext()->stats->units->getSpyForce($event->target->owner, 'spy');
+		$attackerPower = $attackerSpyCount * $this->getContext()->stats->units->getUnitLevel($event->owner, 'spy');
+		$defenderPower = $defenderSpyCount * $this->getContext()->stats->units->getUnitLevel($event->target->owner, 'spy') + $this->getContext()->stats->units->getSpyForce($event->target->owner, 'spy');
 
 		$attackerCasualtiesCoefficient = $defenderPower > 0 ? 1 - tanh($attackerPower / (5 * $defenderPower)) : 0;
 		$defenderCasualtiesCoefficient = $defenderPower > 0 ? tanh(2 * $attackerPower / $defenderPower) : 1;
@@ -64,27 +64,27 @@ class Spy extends AbstractRule implements IEvent
 		$result['attacker']['casualties'] = array('spy' => intval(round($attackerSpyCount * $attackerCasualtiesCoefficient)));
 		$result['defender']['casualties'] = array('spy' => intval(round($defenderSpyCount * $defenderCasualtiesCoefficient)));
 
-		if ($result['attacker']['casualties']['spy'] >  $attackerSpyCount/2){
+		if ($result['attacker']['casualties']['spy'] <=  $attackerSpyCount/2){
 			$result['successful'] = TRUE;
 			$result['field'] = $event->target;
-			$result['researches'] = $this->getContext()->model->getResearchRepository()->getResearched($event->owner);
+			$researches = $this->getContext()->model->getResearchRepository()->getResearched($event->owner);
+			foreach ($researches as $research){
+				$result['researches'][$research->type] = $research->level;
+			}
 
 		}
 
 		return $result;
 	}
 
-	protected function returnAttackingUnits (Entities\Event $event, $processor, $loot = NULL)
+	protected function returnAttackingUnits (Entities\Event $event, $processor)
 	{
-		if ($loot) {
-			$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, $event->term);
-		}
 		$processor->queueEvent($this->getContext()->model->getMoveService()->startUnitReturn(
 			$event->target,
 			$event->origin,
 			$event->origin->owner,
 			$this->attackingUnits,
-			$loot,
+			null,
 			$event->term
 		));
 	}
@@ -101,6 +101,7 @@ class Spy extends AbstractRule implements IEvent
 		if ($result['defender']['casualties']) {
 			$model->getUnitService()->removeUnits($event->target->owner, $event->target, $result['defender']['casualties'], $event->term);
 		}
+		$this->returnAttackingUnits($event, $processor);
 		return $result;
 	}
 
@@ -114,13 +115,6 @@ class Spy extends AbstractRule implements IEvent
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
-//		Debugger::barDump($data['attacker']['casualties']);
-		foreach($data['attacker']['casualties'] as $key => $value){
-			Debugger::barDump($key);
-			Debugger::barDump($value);
-
-		}
-
 		$message = array(
 			ReportItem::create('unitGrid', array(
 				DataRow::from($data['attacker']['units'])->setLabel('Jednotky'),
@@ -128,8 +122,11 @@ class Spy extends AbstractRule implements IEvent
 			))->setHeading('Útočník'),
 			ReportItem::create('unitGrid', array(
 				DataRow::from($data['defender']['units'])->setLabel('Jednotky'),
-				DataRow::from($data['defender']['casualties'])->setLabel('Ztráty')
-			))->setHeading('Obránce')
+				DataRow::from($data['defender']['casualties'])->setLabel('Ztráty'),
+			))->setHeading('Obránce'),
+			ReportItem::create('researchGrid', array(
+				DataRow::from($data['researches'])->setLabel('Výzkumy')
+			))->setHeading('Výzkumy')
 		);
 		return $message;
 	}

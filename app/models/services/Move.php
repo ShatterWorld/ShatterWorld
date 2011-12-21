@@ -34,10 +34,13 @@ class Move extends Event
 				if ($distance * $speed > $time) {
 					$time = $distance * $speed;
 				}
+		/*Debugger::fireLog($distance);
+		Debugger::fireLog($speed);
+		Debugger::fireLog($time);*/
 			}
 		}
-		Debugger::fireLog($units);
-		Debugger::fireLog($time);
+		/*Debugger::fireLog($units);
+		Debugger::fireLog($time);*/
 		$move->setTimeout($time, $now);
 		return $move;
 	}

@@ -46,7 +46,14 @@ class Units extends AbstractStat
 	public function getSpyForce ($clan)
 	{
 		$level = $this->getUnitLevel($clan, 'spy');
-		return $level;
+		$spyCount = $this->getContext()->model->getUnitRepository()->getTotalUnitCount($clan, 'spy');
+		$territorySize = $this->getContext()->model->getFieldRepository()->getTerritorySize($clan);
+
+		if ($territorySize <= 0){
+			return 0;
+		}
+
+		return $level * $spyCount / $territorySize;
 	}
 
 
