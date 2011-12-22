@@ -40,6 +40,7 @@ class ServiceFactory extends Nette\Object
 		$context->lazyCopy($container, 'model');
 		$context->lazyCopy($container, 'rules');
 		$context->lazyCopy($container, 'stats');
+		$context->lazyCopy($container, 'map');
 		$context->params['game'] = &$container->params['game'];
 		$context->params['database'] = &$container->params['database'];
 		$context->params['doctrine'] = &$container->params['doctrine'];

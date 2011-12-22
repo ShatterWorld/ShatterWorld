@@ -67,61 +67,30 @@ class Clan extends BaseService
 
 		$fieldService = $this->context->fieldService;
 		$fieldRepository = $fieldService->getRepository();
-
-		$mapSize = $this->context->params['game']['map']['size'];
-		$playerDistance = $this->context->params['game']['map']['playerDistance'];
 		$initialFieldsCount = $this->context->params['game']['map']['initialFieldsCount'];
-
-		$S = $fieldRepository->findByCoords($mapSize/2 - 1, $mapSize/2);
-		$map = $fieldRepository->getIndexedMap();
-
-		$lastHqId = $this->cache->load('lastHqId');
-		$lastHq = null;
-		if ($lastHqId === null) {
-			$lastHq =  $S;
-		} else {
-			$lastHq =  $fieldRepository->find($lastHqId);
-		}
-
-		//Debugger::barDump($lastHq);
-		$neutralHexagonsCenters = $fieldRepository->findNeutralHexagons($lastHq, $playerDistance, $mapSize, $map);
-		//Debugger::barDump($neutralHexagonsCenters);
-		$fieldRepository->sortByDistance($neutralHexagonsCenters, $S);
-
-
-		$found = new ArraySet();
-		foreach ($neutralHexagonsCenters as $center) {
-			$finalized = false;
-
-			$found = new ArraySet();
-			$found->addElement($center->type, $center);
-
-			$neighbours = $fieldRepository->getFieldNeighbours($center, 1, $map);
-			foreach ($neighbours as $neighbour){
-
-				if ($found->count() >= $initialFieldsCount){
-					$finalized = true;
-					break;
-				}
-				$found->addElement($neighbour->type, $neighbour);
-			}
-
-			if ($finalized){
+		$candidate = $this->context->map->getHighestRankedField();
+		$headq = $this->context->model->fieldRepository->findByCoords($candidate['x'], $candidate['y']);
+		$territory = array($headq);
+		$fieldCount = 1;
+		foreach ($this->context->model->fieldRepository->findCircuit($headq, 1) as $field) {
+			$territory[] = $field;
+			if (count($territory) >= $initialFieldsCount) {
 				break;
 			}
 		}
-
-		$foundArr = $found->toArray();
-		$headq = array_pop($foundArr);
-
 		$values['headquarters'] = $headq;
 		$clan = parent::create($values, $flush);
 
 		$this->context->model->getOrdersService()->create(array('owner' => $clan), FALSE);
-
-		foreach ($found as $foundField) {
-			$fieldService->update($foundField, array('owner' => $clan));
+		
+		$this->context->map->open();
+		
+		foreach ($territory as $field) {
+			$fieldService->update($field, array('owner' => $clan));
+			$this->context->map->occupyField($field->x, $field->y, 1);
 		}
+		
+		$this->context->map->close();
 		$this->cache->save('lastHqId', $headq->id);
 
 		$initial = $this->context->params['game']['initial'];
