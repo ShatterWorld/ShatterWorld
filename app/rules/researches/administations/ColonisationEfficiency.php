@@ -26,7 +26,7 @@ class ColonisationEfficiency extends AbstractRule implements IResearch
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 24000;
+		return (5 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -48,6 +48,11 @@ class ColonisationEfficiency extends AbstractRule implements IResearch
 	public function getCategory ()
 	{
 		return 'administration';
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 50;
 	}
 
 }

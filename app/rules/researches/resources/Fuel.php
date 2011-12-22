@@ -18,16 +18,16 @@ class Fuel extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 400,
-			'stone' => pow($level, 2) * 400,
-			'metal' => pow($level, 2) * 400,
-			'fuel' => pow($level, 2) * 600
+			'food' => pow($level, 2) * 600,
+			'stone' => pow($level, 2) * 600,
+			'metal' => pow($level, 2) * 600,
+			'fuel' => pow($level, 2) * 800
 		);
 	}
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 36000;
+		return (19 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -55,5 +55,10 @@ class Fuel extends AbstractRule implements IResearch
 	public function getCategory ()
 	{
 		return 'resource';
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 300 + $level * 200;
 	}
 }

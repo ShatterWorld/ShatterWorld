@@ -17,24 +17,31 @@ class Refinery extends AbstractRule implements IFacility
 	public function getConstructionCost ($level = 1)
 	{
 		return array(
-			'stone' => $level * 60,
-			'metal' => ($level - 1) * 20
+			'food' => 80 + max($level - 1, 0) * 100,
+			'stone' => 80 + max($level - 1, 0) * 50,
+			'metal' => 60 + max($level - 1, 0) * 70,
+			'fuel' => 60 + max($level - 1, 0) * 50
 		);
 	}
 
 	public function getConstructionTime ($level = 1)
 	{
-		return pow($level, 2) * 90;
+		return 10*60 + pow($level, 2) * 90;
 	}
 
 	public function getDemolitionCost ($from, $level = 0)
 	{
-		return array();
+		return array(
+			'food' => 80 + ($from - $level) * 100,
+			'stone' => 80 + ($from - $level) * 50,
+			'metal' => 60 + ($from - $level) * 70,
+			'fuel' => 60 + ($from - $level) * 50
+		);
 	}
 
 	public function getDemolitionTime ($from, $level = 0)
 	{
-		return ($from - $level) * 90;
+		return 5*60 + ($from - $level) * 90;
 	}
 
 	public function getProduction ($level = 1)
@@ -44,8 +51,13 @@ class Refinery extends AbstractRule implements IFacility
 		);
 	}
 
-	public function getDefenceBonus ()
+	public function getDefenceBonus ($level = 1)
 	{
 		return -0.2;
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 20;
 	}
 }

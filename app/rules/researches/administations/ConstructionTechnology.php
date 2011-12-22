@@ -18,15 +18,15 @@ class ConstructionTechnology extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 150,
-			'stone' => pow($level, 2) * 150,
+			'food' => pow($level, 2) * 100,
+			'stone' => pow($level, 2) * 200,
 			'metal' => pow($level, 2) * 150
 		);
 	}
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 24000;
+		return (5 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -52,4 +52,8 @@ class ConstructionTechnology extends AbstractRule implements IResearch
 		return 'administration';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 50 + $level * 20;
+	}
 }

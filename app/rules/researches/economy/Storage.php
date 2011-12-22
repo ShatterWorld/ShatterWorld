@@ -26,7 +26,7 @@ class Storage extends AbstractRule implements IResearch
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 20000;
+		return (2 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -51,6 +51,11 @@ class Storage extends AbstractRule implements IResearch
 	public function getCategory ()
 	{
 		return 'economy';
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 100;
 	}
 
 }

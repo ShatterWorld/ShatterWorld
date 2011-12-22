@@ -13,30 +13,30 @@ class HeavyVehicle extends AbstractRule implements IUnit
 	{
 		return 7;
 	}
-	
+
 	public function getDefense ()
 	{
 		return 5;
 	}
-	
+
 	public function getSpeed ()
 	{
 		return 150;
 	}
-	
+
 	public function getCapacity ()
 	{
 		return 60;
 	}
-	
+
 	public function getCost ()
 	{
 		return array(
-			'food' => 180,
-			'metal' => 150
+			'food' => 150,
+			'metal' => 200
 		);
 	}
-	
+
 	public function getUpkeep ()
 	{
 		return array(
@@ -44,17 +44,22 @@ class HeavyVehicle extends AbstractRule implements IUnit
 			'fuel' => 0.03
 		);
 	}
-	
+
 	public function getTrainingTime ()
 	{
-		return 7200;
+		return 120*60;
 	}
-	
+
 	public function getDifficulty ()
 	{
 		return array(
 			'barracks' => 2,
 			'workshop' => 6
 		);
+	}
+
+	public function getValue ()
+	{
+		return 7;
 	}
 }

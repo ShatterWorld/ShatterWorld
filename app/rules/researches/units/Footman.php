@@ -26,7 +26,7 @@ class Footman extends AbstractRule implements IResearch
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 24000;
+		return (2 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -48,6 +48,11 @@ class Footman extends AbstractRule implements IResearch
 	public function getCategory ()
 	{
 		return 'unit';
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 300 + $level * 150;
 	}
 }
 

@@ -19,9 +19,14 @@ class Fuel extends AbstractRule implements IExhaustableResource
 	{
 		return "Vyčerpání paliva";
 	}
-	
+
 	public function formatExhaustionReport (Entities\Report $report)
 	{
 		return array();
+	}
+
+	public function getValue ()
+	{
+		return 0.05;
 	}
 }

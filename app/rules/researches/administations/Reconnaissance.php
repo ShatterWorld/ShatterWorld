@@ -19,14 +19,15 @@ class Reconnaissance extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'fuel' => pow($level, 2) * 700,
-			'stone' => pow($level, 2) * 200
+			'fuel' => pow($level, 2) * 300,
+			'stone' => pow($level, 2) * 200,
+			'metal' => pow($level, 2) * 100
 		);
 	}
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 36000;
+		return (7 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -63,6 +64,11 @@ class Reconnaissance extends AbstractRule implements IResearch
 	public function getCategory ()
 	{
 		return 'administration';
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 200 + $level * 100;
 	}
 
 }

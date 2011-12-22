@@ -21,7 +21,7 @@ class Spy extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 150;
+		return 80;
 	}
 
 	public function getCapacity ()
@@ -32,7 +32,7 @@ class Spy extends AbstractRule implements IUnit
 	public function getCost ()
 	{
 		return array(
-			'food' => 180,
+			'food' => 150,
 			'metal' => 150
 		);
 	}
@@ -46,7 +46,7 @@ class Spy extends AbstractRule implements IUnit
 
 	public function getTrainingTime ()
 	{
-		return 16000;
+		return 240 * 60;
 	}
 
 	public function getDifficulty ()
@@ -54,5 +54,10 @@ class Spy extends AbstractRule implements IUnit
 		return array(
 			'barracks' => 1
 		);
+	}
+
+	public function getValue ()
+	{
+		return 1.5;
 	}
 }

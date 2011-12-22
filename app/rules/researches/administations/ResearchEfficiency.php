@@ -20,13 +20,13 @@ class ResearchEfficiency extends AbstractRule implements IResearch
 		return array(
 			'stone' => pow($level, 2) * 500,
 			'metal' => pow($level, 2) * 500,
-			'fuel' => pow($level, 2) * 500
+			'fuel' => pow($level, 2) * 100
 		);
 	}
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 18000;
+		return (6 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -48,6 +48,11 @@ class ResearchEfficiency extends AbstractRule implements IResearch
 	public function getCategory ()
 	{
 		return 'administration';
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 50 + $level * 20;
 	}
 
 }

@@ -1,0 +1,9 @@
+{block #header}
+	Skóre klanu
+{/block}
+
+{block #content}
+	{foreach $clanScore as $name => $score}
+		<div>{$name}: {$score}</div>
+	{/foreach}
+{/block}

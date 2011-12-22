@@ -13,30 +13,30 @@ class LightVehicle extends AbstractRule implements IUnit
 	{
 		return 4;
 	}
-	
+
 	public function getDefense ()
 	{
 		return 3;
 	}
-	
+
 	public function getSpeed ()
 	{
 		return 90;
 	}
-	
+
 	public function getCapacity ()
 	{
 		return 80;
 	}
-	
+
 	public function getCost ()
 	{
 		return array(
-			'food' => 120,
-			'metal' => 80
+			'food' => 100,
+			'metal' => 150
 		);
 	}
-	
+
 	public function getUpkeep ()
 	{
 		return array(
@@ -44,17 +44,22 @@ class LightVehicle extends AbstractRule implements IUnit
 			'fuel' => 0.01
 		);
 	}
-	
+
 	public function getTrainingTime ()
 	{
-		return 3600;
+		return 90 * 60;
 	}
-	
+
 	public function getDifficulty ()
 	{
 		return array(
 			'barracks' => 2,
 			'workshop' => 2
 		);
+	}
+
+	public function getValue ()
+	{
+		return 5;
 	}
 }

@@ -27,7 +27,7 @@ class Stone extends AbstractRule implements IResearch
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 36000;
+		return (9 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -57,4 +57,8 @@ class Stone extends AbstractRule implements IResearch
 		return 'resource';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 200 + $level * 150;
+	}
 }

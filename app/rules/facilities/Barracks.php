@@ -17,24 +17,29 @@ class Barracks extends AbstractRule implements IConstructionFacility
 	public function getConstructionCost ($level = 1)
 	{
 		return array(
-			'stone' => $level * 60,
-			'metal' => ($level - 1) * 40
+			'food' => $level * 150,
+			'stone' => 100 + $level * 150,
+			'metal' => 50 + $level * 100,
+			'fuel' => 0 + max($level - 3, 0) * 50
 		);
 	}
 
 	public function getConstructionTime ($level = 1)
 	{
-		return pow($level, 2) * 90;
+		return 5*60 + pow($level, 2) * 90;
 	}
 
 	public function getDemolitionCost ($from, $level = 0)
 	{
-		return array();
+		return array(
+			'food' => 100 + $level * 20,
+			'fuel' => 100
+		);
 	}
 
 	public function getDemolitionTime ($from, $level = 0)
 	{
-		return($from - $level) * 90;
+		return 5*60 + ($from - $level) * 90;
 	}
 
 	public function getProduction ($level = 1)
@@ -47,8 +52,13 @@ class Barracks extends AbstractRule implements IConstructionFacility
 		return intval(floor(pow($level + 1, 2) / 4));
 	}
 
-	public function getDefenceBonus ()
+	public function getDefenceBonus ($level = 1)
 	{
 		return 0;
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 20;
 	}
 }

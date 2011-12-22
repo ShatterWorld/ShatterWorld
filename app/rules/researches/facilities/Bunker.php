@@ -52,4 +52,9 @@ class Bunker extends AbstractRule implements IResearch
 		return 'facility';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 500 + $level * 150;
+	}
+
 }

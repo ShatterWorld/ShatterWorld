@@ -30,7 +30,7 @@ class Unit extends BaseRepository
 			'move' => NULL
 		));
 
-		return count($clanUnits);
+		return $clanUnits->count;
 
 	}
 }

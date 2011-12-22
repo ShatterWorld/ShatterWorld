@@ -18,15 +18,15 @@ class ExplorationEfficiency extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 3) * 300,
-			'stone' => pow($level, 3) * 300,
-			'metal' => pow($level, 3) * 300
+			'food' => pow($level, 2) * 300,
+			'stone' => pow($level, 2) * 300,
+			'metal' => pow($level, 2) * 300
 		);
 	}
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 24000;
+		return (5 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
@@ -48,6 +48,11 @@ class ExplorationEfficiency extends AbstractRule implements IResearch
 	public function getCategory ()
 	{
 		return 'administration';
+	}
+
+	public function getValue ($level = 1)
+	{
+		return 200 + $level * 70;
 	}
 
 }

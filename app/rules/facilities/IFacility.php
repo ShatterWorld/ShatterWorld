@@ -53,7 +53,15 @@ interface IFacility extends IRule
 
 	/**
 	 *	Percentual bonus to the defence
+	 * 	@param int
 	 *  @return float
 	 */
-	public function getDefenceBonus ();
+	public function getDefenceBonus ($level = 1);
+
+	/**
+	 * Value
+	 * @return float
+	 */
+	public function getValue ($level = 1);
+
 }
