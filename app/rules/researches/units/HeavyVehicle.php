@@ -50,5 +50,10 @@ class HeavyVehicle extends AbstractRule implements IResearch
 	{
 		return 'unit';
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 700 + $level * 300;
+	}
 }
 

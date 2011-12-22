@@ -50,4 +50,9 @@ class ExplorationEfficiency extends AbstractRule implements IResearch
 		return 'administration';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 200 + $level * 70;
+	}
+
 }

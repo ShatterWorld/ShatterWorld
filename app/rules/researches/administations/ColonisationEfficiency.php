@@ -50,4 +50,9 @@ class ColonisationEfficiency extends AbstractRule implements IResearch
 		return 'administration';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 50;
+	}
+
 }

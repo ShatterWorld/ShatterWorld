@@ -43,4 +43,9 @@ class Headquarters extends AbstractRule implements IFacility
 	{
 		return 0.5;
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 50;
+	}
 }

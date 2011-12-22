@@ -55,4 +55,9 @@ class Mine extends AbstractRule implements IFacility
 	{
 		return 0;
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 50 + $level * 20;
+	}
 }

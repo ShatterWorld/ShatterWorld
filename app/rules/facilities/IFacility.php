@@ -57,4 +57,11 @@ interface IFacility extends IRule
 	 *  @return float
 	 */
 	public function getDefenceBonus ($level = 1);
+
+	/**
+	 * Value
+	 * @return float
+	 */
+	public function getValue ($level = 1);
+
 }

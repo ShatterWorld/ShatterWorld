@@ -53,4 +53,9 @@ class MineField extends AbstractRule implements IResearch
 		return 'facility';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 50;
+	}
+
 }

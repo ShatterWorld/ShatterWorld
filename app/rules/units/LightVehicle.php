@@ -57,4 +57,9 @@ class LightVehicle extends AbstractRule implements IUnit
 			'workshop' => 2
 		);
 	}
+
+	public function getValue ()
+	{
+		return 5;
+	}
 }

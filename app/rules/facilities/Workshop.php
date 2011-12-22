@@ -56,4 +56,9 @@ class Workshop extends AbstractRule implements IConstructionFacility
 	{
 		return 0;
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 150 + $level * 20;
+	}
 }

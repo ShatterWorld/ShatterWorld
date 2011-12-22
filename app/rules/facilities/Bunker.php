@@ -49,4 +49,9 @@ class Bunker extends AbstractRule implements IFacility
 	{
 		return $level * 0.5;
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 50;
+	}
 }

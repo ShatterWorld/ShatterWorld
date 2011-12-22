@@ -13,22 +13,22 @@ class Militia extends AbstractRule implements IUnit
 	{
 		return 1;
 	}
-	
+
 	public function getDefense ()
 	{
 		return 1;
 	}
-	
+
 	public function getSpeed ()
 	{
 		return 120;
 	}
-	
+
 	public function getCapacity ()
 	{
 		return 20;
 	}
-	
+
 	public function getCost ()
 	{
 		return array(
@@ -36,23 +36,28 @@ class Militia extends AbstractRule implements IUnit
 			'metal' => 5
 		);
 	}
-	
+
 	public function getUpkeep ()
 	{
 		return array(
 			'food' => 0.005
 		);
 	}
-	
+
 	public function getTrainingTime ()
 	{
 		return 1200;
 	}
-	
+
 	public function getDifficulty ()
 	{
 		return array(
 			'barracks' => 1
 		);
+	}
+
+	public function getValue ()
+	{
+		return 0.7;
 	}
 }

@@ -52,4 +52,8 @@ class ConstructionTechnology extends AbstractRule implements IResearch
 		return 'administration';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 50 + $level * 20;
+	}
 }

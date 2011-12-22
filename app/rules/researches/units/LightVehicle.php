@@ -50,5 +50,10 @@ class LightVehicle extends AbstractRule implements IResearch
 	{
 		return 'unit';
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 600 + $level * 300;
+	}
 }
 

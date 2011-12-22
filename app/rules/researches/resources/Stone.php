@@ -57,4 +57,8 @@ class Stone extends AbstractRule implements IResearch
 		return 'resource';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 200 + $level * 150;
+	}
 }

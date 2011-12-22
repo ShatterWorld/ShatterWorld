@@ -56,4 +56,9 @@ class Barracks extends AbstractRule implements IConstructionFacility
 	{
 		return 0;
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 20;
+	}
 }

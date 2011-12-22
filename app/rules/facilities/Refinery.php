@@ -55,4 +55,9 @@ class Refinery extends AbstractRule implements IFacility
 	{
 		return -0.2;
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 20;
+	}
 }

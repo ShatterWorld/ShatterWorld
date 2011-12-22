@@ -57,4 +57,9 @@ class HeavyVehicle extends AbstractRule implements IUnit
 			'workshop' => 6
 		);
 	}
+
+	public function getValue ()
+	{
+		return 7;
+	}
 }

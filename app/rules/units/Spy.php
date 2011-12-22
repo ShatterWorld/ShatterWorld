@@ -55,4 +55,9 @@ class Spy extends AbstractRule implements IUnit
 			'barracks' => 1
 		);
 	}
+
+	public function getValue ()
+	{
+		return 1.5;
+	}
 }

@@ -52,4 +52,9 @@ class Food extends AbstractRule implements IExhaustableResource
 	{
 		return array();
 	}
+
+	public function getValue ()
+	{
+		return 0.01;
+	}
 }

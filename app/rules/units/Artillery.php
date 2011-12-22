@@ -54,4 +54,9 @@ class Artillery extends AbstractRule implements IUnit
 			'workshop' => 1
 		);
 	}
+
+	public function getValue ()
+	{
+		return 3;
+	}
 }

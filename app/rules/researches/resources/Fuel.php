@@ -56,4 +56,9 @@ class Fuel extends AbstractRule implements IResearch
 	{
 		return 'resource';
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 300 + $level * 200;
+	}
 }

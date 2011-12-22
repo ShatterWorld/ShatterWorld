@@ -53,4 +53,9 @@ class Storage extends AbstractRule implements IResearch
 		return 'economy';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 100 + $level * 100;
+	}
+
 }

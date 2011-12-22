@@ -66,4 +66,9 @@ class Reconnaissance extends AbstractRule implements IResearch
 		return 'administration';
 	}
 
+	public function getValue ($level = 1)
+	{
+		return 200 + $level * 100;
+	}
+
 }

@@ -61,5 +61,10 @@ interface IResearch extends IRule
 	 */
 	public function getCategory ();
 
+	/**
+	 * Value
+	 * @return float
+	 */
+	public function getValue ($level = 1);
 
 }

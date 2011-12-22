@@ -49,5 +49,10 @@ class Artillery extends AbstractRule implements IResearch
 	{
 		return 'unit';
 	}
+
+	public function getValue ($level = 1)
+	{
+		return 500 + $level * 300;
+	}
 }
 
