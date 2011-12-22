@@ -8,27 +8,27 @@ class Footman extends AbstractRule implements IUnit
 	{
 		return 'Pěšák';
 	}
-	
+
 	public function getAttack ()
 	{
 		return 2;
 	}
-	
+
 	public function getDefense ()
 	{
 		return 3;
 	}
-	
+
 	public function getSpeed ()
 	{
 		return 100;
 	}
-	
+
 	public function getCapacity ()
 	{
 		return 30;
 	}
-	
+
 	public function getCost ()
 	{
 		return array(
@@ -36,19 +36,19 @@ class Footman extends AbstractRule implements IUnit
 			'metal' => 30
 		);
 	}
-	
+
 	public function getUpkeep ()
 	{
 		return array(
 			'food' => 0.005
 		);
 	}
-	
+
 	public function getTrainingTime ()
 	{
-		return 3600;
+		return 45*60;
 	}
-	
+
 	public function getDifficulty ()
 	{
 		return array(

@@ -17,24 +17,29 @@ class Workshop extends AbstractRule implements IConstructionFacility
 	public function getConstructionCost ($level = 1)
 	{
 		return array(
-			'stone' => $level * 70,
-			'metal' => ($level - 1) * 50
+			'food' => $level * 100,
+			'stone' => 100 + $level * 150,
+			'metal' => 100 + $level * 100,
+			'fuel' => 100 + max($level - 3, 0) * 50
 		);
 	}
 
 	public function getConstructionTime ($level = 1)
 	{
-		return pow($level, 2) * 90;
+		return 10*60 + pow($level, 2) * 90;
 	}
 
 	public function getDemolitionCost ($from, $level = 0)
 	{
-		return array();
+		return array(
+			'food' => 100 + $level * 20,
+			'fuel' => 100
+		);
 	}
 
 	public function getDemolitionTime ($from, $level = 0)
 	{
-		return ($from - $level) * 90;
+		return 5*60 + ($from - $level) * 90;
 	}
 
 	public function getProduction ($level = 1)
@@ -47,7 +52,7 @@ class Workshop extends AbstractRule implements IConstructionFacility
 		return intval(floor(pow($level + 2, 2) / 7));
 	}
 
-	public function getDefenceBonus ()
+	public function getDefenceBonus ($level = 1)
 	{
 		return 0;
 	}

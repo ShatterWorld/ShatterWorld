@@ -20,13 +20,14 @@ class LightVehicle extends AbstractRule implements IResearch
 		return array(
 			'food' => pow($level, 2) * 300,
 			'stone' => pow($level, 2) * 300,
-			'metal' => pow($level, 2) * 300
+			'metal' => pow($level, 2) * 300,
+			'fuel' => pow($level, 2) * 300
 		);
 	}
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 24000;
+		return (8 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()

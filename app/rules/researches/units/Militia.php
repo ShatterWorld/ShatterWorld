@@ -18,15 +18,15 @@ class Militia extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 300,
-			'stone' => pow($level, 2) * 300,
-			'metal' => pow($level, 2) * 300
+			'food' => pow($level, 2) * 200,
+			'stone' => pow($level, 2) * 200,
+			'metal' => pow($level, 2) * 200
 		);
 	}
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 24000;
+		return (2 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()

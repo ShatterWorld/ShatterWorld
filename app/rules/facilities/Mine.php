@@ -17,24 +17,31 @@ class Mine extends AbstractRule implements IFacility
 	public function getConstructionCost ($level = 1)
 	{
 		return array(
-			'stone' => $level * 40,
-			'metal' => ($level - 1) * 20
+			'food' => 40 + max($level - 1, 0) * 40,
+			'stone' => 40 + max($level - 1, 0) * 40,
+			'metal' => 60 + max($level - 1, 0) * 60,
+			'fuel' => 0 + max($level - 5, 0) * 50
 		);
 	}
 
 	public function getConstructionTime ($level = 1)
 	{
-		return pow($level, 2) * 90;
+		return 3*60 + pow($level, 2) * 90;
 	}
 
 	public function getDemolitionCost ($from, $level = 0)
 	{
-		return array();
+		return array(
+			'food' => 40 + ($from - $level) * 40,
+			'stone' => 40 + ($from - $level) * 40,
+			'metal' => 60 + ($from - $level) * 60,
+			'fuel' => 0 + ($from - $level) * 50
+		);
 	}
 
 	public function getDemolitionTime ($from, $level = 0)
 	{
-		return ($from - $level) * 90;
+		return 3*60 + ($from - $level) * 90;
 	}
 
 	public function getProduction ($level = 1)
@@ -44,7 +51,7 @@ class Mine extends AbstractRule implements IFacility
 		);
 	}
 
-	public function getDefenceBonus ()
+	public function getDefenceBonus ($level = 1)
 	{
 		return 0;
 	}

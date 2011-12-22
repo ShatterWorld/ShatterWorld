@@ -39,7 +39,7 @@ class Headquarters extends AbstractRule implements IFacility
 		return array();
 	}
 
-	public function getDefenceBonus ()
+	public function getDefenceBonus ($level = 1)
 	{
 		return 0.5;
 	}

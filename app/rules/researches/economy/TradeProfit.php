@@ -20,13 +20,14 @@ class TradeProfit extends AbstractRule implements IResearch
 	{
 		return array(
 			'food' => pow($level, 2) * 500,
-			'fuel' => $level > 3 ? pow($level, 2) * 350 : 0
+			'fuel' => $level > 3 ? pow($level, 2) * 350 : 500,
+			'metal' => $level * 250
 		);
 	}
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 36000;
+		return (9 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()

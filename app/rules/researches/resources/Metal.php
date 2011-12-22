@@ -27,7 +27,7 @@ class Metal extends AbstractRule implements IResearch
 
 	public function getResearchTime ($level = 1)
 	{
-		return $level * 36000;
+		return (9 + $level) * 60 * 60;
 	}
 
 	public function getDependencies ()
