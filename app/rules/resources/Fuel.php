@@ -25,8 +25,8 @@ class Fuel extends AbstractRule implements IExhaustableResource
 		return array();
 	}
 
-	public function getValue ()
+	public function getValue (Entities\Resource $resource)
 	{
-		return 0.05;
+		return $resource->production * 3600;
 	}
 }

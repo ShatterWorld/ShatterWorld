@@ -1,6 +1,7 @@
 <?php
 namespace Rules\Resources;
 use Rules\AbstractRule;
+use Entities;
 
 class Stone extends AbstractRule implements IResource
 {
@@ -9,8 +10,8 @@ class Stone extends AbstractRule implements IResource
 		return 'Kámen';
 	}
 
-	public function getValue ()
+	public function getValue (Entities\Resource $resource)
 	{
-		return 0.02;
+		return $resource->production * 1800;
 	}
 }
