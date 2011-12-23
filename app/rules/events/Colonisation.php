@@ -15,6 +15,7 @@ class Colonisation extends AbstractRule implements IConstruction
 	{
 		$event->target->setOwner($event->owner);
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
+		$this->getContext()->map->occupyField($event->target->x, $event->target->y);
 		return array();
 	}
 

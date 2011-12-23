@@ -90,7 +90,7 @@ common:
 		map:
 			class: Map
 			arguments: [%game.map%, @model, @cacheStorage]
-			
+		
 		entityManager:
 			factory: ServiceFactory::createEntityManager
 
