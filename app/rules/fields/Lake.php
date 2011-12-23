@@ -35,4 +35,9 @@ class Lake extends AbstractRule implements IField
 		return -0.2;
 	}
 
+	public function getValue ()
+	{
+		return 350;
+	}
+
 }

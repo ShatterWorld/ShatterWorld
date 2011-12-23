@@ -34,4 +34,9 @@ class Mountain extends AbstractRule implements IField
 		return 0.5;
 	}
 
+	public function getValue ()
+	{
+		return 350;
+	}
+
 }

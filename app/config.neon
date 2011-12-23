@@ -42,22 +42,30 @@ common:
 			event: Rules\Events
 			research: Rules\Researches
 			quest: Rules\Quests
-		
+
 		initial:
 			resources:
 				food: 500
 				fuel: 100
 				stone: 400
 				metal: 200
-			
+
 			units:
 				militia: 10
-			
+
 			researches:
 				militia: 1
-			
+
 			quests:
 				- foodGathering
+
+		score:
+			- research
+			- unit
+			- quest
+			- territory
+			- production
+			- facility
 
 	doctrine:
 		proxyDir: %tempDir%/proxies
@@ -90,7 +98,7 @@ common:
 		map:
 			class: Map
 			arguments: [%game.map%, @model, @cacheStorage]
-		
+
 		entityManager:
 			factory: ServiceFactory::createEntityManager
 

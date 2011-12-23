@@ -30,6 +30,7 @@ class Score extends BaseEntity {
 
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan")
+ 	 * @JoinColumn(onDelete = "CASCADE")
 	 * @var Entities\Clan
 	 */
 	private $owner;
@@ -81,7 +82,7 @@ class Score extends BaseEntity {
 	 */
 	public function setValue ($value)
 	{
-		$value->level = $value;
+		$this->value = $value;
 	}
 
 }

@@ -34,4 +34,9 @@ class Forest extends AbstractRule implements IField
 	{
 		return 0;
 	}
+
+	public function getValue ()
+	{
+		return 350;
+	}
 }

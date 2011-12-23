@@ -30,4 +30,10 @@ interface IField extends \Rules\IRule {
 	 * return float
 	 */
 	public function getDefenceBonus ();
+
+	/**
+	 * Value of the field
+	 * return float
+	 */
+	public function getValue ();
 }
