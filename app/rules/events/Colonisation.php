@@ -13,7 +13,7 @@ class Colonisation extends AbstractRule implements IConstruction
 
 	public function process (Entities\Event $event, $processor)
 	{
-		$event->target->setOwner($event->owner);
+		$this->getContext()->model->getFieldService()->setFieldOwner($event->target, $event->owner);
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
 		$this->getContext()->map->occupyField($event->target->x, $event->target->y);
 		return array();
@@ -40,12 +40,12 @@ class Colonisation extends AbstractRule implements IConstruction
 			ReportItem::create('text', 'Úspěšně jsme připojili další území k našemu teritoriu!')
 		);
 	}
-	
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Kolonizace pole %s', $event->target->getCoords());
 	}
-	
+
 	public function isExclusive ()
 	{
 		return TRUE;

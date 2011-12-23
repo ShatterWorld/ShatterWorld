@@ -32,9 +32,12 @@ class Research extends AbstractRule implements IEvent
 		}
 		$rule = $this->getContext()->rules->get('research', $event->construction);
 		$rule->afterResearch($event);
+
+		$this->getContext()->model->getScoreService()->increaseClanScore($event->owner, 'research', $rule->getValue($event->level));
+
 		return array('type' => $event->construction, 'level' => $event->level);
 	}
-	
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Výzkum %s', $this->getContext()->rules->get('research', $event->construction)->getDescription());
