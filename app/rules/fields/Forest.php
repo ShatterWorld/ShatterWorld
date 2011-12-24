@@ -3,7 +3,7 @@ namespace Rules\Fields;
 use Rules\AbstractRule;
 use Nette;
 
-class Forest extends AbstractRule implements IField
+class Forest extends AbstractField implements IField
 {
 	public function getDescription ()
 	{
@@ -33,10 +33,5 @@ class Forest extends AbstractRule implements IField
 	public function getDefenceBonus ()
 	{
 		return 0;
-	}
-
-	public function getValue ()
-	{
-		return 350;
 	}
 }

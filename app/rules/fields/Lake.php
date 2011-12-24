@@ -3,7 +3,7 @@ namespace Rules\Fields;
 use Rules\AbstractRule;
 use Nette;
 
-class Lake extends AbstractRule implements IField
+class Lake extends AbstractField implements IField
 {
 	public function getDescription ()
 	{
@@ -33,11 +33,6 @@ class Lake extends AbstractRule implements IField
 	public function getDefenceBonus ()
 	{
 		return -0.2;
-	}
-
-	public function getValue ()
-	{
-		return 350;
 	}
 
 }

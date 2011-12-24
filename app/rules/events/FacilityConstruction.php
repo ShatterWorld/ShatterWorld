@@ -18,16 +18,20 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 			'level' => $event->level
 		));
 		$this->getContext()->model->getResourceService()->recalculateProduction($event->owner, $event->term);
+
+		$value = $this->getContext()->rules->get('facility', $event->construction)->getValue($event->level);
+		$this->getContext()->model->getScoreService()->increaseClanScore($event->owner, 'facility', $value);
+
 		return array();
 	}
-	
+
 	public function isValid (Entities\Event $event)
 	{
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
 		return $event->target->owner == $clan && $event->level <= $this->getContext()->params['game']['stats']['facilityLevelCap'] &&
 			(($event->target->facility === $event->construction || ($event->target->facility === NULL && $event->level === 1)) && $event->target->level === ($event->level - 1));
 	}
-	
+
 	public function getExplanation (Entities\Event $event)
 	{
 		if ($event->level) {
@@ -36,7 +40,7 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 			return sprintf('Stavba budovy %s na poli %s', $this->getContext()->rules->get('facility', $event->construction)->getDescription(), $event->target->getCoords());
 		}
 	}
-	
+
 	public function formatReport (Entities\Report $report)
 	{
 		$facility = $this->getContext()->rules->get('facility', $report->event->construction)->getDescription();
@@ -45,7 +49,7 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 			ReportItem::create('text', $level == 1 ? sprintf("Budova %s byla dostavena.", $facility) : sprintf("Budova %s byla vylepšena na úroveň %s.", $facility, $level))
 		);
 	}
-	
+
 	public function isExclusive ()
 	{
 		return TRUE;
