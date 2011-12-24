@@ -96,12 +96,8 @@ class Clan extends BaseService
 		$increment = 0;
 		foreach ($territory as $field) {
 			$fieldService->update($field, array('owner' => $clan));
-<<<<<<< HEAD
 			$this->context->map->occupyField($field->x, $field->y);
-=======
-			$this->context->map->occupyField($field->x, $field->y, 1);
 			$increment += $this->context->rules->get('field', $field->type)->getValue();
->>>>>>> d832e6f95f57a6300e1568d5fac64e9a02c4e348
 		}
 		$initScore['territory'] = $increment;
 
@@ -188,7 +184,8 @@ class Clan extends BaseService
 		}
 	}
 
-	public function deleteAll ($flush = TRUE){
+	public function deleteAll ($flush = TRUE)
+	{
 		parent::deleteAll($flush);
 		$this->cache->clean();
 	}
