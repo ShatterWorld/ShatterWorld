@@ -19,6 +19,9 @@ class Score extends BaseService
 	 */
 	public function increaseClanScore (Entities\Clan $clan, $type, $value)
 	{
+		if ($value < 0){
+			$this->decreaseClanScore($clan, $type, -$value);
+		}
 		$score = $this->context->model->getScoreRepository()->findOneBy(array(
 			'owner' => $clan->id,
 			'type' => $type
@@ -38,6 +41,9 @@ class Score extends BaseService
 	 */
 	public function decreaseClanScore (Entities\Clan $clan, $type, $value)
 	{
+		if ($value < 0){
+			$this->increaseClanScore($clan, $type, -$value);
+		}
 		$score = $this->context->model->getScoreRepository()->findOneBy(array(
 			'owner' => $clan->id,
 			'type' => $type
