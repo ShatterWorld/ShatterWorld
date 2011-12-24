@@ -34,18 +34,6 @@ class Map extends Nette\Object
 	}
 	
 	/**
-	 * Get a reference to a two-dimensional array of field ranks
-	 * @return array
-	 */
-	protected function & getFieldRanks ()
-	{
-		if (!$this->fieldRanks && !($this->fieldRanks = $this->cache->load('FieldRanks'))) {
-			$this->fieldRanks = array($this->center['x'] => array($this->center['y'] => 1));
-		}
-		return $this->fieldRanks;
-	}
-	
-	/**
 	 * Open the map for transactional writing
 	 * @return void
 	 */
@@ -74,26 +62,15 @@ class Map extends Nette\Object
 	}
 	
 	/**
-	 * Mark a field as occupied, then mark surrounding neutral field as 
-	 * unsuitable for occupation and the outermost circle as suitable for occupation
-	 * @param int
-	 * @param int
-	 * @return void
+	 * Get a reference to a two-dimensional array of field ranks
+	 * @return array
 	 */
-	public function occupyField ($x, $y)
+	protected function & getFieldRanks ()
 	{
-		$this->setRank($x, $y, 0);
-		for ($i = 1; $i <= $this->params['playerDistance']; $i++) {
-			foreach ($this->getCircuit($x, $y, $i) as $field) {
-				$this->setRank($field['x'], $field['y'], 0);
-			}
+		if (!$this->fieldRanks && !($this->fieldRanks = $this->cache->load('FieldRanks'))) {
+			$this->fieldRanks = array($this->center['x'] => array($this->center['y'] => 1));
 		}
-		foreach ($this->getCircuit($x, $y, $this->params['playerDistance'] + 1) as $field) {
-			$this->setRank($field['x'], $field['y'], 1);
-		}
-		if (!$this->open) {
-			$this->saveRanks();
-		}
+		return $this->fieldRanks;
 	}
 	
 	/**
@@ -121,6 +98,29 @@ class Map extends Nette\Object
 			return $result;
 		} else {
 			throw new Exception;
+		}
+	}
+	
+	/**
+	 * Mark a field as occupied, then mark surrounding neutral field as 
+	 * unsuitable for occupation and the outermost circle as suitable for occupation
+	 * @param int
+	 * @param int
+	 * @return void
+	 */
+	public function occupyField ($x, $y)
+	{
+		$this->setRank($x, $y, 0);
+		for ($i = 1; $i <= $this->params['playerDistance']; $i++) {
+			foreach ($this->getCircuit($x, $y, $i) as $field) {
+				$this->setRank($field['x'], $field['y'], 0);
+			}
+		}
+		foreach ($this->getCircuit($x, $y, $this->params['playerDistance'] + 1) as $field) {
+			$this->setRank($field['x'], $field['y'], 1);
+		}
+		if (!$this->open) {
+			$this->saveRanks();
 		}
 	}
 	
