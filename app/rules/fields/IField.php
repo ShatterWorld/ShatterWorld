@@ -30,4 +30,5 @@ interface IField extends \Rules\IRule {
 	 * return float
 	 */
 	public function getDefenceBonus ();
+
 }

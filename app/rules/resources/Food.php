@@ -15,7 +15,7 @@ class Food extends AbstractRule implements IExhaustableResource
 	{
 		$clan = $event->owner;
 		$resources = $this->getContext()->model->getResourceRepository()->getResourcesArray($clan);
-		$units = $this->getContext()->model->getUnitRepository()->getClanUnits($clan);
+		$units = $this->getContext()->model->getUnitRepository()->getStaticClanUnits($clan);
 
 		$rules = $this->getContext()->rules;
 		//sort units in reverse order
@@ -53,8 +53,8 @@ class Food extends AbstractRule implements IExhaustableResource
 		return array();
 	}
 
-	public function getValue ()
+	public function getValue (Entities\Resource $resource)
 	{
-		return 0.01;
+		return $resource->production * 1800;
 	}
 }

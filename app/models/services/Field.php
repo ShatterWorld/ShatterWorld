@@ -3,22 +3,22 @@ namespace Services;
 use Entities;
 
 class Field extends BaseService {
-	
+
 	protected $options;
-	
+
 	protected $fieldRules;
-	
+
 	public function __construct ($context, $entityClass)
 	{
 		parent::__construct($context, $entityClass);
 		$this->options = $context->params['game']['map'];
 	}
-	
+
 	public function invalidateVisibleFields ($clanId)
 	{
 		$this->getRepository()->getVisibleFieldsCache()->save($clanId, NULL);
 	}
-	
+
 	public function createMap ()
 	{
 		$map = array();
@@ -35,7 +35,7 @@ class Field extends BaseService {
 		}
 		$this->entityManager->flush();
 	}
-	
+
 	protected function getFieldRules ()
 	{
 		if (!isset($this->fieldRules)) {
@@ -43,7 +43,7 @@ class Field extends BaseService {
 		}
 		return $this->fieldRules;
 	}
-	
+
 	protected function getProbabilityTable ($exclude = array())
 	{
 		$table = array();
@@ -56,7 +56,7 @@ class Field extends BaseService {
 		}
 		return array($table, $peak);
 	}
-	
+
 	protected function pickType ($x, $y, &$map)
 	{
 		$neighbours = array();
@@ -82,5 +82,17 @@ class Field extends BaseService {
 				return $type;
 			}
 		}
+	}
+	public function setFieldOwner ($field, $newOwner)
+	{
+		$oldOwner = $field->owner;
+		$value = $this->context->rules->get('field', $field->type)->getValue();
+		if ($newOwner !== null){
+			$this->context->model->getScoreService()->increaseClanScore($newOwner, 'territory', $value);
+		}
+		if ($oldOwner !== null){
+			$this->context->model->getScoreService()->decreaseClanScore($oldOwner, 'territory', $value);
+		}
+		$this->update($field, array('owner' => $newOwner));
 	}
 }

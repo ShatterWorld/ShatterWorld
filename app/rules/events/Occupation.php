@@ -9,7 +9,7 @@ class Occupation extends Attack
 	{
 		return 'Dobyvačný útok';
 	}
-	
+
 	public function process (Entities\Event $event, $processor)
 	{
 		$result = parent::process($event, $processor);
@@ -22,13 +22,26 @@ class Occupation extends Attack
 				$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, $event->term, FALSE);
 				$this->getContext()->model->getResourceService()->increase($event->owner, $loot, $event->term, FALSE);
 			}
-			$event->target->owner = $event->owner;
+			if ($event->target->facility !== null){
+				$value = 0;
+				$i = $event->target->level;
+				$rule = $this->getContext()->rules->get('facility', $event->target->facility);
+				while ($i > 0){
+					$value += $rule->getValue($i);
+					$i--;
+				}
+				$this->getContext()->model->getScoreService()->decreaseClanScore($event->target->owner, 'facility', $value);
+				$this->getContext()->model->getScoreService()->increaseClanScore($event->owner, 'facility', $value);
+			}
+
+
+			$this->getContext()->model->getFieldService()->setFieldOwner($event->target, $event->owner);
 		} else {
 			$this->returnAttackingUnits($event, $processor);
 		}
 		return $result;
 	}
-	
+
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
@@ -39,12 +52,12 @@ class Occupation extends Attack
 		}
 		return $message;
 	}
-	
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Dobyvačný útok na %s', $event->target->getCoords());
 	}
-	
+
 	public function isValid (Entities\Event $event)
 	{
 		if (parent::isValid($event)) {

@@ -13,7 +13,8 @@ class ScorePresenter extends BasePresenter {
 
 	public function renderDefault ()
 	{
-		$this->template->clanScore = $this->context->stats->score->getClanScore($this->getPlayerClan());
+		$this->template->clanScore = $this->context->model->getScoreRepository()->getClanScoreArray($this->getPlayerClan());
+		$this->template->totalClanScore = $this->context->model->getScoreRepository()->getTotalClanScore($this->getPlayerClan());
 	}
 
 

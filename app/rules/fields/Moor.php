@@ -3,7 +3,7 @@ namespace Rules\Fields;
 use Rules\AbstractRule;
 use Nette;
 
-class Moor extends AbstractRule implements IField
+class Moor extends AbstractField implements IField
 {
 	public function getDescription ()
 	{

@@ -88,22 +88,34 @@ class Clan extends BaseService
 		$clan = parent::create($values, $flush);
 
 		$this->context->model->getOrdersService()->create(array('owner' => $clan), FALSE);
-		
+
 		$this->context->map->open();
-		
+
+		$initScore = array();
+
+		$increment = 0;
 		foreach ($territory as $field) {
 			$fieldService->update($field, array('owner' => $clan));
+<<<<<<< HEAD
 			$this->context->map->occupyField($field->x, $field->y);
+=======
+			$this->context->map->occupyField($field->x, $field->y, 1);
+			$increment += $this->context->rules->get('field', $field->type)->getValue();
+>>>>>>> d832e6f95f57a6300e1568d5fac64e9a02c4e348
 		}
-		
+		$initScore['territory'] = $increment;
+
 		$this->context->map->close();
 		$this->cache->save('lastHqId', $headq->id);
 
 		$initial = $this->context->params['game']['initial'];
 		$now = new \DateTime();
 
+
+
+		$increment = 0;
 		foreach ($initial['resources'] as $resource => $balance) {
-			$this->context->model->getResourceService()->create(array(
+			$object = $this->context->model->getResourceService()->create(array(
 				'clan' => $clan,
 				'type' => $resource,
 				'balance' => $balance,
@@ -111,7 +123,9 @@ class Clan extends BaseService
 				'clearance' => $now
 			), FALSE);
 		}
+		$initScore['production'] = $increment;
 
+		$increment = 0;
 		foreach ($initial['units'] as $unit => $count) {
 			$this->context->model->unitService->create(array(
 				'type' => $unit,
@@ -119,23 +133,41 @@ class Clan extends BaseService
 				'location' => $headq,
 				'owner' => $clan
 			), FALSE);
+			$increment += $this->context->rules->get('unit', $unit)->getValue() * $count;
 		}
+		$initScore['unit'] = $increment;
 
+		$increment = 0;
 		foreach ($initial['researches'] as $research => $level) {
 			$this->context->model->getResearchService()->create(array(
 				'type' => $research,
 				'owner' => $clan,
 				'level' => $level
 			), FALSE);
+			$increment += $this->context->rules->get('research', $research)->getValue($level);
 		}
+		$initScore['research'] = $increment;
 
+		$increment = 0;
 		foreach ($initial['quests'] as $quest) {
 			$this->context->model->questService->create(array(
 				'type' => $quest,
 				'owner' => $clan,
-				'start' => $now,
+				'start' => $now
 			), FALSE);
 		}
+		$initScore['quest'] = $increment;
+
+		$initScore['facility'] = $this->context->rules->get('facility', 'headquarters')->getValue(1);
+
+		foreach ($this->context->params['game']['score'] as $type) {
+			$this->context->model->scoreService->create(array(
+				'type' => $type,
+				'owner' => $clan,
+				'value' => $initScore[$type]
+			), TRUE);
+		}
+
 
 		$this->entityManager->flush();
 		$this->context->model->getUserService()->update($clan->user, array('activeClan' => $clan));

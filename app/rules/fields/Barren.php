@@ -3,7 +3,7 @@ namespace Rules\Fields;
 use Rules\AbstractRule;
 use Nette;
 
-class Barren extends AbstractRule implements IField
+class Barren extends AbstractField implements IField
 {
 	public function getDescription ()
 	{
@@ -33,4 +33,5 @@ class Barren extends AbstractRule implements IField
 	{
 		return 0.2;
 	}
+
 }

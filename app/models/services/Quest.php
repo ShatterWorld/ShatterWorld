@@ -10,7 +10,7 @@ class Quest extends BaseService
 			$this->completeQuest($quest, $term);
 		}
 	}
-	
+
 	protected function completeQuest (Entities\Quest $quest, $term)
 	{
 		$rule = $this->context->rules->get('quest', $quest->type);
@@ -26,6 +26,7 @@ class Quest extends BaseService
 				), FALSE);
 				$this->completeQuest($next, $term);
 			}
+			$this->context->model->getScoreService()->increaseClanScore($quest->owner, 'quest', $rule->getValue($quest->level));
 		}
 	}
 }

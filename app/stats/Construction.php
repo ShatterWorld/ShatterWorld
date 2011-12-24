@@ -70,6 +70,6 @@ class Construction extends AbstractStat
 
 	public function getAbandonmentTime ($level)
 	{
-		return $level * $this->context->params['game']['stats']['baseAbandonmentTime'];
+		return $level * $this->getContext()->params['game']['stats']['baseAbandonmentTime'];
 	}
 }
