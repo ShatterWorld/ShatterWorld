@@ -54,14 +54,6 @@ class Field extends BaseRepository
 	 */
 	public function findIdByCoords ($x, $y, &$map = array())
 	{
-		$mapSize = $this->context->params['game']['map']['size'];
-		if ($x >= $mapSize || $y >= $mapSize || $x < 0 || $y < 0) {
-			throw new InvalidCoordinatesException;
-		}
-		if (count($map) > 0){
-			return $map[$x][$y];
-		}
-
 		$qb = $this->createQueryBuilder('f');
 		$qb->select('f.id')->where($qb->expr()->andX(
 			$qb->expr()->eq('f.coordX', $x),
@@ -271,7 +263,7 @@ class Field extends BaseRepository
 			}
 
 		}
-		return $visibleFields->toArray();
+		return array_values($visibleFields->toArray());
 	}
 
 	/**
