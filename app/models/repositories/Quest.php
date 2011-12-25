@@ -28,7 +28,7 @@ class Quest extends BaseRepository
 	public function findCompleted (Entities\Clan $clan)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('q.type', $qb->expr()->max('q.level'))
+		$qb->select('q.type', 'max(q.level) as level')
 			->from('Entities\Quest', 'q')
 			->where($qb->expr()->andX(
 				$qb->expr()->eq('q.owner', $clan->id),
