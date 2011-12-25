@@ -58,4 +58,14 @@ class Score extends BaseRepository
 		return $scoreArray;
 	}
 
+	/**
+	 *	Get clan score array
+	 * 	@return array
+	 */
+	public function getList ()
+	{
+
+	}
+
+
 }
