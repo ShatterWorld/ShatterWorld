@@ -1,7 +1,7 @@
 <?php
 namespace Repositories;
 use Entities;
-use Doctrine\Doctrine_Query;
+use Nette\Diagnostics\Debugger;
 
 class Quest extends BaseRepository
 {
@@ -36,17 +36,21 @@ class Quest extends BaseRepository
 
 
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('q.owner, q.type, max(q.level) as maxlevel')
+		$qb->select('q.owner')
+			->addSelect('q.type')
+			->addSelect('max(q.level) as maxlevel')
 			->from('Entities\Quest', 'q')
 			->where($qb->expr()->andX(
 				$qb->expr()->eq('q.owner', $clan->id),
 				$qb->expr()->eq('q.completed', '?1'),
 				$qb->expr()->eq('q.failed', '?2')
 			))
-			->groupBy('q.type, q.owner');
+			->groupBy('q.type')
+			->addGroupBy('q.owner');
 		$qb->setParameter(1, true);
 		$qb->setParameter(2, false);
 
+		Debugger::barDump($qb->getDQL());
 		$quests = $qb->getQuery()->getResult();
 		Debugger::barDump($quests);
 
