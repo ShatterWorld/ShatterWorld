@@ -27,7 +27,7 @@
 					<td class="value">{$rule->getValue($quest->level)}</td>
 				</tr>
 				<tr class="row1">
-					<td class="explanation" colspan="4">{$all[$quest->type]->getExplanation($quest->level)}</td>
+					<td class="explanation" colspan="4">{$rule->getExplanation($quest->level)}</td>
 				</tr>
 			{/foreach}
 		</table>
@@ -48,17 +48,18 @@
 			</tr>
 			{foreach $completed as $quest}
 				<tr class="row{$iterator->even ? 1 : 2} data">
-					{?$rule = $all[$quest->type]}
+					{?$rule = $all[$quest['type']]}
 					<td class="type">{$rule->getDescription()}</td>
-					<td class="level">{$quest->level}</td>
+					<td class="level">{$quest['level']}</td>
 					<td class="max">{$rule->getLevelCap()}</td>
-					{?$i = $quest->level}
+					{?$i = $quest['level']}
 					{?$value = 0}
 					{while $i > 0}
 						{?$value += $rule->getValue($i)}
+						{?$i--}
 					{/while}
 					<td class="value">{$value}</td>
-					{?$totalValue = $totalValue + $rule->getValue($quest->level)}
+					{?$totalValue += $value}
 				</tr>
 			{/foreach}
 		</table>
