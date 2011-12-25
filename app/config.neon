@@ -42,6 +42,7 @@ common:
 			event: Rules\Events
 			research: Rules\Researches
 			quest: Rules\Quests
+			score: Rules\Scores
 
 		initial:
 			resources:

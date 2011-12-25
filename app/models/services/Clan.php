@@ -156,12 +156,12 @@ class Clan extends BaseService
 
 		$initScore['facility'] = $this->context->rules->get('facility', 'headquarters')->getValue(1);
 
-		foreach ($this->context->params['game']['score'] as $type) {
+		foreach ($this->context->rules->getAll('score') as $type => $rule) {
 			$this->context->model->scoreService->create(array(
 				'type' => $type,
 				'owner' => $clan,
 				'value' => $initScore[$type]
-			), TRUE);
+			), FALSE);
 		}
 
 
