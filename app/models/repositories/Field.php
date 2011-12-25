@@ -156,25 +156,27 @@ class Field extends BaseRepository
 		}
 		return $result;
 	}
-
-	protected function getCoordinateValues ($coordinates, $map)
+	
+	/**
+	 * Get fields under given coordinates
+	 * @param array of arrays containing coordinates
+	 * @param array
+	 * @return array
+	 */
+	protected function getCoordinateValues ($coordinates, $map = array())
 	{
 		if ($map) {
-			$result = array();
-			foreach ($coordinates as $coord) {
-				$result[] = $map[$coord['x']][$coord['y']];
-			}
-			return $result;
+			return array_map(function ($coord) use ($map) {
+				return $map[$coord['x']][$coord['y']];
+			}, $coordinates);
 		} else {
 			$qb = $this->createQueryBuilder('f');
-			$conds = array();
-			foreach ($coordinates as $coord) {
-				$conds[] = $qb->expr()->andX(
+			$qb->where(call_user_func_array(callback($qb->expr(), 'orX'), array_map(function ($coord) use ($qb) {
+				return $qb->expr()->andX(
 					$qb->expr()->eq('f.coordX', $coord['x']),
 					$qb->expr()->eq('f.coordY', $coord['y'])
 				);
-			}
-			$qb->where(call_user_func_array(callback($qb->expr(), 'orX'), $conds));
+			}, $coordinates)));
 			return $qb->getQuery()->getResult();
 		}
 		
