@@ -72,8 +72,14 @@ class Clan extends BaseService
 		$headq = $this->context->model->fieldRepository->findByCoords($candidate['x'], $candidate['y']);
 		$territory = array($headq);
 		$fieldCount = 1;
-		foreach ($this->context->model->fieldRepository->findCircuit($headq, 1) as $field) {
-			$territory[] = $field;
+		$circuit = $this->context->map->getCircuit($candidate['x'], $candidate['y'], 1);
+		$candidates = $initialFieldsCount > 2 ? array_rand($circuit, $initialFieldsCount - 1) : array(array_rand($circuit));
+		foreach ($candidates as $key) {
+			$coords = $circuit[$key];
+			$field = $this->context->model->fieldRepository->findByCoords($coords['x'], $coords['y']);
+			if (!$field->owner) {
+				$territory[] = $field;
+			}
 			if (count($territory) >= $initialFieldsCount) {
 				break;
 			}
@@ -90,7 +96,7 @@ class Clan extends BaseService
 		$increment = 0;
 		foreach ($territory as $field) {
 			$fieldService->update($field, array('owner' => $clan));
-			$this->context->map->occupyField($field->x, $field->y, 1);
+			$this->context->map->occupyField($field->x, $field->y);
 			$increment += $this->context->rules->get('field', $field->type)->getValue();
 		}
 		$initScore['territory'] = $increment;
@@ -178,7 +184,8 @@ class Clan extends BaseService
 		}
 	}
 
-	public function deleteAll ($flush = TRUE){
+	public function deleteAll ($flush = TRUE)
+	{
 		parent::deleteAll($flush);
 		$this->cache->clean();
 	}

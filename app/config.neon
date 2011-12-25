@@ -16,7 +16,7 @@ common:
 		map:
 			size: 50
 			diversityMinimum: 2
-			playerDistance: 3
+			playerDistance: 4
 			initialFieldsCount: 3
 			toleration: 3
 

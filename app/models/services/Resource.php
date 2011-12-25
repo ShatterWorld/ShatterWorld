@@ -54,7 +54,10 @@ class Resource extends BaseService
 			if (!isset($production[$account->type])){
 				$production[$account->type] = 0;
 			}
-			$account->setProduction($production[$account->type], $term ?: new \DateTime());
+			if ($account->production != $production[$account->type]) {
+				$this->context->model->scoreService->increaseClanScore($clan, 'production', $production[$account->type] - $account->production);
+				$account->setProduction($production[$account->type], $term ?: new \DateTime());
+			}
 		}
 		$this->entityManager->flush();
 		$this->checkExhaustion($clan, $term);
