@@ -29,7 +29,8 @@ class Move extends Event
 				} else {
 					$unit->move = $move;
 				}
-				$distance = $this->context->model->getFieldRepository()->calculateDistance($unit->location, $target);
+				$map = $this->context->map;
+				$distance = $map->calculateDistance($map->coords($unit->location), $map->coords($target));
 				$speed = $this->context->rules->get('unit', $unit->type)->getSpeed();
 				if ($distance * $speed > $time) {
 					$time = $distance * $speed;

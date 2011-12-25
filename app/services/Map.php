@@ -146,6 +146,22 @@ class Map extends Nette\Object
 	}
 	
 	/**
+	 * Convert given arguments to a coordinate array
+	 * @param Entities\Field|int
+	 * @param int
+	 * @return array
+	 */
+	public function coords ()
+	{
+		$args = func_get_args();
+		if ($args[0] instanceof Entities\Field) {
+			return array('x' => $args[0]->getX(), 'y' => $args[0]->getY());
+		} else {
+			return array('x' => $args[0], 'y' => $args[1]);
+		}
+	}
+	
+	/**
 	 * Are given coordinates within the area of the map?
 	 * @param integer
 	 * @param integer

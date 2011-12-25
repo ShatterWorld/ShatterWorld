@@ -75,7 +75,8 @@ class Clan extends BaseRepository
 				$dvcId = $dvc->id;
 				if ($dvcId != $id){
 					$graph->addVertice($dvcId, $this->context->stats->trading->getProfit($dvc));
-					$graph->addEdge($id, $dvcId, $this->context->model->getFieldRepository()->calculateDistance($dealer->headquarters, $dvc->headquarters));
+					$map = $this->context->map;
+					$graph->addEdge($id, $dvcId, $map->calculateDistance($map->coords($dealer->headquarters), $map->coords($dvc->headquarters)));
 				}
 				if ($depths->offsetExists($dvcId)){
 					if($depths->offsetGet($dvcId) < $depths->offsetGet($id)-1){
@@ -151,17 +152,6 @@ class Clan extends BaseRepository
 	}
 
 	/**
-	 * Counts distance between field $a and $b
-	 * @param Entities\Clan
-	 * @param Entities\Clan
-	 * @return integer
-	 */
-	public function calculateDistance ($a, $b)
-	{
-		return $this->context->model->getFieldRepository()->calculateDistance($a->headquarters, $b->headquarters);
-	}
-
-	/**
 	 * Counts the sum of distances fields
 	 * @param Entities\Clan
 	 * @param Entities\Clan
@@ -170,28 +160,25 @@ class Clan extends BaseRepository
 	 */
 	public function calculateTotalDistance ($origin, $target, $mediators)
 	{
-		if (count($mediators) <= 0){
-			return $this->calculateDistance($origin, $target);
+		$map = $this->context->map;
+		if (count($mediators) <= 0) {
+			return $map->calculateDistance($map->coords($origin), $map->coords($target));
 		}
 		$distance = 0;
 		$first = true;
 		$prev = null;
 
-		foreach ($mediators as $mediator){
-			if ($first){
+		foreach ($mediators as $mediator) {
+			if ($first) {
 				$first = false;
-				$distance += $this->calculateDistance($origin, $mediator);
+				$distance += $map->calculateDistance($map->coords($origin), $map->coords($mediator));
 				$prev = $mediator;
 				continue;
 			}
-			$distance += $this->calculateDistance($prev, $mediator);
+			$distance += $map->calculateDistance($map->coords($prev), $map->coords($mediator));
 			$prev = $mediator;
 		}
-		$distance += $this->calculateDistance($prev, $target);
+		$distance += $map->calculateDistance($map->coords($prev), $map->coords($target));
 		return $distance;
-
 	}
-
-
-
 }
