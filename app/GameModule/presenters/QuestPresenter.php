@@ -22,6 +22,7 @@ class QuestPresenter extends BasePresenter
 	public function renderDefault ()
 	{
 		$clan = $this->getPlayerClan();
+		Debugger::barDump($this->getQuestRepository()->findCompleted($clan));
 		$this->template->all = $this->context->rules->getAll('quest');
 		$this->template->active = $this->getQuestRepository()->findActive($clan);
 		$this->template->completed = $this->getQuestRepository()->findCompleted($clan);
