@@ -33,12 +33,12 @@ class Offer extends BaseRepository
 		$qb->setParameter(1, false);
 		$offers = $qb->getQuery()->getResult();
 
-		$fieldRepository = $this->context->model->getFieldRepository();
+		$map = $this->context->map;
 		$hq = $clan->headquarters;
 
-		@usort($offers, function($a, $b) use ($fieldRepository, $hq, $stats){
-			$timeA = $fieldRepository->calculateDistance($a->owner->headquarters, $hq) * $stats->getMerchantSpeed($a->owner);
-			$timeB = $fieldRepository->calculateDistance($b->owner->headquarters, $hq) * $stats->getMerchantSpeed($b->owner);
+		@usort($offers, function($a, $b) use ($map, $hq, $stats){
+			$timeA = $map->calculateDistance($map->coords($a->owner->headquarters), $map->coords($hq)) * $stats->getMerchantSpeed($a->owner);
+			$timeB = $map->calculateDistance($map->coords($b->owner->headquarters), $map->coords($hq)) * $stats->getMerchantSpeed($b->owner);
 
 			if ($timeA == $timeB) {
 				return 0;
@@ -116,13 +116,3 @@ class Offer extends BaseRepository
 		return $totalProfit;
 	}
 }
-
-
-
-
-
-
-
-
-
-

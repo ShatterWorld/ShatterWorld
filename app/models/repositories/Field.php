@@ -157,6 +157,29 @@ class Field extends BaseRepository
 		return $result;
 	}
 
+	protected function getCoordinateValues ($coordinates, $map)
+	{
+		if ($map) {
+			$result = array();
+			foreach ($coordinates as $coord) {
+				$result[] = $map[$coord['x']][$coord['y']];
+			}
+			return $result;
+		} else {
+			$qb = $this->createQueryBuilder('f');
+			$conds = array();
+			foreach ($coordinates as $coord) {
+				$conds[] = $qb->expr()->andX(
+					$qb->expr()->eq('f.coordX', $coord['x']),
+					$qb->expr()->eq('f.coordY', $coord['y'])
+				);
+			}
+			$qb->where(call_user_func_array(callback($qb->expr(), 'orX'), $conds));
+			return $qb->getQuery()->getResult();
+		}
+		
+	}
+	
 	/**
 	 * Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
 	 * @param Entities\Field
@@ -166,74 +189,12 @@ class Field extends BaseRepository
 	public function getFieldNeighbours (Entities\Field $field, $depth = 1, &$map = array())
 	{
 		$neighbours = array();
-
-		if ($depth > 1){
-
-			for($d = 1; $d <= $depth; $d++){
-				$circuitNeighbours = $this->findCircuit($field, $d, $map);
-				foreach ($circuitNeighbours as $circuitNeighbour){
-					$neighbours[] = $circuitNeighbour;
-				}
-			}
+		
+		for ($d = 1; $d <= $depth; $d++) {
+			$neighbours = array_merge($neighbours, $this->context->map->getCircuit($field->x, $field->y, $d));
 		}
-		else if (count($map) > 0){
-			$x = $field->getX();
-			$y = $field->getY();
-
-			if (isset($map[$x+1][$y-1])){
-				$neighbours[] = $map[$x+1][$y-1];
-			}
-			if (isset($map[$x+1][$y])){
-				$neighbours[] = $map[$x+1][$y];
-			}
-			if (isset($map[$x-1][$y+1])){
-				$neighbours[] = $map[$x-1][$y+1];
-			}
-			if (isset($map[$x-1][$y])){
-				$neighbours[] = $map[$x-1][$y];
-			}
-			if (isset($map[$x][$y+1])){
-				$neighbours[] = $map[$x][$y+1];
-			}
-			if (isset($map[$x][$y-1])){
-				$neighbours[] = $map[$x][$y-1];
-			}
-
-		} else {
-			$x = $field->getX();
-			$y = $field->getY();
-
-			$qb = $this->createQueryBuilder('f');
-			$qb->where($qb->expr()->orX(
-				$qb->expr()->andX(# north
-					$qb->expr()->eq('f.coordX', $x+1),
-					$qb->expr()->eq('f.coordY', $y-1)
-				),
-				$qb->expr()->andX(# south
-					$qb->expr()->eq('f.coordX', $x-1),
-					$qb->expr()->eq('f.coordY', $y+1)
-				),
-				$qb->expr()->andX(# north-east
-					$qb->expr()->eq('f.coordX', $x+1),
-					$qb->expr()->eq('f.coordY', $y)
-				),
-				$qb->expr()->andX(# south-east
-					$qb->expr()->eq('f.coordX', $x),
-					$qb->expr()->eq('f.coordY', $y+1)
-				),
-				$qb->expr()->andX(# north-west
-					$qb->expr()->eq('f.coordX', $x),
-					$qb->expr()->eq('f.coordY', $y-1)
-				),
-				$qb->expr()->andX(# south-east
-					$qb->expr()->eq('f.coordX', $x-1),
-					$qb->expr()->eq('f.coordY', $y)
-				)
-			));
-			$neighbours = $qb->getQuery()->getResult();
-		}
-
-		return $neighbours;
+		
+		return $this->getCoordinateValues($neighbours, $map);
 	}
 
 	/**
@@ -248,34 +209,7 @@ class Field extends BaseRepository
 	 */
 	public function findByCoords ($x, $y, &$map = array())
 	{
-		$mapSize = $this->context->params['game']['map']['size'];
-		if ($x >= $mapSize || $y >= $mapSize || $x < 0 || $y < 0) {
-			throw new InvalidCoordinatesException;
-		}
-		if (count($map) > 0){
-			return $map[$x][$y];
-		}
-
-		$qb = $this->createQueryBuilder('f');
-		$qb->where($qb->expr()->andX(
-			$qb->expr()->eq('f.coordX', $x),
-			$qb->expr()->eq('f.coordY', $y)
-		));
-
-		return $qb->getQuery()->getSingleResult();
-	}
-
-	/**
-	 * Finds fields with no owner
-	 * @return array of Entities\Field
-	 */
-	public function findNeutralFields ()
-	{
-		$qb = $this->createQueryBuilder('f');
-		$qb->where(
-			$qb->expr()->isNull('f.owner')
-		);
-		return $qb->getQuery()->getResult();
+		return $this->getCoordinateValues(array(array('x' => $x, 'y' => $y)), $map);
 	}
 
 	/**
@@ -394,142 +328,4 @@ class Field extends BaseRepository
 		}
 		return $result;
 	}
-
-	/**
-	 * Finds centers of seven-fields-sized hexagons which are located $outline from the $S.
-	 * The hexagons are chosen only if $playerDistance fields around are neutral.
-	 * @param Entities\Field
-	 * @param int
-	 * @param int
-	 * @param array of Entities\Field
-	 * @return array of Entities\Field
-	 */
-	public function findNeutralHexagons($S, $playerDistance, $mapSize, &$map = null)
-	{
-		$foundCenters = array();
-		$i = $playerDistance;
-
-		while (count($foundCenters) <= 0){
-			$circuit = $this->findCircuit($S, $i+2, $map);
-
-			foreach($circuit as $field){
-				if($field->owner == null){
-					$neighbours = $this->getFieldNeighbours($field, $i, $map);
-					$add = true;
-
-					foreach($neighbours as $neighbour){
-						if($neighbour->owner !== null){
-							$add = false;
-							break;
-						}
-					}
-					if ($add){
-						$foundCenters[] = $field;
-					}
-				}
-
-			}
-
-			$i++;
-		}
-		return $foundCenters;
-	}
-
-	/**
-	 * Counts distance between field $a and $b
-	 * @param Entities\Field
-	 * @param Entities\Field
-	 * @return integer
-	 */
-	public function calculateDistance ($a, $b)
-	{
-		$sign = function ($x) {
-			return $x == 0 ? 0 : (abs($x) / $x);
-		};
-		$dx = $b->getX() - $a->getX();
-		$dy = $b->getY() - $a->getY();
-
-		if ($sign($dx) === $sign($dy)) {
-			return abs($dx) + abs($dy);
-		}
-		else {
-			return max(abs($dx), abs($dy));
-		}
-	}
-
-	/**
-	 * Finds zone of fields which are settled in hexagon ABCDEF (center $S, radius $r i.e. |SA|==|SB|==$r)
-	 * @param Entities\Field
-	 * @param integer
-	 * @param Entities\Field
-	 * @return array of Entities\Field
-	 */
-	public function findCircuit ($S, $r, &$map = array())
-	{
-		if ($r === 1) {
-			return $this->getFieldNeighbours($S, 1, $map);
-		}
-
-		$x = $S->getX();
-		$y = $S->getY();
-
-		$coords = array(
-			'north' => array('x' => $x + $r, 'y' => $y - $r),
-			'south' => array('x' => $x - $r, 'y' => $y + $r),
-			'north-west' => array('x' => $x, 'y' => $y - $r),
-			'north-east' => array('x' => $x + $r, 'y' => $y),
-			'south-west' => array('x' => $x - $r, 'y' => $y),
-			'south-east' => array('x' => $x, 'y' => $y + $r)
-		);
-
-		$circuit = array();
-
-		$vectors = array(
-			array('origin' => 'north', 'target' => 'north-east', 'direction' => array(0, 1)),
-			array('origin' => 'north-east', 'target' => 'south-east', 'direction' => array(-1, 1)),
-			array('origin' => 'south-east', 'target' => 'south', 'direction' => array(-1, 0)),
-			array('origin' => 'south', 'target' => 'south-west', 'direction' => array(0, -1)),
-			array('origin' => 'south-west', 'target' => 'north-west', 'direction' => array(1, -1)),
-			array('origin' => 'north-west', 'target' => 'north', 'direction' => array(1, 0)),
-		);
-
-		foreach ($vectors as $vector) {
-			$tmpX = $coords[$vector['origin']]['x'];
-			$tmpY = $coords[$vector['origin']]['y'];
-			$targetX = $coords[$vector['target']]['x'];
-			$targetY = $coords[$vector['target']]['y'];
-			$dirX = $vector['direction'][0];
-			$dirY = $vector['direction'][1];
-			while (($dirX === 0 or $dirX * ($targetX - $tmpX) > 0) and
-				($dirY === 0 or $dirY * ($targetY - $tmpY) > 0)) {
-				try {
-					$circuit[] = $this->findIdByCoords($tmpX, $tmpY, $map);
-				}
-				catch (InvalidCoordinatesException $e) {}
-				$tmpX = $tmpX + $dirX;
-				$tmpY = $tmpY + $dirY;
-			}
-		}
-
-		return $circuit;
-	}
-
-	/**
-	 * Sorts the given array by the distance from the field given
-	 * @param array of Entities\Field
-	 * @param Entities\Field
-	 * @return void
-	 */
-	public function sortByDistance (&$fields, $S){
-		$fieldRepository = $this;
-		usort($fields, function ($a, $b) use ($fieldRepository, $S){
-			$dA = $fieldRepository->calculateDistance($S, $a);
-			$dB = $fieldRepository->calculateDistance($S, $b);
-			if ($dA == $dB) return 0;
-			return ($dA < $dB) ? -1 : 1;
-		});
-	}
-
 }
-
-class InvalidCoordinatesException extends \Exception {}
