@@ -22,9 +22,9 @@ class Field extends BaseService {
 	public function createMap ()
 	{
 		$map = array();
-		for ($x = 0; $x < $this->options['size']; $x++) {
+		for ($x = 1; $x <= $this->options['size']; $x++) {
 			$map[$x] = array();
-			for ($y = 0; $y < $this->options['size']; $y++) {
+			for ($y = 1; $y <= $this->options['size']; $y++) {
 				$map[$x][$y] = $this->pickType($x, $y, $map);
 			}
 		}

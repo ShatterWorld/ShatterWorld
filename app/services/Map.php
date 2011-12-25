@@ -169,7 +169,7 @@ class Map extends Nette\Object
 	 */
 	protected function checkCoords ($x, $y) 
 	{
-		return $x > 0 && $x < $this->params['size'] && $y > 0 && $y < $this->params['size'];
+		return $x > 0 && $x <= $this->params['size'] && $y > 0 && $y <= $this->params['size'];
 	}
 	
 	/**
@@ -231,7 +231,7 @@ class Map extends Nette\Object
 			$dirY = $vector['direction'][1];
 			while (($dirX === 0 or $dirX * ($targetX - $tmpX) > 0) and
 				($dirY === 0 or $dirY * ($targetY - $tmpY) > 0)) {
-				if ($this->checkCoords($x, $y)) {
+				if ($this->checkCoords($tmpX, $tmpY)) {
 					$circuit[] = array('x' => $tmpX, 'y' => $tmpY);
 				}
 				$tmpX = $tmpX + $dirX;

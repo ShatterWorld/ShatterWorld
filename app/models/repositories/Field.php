@@ -203,7 +203,8 @@ class Field extends BaseRepository
 	 */
 	public function findByCoords ($x, $y, &$map = array())
 	{
-		return $this->getCoordinateValues(array(array('x' => $x, 'y' => $y)), $map);
+		$result = $this->getCoordinateValues(array(array('x' => $x, 'y' => $y)), $map);
+		return array_pop($result);
 	}
 
 	/**
