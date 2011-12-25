@@ -27,18 +27,8 @@ class Quest extends BaseRepository
 
 	public function findCompleted (Entities\Clan $clan)
 	{
-		/*
-		SELECT q.type, q.owner_id, max(q.level) as maxlevel
-		FROM Quest q
-		where q.failed=0 and q.completed=1
-		group by q.type, q.owner_id
-		*/
-
-
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('q.owner')
-			->addSelect('q.type')
-			->addSelect('max(q.level) as maxlevel')
+		$qb->select('q.type', $qb->expr()->max('q.level'))
 			->from('Entities\Quest', 'q')
 			->where($qb->expr()->andX(
 				$qb->expr()->eq('q.owner', $clan->id),
@@ -50,15 +40,6 @@ class Quest extends BaseRepository
 		$qb->setParameter(1, true);
 		$qb->setParameter(2, false);
 
-		Debugger::barDump($qb->getDQL());
-		$quests = $qb->getQuery()->getResult();
-		Debugger::barDump($quests);
-
-
-		return $this->findBy(array(
-			'owner' => $clan->id,
-			'completed' => TRUE,
-			'failed' => FALSE
-		));
+		return $qb->getQuery()->getResult();
 	}
 }
