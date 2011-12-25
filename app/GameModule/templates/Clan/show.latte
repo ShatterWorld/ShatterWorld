@@ -1,3 +1,8 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/clan.css" />
+{/block}
+
 {block #header}
 	Přehled klanu
 {/block}
@@ -11,7 +16,7 @@
 			</tr>
 			<tr>
 				<th>Aliance</th>
-				<td>{if $clan->alliance != null}{$clan->alliance->name}{else}bezalianční{/if}</td>
+				<td>{if $clan->alliance != null}<a n:href="Alliance:show $clan->alliance->id">{$clan->alliance->name}</a>{else}bezalianční{/if}</td>
 			</tr>
 			<tr>
 				<th>Hráč</th>
@@ -23,7 +28,22 @@
 					{/ifset}
 				</td>
 			</tr>
+		</table>
 
+		<h3>Skóre</h3>
+		<table id="clanScoreTable">
+			{if isset($scoreRules) && isset($clanScores)}
+				{foreach $clanScores as $name => $score}
+					<tr>
+						<th>{$scoreRules[$name]->getDescription()}</th>
+						<td>{$score}</td>
+					</tr>
+				{/foreach}
+			{/if}
+			<tr>
+				<th>Celkem</th>
+				<td>{$totalClanScore}</td>
+			</tr>
 		</table>
 	{else}
 		Klan nenalezen

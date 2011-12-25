@@ -59,10 +59,49 @@ class Score extends BaseRepository
 	}
 
 	/**
+	 *	Get total alliance score
+	 * 	@param Entities\Alliance
+	 * 	@return int
+	 */
+	public function getTotalAllianceScore (Entities\Alliance $alliance)
+	{
+		$totalScore = 0;
+		foreach($this->getAllianceScoreArray($alliance) as $value){
+			$totalScore += $value;
+		}
+		return $totalScore;
+	}
+
+
+	/**
+	 *	Get alliance score array
+	 * 	@param Entities\Alliance
+	 * 	@return array of array of int
+	 */
+	public function getAllianceScoreArray (Entities\Alliance $alliance)
+	{
+		$allianceScore = array();
+		foreach ($alliance->members as $member){
+			$allianceScore[$member->id] = $this->getTotalClanScore($member);
+		}
+
+		return $allianceScore;
+	}
+
+	/**
 	 *	Get clan score array
 	 * 	@return array
 	 */
-	public function getList ()
+	public function getClanList ()
+	{
+
+	}
+
+	/**
+	 *	Get alliance score array
+	 * 	@return array
+	 */
+	public function getAllianceList ()
 	{
 
 	}
