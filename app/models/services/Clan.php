@@ -161,7 +161,7 @@ class Clan extends BaseService
 				'type' => $type,
 				'owner' => $clan,
 				'value' => $initScore[$type]
-			), TRUE);
+			), FALSE);
 		}
 
 
