@@ -42,10 +42,13 @@ class ClanPresenter extends BasePresenter {
 		if ($clan = $this->context->model->getClanRepository()->findOneById($clanId)){
 			$playerClan = $this->getPlayerClan();
 
-			if (!($clan->id === $playerClan->id || $clan->alliance && $playerClan->alliance && $clan->alliance->id === $playerClan->alliance->id)){
-				//if not yours or alliance (maybe hide sth)
+			if (($clan->id === $playerClan->id || $clan->alliance && $playerClan->alliance && $clan->alliance->id === $playerClan->alliance->id)){
+				$this->template->scoreRules = $this->context->rules->getAll('score');
+				$this->template->clanScores = $this->context->model->getScoreRepository()->getClanScoreArray($clan);
 			}
+
 			$this->template->clan = $clan;
+			$this->template->totalClanScore = $this->context->model->getScoreRepository()->getTotalClanScore($this->getPlayerClan());
 			if ($profile = $this->context->model->getProfileRepository()->findOneByUser($clan->user->id)){
 				$this->template->profile = $profile;
 			}

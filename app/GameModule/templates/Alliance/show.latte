@@ -8,11 +8,25 @@
 		<table>
 			<tr>
 				<th>Jméno</th>
+				<th>Hráč</th>
+				<th>Skóre</th>
 			</tr>
 			{foreach $alliance->members as $member}
-				<tr><td><a n:href="Clan:show $member->id">{$member->name}</a></td></tr>
+				<tr>
+					<td><a n:href="Clan:show $member->id">{$member->name}</a></td>
+					<td><a n:href="Profile:show $member->user->id">{$member->user->nickname}</a></td>
+					<td>{$memberScores[$member->id]}</td>
+				</tr>
 			{/foreach}
 		</table>
+		<h2>Skóre</h2>
+		<table>
+			<tr>
+				<th>Celkové skóre</th>
+				<td>{$totalAllianceScore}</td>
+			</tr>
+		</table>
+
 	{else}
 		Aliance neexistuje
 	{/ifset}

@@ -38,26 +38,16 @@ class AlliancePresenter extends BasePresenter
 	{
 		if ($alliance = $this->context->model->getAllianceRepository()->findOneById($allianceId)){
 			$playerAlliance = $this->getClanAlliance();
-
 			if ($alliance->id !== $playerAlliance->id){
 				//if not yours alliance (hide sth)
 			}
+
+			$this->template->memberScores = $this->context->model->getScoreRepository()->getAllianceScoreArray($alliance);
+			$this->template->totalAllianceScore = $this->context->model->getScoreRepository()->getTotalAllianceScore($alliance);
 			$this->template->alliance = $alliance;
 
 		}
 	}
-/*	public function actionDefault ()
-	{
-		if (!$this->getPlayerClan()->getAlliance()) {
-			$this->flashMessage('Nemáte ještě alianci', 'error');
-			$this->redirect('Alliance:neutral');
-		}
-	}
-
-	public function renderDefault ()
-	{
-		$this->template->alliance = $this->getPlayerClan()->getAlliance();
-	}*/
 
 	public function actionNew ()
 	{
