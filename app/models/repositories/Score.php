@@ -111,20 +111,41 @@ class Score extends BaseRepository
 	}
 
 	/**
-	 *	Get clan score array
+	 *	Get clan score chart
 	 * 	@return array
 	 */
-	public function getClanList ()
+	public function getClanChart ()
 	{
-
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('o.id as clanid, o.name as clanname, u.id as userid, u.nickname as usernickname, sum(s.value) as sumvalue')
+			->from('Entities\Score', 's')
+			->leftJoin('s.owner', 'o')
+			->leftJoin('o.user', 'u')
+			->groupBy('s.owner')
+			->orderBy('sumvalue', 'DESC')
+			->addOrderBy('o.name');
+		return $qb->getQuery()->getResult();
 	}
 
 	/**
-	 *	Get alliance score array
+	 *	Get alliance score chart
 	 * 	@return array
 	 */
-	public function getAllianceList ()
+	public function getAllianceChart ()
 	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('a.id as allianceid, a.name as alliancename, l.name as leadername, l.id as leaderid, sum(s.value) as sumvalue')
+			->from('Entities\Score', 's')
+			->leftJoin('s.owner', 'o')
+			->leftJoin('o.alliance', 'a')
+			->leftJoin('a.leader', 'l')
+			->where(
+				$qb->expr()->isNotNull('o.alliance')
+			)
+			->groupBy('o.alliance')
+			->orderBy('sumvalue', 'DESC')
+			->addOrderBy('a.name');
+		return $qb->getQuery()->getResult();
 
 	}
 
