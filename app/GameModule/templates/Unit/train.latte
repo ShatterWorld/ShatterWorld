@@ -26,6 +26,7 @@
 		<table id="trainUnitTable">
 			<tr>
 				<th>Jméno</th>
+				<th>Úroveň</th>
 				<th>Síla</th>
 				{foreach $resources as $key => $res}
 					<th class="cost {$key}">
@@ -52,6 +53,7 @@
 						<th class="name">
 							{label $name /}
 						</th>
+						<td>{$name|getUnitLevel}</td>
 						<td class="strength">
 							{$name|getUnitAttack}/{$name|getUnitDefense}
 						</td>
@@ -93,14 +95,15 @@
 
 			<table id="slotSum">
 				<tr>
-					<td>Slot</td>
-					<td>Použito</td>
-					<td>Zbývá</td>
-					<td>Celkem</td>
+					<th>Slot</th>
+					<th>Použito</th>
+					<th>Zbývá</th>
+					<th>Celkem</th>
 				</tr>
+				{dump $facilityRules}
 				{foreach $slots as $key => $slot}
 					<tr id="{$key}">
-						<td>{$key}</td>
+						<td>{$facilityRules[$key]->getDescription()}</td>
 						<td class="used">0</td>
 						<td class="remains">{$totalSlots[$key]}</td>
 						<td>{$totalSlots[$key]}</td>

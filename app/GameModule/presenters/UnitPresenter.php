@@ -14,6 +14,7 @@ class UnitPresenter extends BasePresenter
 		$this->template->registerHelper('getDescription', callback($this, 'getUnitDescription'));
 		$this->template->registerHelper('getUnitAttack', callback($this, 'getUnitAttack'));
 		$this->template->registerHelper('getUnitDefense', callback($this, 'getUnitDefense'));
+		$this->template->registerHelper('getUnitLevel', callback($this, 'getUnitLevel'));
 		$this->template->units = $this->getClanUnits();
 	}
 
@@ -40,6 +41,7 @@ class UnitPresenter extends BasePresenter
 		$this->template->registerHelper('getUnitDefense', callback($this, 'getUnitDefense'));
 		$this->template->resourceRules = $resources;
 		$this->template->unitRules = $this->context->rules->getAll('unit');
+		$this->template->facilityRules = $this->context->rules->getAll('facility');
 		$this->template->slots = $slots;
 		$this->template->totalSlots = $totalSlots;
 	}

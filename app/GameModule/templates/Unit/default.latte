@@ -8,6 +8,7 @@
 		<table>
 			<tr>
 				<th>Jednotka</th>
+				<th>Úroveň</th>
 				<th>Útok</th>
 				<th>Obrana</th>
 				<th>Množství</th>
@@ -16,6 +17,7 @@
 			{foreach $units as $unit}
 				<tr class="data">
 					<td>{$unit->type|getDescription}</td>
+					<td>{$unit->type|getUnitLevel}</td>
 					<td>{$unit->type|getUnitAttack}</td>
 					<td>{$unit->type|getUnitDefense}</td>
 					<td>{$unit->count}</td>

@@ -3,20 +3,24 @@
 {/block}
 
 {block #content}
-	<table>
-		<tr>
-			<th>Pořadí</th>
-			<th>Aliance</th>
-			<th>Vůdce</th>
-			<th>Skóre</th>
-		</tr>
-		{foreach $chart as $order =>$row}
+	{if count($chart) > 0}
+		<table>
 			<tr>
-				<td>{$order + 1}</td>
-				<td><a n:href="Alliance:show $row['allianceid']">{$row['alliancename']}</a></td>
-				<td><a n:href="Clan:show $row['leaderid']">{$row['leadername']}</a></td>
-				<td>{$row['sumvalue']}</td>
+				<th>Pořadí</th>
+				<th>Aliance</th>
+				<th>Vůdce</th>
+				<th>Skóre</th>
 			</tr>
-		{/foreach}
-	</table>
+			{foreach $chart as $order =>$row}
+				<tr>
+					<td>{$order + 1}</td>
+					<td><a n:href="Alliance:show $row['allianceid']">{$row['alliancename']}</a></td>
+					<td><a n:href="Clan:show $row['leaderid']">{$row['leadername']}</a></td>
+					<td>{$row['sumvalue']}</td>
+				</tr>
+			{/foreach}
+		</table>
+	{else}
+		Neexistují žádné aliance. Alianci můžete <a n:href="Alliance:new">založit</a>.
+	{/if}
 {/block}
