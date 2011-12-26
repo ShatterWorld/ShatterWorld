@@ -17,12 +17,14 @@ class Score extends BaseRepository
 	 */
 	public function getTotalClanScore (Entities\Clan $clan)
 	{
-		$totalScore = 0;
-		foreach($this->getClanScoreArray($clan) as $value){
-			$totalScore += $value;
-		}
-
-		return $totalScore;
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('sum(s.value) as sumvalue')
+			->from('Entities\Score', 's')
+			->where(
+				$qb->expr()->eq('s.owner', $clan->id)
+			);
+		$result = $qb->getQuery()->getResult();
+		return $result[0]['sumvalue'];
 	}
 
 	/**
@@ -37,7 +39,6 @@ class Score extends BaseRepository
 			'owner' => $clan->id,
 			'type' => $type
 		));
-
 		return $score->value;
 	}
 
@@ -54,7 +55,6 @@ class Score extends BaseRepository
 		foreach($scores as $score){
 			$scoreArray[$score->type] = $score->value;
 		}
-
 		return $scoreArray;
 	}
 
@@ -65,11 +65,18 @@ class Score extends BaseRepository
 	 */
 	public function getTotalAllianceScore (Entities\Alliance $alliance)
 	{
-		$totalScore = 0;
-		foreach($this->getAllianceScoreArray($alliance) as $value){
-			$totalScore += $value;
+		foreach ($alliance->members as $member){
+			$memberIds[] = $member->id;
 		}
-		return $totalScore;
+
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('sum(s.value) as sumvalue')
+			->from('Entities\Score', 's')
+			->where(
+				$qb->expr()->in('s.owner', $memberIds)
+			);
+		$result = $qb->getQuery()->getResult();
+		return $result[0]['sumvalue'];
 	}
 
 
@@ -80,9 +87,24 @@ class Score extends BaseRepository
 	 */
 	public function getAllianceScoreArray (Entities\Alliance $alliance)
 	{
-		$allianceScore = array();
 		foreach ($alliance->members as $member){
-			$allianceScore[$member->id] = $this->getTotalClanScore($member);
+			$memberIds[] = $member->id;
+		}
+
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('o.id, sum(s.value) as sumvalue')
+			->from('Entities\Score', 's')
+			->leftJoin('s.owner', 'o')
+			->where(
+				$qb->expr()->in('s.owner', $memberIds)
+			)
+			->groupBy('s.owner')
+			->orderBy('sumvalue', 'DESC');
+		$scores = $qb->getQuery()->getResult();
+
+		$allianceScore = array();
+		foreach ($scores as $score){
+			$allianceScore[$score['id']] = $score['sumvalue'];
 		}
 
 		return $allianceScore;
