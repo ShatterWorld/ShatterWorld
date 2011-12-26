@@ -54,14 +54,6 @@ class Field extends BaseRepository
 	 */
 	public function findIdByCoords ($x, $y, &$map = array())
 	{
-		$mapSize = $this->context->params['game']['map']['size'];
-		if ($x >= $mapSize || $y >= $mapSize || $x < 0 || $y < 0) {
-			throw new InvalidCoordinatesException;
-		}
-		if (count($map) > 0){
-			return $map[$x][$y];
-		}
-
 		$qb = $this->createQueryBuilder('f');
 		$qb->select('f.id')->where($qb->expr()->andX(
 			$qb->expr()->eq('f.coordX', $x),
@@ -156,25 +148,27 @@ class Field extends BaseRepository
 		}
 		return $result;
 	}
-
-	protected function getCoordinateValues ($coordinates, $map)
+	
+	/**
+	 * Get fields under given coordinates
+	 * @param array of arrays containing coordinates
+	 * @param array
+	 * @return array
+	 */
+	protected function getCoordinateValues ($coordinates, $map = array())
 	{
 		if ($map) {
-			$result = array();
-			foreach ($coordinates as $coord) {
-				$result[] = $map[$coord['x']][$coord['y']];
-			}
-			return $result;
+			return array_map(function ($coord) use ($map) {
+				return $map[$coord['x']][$coord['y']];
+			}, $coordinates);
 		} else {
 			$qb = $this->createQueryBuilder('f');
-			$conds = array();
-			foreach ($coordinates as $coord) {
-				$conds[] = $qb->expr()->andX(
+			$qb->where(call_user_func_array(callback($qb->expr(), 'orX'), array_map(function ($coord) use ($qb) {
+				return $qb->expr()->andX(
 					$qb->expr()->eq('f.coordX', $coord['x']),
 					$qb->expr()->eq('f.coordY', $coord['y'])
 				);
-			}
-			$qb->where(call_user_func_array(callback($qb->expr(), 'orX'), $conds));
+			}, $coordinates)));
 			return $qb->getQuery()->getResult();
 		}
 		
@@ -209,7 +203,8 @@ class Field extends BaseRepository
 	 */
 	public function findByCoords ($x, $y, &$map = array())
 	{
-		return $this->getCoordinateValues(array(array('x' => $x, 'y' => $y)), $map);
+		$result = $this->getCoordinateValues(array(array('x' => $x, 'y' => $y)), $map);
+		return array_pop($result);
 	}
 
 	/**
@@ -269,7 +264,7 @@ class Field extends BaseRepository
 			}
 
 		}
-		return $visibleFields->toArray();
+		return array_values($visibleFields->toArray());
 	}
 
 	/**
