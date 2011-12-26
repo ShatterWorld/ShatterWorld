@@ -12,7 +12,7 @@ class Metal extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Nové krumpáče';
+		return 'Vyšší produkce kovu z dolů';
 	}
 
 	public function getCost ($level = 1)

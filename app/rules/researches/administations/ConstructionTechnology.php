@@ -12,7 +12,7 @@ class ConstructionTechnology extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Rychlejší stavba, nižší náklady';
+		return 'Nižší náklady a rychlejší stavba';
 	}
 
 	public function getCost ($level = 1)

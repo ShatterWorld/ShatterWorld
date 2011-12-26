@@ -12,7 +12,7 @@ class Footman extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Vylepšení technologií pěšáků';
+		return 'Síla pěšáků';
 	}
 
 	public function getCost ($level = 1)

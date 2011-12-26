@@ -12,7 +12,7 @@ class Food extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Zvýšení industrializace farem';
+		return 'Vyšší produkce jídla z farem';
 	}
 
 	public function getCost ($level = 1)

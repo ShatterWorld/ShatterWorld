@@ -8,12 +8,12 @@ class Reconnaissance extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Znalost okolí';
+		return 'Viditelnost';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Okruh polí, které je viditelný kolem klanu';
+		return 'Okruh polí, které klan kolem sebe vidí';
 	}
 
 	public function getCost ($level = 1)

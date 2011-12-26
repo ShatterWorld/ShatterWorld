@@ -12,7 +12,7 @@ class ResearchEfficiency extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Nové vybavení laboratoří';
+		return 'Levnější a rychlejší výzkum';
 	}
 
 	public function getCost ($level = 1)

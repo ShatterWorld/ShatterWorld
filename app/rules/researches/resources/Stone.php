@@ -12,7 +12,7 @@ class Stone extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Nové krumpáče';
+		return 'Vyšší produkce kamene z lomů';
 	}
 
 	public function getCost ($level = 1)

@@ -8,12 +8,12 @@ class TradeRoutes extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Hloubka obchodu';
+		return 'Obchodní stezky';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Počet prostředníků + rychlost obchodníků';
+		return 'Zvýšení maximálního počtu prostředníků a rychlost obchodníků';
 	}
 
 	public function getCost ($level = 1)

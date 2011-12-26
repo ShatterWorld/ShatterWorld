@@ -12,7 +12,7 @@ class ColonisationEfficiency extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Lepší osadníci, nižší náklady, rychlejší osídlení';
+		return 'Nižší náklady a rychlejší kolonizace';
 	}
 
 	public function getCost ($level = 1)

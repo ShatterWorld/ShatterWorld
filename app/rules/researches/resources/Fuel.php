@@ -7,12 +7,12 @@ class Fuel extends AbstractRule implements IResearch
 {
 	public function getDescription ()
 	{
-		return 'Těžba ropy';
+		return 'Těžba paliva';
 	}
 
 	public function getExplanation ()
 	{
-		return 'Hloubka vrtů';
+		return 'Vyšší produkce paliva z rafinérií';
 	}
 
 	public function getCost ($level = 1)

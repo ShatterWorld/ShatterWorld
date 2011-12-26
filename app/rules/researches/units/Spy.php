@@ -12,7 +12,7 @@ class Spy extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Vylepšení rozvětky';
+		return 'Síla špionů a rozvětky';
 	}
 
 	public function getCost ($level = 1)
