@@ -11,11 +11,13 @@
 				<th>Hráč</th>
 				<th>Skóre</th>
 			</tr>
-			{foreach $alliance->members as $member}
+			{?$members = $alliance->getMembers()}
+			{foreach $memberScores as $clanId => $score}
+				{?$member = $members[$clanId]}
 				<tr>
-					<td><a n:href="Clan:show $member->id">{$member->name}</a></td>
+					<td><a n:href="Clan:show $clanId">{$member->name}</a></td>
 					<td><a n:href="Profile:show $member->user->id">{$member->user->nickname}</a></td>
-					<td>{$memberScores[$member->id]}</td>
+					<td>{$score}</td>
 				</tr>
 			{/foreach}
 		</table>
