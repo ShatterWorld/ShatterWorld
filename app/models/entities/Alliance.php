@@ -68,6 +68,15 @@ class Alliance extends BaseEntity
 	 */
 	public function getMembers ()
 	{
+		return $this->members;
+	}
+
+	/**
+	 * Members getter
+	 * @return array of Entities\Clan
+	 */
+	public function getMembersArray ()
+	{
 		$members = array();
 		foreach($this->members as $member){
 			$members[$member->id] = $member;

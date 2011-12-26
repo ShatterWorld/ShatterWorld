@@ -27,8 +27,14 @@ class ClanPresenter extends BasePresenter {
 	*/
 	public function actionShow ($clanId = null)
 	{
-		if ($clanId === null){
-			$this->redirect('Clan:show', $this->getPlayerClan()->id);
+		if ($this->getPlayerClan()){
+
+			if ($clanId === null){
+				$this->redirect('Clan:show', $this->getPlayerClan()->id);
+			}
+		}
+		else{
+			$this->redirect('Clan:new');
 		}
 	}
 
@@ -52,6 +58,7 @@ class ClanPresenter extends BasePresenter {
 			if ($profile = $this->context->model->getProfileRepository()->findOneByUser($clan->user->id)){
 				$this->template->profile = $profile;
 			}
+			$this->template->playerClan = $playerClan;
 		}
 	}
 

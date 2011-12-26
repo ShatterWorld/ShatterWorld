@@ -98,7 +98,8 @@ abstract class BasePresenter extends \BasePresenter
 	 */
 	public function getPlayerClan ()
 	{
-		return $this->getClanRepository()->getPlayerClan();
+		$clan = $this->getClanRepository()->getPlayerClan();
+		return ($clan === null || $clan->deleted) ? null : $clan;
 	}
 
 	/**

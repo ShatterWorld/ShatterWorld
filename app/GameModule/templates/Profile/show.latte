@@ -30,6 +30,14 @@
 				<td>{$profile->icq}</td>
 			</tr>
 		</table>
+
+		{if $clan->user->id === $profile->user->id}
+			<ul>
+				<li><a href="{link Profile:edit}">Upravit profil</a></li>
+				<li><a href="{link Profile:delete}">Smazat profil</a></li>
+			</ul>
+		{/if}
+
 	{else}
 		Požadovaný profil nenalezen. Hráč si pravděpodobně nezaložil profil, nebo hráč vůbec neexistuje.
 	{/ifset}

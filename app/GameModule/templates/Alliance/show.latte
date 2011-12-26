@@ -11,7 +11,7 @@
 				<th>Hráč</th>
 				<th>Skóre</th>
 			</tr>
-			{?$members = $alliance->getMembers()}
+			{?$members = $alliance->getMembersArray()}
 			{foreach $memberScores as $clanId => $score}
 				{?$member = $members[$clanId]}
 				<tr>
@@ -28,6 +28,9 @@
 				<td>{$totalAllianceScore}</td>
 			</tr>
 		</table>
+		{if $clan->alliance->id === $alliance->id}
+			<a n:href="Alliance:leave">Opustit alianci</a>
+		{/if}
 
 	{else}
 		Aliance neexistuje

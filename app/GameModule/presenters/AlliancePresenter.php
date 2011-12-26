@@ -14,7 +14,12 @@ class AlliancePresenter extends BasePresenter
 	*/
 	public function actionDefault ()
 	{
-		$this->redirect('Alliance:show', $this->getClanAlliance()->id);
+		if($this->getClanAlliance()){
+			$this->redirect('Alliance:show', $this->getClanAlliance()->id);
+		}
+		else{
+			$this->redirect('Alliance:neutral');
+		}
 	}
 
 	/**
@@ -45,6 +50,7 @@ class AlliancePresenter extends BasePresenter
 			$this->template->memberScores = $this->context->model->getScoreRepository()->getAllianceScoreArray($alliance);
 			$this->template->totalAllianceScore = $this->context->model->getScoreRepository()->getTotalAllianceScore($alliance);
 			$this->template->alliance = $alliance;
+			$this->template->clan = $this->getPlayerClan();
 
 		}
 	}
@@ -69,19 +75,6 @@ class AlliancePresenter extends BasePresenter
 	{
 		$this->template->clan = $this->getPlayerClan();
 		$this->template->visibleAlliances = $this->getAllianceRepository()->getVisibleAlliances($this->getPlayerClan());
-	}
-
-	public function actionApplicants ()
-	{
-		if (!$this->isLeader()) {
-			$this->flashMessage('Nemáte oprávnění přijímat nové členy', 'error');
-			$this->redirect('Alliance:');
-		}
-	}
-
-	public function renderApplicants ()
-	{
-		$this->template->alliance = $this->getPlayerClan()->getAlliance();
 	}
 
 	public function actionManagement ()

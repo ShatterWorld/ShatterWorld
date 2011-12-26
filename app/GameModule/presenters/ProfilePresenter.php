@@ -42,6 +42,7 @@ class ProfilePresenter extends BasePresenter {
 	{
 		if ($profile = $this->context->model->getProfileRepository()->findOneByUser($userId)){
 			$this->template->profile = $profile;
+			$this->template->clan = $this->getPlayerClan();
 		}
 	}
 

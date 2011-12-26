@@ -24,4 +24,23 @@
 		{/foreach}
 	</table>
 
+	<h2>Uchazeči o vstup</h2>
+	{if count($alliance->applicants) > 0}
+		<table>
+			<tr>
+				<th>Jméno</th>
+				<th colspan="2">Akce</th>
+			</tr>
+			{foreach $alliance->applicants as $applicant}
+				<tr>
+					<td><a n:href="Clan:show $applicant->id">{$applicant->name}</a></td>
+					<td><a n:href="accept! $applicant->id">Přijmout</a></td>
+					<td><a n:href="decline! $applicant->id">Odmítnout</a></td>
+				</tr>
+			{/foreach}
+		</table>
+	{else}
+	<p>Nikdo nechce do vaší aliance<p>
+	{/if}
+
 {/block}

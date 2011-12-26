@@ -15,6 +15,10 @@
 				<td>{$clan->name}</td>
 			</tr>
 			<tr>
+				<th>Skóre</th>
+				<td>{$totalClanScore}</td>
+			</tr>
+			<tr>
 				<th>Aliance</th>
 				<td>{if $clan->alliance != null}<a n:href="Alliance:show $clan->alliance->id">{$clan->alliance->name}</a>{else}bezalianční{/if}</td>
 			</tr>
@@ -30,21 +34,23 @@
 			</tr>
 		</table>
 
-		<h3>Skóre</h3>
-		<table id="clanScoreTable">
-			{if isset($scoreRules) && isset($clanScores)}
+		{if isset($scoreRules) && isset($clanScores)}
+			<h2>Detaily skóre</h2>
+			<table id="clanScoreTable">
 				{foreach $clanScores as $name => $score}
 					<tr>
 						<th>{$scoreRules[$name]->getDescription()}</th>
 						<td>{$score}</td>
 					</tr>
 				{/foreach}
-			{/if}
-			<tr>
-				<th>Celkem</th>
-				<td>{$totalClanScore}</td>
-			</tr>
-		</table>
+			</table>
+		{/if}
+
+		{if $playerClan->id === $clan->id}
+			<a href="{link Clan:delete}">Smazat klan</a>
+		{/if}
+
+
 	{else}
 		Klan nenalezen
 	{/ifset}

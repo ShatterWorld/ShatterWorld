@@ -183,40 +183,18 @@
 					</ul>
 				</div>
 
-				<div class="submenu{ifCurrent Clan:*} active{/ifCurrent}{ifCurrent Alliance:*} active{/ifCurrent}{ifCurrent Profile:*} active{/ifCurrent}">
-					<h3>Klan</h3>
+				<div class="submenu{ifCurrent Clan:*} active{/ifCurrent}{ifCurrent Alliance:*} active{/ifCurrent}{ifCurrent Profile:*} active{/ifCurrent}{ifCurrent Quest:*} active{/ifCurrent}">
+					<h3>Ty</h3>
 					<ul>
-						{if !$presenter->getPlayerClan()}
-							<li><a href="{link Clan:new}">Založit klan</a></li>
-						{else}
-							<li><a href="{link Clan:}">Přehled klanu</a></li>
-							<li><a href="{link Clan:delete}">Smazat klan</a></li>
+						<li><a href="{link Clan:}">Klan</a></li>
+						<li><a href="{link Quest:}">Úkoly</a></li>
+
+						<li><a n:href="Alliance:">Aliance</a></li>
+						{if $presenter->getPlayerClan() && $presenter->getPlayerClan()->getAlliance() && $presenter->isLeader()}
+							<li><a n:href="Alliance:management">Správa aliance</a></li>
 						{/if}
 
-						<li>----------------</li>
-
-						{if $presenter->getPlayerClan() && $presenter->getPlayerClan()->getAlliance()}
-							<li><a n:href="Alliance:">Aliance</a></li>
-							{if $presenter->isLeader()}
-								<li><a n:href="Alliance:applicants">Přjmout členy</a></li>
-								<li><a n:href="Alliance:management">Správa aliance</a></li>
-							{/if}
-							<li><a n:href="Alliance:leave">Opustit alianci</a></li>
-							<li><a href="{link Score:alliance}">Skóre aliance</a></li>
-						{else}
-							<li><a n:href="Alliance:new">Nová aliance</a></li>
-							<li><a n:href="Alliance:neutral">Přehled aliance</a></li>
-						{/if}
-
-						<li>----------------</li>
-
-						{if !$presenter->getPlayerProfile()}
-							<li><a href="{link Profile:new}">Založit profil</a></li>
-						{else}
-							<li><a href="{link Profile:}">Profil</a></li>
-							<li><a href="{link Profile:edit}">Upravit profil</a></li>
-							<li><a href="{link Profile:delete}">Smazat profil</a></li>
-						{/if}
+						<li><a href="{link Profile:}">Profil</a></li>
 
 					</ul>
 
@@ -255,14 +233,6 @@
 						<ul>
 							<li><a href="{link Research:}">Přehled</a></li>
 							<li><a href="{link Research:research}">Vyzkoumat</a></li>
-						</ul>
-					</div>
-
-					<div class="submenu{ifCurrent Quest:*} active{/ifCurrent}{ifCurrent Score:*} active{/ifCurrent}">
-						<h3>Úkoly</h3>
-
-						<ul>
-							<li><a href="{link Quest:}">Přehled</a></li>
 						</ul>
 					</div>
 
