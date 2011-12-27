@@ -70,14 +70,12 @@ class Report extends BaseRepository
 			));
 
 		$qb->setParameter(1, $now);
-
-
 		$reports =  $qb->getQuery()->getResult();
 
 		$count = 0;
 		foreach($reports as $report){
 			$data = Json::decode($report['data']);
-			if (isset($data->successful) && $data->successful){
+			if (isset($data->totalVictory) && $data->totalVictory){
 				$count++;
 			}
 		}
