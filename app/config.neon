@@ -63,6 +63,8 @@ common:
 				- spyForce
 				- attackForce
 				- defenceForce
+				- dominance
+				- remoteExploration
 
 	doctrine:
 		proxyDir: %tempDir%/proxies

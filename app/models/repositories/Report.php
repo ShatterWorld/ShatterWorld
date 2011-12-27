@@ -65,11 +65,17 @@ class Report extends BaseRepository
 			->from($this->getEntityName(), 'r')
 			->leftJoin('r.event', 'e')
 			->where($qb->expr()->andX(
+				$qb->expr()->orX(
+					$qb->expr()->eq('e.type', '?1'),
+					$qb->expr()->eq('e.type', '?2')
+				),
 				$qb->expr()->eq('r.owner', $clan->id),
-				$qb->expr()->lte('?1', 'e.term')
+				$qb->expr()->lte('?3', 'e.term')
 			));
 
-		$qb->setParameter(1, $now);
+		$qb->setParameter(1, 'occupation');
+		$qb->setParameter(2, 'pillaging');
+		$qb->setParameter(3, $now);
 		$reports =  $qb->getQuery()->getResult();
 
 		$count = 0;

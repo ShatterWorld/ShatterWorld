@@ -23,10 +23,10 @@ class Event extends BaseRepository {
 		$qb->setParameter(2, $lockTimeout);
 		return $qb->getQuery()->getResult();
 	}
-	
+
 	/**
 	 * Finds upcoming events that are relevant to given clan
-	 * @param Entities\Clan 
+	 * @param Entities\Clan
 	 * @return array of Entities\Event
 	 */
 	public function findUpcomingEvents (Entities\Clan $clan)
@@ -42,6 +42,34 @@ class Event extends BaseRepository {
 		$qb->setParameter(1, $clan->id);
 		$qb->setParameter(2, FALSE);
 		return $qb->getQuery()->getResult();
+	}
+
+	public function getRemoteExploration (Entities\Clan $clan, $distance)
+	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('e');
+		$qb->from($this->getEntityName(), 'e');
+		$qb->where($qb->expr()->andX(
+			$qb->expr()->eq('e.owner', $clan->id),
+			$qb->expr()->eq('e.processed', '?1'),
+			$qb->expr()->eq('e.type', '?2')
+		));
+
+		$qb->setParameter(1, TRUE);
+		$qb->setParameter(2, 'exploration');
+		$explorations = $qb->getQuery()->getResult();
+
+		$count = 0;
+		$hq = $clan->headquarters;
+		$hqArr = array('x' => $hq->getX(), 'y' => $hq->getY());
+		foreach($explorations as $exploration){
+			$target = $exploration->target;
+			$targetArr = array('x' => $target->getX(), 'y' => $target->getY());
+			if ($this->context->map->calculateDistance($hqArr, $targetArr) >= $distance){
+				$count++;
+			}
+		}
+		return $count;
 	}
 }
 
