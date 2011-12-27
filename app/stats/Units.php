@@ -2,9 +2,18 @@
 namespace Stats;
 use Rules;
 use Entities;
-
+use Nette\Diagnostics\Debugger;
+/**
+ *	Units stat
+ *	@author Petr Bělohlávek
+ */
 class Units extends AbstractStat
 {
+	/**
+	 *	Get clan slots
+	 * 	@param Entities\Clan
+	 *	@return array of int
+	 */
 	public function getSlots (Entities\Clan $clan)
 	{
 		$result = array();
@@ -24,26 +33,92 @@ class Units extends AbstractStat
 		return $result;
 	}
 
-	public function getUnitLevel ($clan, $unitName)
+	/**
+	 *	Get level of the unit
+	 * 	@param Entities\Clan
+	 * 	@param string
+	 *	@return int
+	 */
+	public function getUnitLevel (Entities\Clan $clan, $unitName)
 	{
 		return $this->getContext()->model->getResearchRepository()->getResearchLevel($clan, $unitName);
 	}
 
-	public function getUnitAttack ($clan, $unitName)
+	/**
+	 *	Get attack of the unit
+	 * 	@param Entities\Clan
+	 * 	@param string
+	 *	@return int
+	 */
+	public function getUnitAttack (Entities\Clan $clan, $unitName)
 	{
 		$rule = $this->getContext()->rules->get('unit', $unitName);
 		$level = $this->getUnitLevel($clan, $unitName);
 		return $rule->getAttack() + $level;
 	}
 
-	public function getUnitDefense ($clan, $unitName)
+	/**
+	 *	Get total attack force of the clan
+	 * 	@param Entities\Clan
+	 *	@return int
+	 */
+	public function getClanAttackForce (Entities\Clan $clan)
+	{
+		$units = $this->getContext()->model->getUnitRepository()->getClanUnits($clan);
+
+		$attackPower = 0;
+		foreach($units as $unit){
+			$attackPower += $this->getUnitAttack($clan, $unit->type) * $unit->count;
+		}
+		return $attackPower;
+	}
+
+	/**
+	 *	Get defence of the unit
+	 * 	@param Entities\Clan
+	 * 	@param string
+	 *	@return int
+	 */
+	public function getUnitDefence (Entities\Clan $clan, $unitName)
 	{
 		$rule = $this->getContext()->rules->get('unit', $unitName);
 		$level = $this->getUnitLevel($clan, $unitName);
 		return $rule->getDefense() + $level;
 	}
 
-	public function getSpyForce ($clan)
+	/**
+	 *	Get defence of the unit
+	 * 	@deprecated
+	 * 	@param Entities\Clan
+	 * 	@param string
+	 *	@return int
+	 */
+	public function getUnitDefense (Entities\Clan $clan, $unitName)
+	{
+		return $this->getUnitDefence($clan, $unitName);
+	}
+
+	/**
+	 *	Get total defence force of the clan
+	 * 	@param Entities\Clan
+	 *	@return int
+	 */
+	public function getClanDefenceForce (Entities\Clan $clan)
+	{
+		$units = $this->getContext()->model->getUnitRepository()->getClanUnits($clan);
+		$defencePower = 0;
+		foreach($units as $unit){
+			$defencePower += $this->getUnitDefense($clan, $unit->type) * $unit->count;
+		}
+		return $defencePower;
+	}
+
+	/**
+	 *	Get total spy force of the clan
+	 * 	@param Entities\Clan
+	 *	@return int
+	 */
+	public function getSpyForce (Entities\Clan $clan)
 	{
 		$level = $this->getUnitLevel($clan, 'spy');
 		$spyCount = $this->getContext()->model->getUnitRepository()->getTotalUnitCount($clan, 'spy');

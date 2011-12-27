@@ -3,18 +3,17 @@ namespace Rules\Quests;
 use Rules\AbstractRule;
 use Entities;
 
-class FoodGathering extends AbstractRule implements IQuest
+class DefenceForce extends AbstractRule implements IQuest
 {
 	public function getDescription ()
 	{
-		return 'Zásoba jídla';
+		return 'Obranná síla';
 	}
 
 	public function getExplanation (Entities\Quest $quest)
 	{
-		$resources = $this->getContext()->model->resourceRepository->getResourcesArray($quest->owner);
-		$food = floor($resources['food']['balance']);
-		return 'Nashomáždi ' . pow($quest->level, 2) * 300 . ' jídla (' . $food .' splněno)';
+		$attackForce = $this->getContext()->stats->units->getClanDefenceForce($quest->owner);
+		return 'Zvyš celkovou obrannou sílu armády na ' . (30 * pow($quest->level, 3) + 250) . ' (' . $attackForce . ' splněno)';
 	}
 
 	public function getDependencies ($level = 1)
@@ -24,7 +23,7 @@ class FoodGathering extends AbstractRule implements IQuest
 
 	public function isCompleted (Entities\Quest $quest, $term = null)
 	{
-		if ($this->getContext()->model->resourceRepository->checkResources($quest->owner, array('food' => pow($quest->level, 2) * 300))) {
+		if ($this->getContext()->stats->units->getClanDefenceForce($quest->owner) >= 30 * pow($quest->level, 3) + 250) {
 			return TRUE;
 		}
 		return FALSE;
@@ -37,11 +36,11 @@ class FoodGathering extends AbstractRule implements IQuest
 
 	public function getValue ($level = 1)
 	{
-		return $level * 900;
+		return 500 + $level * 100;
 	}
 
 	public function getLevelCap ()
 	{
-		return 5;
+		return 10;
 	}
 }
