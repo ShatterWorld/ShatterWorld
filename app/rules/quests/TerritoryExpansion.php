@@ -3,7 +3,7 @@ namespace Rules\Quests;
 use Rules\AbstractRule;
 use Entities;
 
-class TerritoryExpansion extends AbstractRule implements IQuest
+class TerritoryExpansion extends AbstractQuest implements IQuest
 {
 	public function getDescription ()
 	{
@@ -12,27 +12,9 @@ class TerritoryExpansion extends AbstractRule implements IQuest
 
 	public function getExplanation (Entities\Quest $quest)
 	{
-		$territorySize = $this->getContext()->model->fieldRepository->getTerritorySize($quest->owner);
-		return 'Rozšiř území klanu na ' . (pow($quest->level, 2) + 6) . ' polí (' . $territorySize . ' splněno)';
+		return 'Rozšiř území klanu na ' . $this->getTarget($quest) . ' polí (' . $this->getStatus($quest) . ' splněno)';
 	}
 
-	public function getDependencies ($level = 1)
-	{
-		return array();
-	}
-
-	public function isCompleted (Entities\Quest $quest, $term = null)
-	{
-		if ($this->getContext()->model->fieldRepository->getTerritorySize($quest->owner) >= pow($quest->level, 2) + 6) {
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-	public function processCompletion (Entities\Quest $quest)
-	{
-
-	}
 
 	public function getValue ($level = 1)
 	{
@@ -42,5 +24,20 @@ class TerritoryExpansion extends AbstractRule implements IQuest
 	public function getLevelCap ()
 	{
 		return 10;
+	}
+	public function getTarget (Entities\Quest $quest)
+	{
+		return pow($quest->level, 2) + 6;
+	}
+
+	public function getStatus (Entities\Quest $quest)
+	{
+		if (isset($this->status)){
+			return $this->status;
+		}
+		$status = $this->getContext()->model->fieldRepository->getTerritorySize($quest->owner);
+		$this->status = $status;
+		return $status;
+
 	}
 }
