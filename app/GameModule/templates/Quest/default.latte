@@ -4,7 +4,7 @@
 {/block}
 
 {block #header}
-	Úkoly - přehled
+	Úkoly
 {/block}
 
 {block #content}
@@ -27,7 +27,7 @@
 					<td class="value">{$rule->getValue($quest->level)}</td>
 				</tr>
 				<tr class="row1">
-					<td class="explanation" colspan="4">{$rule->getExplanation($quest->level)}</td>
+					<td class="explanation" colspan="4">{$rule->getExplanation($quest)}</td>
 				</tr>
 			{/foreach}
 		</table>

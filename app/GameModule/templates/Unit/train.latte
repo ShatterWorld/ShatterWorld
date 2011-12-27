@@ -6,7 +6,7 @@
 {/block}
 
 {block #header}
-	Trénink
+	Trénink jednotek
 {/block}
 
 {block #content}
@@ -100,7 +100,6 @@
 					<th>Zbývá</th>
 					<th>Celkem</th>
 				</tr>
-				{dump $facilityRules}
 				{foreach $slots as $key => $slot}
 					<tr id="{$key}">
 						<td>{$facilityRules[$key]->getDescription()}</td>

@@ -11,12 +11,14 @@ interface IQuest extends IRule
 {
 	/**
 	 * Get further explanation of quest
+	 * @param Entities\Quest
 	 * @return string
 	 */
-	public function getExplanation ($level = 1);
+	public function getExplanation (Entities\Quest $quest);
 
 	/**
 	 * Get quests the player has to complete before being able to start this quest
+	 * @param int
 	 * @return array
 	 */
 	public function getDependencies ($level = 1);

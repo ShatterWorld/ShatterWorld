@@ -13,12 +13,12 @@ class Colonisation extends AbstractStat
 	protected function getCoefficient (Entities\Field $target, Entities\Clan $clan)
 	{
 		$level = $this->getContext()->model->getResearchRepository()->getResearchLevel($clan, 'colonisationEfficiency');
-		$map = $this->context->map;
+		$map = $this->getContext()->map;
 		$distance = $map->calculateDistance($map->coords($clan->getHeadquarters()), $map->coords($target));
 		$count = $this->getContext()->model->getFieldRepository()->getTerritorySize($clan) + $this->getContext()->model->getConstructionRepository()->getColonisationCount($clan);
 		return $distance * $count * (1 - (pow($level, 2) / 100));
 	}
-	
+
 	/**
 	 * Calculate the time needed to colonise a field
 	 * @param Entities\Field
@@ -31,7 +31,7 @@ class Colonisation extends AbstractStat
 		$coefficient = $this->getCoefficient($target, $clan);
 		return $base * $coefficient;
 	}
-	
+
 	/**
 	 * Calculate the costs needed to colonise a field
 	 * @param Entities\Field

@@ -59,6 +59,8 @@ common:
 
 			quests:
 				- foodGathering
+				- territoryExpansion
+				- spyForce
 
 		score:
 			- research
