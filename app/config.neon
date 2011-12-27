@@ -64,14 +64,6 @@ common:
 				- attackForce
 				- defenceForce
 
-		score:
-			- research
-			- unit
-			- quest
-			- territory
-			- production
-			- facility
-
 	doctrine:
 		proxyDir: %tempDir%/proxies
 		proxyNamespace: Proxies

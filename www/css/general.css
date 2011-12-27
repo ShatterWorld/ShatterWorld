@@ -16,7 +16,7 @@ body {
 }
 
 a {
-	color: #66b301;
+	color: #438f04;
 }
 
 a:hover {
@@ -149,3 +149,15 @@ a:hover {
 	position: relative;
 	padding: 5px 15px;
 }
+
+#content h2 {
+	text-decoration: underline;
+	font-weight: bold;
+	font-size: 110%;
+}
+
+#content h3 {
+	text-decoration: underline;
+	font-weight: bold;
+}
+
