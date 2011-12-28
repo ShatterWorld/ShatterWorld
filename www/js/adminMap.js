@@ -62,6 +62,7 @@ Game.adminMap = {
 	
 	repaint: function ()
 	{
+		$('#map').html('');
 		$.each(Game.adminMap.map, function (x, row) {
 			$.each(row, function (y, field) {
 				var element = $('<div>').css({
