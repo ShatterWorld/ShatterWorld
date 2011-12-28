@@ -92,7 +92,7 @@ Game.adminMap = {
 		});
 
 		$('#mapContainer').scrollLeft(dX + fieldWidth);
-		$('#mapContainer').scrollTop(sY + fieldHeight);
+		$('#mapContainer').scrollTop(dY + fieldHeight);
 
 	},
 
