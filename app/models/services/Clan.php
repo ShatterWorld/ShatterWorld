@@ -164,9 +164,9 @@ class Clan extends BaseService
 			), FALSE);
 		}
 
-
 		$this->entityManager->flush();
-		$this->context->model->getUserService()->update($clan->user, array('activeClan' => $clan));
+		$this->context->model->resourceService->recalculateProduction($clan);
+		$this->context->model->userService->update($clan->user, array('activeClan' => $clan));
 		return $clan;
 	}
 
