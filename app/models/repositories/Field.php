@@ -282,7 +282,7 @@ class Field extends BaseRepository
 		}
 		return $ids;
 	}
-
+	
 	/**
 	 * Finds visible fields and returns them as the 2d array of integers (their coords)
 	 * @param Entities\Clan
@@ -290,16 +290,33 @@ class Field extends BaseRepository
 	 */
 	public function getVisibleFieldsArray (Entities\Clan $clan)
 	{
-		$ids = $this->getVisibleFieldsIds($clan);
+		return $this->fetchFieldsData($clan, $this->getVisibleFieldsIds($clan));
+	}
+
+	public function getMapArray ()
+	{
+		return $this->fetchFieldsData();
+	}
+	
+	protected function fetchFieldsData (Entities\Clan $clan = NULL, $ids = array())
+	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a')
-			->where($qb->expr()->in('f.id', $ids));
+		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
+		if ($ids) {
+			$qb->where($qb->expr()->in('f.id', $ids));
+		}
 		$unitsQb = $this->getEntityManager()->createQueryBuilder();
-		$unitsQb->select('u', 'l')->from('Entities\Unit', 'u')->innerJoin('u.location', 'l')
-			->where($unitsQb->expr()->andX(
-				$unitsQb->expr()->in('u.location', $ids),
-				$unitsQb->expr()->eq('u.owner', $clan->id)
-			));
+		$unitsQb->select('u', 'l')->from('Entities\Unit', 'u')->innerJoin('u.location', 'l');
+		$conds = array();
+		if ($clan) {
+			$conds[] = $unitsQb->expr()->eq('u.owner', $clan->id);
+		}
+		if ($ids) {
+			$conds[] = $unitsQb->expr()->in('u.location', $ids);
+		}
+		if ($conds) {
+			$unitsQb->where(call_user_func_array(callback($unitsQb->expr(), 'andX'), $conds));
+		}
 		$units = array();
 		foreach ($unitsQb->getQuery()->getArrayResult() as $row) {
 			if (!isset($units[$row['location']['id']])) {
@@ -314,7 +331,7 @@ class Field extends BaseRepository
 			if (!isset($result[$x])) {
 				$result[$x] = array();
 			}
-			if ($row['owner'] != null && $row['owner']['id'] != $clan->id){
+			if ($clan && ($row['owner'] != null && $row['owner']['id'] != $clan->id)) {
 				$row['facility'] = null;
 				$row['level'] = null;
 			}

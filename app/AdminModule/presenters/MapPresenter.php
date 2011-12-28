@@ -28,4 +28,12 @@ class MapPresenter extends BasePresenter
 		$this->flashMessage('Nová mapa byla vygenerována');
 		$this->redirect('default');
 	}
+	
+	public function handleFetchMap ()
+	{
+		$this->payload->fields = $this->context->model->fieldRepository->getMapArray();
+		$cache = new Nette\Caching\Cache($this->context->cacheStorage, 'Map');
+		$this->payload->ranks = $cache->load('FieldRanks');
+		$this->sendPayload();
+	}
 }
