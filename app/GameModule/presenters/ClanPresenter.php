@@ -57,7 +57,7 @@ class ClanPresenter extends BasePresenter {
 				$this->template->profile = $profile;
 			}
 			$this->template->playerClan = $playerClan;
-		$this->template->clanQuota = $this->context->params['game']['stats']['clanQuota'];
+			$this->template->clanQuota = $this->context->params['game']['stats']['clanQuota'];
 		}
 	}
 

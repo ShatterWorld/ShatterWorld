@@ -20,10 +20,19 @@ class Alliance extends BaseService
 
 	public function addMember (Entities\Alliance $alliance, Entities\Clan $clan)
 	{
-		$this->update($clan, array('alliance' => $alliance, 'allianceApplication' => NULL));
-		$this->context->model->getFieldService()->invalidateVisibleFields($clan->id);
-		foreach ($alliance->getMembers() as $member) {
-			$this->context->model->getFieldService()->invalidateVisibleFields($member->id);
+		$valid = TRUE;
+		foreach ($alliance->members as $member) {
+			if ($member->user === $clan->user) {
+				$valid = FALSE;
+				break;
+			}
+		}
+		if ($valid && count($alliance->members) < $this->context->params['game']['stats']['allianceMemberQuota']) {
+			$this->update($clan, array('alliance' => $alliance, 'allianceApplication' => NULL));
+			$this->context->model->getFieldService()->invalidateVisibleFields($clan->id);
+			foreach ($alliance->getMembers() as $member) {
+				$this->context->model->getFieldService()->invalidateVisibleFields($member->id);
+			}
 		}
 	}
 
