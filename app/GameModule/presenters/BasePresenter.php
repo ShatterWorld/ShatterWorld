@@ -180,7 +180,7 @@ abstract class BasePresenter extends \BasePresenter
 	}
 
 	/**
-	 * Ajax descriptionfetching
+	 * Ajax description fetching
 	 * @return void
 	 */
 	public function handleFetchDescriptions ()
@@ -188,76 +188,4 @@ abstract class BasePresenter extends \BasePresenter
 		$this->payload->descriptions = $this->context->rules->getDescriptions();
 		$this->sendPayload();
 	}
-
-	/**
-	* Test !!!
-	* TODO: remove
-	*/
-	public function handleCreateUser ()
-	{
-		$user = $this->getService('userService')->create(
-			array(
-				'login' => Nette\Utils\Strings::random(),
-				'nickname' => Nette\Utils\Strings::random(),
-				'email' => 'test@test.com',
-				'password' => '123456',
-				'role' => 'player'
-			)
-		);
-
-		$clan = $this->getService('clanService')->create(
-			array(
-				'name' => Nette\Utils\Strings::random(),
-				'user' => $user
-			)
-		);
-
-		//$this->redirect('Map:');
-	}
-
-	public function handleCreate10Users ()
-	{
-		for($i = 0; $i < 10; $i++){
-		$user = $this->getService('userService')->create(
-			array(
-				'login' => Nette\Utils\Strings::random(),
-				'nickname' => Nette\Utils\Strings::random(),
-				'email' => 'test@test.com',
-				'password' => '123456',
-				'role' => 'player'
-			)
-		);
-
-		$clan = $this->getService('clanService')->create(
-			array(
-				'name' => Nette\Utils\Strings::random(),
-				'user' => $user
-			)
-		);		}
-		//$this->redirect('Map:');
-	}
-
-	public function handleCreate100Users ()
-	{
-		for($i = 0; $i < 100; $i++){
-		$user = $this->getService('userService')->create(
-			array(
-				'login' => Nette\Utils\Strings::random(),
-				'nickname' => Nette\Utils\Strings::random(),
-				'email' => 'test@test.com',
-				'password' => '123456',
-				'role' => 'player'
-			)
-		);
-
-		$clan = $this->getService('clanService')->create(
-			array(
-				'name' => Nette\Utils\Strings::random(),
-				'user' => $user
-			)
-		);		}
-		$this->redirect('Map:');
-	}
-
-
 }

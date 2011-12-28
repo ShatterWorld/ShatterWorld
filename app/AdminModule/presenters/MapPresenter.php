@@ -47,4 +47,26 @@ class MapPresenter extends BasePresenter
 		));
 		return $form;
 	}
+	
+	protected function createComponentGenerateClanForm ()
+	{
+		$form = new Form;
+		$form->addText('count', 'Počet klanů')->addRule(Form::INTEGER, 'Počet musí být číslo');
+		$form->addSubmit('generate', 'Generovat');
+		$form->onSuccess[] = callback($this, 'submitGenerateClanForm');
+		$form->setDefaults(array('count' => 1));
+		return $form;
+	}
+	
+	public function submitGenerateClanForm (Form $form)
+	{
+		$data = $form->getValues();
+		for ($i = 0; $i < $data['count']; $i++) {
+			$this->getService('clanService')->create(array(
+				'name' => Nette\Utils\Strings::random(),
+				'user' => $this->context->model->userRepository->getActiveUser()
+			), FALSE);
+		}
+		$this->context->entityManager->flush();
+	}
 }
