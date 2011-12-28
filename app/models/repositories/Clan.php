@@ -196,4 +196,13 @@ class Clan extends BaseRepository
 		$distance += $map->calculateDistance($map->coords($prev), $map->coords($target));
 		return $distance;
 	}
+
+	/**
+	 * Count of all clans
+	 * @return integer
+	 */
+	public function getClanCount ()
+	{
+		return count($this->findAll());
+	}
 }

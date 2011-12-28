@@ -24,5 +24,10 @@ class Alliance extends BaseRepository
 		}
 	}
 
+	public function getAllianceCount ()
+	{
+		return count($this->findAll());
+	}
 
 }
+

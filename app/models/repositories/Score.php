@@ -110,11 +110,7 @@ class Score extends BaseRepository
 		return $allianceScore;
 	}
 
-	/**
-	 *	Get clan score chart
-	 * 	@return array
-	 */
-	public function getClanChart ()
+	public function getClanPage ($pageLength, $page = 1)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('o.id as clanid, o.name as clanname, u.id as userid, u.nickname as usernickname, sum(s.value) as sumvalue')
@@ -123,15 +119,14 @@ class Score extends BaseRepository
 			->leftJoin('o.user', 'u')
 			->groupBy('s.owner')
 			->orderBy('sumvalue', 'DESC')
-			->addOrderBy('o.name');
+			->addOrderBy('o.name')
+			->setFirstResult($pageLength * ($page-1))
+			->setMaxResults($pageLength);
+
 		return $qb->getQuery()->getResult();
 	}
 
-	/**
-	 *	Get alliance score chart
-	 * 	@return array
-	 */
-	public function getAllianceChart ()
+	public function getAlliancePage ($pageLength, $page = 1)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('a.id as allianceid, a.name as alliancename, l.name as leadername, l.id as leaderid, sum(s.value) as sumvalue')
@@ -144,10 +139,9 @@ class Score extends BaseRepository
 			)
 			->groupBy('o.alliance')
 			->orderBy('sumvalue', 'DESC')
-			->addOrderBy('a.name');
+			->addOrderBy('a.name')
+			->setFirstResult($pageLength * ($page-1))
+			->setMaxResults($pageLength);
 		return $qb->getQuery()->getResult();
-
 	}
-
-
 }
