@@ -3,31 +3,31 @@ namespace Rules\Quests;
 use Rules\AbstractRule;
 use Entities;
 
-class TerritoryExpansion extends AbstractQuest implements IQuest
+class Dominance extends AbstractQuest implements IQuest
 {
 	public function getDescription ()
 	{
-		return 'Rozšíření území';
+		return 'Dominance';
 	}
 
 	public function getExplanation (Entities\Quest $quest)
 	{
-		return 'Rozšiř území klanu na ' . $this->getTarget($quest) . ' polí (' . $this->getStatus($quest) . ' splněno)';
+		return 'Proveď ' . $this->getTarget($quest) . ' totálních vítězství během 24hod (' . $this->getStatus($quest) . ' splněno)';
 	}
-
 
 	public function getValue ($level = 1)
 	{
-		return 800;
+		return 500 + pow($level, 2) * 250;
 	}
 
 	public function getLevelCap ()
 	{
 		return 10;
 	}
+
 	public function getTarget (Entities\Quest $quest)
 	{
-		return pow($quest->level, 2) + 6;
+		return 3 * pow($quest->level, 2) + 3;
 	}
 
 	public function getStatus (Entities\Quest $quest)
@@ -35,9 +35,10 @@ class TerritoryExpansion extends AbstractQuest implements IQuest
 		if (isset($this->status)){
 			return $this->status;
 		}
-		$status = $this->getContext()->model->fieldRepository->getTerritorySize($quest->owner);
+		$status = $this->getContext()->model->getReportRepository()->getTotalVictoryCount($quest->owner);
 		$this->status = $status;
 		return $status;
 
 	}
+
 }

@@ -8,6 +8,13 @@
 {/block}
 
 {block #content}
+	<table id="msgMenu">
+		<tr>
+			<td><a href="{link Message:new}">Napsat</a></td>
+			<td><a href="{link Message:}">Přijaté</a></td>
+			<td><a href="{link Message:sent}">Odeslané</a></td>
+		</tr>
+	</table>
 
 	<table id="message">
 		<tr><th>Odesílatel:</th><td><a n:href="Profile:show $message->sender->id">{$message->sender->nickname}</a></td></tr>

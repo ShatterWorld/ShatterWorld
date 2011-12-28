@@ -1,6 +1,8 @@
 <?php
 namespace Repositories;
 use Entities;
+use Nette\Diagnostics\Debugger;
+use Nette\Utils\Json;
 
 class Report extends BaseRepository
 {
@@ -15,7 +17,7 @@ class Report extends BaseRepository
 		$qb->setParameter(1, $clan->id);
 		return $qb->getQuery()->getResult();
 	}
-	
+
 	public function getPage (Entities\Clan $clan, $pageLength, $page = 1)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
@@ -29,7 +31,7 @@ class Report extends BaseRepository
 		$qb->setParameter(1, $clan->id);
 		return $qb->getQuery()->getResult();
 	}
-	
+
 	public function getCount (Entities\Clan $clan)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
@@ -40,7 +42,7 @@ class Report extends BaseRepository
 		$qb->setParameter(1, $clan->id);
 		return $qb->getQuery()->getSingleScalarResult();
 	}
-	
+
 	public function countUnread (Entities\Clan $clan)
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
@@ -53,4 +55,45 @@ class Report extends BaseRepository
 		$qb->setParameter(2, FALSE);
 		return $qb->getQuery()->getSingleScalarResult();
 	}
+
+	public function getTotalVictoryCount (Entities\Clan $clan)
+	{
+		$now = new \DateTime('@' . strtotime('-1 day', date('U')));
+
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('r.data, e.term')
+			->from($this->getEntityName(), 'r')
+			->leftJoin('r.event', 'e')
+			->where($qb->expr()->andX(
+				$qb->expr()->orX(
+					$qb->expr()->eq('e.type', '?1'),
+					$qb->expr()->eq('e.type', '?2')
+				),
+				$qb->expr()->eq('r.owner', $clan->id),
+				$qb->expr()->lte('?3', 'e.term')
+			));
+
+		$qb->setParameter(1, 'occupation');
+		$qb->setParameter(2, 'pillaging');
+		$qb->setParameter(3, $now);
+		$reports =  $qb->getQuery()->getResult();
+
+		$count = 0;
+		foreach($reports as $report){
+			$data = Json::decode($report['data']);
+			if (isset($data->totalVictory) && $data->totalVictory){
+				$count++;
+			}
+		}
+
+		return $count;
+	}
+
+
+
+
+
+
+
+
 }

@@ -148,7 +148,7 @@ class Field extends BaseRepository
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Get fields under given coordinates
 	 * @param array of arrays containing coordinates
@@ -171,9 +171,9 @@ class Field extends BaseRepository
 			}, $coordinates)));
 			return $qb->getQuery()->getResult();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Finds 2-6 neighbours of field. If $map is given, it is searched instead of fetching the map from the database
 	 * @param Entities\Field
@@ -183,11 +183,11 @@ class Field extends BaseRepository
 	public function getFieldNeighbours (Entities\Field $field, $depth = 1, &$map = array())
 	{
 		$neighbours = array();
-		
+
 		for ($d = 1; $d <= $depth; $d++) {
 			$neighbours = array_merge($neighbours, $this->context->map->getCircuit($field->x, $field->y, $d));
 		}
-		
+
 		return $this->getCoordinateValues($neighbours, $map);
 	}
 
@@ -340,4 +340,24 @@ class Field extends BaseRepository
 		}
 		return $result;
 	}
+
+	/**
+	 * Determines whether the field given is neighbour of clan given
+	 * @param Entities\Field
+	 * @param Entities\Clan
+	 * @return bool
+	 */
+	public function isNeighbourOf (Entities\Field $field, Entities\Clan $clan = null)
+	{
+		$neighbours = $this->getFieldNeighbours($field);
+		foreach($neighbours as $neighbour){
+			if($neighbour->owner === $clan){
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
+
+

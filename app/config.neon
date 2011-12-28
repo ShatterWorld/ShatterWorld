@@ -61,14 +61,10 @@ common:
 				- foodGathering
 				- territoryExpansion
 				- spyForce
-
-		score:
-			- research
-			- unit
-			- quest
-			- territory
-			- production
-			- facility
+				- attackForce
+				- defenceForce
+				- dominance
+				- remoteExploration
 
 	doctrine:
 		proxyDir: %tempDir%/proxies

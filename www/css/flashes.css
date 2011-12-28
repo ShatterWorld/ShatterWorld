@@ -4,14 +4,21 @@
 	top: 0px;
 	z-index: 9999;
 	width: 100%;
-}
-
-#flashes .flash{
-	background: lightgrey;
 	cursor: pointer;
-	padding: 6px 3px;
+	background: #dfdfdf;
+	text-align:center;
 }
 
-#flashes .error{
-	background: red;
+#flashes .flash, #flashes .error {
+	padding: 6px 3px;
+	font-weight: bold;
+	text-decoration:underline;
+}
+
+#flashes .flash {
+	color: #438f04;
+}
+
+#flashes .error {
+	color: red;
 }

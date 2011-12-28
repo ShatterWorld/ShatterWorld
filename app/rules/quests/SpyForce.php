@@ -3,7 +3,7 @@ namespace Rules\Quests;
 use Rules\AbstractRule;
 use Entities;
 
-class SpyForce extends AbstractRule implements IQuest
+class SpyForce extends AbstractQuest implements IQuest
 {
 	public function getDescription ()
 	{
@@ -12,27 +12,9 @@ class SpyForce extends AbstractRule implements IQuest
 
 	public function getExplanation (Entities\Quest $quest)
 	{
-		$spyForce = $this->getContext()->stats->units->getSpyForce($quest->owner);
-		return 'Zvyš sílu rozvětky na ' . (pow($quest->level, 2) + 14) . ' (' . $spyForce . ' splněno)';
+		return 'Zvyš sílu rozvětky na ' . $this->getTarget($quest) . ' (' . $this->getStatus($quest) . ' splněno)';
 	}
 
-	public function getDependencies ($level = 1)
-	{
-		return array();
-	}
-
-	public function isCompleted (Entities\Quest $quest, $term = null)
-	{
-		if ($this->getContext()->stats->units->getSpyForce($quest->owner) >= pow($quest->level, 2) + 14) {
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-	public function processCompletion (Entities\Quest $quest)
-	{
-
-	}
 
 	public function getValue ($level = 1)
 	{
@@ -42,5 +24,20 @@ class SpyForce extends AbstractRule implements IQuest
 	public function getLevelCap ()
 	{
 		return 10;
+	}
+	public function getTarget (Entities\Quest $quest)
+	{
+		return pow($quest->level, 2) + 14;
+	}
+
+	public function getStatus (Entities\Quest $quest)
+	{
+		if (isset($this->status)){
+			return $this->status;
+		}
+		$status = $this->getContext()->stats->units->getSpyForce($quest->owner);
+		$this->status = $status;
+		return $status;
+
 	}
 }

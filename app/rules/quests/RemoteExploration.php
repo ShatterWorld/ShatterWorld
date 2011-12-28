@@ -3,31 +3,31 @@ namespace Rules\Quests;
 use Rules\AbstractRule;
 use Entities;
 
-class TerritoryExpansion extends AbstractQuest implements IQuest
+class RemoteExploration extends AbstractQuest implements IQuest
 {
 	public function getDescription ()
 	{
-		return 'Rozšíření území';
+		return 'Vzdálený průzkum';
 	}
 
 	public function getExplanation (Entities\Quest $quest)
 	{
-		return 'Rozšiř území klanu na ' . $this->getTarget($quest) . ' polí (' . $this->getStatus($quest) . ' splněno)';
+		return 'Proveď ' . $this->getTarget($quest) . ' průzkumů vzdálených alespoň 11 polí od velitelství (' . $this->getStatus($quest) . ' splněno)';
 	}
-
 
 	public function getValue ($level = 1)
 	{
-		return 800;
+		return 300 + pow($level, 2) * 200;
 	}
 
 	public function getLevelCap ()
 	{
-		return 10;
+		return 5;
 	}
+
 	public function getTarget (Entities\Quest $quest)
 	{
-		return pow($quest->level, 2) + 6;
+		return 10 * $quest->level + 5;
 	}
 
 	public function getStatus (Entities\Quest $quest)
@@ -35,9 +35,10 @@ class TerritoryExpansion extends AbstractQuest implements IQuest
 		if (isset($this->status)){
 			return $this->status;
 		}
-		$status = $this->getContext()->model->fieldRepository->getTerritorySize($quest->owner);
+		$status = $this->getContext()->model->getEventRepository()->getRemoteExploration($quest->owner, 11);
 		$this->status = $status;
 		return $status;
 
 	}
+
 }

@@ -41,9 +41,10 @@ abstract class Attack extends AbstractRule implements IEvent
 		}
 
 		$fieldRule = $this->getContext()->rules->get('field', $event->target->type);
-		$facilityRule = $this->getContext()->rules->get('facility', $event->target->facility);
-		$defenderDefense *= (1 + $fieldRule->getDefenceBonus()) * (1 + $facilityRule);
-
+		if ($event->target->facility){
+			$facilityRule = $this->getContext()->rules->get('facility', $event->target->facility);
+			$defenderDefense *= (1 + $fieldRule->getDefenceBonus()) * (1 + $facilityRule->getDefenceBonus());
+		}
 		$attackerCasualtiesCoefficient = $defenderDefense > 0 ? 1 - tanh($attackerPower / (5 * $defenderDefense)) : 0;
 		$defenderCasualtiesCoefficient = $defenderDefense > 0 ? tanh(2 * $attackerPower / $defenderDefense) : 1;
 		foreach ($event->getUnits() as $unit) {
@@ -106,7 +107,8 @@ abstract class Attack extends AbstractRule implements IEvent
 	{
 		return $event->target->owner !== NULL &&
 			$event->target->owner !== $event->owner &&
-			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance);
+			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance) &&
+			($this->getContext()->model->getFieldRepository()->isNeighbourOf($event->target, NULL) || $this->getContext()->model->getFieldRepository()->isNeighbourOf($event->target, $event->owner));
 	}
 
 	public function formatReport (Entities\Report $report)

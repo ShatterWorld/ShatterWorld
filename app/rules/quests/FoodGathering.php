@@ -3,7 +3,7 @@ namespace Rules\Quests;
 use Rules\AbstractRule;
 use Entities;
 
-class FoodGathering extends AbstractRule implements IQuest
+class FoodGathering extends AbstractQuest implements IQuest
 {
 	public function getDescription ()
 	{
@@ -12,27 +12,7 @@ class FoodGathering extends AbstractRule implements IQuest
 
 	public function getExplanation (Entities\Quest $quest)
 	{
-		$resources = $this->getContext()->model->resourceRepository->getResourcesArray($quest->owner);
-		$food = $resources['food']['balance'];
-		return 'Nashomáždi ' . pow($quest->level, 2) * 300 . ' jídla (' . $food .' splněno)';
-	}
-
-	public function getDependencies ($level = 1)
-	{
-		return array();
-	}
-
-	public function isCompleted (Entities\Quest $quest, $term = null)
-	{
-		if ($this->getContext()->model->resourceRepository->checkResources($quest->owner, array('food' => pow($quest->level, 2) * 300))) {
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-	public function processCompletion (Entities\Quest $quest)
-	{
-
+		return 'Nashomáždi ' . $this->getTarget($quest) . ' jídla (' . $this->getStatus($quest) .' splněno)';
 	}
 
 	public function getValue ($level = 1)
@@ -43,5 +23,21 @@ class FoodGathering extends AbstractRule implements IQuest
 	public function getLevelCap ()
 	{
 		return 5;
+	}
+	public function getTarget (Entities\Quest $quest)
+	{
+		return 700 + pow($quest->level, 2) * 300;
+	}
+
+	public function getStatus (Entities\Quest $quest)
+	{
+		if (isset($this->status)){
+			return $this->status;
+		}
+		$resources = $this->getContext()->model->resourceRepository->getResourcesArray($quest->owner);
+		$status = floor($resources['food']['balance']);
+		$this->status = $status;
+		return $status;
+
 	}
 }

@@ -29,7 +29,7 @@ interface IQuest extends IRule
 	 * @param DateTime
 	 * @return bool
 	 */
-	public function isCompleted (Entities\Quest $quest, $term);
+	public function isCompleted (Entities\Quest $quest, $term = null);
 
 	/**
 	 * Reward a clan for completing this quest
@@ -49,4 +49,18 @@ interface IQuest extends IRule
 	 * @return int
 	 */
 	public function getLevelCap ();
+
+	/**
+	 * Get target
+	 * @return int
+	 */
+	public function getTarget (Entities\Quest $quest);
+
+	/**
+	 * Get status
+	 * @return int
+	 */
+	public function getStatus (Entities\Quest $quest);
+
+
 }

@@ -27,7 +27,7 @@ class ReportPresenter extends BasePresenter
 
 	protected function createComponentResourceGrid ()
 	{
-		return new Grid($this, 'resourceGrid', $this->context->rules->getDescriptions('resource'));
+		return new Grid($this, 'resourceGrid', $this->context->rules->getAll('resource'));
 	}
 
 	protected function createComponentResearchGrid ()

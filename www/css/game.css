@@ -34,7 +34,7 @@
 	vertical-align: middle;
 }
 
-#infoBar #countdownBar, #infoBar #reportBar, #infoBar #orderBar {
+#infoBar #countdownBar, #infoBar #reportBar, #infoBar #orderBar, #infoBar #messageBar {
 	color: #ccc;
 	float: right;
 	margin-right: 15px;
@@ -89,6 +89,7 @@
 
 table {
 	width : 100%;
+	margin-bottom: 30px;
 }
 
 table .row1 {
@@ -108,6 +109,3 @@ table th {
 	vertical-align : middle;
 }
 
-table tr.data:hover {
-	background: #ffbe40;
-}

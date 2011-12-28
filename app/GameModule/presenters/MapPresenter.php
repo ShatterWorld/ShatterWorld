@@ -8,13 +8,6 @@ use MultipleConstructionsException;
 
 class MapPresenter extends BasePresenter
 {
-	public function actionTest ()
-	{
-		if ($this->getPlayerClan()->user->role !== 'admin'){
-			$this->flashMessage('Nemáte oprávnění vidět tuto mapu', 'error');
-			$this->redirect('Map:');
-		}
-	}
 
 	public function renderDefault ()
 	{
