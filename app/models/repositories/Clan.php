@@ -188,11 +188,11 @@ class Clan extends BaseRepository
 		foreach ($mediators as $mediator) {
 			if ($first) {
 				$first = false;
-				$distance += $map->calculateDistance($map->coords($origin), $map->coords($mediator));
+				$distance += $map->calculateDistance($map->coords($origin), $map->coords($mediator->getHeadquarters()));
 				$prev = $mediator;
 				continue;
 			}
-			$distance += $map->calculateDistance($map->coords($prev), $map->coords($mediator));
+			$distance += $map->calculateDistance($map->coords($prev), $map->coords($mediator->getHeadquarters()));
 			$prev = $mediator;
 		}
 		$distance += $map->calculateDistance($map->coords($prev), $map->coords($target));
