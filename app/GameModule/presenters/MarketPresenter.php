@@ -5,6 +5,7 @@ use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use InsufficientResourcesException;
 use Graph;
+use Pager;
 
 /**
  * A MarketPresenter
@@ -89,10 +90,12 @@ class MarketPresenter extends BasePresenter {
 
 	/**
 	 * Displays availible offers
+	 * @param int
 	 * @return void
 	 */
-	public function renderBuy ()
+	public function renderBuy ($page = 1)
 	{
+
 		$offers = $this->getOfferRepository()->findReachable($this->getPlayerClan());
 		$hasEnoughRes = array();
 		$profits = array();
@@ -107,7 +110,10 @@ class MarketPresenter extends BasePresenter {
 			$profits['cheap'][$key] = $offerRepository->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
 		}
 
-		$this->template->offers = $offers;
+		$pageLength = 10;
+		$this['pager']->setup(count($offers), $pageLength, $page);
+
+		$this->template->offers = array_slice($offers, $pageLength*($page-1), $pageLength);
 		$this->template->hasEnoughRes = $hasEnoughRes;
 		$this->template->profits = $profits;
 	}
@@ -194,6 +200,10 @@ class MarketPresenter extends BasePresenter {
 	}
 
 
+	protected function createComponentPager ()
+	{
+		return new Pager;
+	}
 
 
 

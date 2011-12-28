@@ -12,11 +12,12 @@
 		</tr>
 		{foreach $chart as $order =>$row}
 			<tr>
-				<td>{$order + 1}</td>
+				<td>{$offset + $order + 1}</td>
 				<td><a n:href="Clan:show $row['clanid']">{$row['clanname']}</a></td>
 				<td><a n:href="Profile:show $row['userid']">{$row['usernickname']}</a></td>
 				<td>{$row['sumvalue']}</td>
 			</tr>
 		{/foreach}
 	</table>
+	{control pager}
 {/block}
