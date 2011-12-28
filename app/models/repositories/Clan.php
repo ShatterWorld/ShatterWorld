@@ -38,10 +38,12 @@ class Clan extends BaseRepository
 		if (!$user) {
 			return NULL;
 		} else {
-			$activeClan = $user->getActiveClan();
-			if (!$activeClan && ($clans = $user->getClans())) {
-				$activeClan = array_pop($clans);
-				$this->context->model->userService->update($user, array('activeClan' => $activeClan));
+			if (!($activeClan = $user->getActiveClan())) {
+				$clans = $user->getClans();
+				if (!$clans->isEmpty()) {
+					$activeClan = $clans->first();
+					$this->context->model->userService->update($user, array('activeClan' => $activeClan));
+				}
 			}
 			return $activeClan;
 		}
