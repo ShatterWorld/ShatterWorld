@@ -29,7 +29,7 @@
 			<tr class="row{($i++ % 2) + 1} {if !$message->read}unread{/if}">
 				<td class="sender"><a n:href="Profile:show $message->sender->id">{$message->sender->nickname}</a></td>
 				<td class="subject"><a href="{link Message:show $message->id}">{$message->subject}</a></td>
-				<td class="time">{$message->sentTime|date:"d.m.Y H:i"}</td>
+				<td class="time">{$message->sentTime|date:$dateFormat}</td>
 				{if !$message->read}
 					<td class="markAs"><a n:href="markRead! $message->id">Přečtenou</a></td>
 				{else}

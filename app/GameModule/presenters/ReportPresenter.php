@@ -8,10 +8,11 @@ class ReportPresenter extends BasePresenter
 {
 	public function renderDefault ($page = 1)
 	{
-		$pageLength = 10;
+		$pageLength = $this->context->params['game']['setting']['pageLength']['report'];
 		$this['pager']->setup($this->getReportRepository()->getCount($this->getPlayerClan()), $pageLength, $page);
 		$this->template->reports = $this->getReportRepository()->getPage($this->getPlayerClan(), $pageLength, $page);
 		$this->template->rules = $this->context->rules;
+		$this->template->dateFormat = $this->context->params['game']['setting']['dateFormat']['report'];
 	}
 
 	public function handleMarkRead ()

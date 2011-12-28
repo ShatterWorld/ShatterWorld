@@ -18,7 +18,7 @@ class ScoreboardPresenter extends BasePresenter {
 	*/
 	public function renderDefault ($page = 1)
 	{
-		$pageLength = 10;
+		$pageLength = $this->context->params['game']['setting']['pageLength']['scoreboard'];
 		$this['pager']->setup($this->context->model->getClanRepository()->getClanCount(), $pageLength, $page);
 
 		$this->template->chart = $this->getScoreRepository()->getClanPage($pageLength, $page);
@@ -32,7 +32,7 @@ class ScoreboardPresenter extends BasePresenter {
 	*/
 	public function renderAlliance ($page = 1)
 	{
-		$pageLength = 10;
+		$pageLength = $this->context->params['game']['setting']['pageLength']['scoreboard'];
 		$this['pager']->setup($this->context->model->getAllianceRepository()->getAllianceCount(), $pageLength, $page);
 
 		$this->template->chart = $this->getScoreRepository()->getAlliancePage($pageLength, $page);

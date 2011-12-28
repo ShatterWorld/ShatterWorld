@@ -75,6 +75,7 @@ class MessagePresenter extends BasePresenter {
 	public function renderDefault ()
 	{
 		$this->template->messages = $this->getMessageRepository()->getReceivedMessages($this->getPlayerClan()->user->id);
+		$this->template->dateFormat = $this->context->params['game']['setting']['dateFormat']['message']['received'];
 	}
 
 	/**
@@ -84,6 +85,7 @@ class MessagePresenter extends BasePresenter {
 	public function renderSent ()
 	{
 		$this->template->messages = $this->getMessageRepository()->getSentMessages($this->getPlayerClan()->user->id);
+		$this->template->dateFormat = $this->context->params['game']['setting']['dateFormat']['message']['sent'];
 	}
 
 	/**
@@ -119,6 +121,7 @@ class MessagePresenter extends BasePresenter {
 	{
 		$message = $this->getMessageRepository()->find($messageId);
 		$this->template->message = $message;
+		$this->template->dateFormat = $this->context->params['game']['setting']['dateFormat']['message']['show'];
 		$this->getMessageService()->update($message, array('read' => true));
 	}
 
