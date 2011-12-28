@@ -33,6 +33,8 @@ common:
 			baseTradingRadius: 7
 			baseMerchantSpeed: 1
 			baseTradeProfit: 0.01
+			clanQuota: 15
+			allianceMemberQuota: 10
 
 		ruleAliases:
 			unit: Rules\Units

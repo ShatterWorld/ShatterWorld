@@ -45,7 +45,9 @@
 				{/foreach}
 			</table>
 		{/if}
-
+		{if count($playerClan->user->clans) < $clanQuota}
+			<a href="{link Clan:new}">Založit další klan</a>
+		{/if}
 		{if $playerClan->id === $clan->id}
 			<a href="{link Clan:delete}">Smazat klan</a>
 		{/if}

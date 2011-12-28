@@ -12,71 +12,59 @@ use Nette\Diagnostics\Debugger;
 class ClanPresenter extends BasePresenter {
 
 	/**
-	* Show players clan
-	* @return void
-	*/
+	 * Show players clan
+	 * @return void
+	 */
 	public function actionDefault ()
 	{
 		$this->redirect('Clan:show', $this->getPlayerClan()->id);
 	}
 
 	/**
-	* Show action
-	* @param int
-	* @return void
-	*/
+	 * Show action
+	 * @param int
+	 * @return void
+	 */
 	public function actionShow ($clanId = null)
 	{
-		if ($this->getPlayerClan()){
-
-			if ($clanId === null){
+		if ($this->getPlayerClan()) {
+			if ($clanId === null) {
 				$this->redirect('Clan:show', $this->getPlayerClan()->id);
 			}
-		}
-		else{
+		} else {
 			$this->redirect('Clan:new');
 		}
 	}
-
+	
 	/**
-	* Show render
-	* @param int
-	* @return void
-	*/
+	 * Show render
+	 * @param int
+	 * @return void
+	 */
 	public function renderShow ($clanId)
 	{
-		if ($clan = $this->context->model->getClanRepository()->findOneById($clanId)){
+		if ($clan = $this->context->model->getClanRepository()->findOneById($clanId)) {
 			$playerClan = $this->getPlayerClan();
 
-			if (($clan->id === $playerClan->id || $clan->alliance && $playerClan->alliance && $clan->alliance->id === $playerClan->alliance->id)){
+			if (($clan->id === $playerClan->id || $clan->alliance && $playerClan->alliance && $clan->alliance->id === $playerClan->alliance->id)) {
 				$this->template->scoreRules = $this->context->rules->getAll('score');
 				$this->template->clanScores = $this->context->model->getScoreRepository()->getClanScoreArray($clan);
 			}
 
 			$this->template->clan = $clan;
 			$this->template->totalClanScore = $this->context->model->getScoreRepository()->getTotalClanScore($this->getPlayerClan());
-			if ($profile = $this->context->model->getProfileRepository()->findOneByUser($clan->user->id)){
+			if ($profile = $this->context->model->getProfileRepository()->findOneByUser($clan->user->id)) {
 				$this->template->profile = $profile;
 			}
 			$this->template->playerClan = $playerClan;
+		$this->template->clanQuota = $this->context->params['game']['stats']['clanQuota'];
 		}
 	}
 
 	/**
-	* Action for new clan
-	* @return void
-	*/
-	public function actionNew ()
-	{
-		if ($this->getPlayerClan()) {
-			$this->redirect('Clan:');
-		}
-	}
-
-	/**
-	* Creates the New form
-	* @return Nette\Application\UI\Form
-	*/
+	 * Creates the New form
+	 * @return Nette\Application\UI\Form
+	 */
 	protected function createComponentNewClanForm ()
 	{
 		$form = new Form();
@@ -88,13 +76,13 @@ class ClanPresenter extends BasePresenter {
 	}
 
 	/**
-	* New clan slot
-	* @param Nette\Application\UI\Form
-	* @return void
-	*/
+	 * New clan slot
+	 * @param Nette\Application\UI\Form
+	 * @return void
+	 */
 	public function submitNewClanForm (Form $form)
 	{
-		if (!$this->getPlayerClan()) {
+		if (count($this->getPlayerClan()->user->clans) < $this->context->params['game']['stats']['clanQuota']) {
 			$data = $form->getValues();
 			$data['user'] = $this->getUserRepository()->find($this->getUser()->getId());
 			$this->getService('clanService')->create($data);
@@ -105,9 +93,9 @@ class ClanPresenter extends BasePresenter {
 	}
 
 	/**
-	* Creates the Delete form
-	* @return Nette\Application\UI\Form
-	*/
+	 * Creates the Delete form
+	 * @return Nette\Application\UI\Form
+	 */
 	protected function createComponentDeleteClanForm ()
 	{
 		$form = new Form();
@@ -117,10 +105,10 @@ class ClanPresenter extends BasePresenter {
 	}
 
 	/**
-	* Delete clan slot
-	* @param Nette\Application\UI\Form
-	* @return void
-	*/
+	 * Delete clan slot
+	 * @param Nette\Application\UI\Form
+	 * @return void
+	 */
 	public function submitDeleteClanForm (Form $form)
 	{
 		if ($this->getPlayerClan()) {
@@ -128,13 +116,5 @@ class ClanPresenter extends BasePresenter {
 			$this->flashMessage('Klan byl smazán.');
 		}
 		$this->redirect('Clan:new');
-
 	}
-
-
-
-
-
-
-
 }
