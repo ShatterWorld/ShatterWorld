@@ -4,7 +4,6 @@
 
 {block #content}
 	{if $reports}
-		{dump $reports}
 		<a n:href="markRead!">Označit všechna hlášení jako přečtená</a>
 		{control pager}
 		<div n:foreach="$reports as $report" class="report {$report->read ? 'read' : 'unread'}">
