@@ -34,6 +34,17 @@ class MapPresenter extends BasePresenter
 		$this->payload->fields = $this->context->model->fieldRepository->getMapArray();
 		$cache = new Nette\Caching\Cache($this->context->cacheStorage, 'Map');
 		$this->payload->ranks = $cache->load('FieldRanks');
+		$this->payload->maxRank = $this->context->map->getHighestRankedField();
 		$this->sendPayload();
+	}
+	
+	protected function createComponentSwitchOverlayForm ()
+	{
+		$form = new Form;
+		$form->addSelect('overlay', 'Pohled', array(
+			'default' => 'Výchozí',
+			'rank' => 'Rozmísťování klanů'
+		));
+		return $form;
 	}
 }
