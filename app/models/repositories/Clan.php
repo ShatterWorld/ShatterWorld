@@ -192,10 +192,10 @@ class Clan extends BaseRepository
 				$prev = $mediator;
 				continue;
 			}
-			$distance += $map->calculateDistance($map->coords($prev), $map->coords($mediator->getHeadquarters()));
+			$distance += $map->calculateDistance($map->coords($prev->getHeadquarters()), $map->coords($mediator->getHeadquarters()));
 			$prev = $mediator;
 		}
-		$distance += $map->calculateDistance($map->coords($prev), $map->coords($target));
+		$distance += $map->calculateDistance($map->coords($prev->getHeadquarters()), $map->coords($target));
 		return $distance;
 	}
 }
