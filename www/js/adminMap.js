@@ -38,11 +38,13 @@ Game.adminMap = {
 				}
 				if (Game.utils.isset(this.ranks[field.coordX]) && Game.utils.isset(this.ranks[field.coordX][field.coordY])) {
 					var rank = this.ranks[field.coordX][field.coordY];
-					var color = Math.floor((rank) * 255).toString(16);
-					if (color.length < 2) {color = '0' + color};
-					return '#' + color + color + '00';
+					if (rank > 0) {
+						return '#ffff00';
+					} else {
+						return '#00ccff';
+					}
 				} else {
-					return '#cdcdcd';
+					return '#ffffff';
 				}
 			default:
 				if (field.owner) {
