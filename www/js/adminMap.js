@@ -1,9 +1,11 @@
 var Game = Game || {};
 
 Game.adminMap = {
-	
+
 	overlay: 'default',
-	
+
+	mapSize : 0,
+
 	/**
 	 * Calculates somehow x-position of the field
 	 * @param field
@@ -21,9 +23,9 @@ Game.adminMap = {
 	 */
 	calculateYPos : function (field)
 	{
-		return (field['coordX'] * -3) + (field['coordY'] * 3) + 300;
+		return (field['coordX'] * -3) + (field['coordY'] * 3);
 	},
-	
+
 	getColor: function (field)
 	{
 		switch (this.overlay) {
@@ -51,38 +53,54 @@ Game.adminMap = {
 		}
 		return '#00ff00';
 	},
-	
+
 	render: function ()
 	{
 		this.fetchMap(function () {
 			Game.adminMap.repaint();
 		});
-		
+
 	},
-	
+
 	repaint: function ()
 	{
+		var max = Game.adminMap.mapSize
+		var fieldWidth = 6;
+		var fieldHeight = 4;
+
+		var S = Game.adminMap.map[max/2][max/2]; //center field
+		var xPosS = Game.adminMap.calculateXPos(S);
+		var yPosS = Game.adminMap.calculateYPos(S);
+
+		var dX = xPosS - 2*fieldWidth  - parseInt($('#mapContainer').css('width')) / 2;
+		var dY = yPosS - 2*fieldHeight - parseInt($('#mapContainer').css('height'))/2;
+
 		$.each(Game.adminMap.map, function (x, row) {
 			$.each(row, function (y, field) {
 				var element = $('<div>').css({
 					position: 'absolute',
-					left: Game.adminMap.calculateXPos(field),
-					top: Game.adminMap.calculateYPos(field),
+					left: Game.adminMap.calculateXPos(field) - dX,
+					top: Game.adminMap.calculateYPos(field) - dY,
 					background: Game.adminMap.getColor(field),
-					width: 6,
-					height: 4
+					width: fieldWidth,
+					height: fieldHeight
 				});
 				field.element = element;
 				$('#map').append(element);
 			})
 		});
+
+		$('#mapContainer').scrollLeft(dX + fieldWidth);
+		$('#mapContainer').scrollTop(sY + fieldHeight);
+
 	},
-	
+
 	fetchMap: function (success)
 	{
 		if (!success) success = function () {};
 		Game.utils.signal('fetchMap', {}, function (data) {
 			Game.adminMap.map = data.fields;
+			Game.adminMap.mapSize = data.mapSize;
 			Game.adminMap.ranks = data.ranks;
 			Game.adminMap.maxRank = data.maxRank;
 			success(data);
