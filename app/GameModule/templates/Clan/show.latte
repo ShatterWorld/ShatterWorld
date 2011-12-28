@@ -24,13 +24,7 @@
 			</tr>
 			<tr>
 				<th>Hráč</th>
-				<td>
-					{ifset $profile}
-						<a n:href="Profile:show $profile->id">{$clan->user->nickname}</a>
-					{else}
-						{$clan->user->nickname}
-					{/ifset}
-				</td>
+				<td><a n:href="Profile:show $clan->user->id">{$clan->user->nickname}</a></td>
 			</tr>
 		</table>
 
