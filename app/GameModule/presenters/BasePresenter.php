@@ -65,7 +65,9 @@ abstract class BasePresenter extends \BasePresenter
 		$form = new Nette\Application\UI\Form;
 		$clans = array();
 		foreach ($this->getContext()->model->getUserRepository()->getActiveUser()->getClans() as $clan) {
-			$clans[$clan->id] = $clan->name;
+			if (!$clan->deleted) {
+				$clans[$clan->id] = $clan->name;
+			}
 		}
 		$form->addSelect('clan', NULL, $clans);
 		$form['clan']->setValue($this->getPlayerClan()->id);

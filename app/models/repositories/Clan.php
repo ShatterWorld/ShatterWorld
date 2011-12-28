@@ -35,7 +35,16 @@ class Clan extends BaseRepository
 	public function getPlayerClan ()
 	{
 		$user = $this->context->model->getUserRepository()->getActiveUser();
-		return $user ? $user->getActiveClan() : NULL;
+		if (!$user) {
+			return NULL;
+		} else {
+			$activeClan = $user->getActiveClan();
+			if (!$activeClan && ($clans = $user->getClans())) {
+				$activeClan = array_pop($clans);
+				$this->context->model->userService->update($user, array('activeClan' => $activeClan));
+			}
+			return $activeClan;
+		}
 	}
 
 
@@ -137,8 +146,12 @@ class Clan extends BaseRepository
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('o.id')->from('Entities\Field', 'f')->innerJoin('f.owner', 'o')
-			->where($qb->expr()->in('f.id', $this->context->model->getFieldRepository()->getVisibleFieldsIds($clan)))
+			->where($qb->expr()->andX(
+				$qb->expr()->in('f.id', $this->context->model->getFieldRepository()->getVisibleFieldsIds($clan)),
+				$qb->expr()->eq('o.deleted', '?1')
+			))
 			->groupBy('o.id');
+		$qb->setParameter(1, FALSE);
 		return array_map(function ($val) {return $val['id'];}, $qb->getQuery()->getArrayResult());
 	}
 
