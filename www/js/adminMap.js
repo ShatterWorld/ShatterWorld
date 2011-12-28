@@ -64,6 +64,7 @@ Game.adminMap = {
 
 	repaint: function ()
 	{
+<<<<<<< HEAD
 		var max = Game.adminMap.mapSize
 		var fieldWidth = 6;
 		var fieldHeight = 4;
@@ -75,6 +76,9 @@ Game.adminMap = {
 		var dX = xPosS - 2*fieldWidth  - parseInt($('#mapContainer').css('width')) / 2;
 		var dY = yPosS - 2*fieldHeight - parseInt($('#mapContainer').css('height'))/2;
 
+=======
+		$('#map').html('');
+>>>>>>> c92a6fc90d6a8231c2198686e6a4fa459a1ef959
 		$.each(Game.adminMap.map, function (x, row) {
 			$.each(row, function (y, field) {
 				var element = $('<div>').css({
