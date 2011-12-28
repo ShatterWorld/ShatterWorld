@@ -175,6 +175,8 @@ class Clan extends BaseRepository
 	 */
 	public function calculateTotalDistance ($origin, $target, $mediators)
 	{
+		$origin = $origin->getHeadquarters();
+		$target = $target->getHeadquarters();
 		$map = $this->context->map;
 		if (count($mediators) <= 0) {
 			return $map->calculateDistance($map->coords($origin), $map->coords($target));
