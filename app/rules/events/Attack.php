@@ -107,7 +107,8 @@ abstract class Attack extends AbstractRule implements IEvent
 	{
 		return $event->target->owner !== NULL &&
 			$event->target->owner !== $event->owner &&
-			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance);
+			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance) &&
+			($this->getContext()->model->getFieldRepository()->isNeighbourOf($event->target, NULL) || $this->getContext()->model->getFieldRepository()->isNeighbourOf($event->target, $event->owner));
 	}
 
 	public function formatReport (Entities\Report $report)
