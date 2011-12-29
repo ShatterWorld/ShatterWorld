@@ -26,7 +26,7 @@ class Resources extends AbstractStat
 			$result[$resource] = 0;
 		}
 		foreach ($this->getContext()->model->getFieldRepository()->findByOwner($clan->id) as $field) {
-			if ($field->facility && !$field->facility->disabled) {
+			if ($field->facility && !$field->facility->damaged) {
 				$production = $this->getContext()->rules->get('facility', $field->facility->type)->getProduction($field->facility->level);
 				$fieldBonus = $this->getContext()->rules->get('field', $field->type)->getProductionBonuses();
 				foreach ($production as $resource => $value) {
