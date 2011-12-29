@@ -49,17 +49,6 @@ abstract class BasePresenter extends \BasePresenter
 		ksort($this->template->resources);
 	}
 
-	/**
-	 * Logout signal
-	 * @return void
-	 */
-	public function handleLogout ()
-	{
-		$this->getUser()->logout(TRUE);
-		$this->flashMessage("Odhlášen");
-		$this->redirect(':Front:Homepage:');
-	}
-
 	protected function createComponentChooseClanForm ()
 	{
 		$form = new Nette\Application\UI\Form;
@@ -92,16 +81,6 @@ abstract class BasePresenter extends \BasePresenter
 	public function getPlayerProfile ()
 	{
 		return $this->getProfileRepository()->findOneByUser($this->getUser()->getId());
-	}
-
-	/**
-	 * Returns players clan
-	 * @return Entities\Clan
-	 */
-	public function getPlayerClan ()
-	{
-		$clan = $this->getClanRepository()->getPlayerClan();
-		return ($clan === null || $clan->deleted) ? null : $clan;
 	}
 
 	/**

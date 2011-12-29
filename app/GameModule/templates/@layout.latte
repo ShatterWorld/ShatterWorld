@@ -80,13 +80,13 @@
 
 				<div id="bannerMenu">
 					<ul>
-						<li><a href="">Nastavení</a> |</li>
-						<li><a href="">Wiki</a> |</li>
-						<li><a href="">Návod</a> |</li>
-						<li><a href="">O projektu</a> |</li>
-						<li><a href="">Přispějte</a> |</li>
-						<li><a href="">Výhody</a> |</li>
-						<li><a href="">Účet</li>
+						<li><a n:href="Dashboard:">Hra</a> |</li>
+						<li><a n:href=":Front:Reference:">Návod</a> |</li>
+						<li><a n:href=":Front:Reference:faq">FAQ</a> |</li>
+						<li><a href="https://github.com/ShatterWorld/ShatterWorld/wiki" target="_blank">Wiki</a> |</li>
+						<li><a n:href=":Front:Donate:">Přispějte</a> |</li>
+						<li><a n:href=":Front:Author:">Autoři</a> |</li>
+						<li><a n:href=":Front:Licence:">Licence</a></li>
 					</ul>
 				</div>
 
@@ -118,7 +118,7 @@
 				{snippet reports}
 					<div id="reportBar" class="hasTooltip" n:if="$reportCount > 0">
 						<span class="text">
-							<a n:href="Report:" class="text"><img src="{$basePath}/images/icons/reports.png" />{$reportCount}</a>
+							<a id="reportLink" n:href="Report:" class="text"><img src="{$basePath}/images/icons/reports.png" />{$reportCount}</a>
 						</span>
 					</div>
 					<div class="tooltip" data-for="reportBar">
@@ -167,14 +167,6 @@
 
 
 			<div id="menu">
-				<div class="submenu{ifCurrent Dashboard:*} active{/ifCurrent}">
-					<h3>Novinky</h3>
-
-					<ul>
-						<li><a href="{link Dashboard:}">Aktuality</a></li>
-					</ul>
-				</div>
-
 				<div class="submenu{ifCurrent Clan:*} active{/ifCurrent}{ifCurrent Alliance:*} active{/ifCurrent}{ifCurrent Profile:*} active{/ifCurrent}{ifCurrent Quest:*} active{/ifCurrent}">
 					<h3>Ty</h3>
 					<ul>

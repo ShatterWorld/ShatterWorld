@@ -43,6 +43,16 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		return $form;
 	}
 
+	/**
+	 * Returns players clan
+	 * @return Entities\Clan
+	 */
+	public function getPlayerClan ()
+	{
+		$clan = $this->getClanRepository()->getPlayerClan();
+		return ($clan === null || $clan->deleted) ? null : $clan;
+	}
+
 	public function submitLoginForm ($form)
 	{
 		$data = $form->getValues();
@@ -61,6 +71,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 		}
 		$this->flashMessage("Úspěšně přihlášen");
 		$this->redirect(":Game:Dashboard:");
+	}
+
+	/**
+	 * Logout signal
+	 * @return void
+	 */
+	public function handleLogout ()
+	{
+		$this->getUser()->logout(TRUE);
+		$this->flashMessage("Odhlášen");
+		$this->redirect(':Front:Homepage:');
 	}
 
 	public function jsonEncode ($value)
