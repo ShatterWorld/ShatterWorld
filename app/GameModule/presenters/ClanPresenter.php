@@ -3,7 +3,7 @@ namespace GameModule;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
-
+use Exception;
 
 /**
  * Clan Presenter
@@ -80,10 +80,15 @@ class ClanPresenter extends BasePresenter {
 	public function submitNewClanForm (Form $form)
 	{
 		if ($this->getPlayerClan() === null || count($this->getPlayerClan()->user->clans) < $this->context->params['game']['stats']['clanQuota']) {
-			$data = $form->getValues();
-			$data['user'] = $this->getUserRepository()->find($this->getUser()->getId());
-			$this->getService('clanService')->create($data);
-			$this->flashMessage(sprintf('Klan %s byl založen.', $data['name']));
+			try{
+				$data = $form->getValues();
+				$data['user'] = $this->getUserRepository()->find($this->getUser()->getId());
+				$this->getService('clanService')->create($data);
+				$this->flashMessage(sprintf('Klan %s byl založen.', $data['name']));
+			} catch (Exception $e) {
+				$this->flashMessage('Klan se nepovedlo vytvořit, pravděpodobně je mapa již plná', 'error');
+				$this->redirect('Clan:');
+			}
 
 		}
 		$this->redirect('Clan:');
