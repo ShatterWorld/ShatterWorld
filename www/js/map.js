@@ -140,140 +140,6 @@ Game.map = {
 		return this.map[x][y];
 	},
 
-
-	/**
-	 * Calculates somehow x-position of the field
-	 * @param field
-	 * @return integer
-	 */
-	calculateMinimisedXPos : function (field) {
-		return (field['coordX'] * 7) + (field['coordY'] * 7);
-	},
-
-	/**
-	 * Calculates somehow y-position of the field
-	 * @param field
-	 * @return integer
-	 */
-	calculateMinimisedYPos : function (field) {
-		return (field['coordX'] * -2) + (field['coordY'] * 2);
-	},
-
-
-	/**
-	 * The minimised width of field
-	 * @var integer
-	 */
-	minimisedFieldWidth : 6,
-
-	/**
-	 * The minimised height of field
-	 * @var integer
-	 */
-	minimisedFieldHeight : 4,
-
-	/**
-	 * minimiseding render
-	 */
-	minimisedRender : function ()
-	{
-
-		/**
-		 * ajax that gets JSON data of visibleFields
-		 */
-		$.get('?do=fetchMap', function(data) {
-			Game.map.map = data['fields'];
-			Game.map.clan = data['clanId'];
-			Game.map.alliance = data['allianceId'];
-
-			/**
-			 * finds the center and calculate dX and dY
-			 */
-			$.each(data['fields'], function(rowKey, row) {
-				$.each(row, function(key, field) {
-					if(field['owner'] != null){
-						if (Game.map.clan == field['owner']['id']){
-							if(field['facility'] != null){
-								if (field['facility'] == 'headquarters'){
-									var posX = Game.map.calculateMinimisedXPos(field);
-									var posY = Game.map.calculateMinimisedYPos(field);
-									Game.map.dX = posX - Game.map.getMapContainerWidth()/2 + Game.map.minimisedFieldWidth/2;
-									Game.map.dY = posY - Game.map.getMapContainerHeight()/2 + 2*Game.map.minimisedFieldHeight;
-									return false;
-								}
-							}
-
-						}
-					}
-
-				});
-			});
-
-			/**
-			 * checks negative coords. of fields, slides them and sets scrollX and scrollY
-			 */
-			$.each(data['fields'], function(rowKey, row) {
-				$.each(row, function(key, field) {
-					if(Game.map.calculateMinimisedXPos(field) - Game.map.dX < 0){
-						Game.map.dX -= Game.map.minimisedFieldWidth;
-						Game.map.scrollX += Game.map.minimisedFieldWidth;
-					}
-					if(Game.map.calculateMinimisedYPos(field) - Game.map.dY < 0){
-						Game.map.dY -= Game.map.minimisedFieldHeight;
-						Game.map.scrollY += Game.map.minimisedFieldHeight;
-					}
-
-				});
-			});
-
-			$.each(data['fields'], function(rowKey, row) {
-				$.each(row, function(key, field) {
-
-					var posX = Game.map.calculateMinimisedXPos(field) - Game.map.dX;
-					var posY = Game.map.calculateMinimisedYPos(field) - Game.map.dY;
-					var z = field['coordX']*field['coordY'];
-
-					var borderType = 'neutral';
-
-					var img = "other";
-					if(field['owner'] === null){
-						img = "neutral";
-					}
-					else if(Game.map.clan == field['owner']['id']){
-						img = "mine";
-					}
-					else{
-						img = "other";
-					}
-
-
-
-					var background = "url('"+basePath+"/images/fields/hex_minimised_"+img+".png')";
-					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
-					//var divStyle = 'width: '+minimisedFieldWidth+'px; height: '+minimisedFieldHeight+'px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
-					var divStyle = 'width: 6px; height: 4px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
-					div.attr('style', divStyle);
-
-					$('#map').append(div);
-
-				});
-
-				/**
-				 * slides the sliders
-				 */
-				$('#mapContainer').scrollLeft(Game.map.scrollX);
-				$('#mapContainer').scrollTop(Game.map.scrollY);
-			});
-
-			var canvasWidth = Game.map.maxXPos + Game.map.minimisedFieldWidth;
-			var canvasHeight = Game.map.maxYPos + Game.map.minimisedFieldHeight;
-			Game.map.overlayDiv = $('<div id="overlay">');
-			Game.map.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight, 'position' : 'absolute', 'left' : 0, 'top' : 0});
-			$('#map').append(Game.map.overlayDiv);
-			Game.map.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
-		});
-	},
-
 	/**
 	 * Cleans the #map and rerender the map (using db-data)
 	 * @return void
@@ -303,7 +169,7 @@ Game.map = {
 					if(field['owner'] != null){
 						if (Game.map.clan == field['owner']['id']){
 							if(field['facility'] != null){
-								if (field['facility'] == 'headquarters'){
+								if (field['facility']['type'] == 'headquarters'){
 									var posX = Game.map.calculateXPos(field);
 									var posY = Game.map.calculateYPos(field);
 									Game.map.dX = posX - Game.map.getMapContainerWidth()/2 + Game.map.fieldWidth/2;
@@ -377,8 +243,8 @@ Game.map = {
 					if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
 						if (field['facility'] !== null){
 							text.append(fieldLabel);
-							Game.descriptions.translate('facility', field['facility'], fieldLabel);
-							if(field['facility'] !== 'headquarters'){
+							Game.descriptions.translate('facility', field['facility']['type'], fieldLabel);
+							if(field['facility'].type !== 'headquarters'){
 								text.append(' ('+field['level']+')');
 							}
 						}
@@ -386,7 +252,7 @@ Game.map = {
 
 					if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
 						if (field['facility'] !== null){
-							var img = $('<img src="' + basePath + '/images/facilities/' + field['facility'] + '.png"/>');
+							var img = $('<img src="' + basePath + '/images/facilities/' + field['facility']['type'] + '.png"/>');
 							div.append(img);
 						}
 					}
@@ -777,11 +643,11 @@ Game.map.tooltip = {
 
 		if ((ownerId !== null && ownerId == Game.map.clan) || (allianceId !== null && allianceId == Game.map.alliance)){
 			if (field['facility'] != null){
-				facility = field['facility'];
+				facility = field['facility'].type;
 			}
 
-			if (field['level'] !== null && field['facility'] !== null && field['facility'] != 'headquarters'){
-				level = field['level'];
+			if (field.facility !== null && field.facility['level'] !== null && field['facility'] !== null && field['facility'].type != 'headquarters'){
+				level = field.facility['level'];
 			}
 
 		}
@@ -904,17 +770,17 @@ Game.map.contextMenu = {
 				actions.push(this.actions.spy);
 			}
 			if (field['facility'] !== null) {
-				if (field['facility'] !== 'headquarters') {
+				if (field['facility'].type !== 'headquarters') {
 					actions.push(this.actions.upgradeFacility);
 					actions.push(this.actions.destroyFacility);
-					if(field['level'] > 1){
+					if(field.facility['level'] > 1){
 						actions.push(this.actions.downgradeFacility);
 					}
 				}
 			} else {
 				actions.push(this.actions.buildFacility);
 			}
-			if ((field['facility'] === null) || (field['facility'] !== null && field['facility'] !== 'headquarters')){
+			if ((field['facility'] === null) || (field['facility'] !== null && field['facility'].type !== 'headquarters')){
 				actions.push(this.actions.leaveField);
 			}
 		}
@@ -1011,9 +877,9 @@ Game.map.contextMenu = {
 				var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
 				dialog.setTitle('Vylepšit budovu');
 				var label = $('<span>');
-				Game.descriptions.translate('facility', target.facility, label);
-				dialog.setBody($('<span>').append(label).append(' (' + (target.level + 1) + ')'));
-				dialog.setCost(Game.map.contextMenu.upgrades[target.facility][target.level + 1].cost, Game.map.contextMenu.upgrades[target.facility][target.level + 1].time);
+				Game.descriptions.translate('facility', target.facility.type, label);
+				dialog.setBody($('<span>').append(label).append(' (' + (target.facility.level + 1) + ')'));
+				dialog.setCost(Game.map.contextMenu.upgrades[target.facility][target.facility.level + 1].cost, Game.map.contextMenu.upgrades[target.facility.type][target.facility.level + 1].time);
 				dialog.setSubmit({
 					text: 'Zahájit stavbu',
 					click: function () {
@@ -1035,9 +901,9 @@ Game.map.contextMenu = {
 				var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
 				dialog.setTitle('Downgradovat budovu');
 				var label = $('<span>');
-				Game.descriptions.translate('facility', target.facility, label);
+				Game.descriptions.translate('facility', target.facility.type, label);
 				dialog.setBody(label);
-				dialog.setCost(Game.map.contextMenu.downgrades[target.facility][target.level - 1].cost, Game.map.contextMenu.downgrades[target.facility][target.level - 1].time);
+				dialog.setCost(Game.map.contextMenu.downgrades[target.facility.type][target.facility.level - 1].cost, Game.map.contextMenu.downgrades[target.facility.type][target.facility.level - 1].time);
 				dialog.setSubmit({
 					text: 'Zahájit stavbu',
 					click: function () {
@@ -1059,9 +925,9 @@ Game.map.contextMenu = {
 				var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
 				dialog.setTitle('Strhnout budovu');
 				var label = $('<span>');
-				Game.descriptions.translate('facility', target.facility, label);
+				Game.descriptions.translate('facility', target.facility.type, label);
 				dialog.setBody(label);
-				dialog.setCost(Game.map.contextMenu.demolitions[target.facility][target.level].cost, Game.map.contextMenu.demolitions[target.facility][target.level].time);
+				dialog.setCost(Game.map.contextMenu.demolitions[target.facility.type][target.facility.level].cost, Game.map.contextMenu.demolitions[target.facility.type][target.facility.level].time);
 				dialog.setSubmit({
 					text: 'Zahájit demolici',
 					click: function () {

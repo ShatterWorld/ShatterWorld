@@ -41,9 +41,9 @@ abstract class Attack extends AbstractRule implements IEvent
 		}
 
 		$fieldRule = $this->getContext()->rules->get('field', $event->target->type);
-		if ($event->target->facility){
-			$facilityRule = $this->getContext()->rules->get('facility', $event->target->facility);
-			$defenderDefense *= (1 + $fieldRule->getDefenceBonus()) * (1 + $facilityRule->getDefenceBonus());
+		if ($facility = $event->target->facility){
+			$facilityRule = $this->getContext()->rules->get('facility', $facility->type);
+			$defenderDefense *= (1 + $fieldRule->getDefenceBonus()) * (1 + $facilityRule->getDefenceBonus($facility->level));
 		}
 		$attackerCasualtiesCoefficient = $defenderDefense > 0 ? 1 - tanh($attackerPower / (5 * $defenderDefense)) : 0;
 		$defenderCasualtiesCoefficient = $defenderDefense > 0 ? tanh(2 * $attackerPower / $defenderDefense) : 1;

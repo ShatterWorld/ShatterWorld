@@ -78,78 +78,6 @@ class Field extends BaseRepository
 	}
 
 	/**
-	 * Get the clan facilities
-	 * @param Entities\Clan
-	 * @return array of Entities\Facility
-	 */
-	public function getClanFacilities (Entities\Clan $clan)
-	{
-		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('max(f.level) level', 'f.facility')
-			->from($this->getEntityName(), 'f')
-			->where($qb->expr()->andX(
-				$qb->expr()->isNotNull('f.facility'),
-				$qb->expr()->eq('f.owner', $clan->id)))
-			->groupBy('f.facility');
-		$result = array();
-		foreach ($qb->getQuery()->getArrayResult() as $row) {
-			$result[$row['facility']] = $row['level'];
-		}
-		return $result;
-	}
-
-	/**
-	 * Get the clan available facility changes
-	 * @param Entities\Clan
-	 * @return
-	 */
-	public function getAvailableFacilityChanges (Entities\Clan $clan)
-	{
-		$qb = $this->createQueryBuilder('f');
-		$qb->where($qb->expr()->andX(
-			$qb->expr()->eq('f.owner', $clan->id),
-			$qb->expr()->isNotNull('f.facility')
-		));
-		$qb->groupBy('f.facility, f.level');
-		$result = array(
-			'upgrades' => array(),
-			'downgrades' => array(),
-			'demolitions' => array()
-		);
-		foreach ($qb->getQuery()->getResult() as $field) {
-			$stats = $this->context->stats->construction;
-			if ($field->level < $this->context->params['game']['stats']['facilityLevelCap']) {
-				if (!isset($result['upgrades'][$field->facility])) {
-					$result['upgrades'][$field->facility] = array();
-				}
-				$level = $field->level + 1;
-				$info = array();
-				$info['cost'] = $stats->getConstructionCost($clan, $field->facility, $level);
-				$info['time'] = $stats->getConstructionTime($clan, $field->facility, $level);
-				$result['upgrades'][$field->facility][$level] = $info;
-			}
-			if ($field->level > 1) {
-				if (!isset($result['downgrades'][$field->facility])) {
-					$result['downgrades'][$field->facility] = array();
-				}
-				$level = $field->level - 1;
-				$info = array();
-				$info['cost'] = $stats->getDemolitionCost($clan, $field->facility, $field->level, $level);
-				$info['time'] = $stats->getDemolitionTime($clan, $field->facility, $field->level, $level);
-				$result['downgrades'][$field->facility][$level] = $info;
-			}
-			if (!isset($result['demolitions'][$field->facility])) {
-				$result['demolitions'][$field->facility] = array();
-			}
-			$info = array();
-			$info['cost'] = $stats->getDemolitionCost($clan, $field->facility, $field->level, 0);
-			$info['time'] = $stats->getDemolitionTime($clan, $field->facility, $field->level, 0);
-			$result['demolitions'][$field->facility][$field->level] = $info;
-		}
-		return $result;
-	}
-
-	/**
 	 * Get fields under given coordinates
 	 * @param array of arrays containing coordinates
 	 * @param array
@@ -301,7 +229,7 @@ class Field extends BaseRepository
 	protected function fetchFieldsData (Entities\Clan $clan = NULL, $ids = array())
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('f', 'o', 'a')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a');
+		$qb->select('f', 'o', 'a', 'c')->from('Entities\Field', 'f')->leftJoin('f.owner', 'o')->leftJoin('o.alliance', 'a')->leftJoin('f.facility', 'c');
 		if ($ids) {
 			$qb->where($qb->expr()->in('f.id', $ids));
 		}
@@ -350,8 +278,8 @@ class Field extends BaseRepository
 	public function isNeighbourOf (Entities\Field $field, Entities\Clan $clan = null)
 	{
 		$neighbours = $this->getFieldNeighbours($field);
-		foreach($neighbours as $neighbour){
-			if($neighbour->owner === $clan){
+		foreach ($neighbours as $neighbour) {
+			if ($neighbour->owner === $clan) {
 				return true;
 			}
 		}
