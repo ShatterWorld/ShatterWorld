@@ -28,11 +28,7 @@ class SignupPresenter extends BasePresenter
 			->setRequired('Zadejte prosím heslo ještě jednou pro kontrolu')
 			->addRule(Form::EQUAL, 'Hesla se neshodují', $form['password']);
 
-		$form->addTextArea("conditions", "Podmínky")
-			->setDefaultValue("lorem \nipsum \ndolor \nsit...\n ahoj\n ahoj\n ahoj\n ahoj\n ahoj\n ahoj\n ahoj\n ahojahoj\n ahoj\nahoj\n ahoj\nahoj\n ahoj\n")
-			->setDisabled();
-
-		$form->addCheckbox("agree", "Souhlasím s podmínkami")
+		$form->addCheckbox("agree", "Souhlasím s všeobecnými a licenčnimi podmínkami.")
 			->addRule(Form::EQUAL, 'Je potřeba souhlasit s podmínkami', TRUE);
 
 		$form->addSubmit('send', 'Registrovat');

@@ -1,8 +1,32 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/faq.css" />
+{/block}
+
 {block #header}
 	FAQ
 {/block}
 
 {block #content}
-	často kladené otázky
+	<div class="question">
+		Kolik za hru platím?
+	</div>
+	<div class="answer">
+		ShatterWorld vždy byl, je a bude zdarma pro všehcny. Pokud se vám hra líbí a chcete jí podpořit, můžete si zakoupit <a n:href="Donate:">Premium účet</a>.
+	</div>
+
+	<div class="question">
+		Na co putují vybrané peníze z <a n:href="Donate:">Premium účtů</a>.?
+	</div>
+	<div class="answer">
+		Peníze jsou aktivně využívány na pokrytí nákladů, zejména serverů, PR a vývoj. Autoři nijak neprofitují
+	</div>
+
+	<div class="question">
+		Projekt se mi velmi líbí a rád bych se na něm podílel, je to možné?
+	</div>
+	<div class="answer">
+		Rádi přijmeme jakoukoli pomoc ohledně designu. Činnost je však dobrovolná a nelze na jejím základě nárokovat jakoukoli odměnu.
+	</div>
 {/block}
 
