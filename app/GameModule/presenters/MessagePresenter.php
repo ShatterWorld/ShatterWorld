@@ -14,6 +14,13 @@ use RuleViolationException;
  */
 class MessagePresenter extends BasePresenter {
 
+	protected $recipients;
+
+	public function renderNew ($recipients = null)
+	{
+		$this->recipients = $recipients;
+	}
+
 	/**
 	 * Creates the new message form
 	 * @return Nette\Application\UI\Form
@@ -31,6 +38,11 @@ class MessagePresenter extends BasePresenter {
 		$form->addTextArea('body', 'Zpráva')
 			->setRequired('Vyberte, prosím, zprávu.');
 
+		if ($this->recipients !== null){
+			$form->setDefaults(array(
+				'recipient' => $this->recipients
+			));
+		}
 
 		$form->addSubmit('submit', 'Odeslat');
 		$form->onSuccess[] = callback($this, 'submitNewMessageForm');

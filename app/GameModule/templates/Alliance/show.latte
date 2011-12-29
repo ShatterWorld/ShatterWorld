@@ -4,6 +4,22 @@
 
 {block #content}
 	{ifset $alliance}
+
+		{?$members = $alliance->getMembersArray()}
+		{if $clan->alliance->id === $alliance->id}
+			{?$recipients = ""}
+			{?$first = true}
+			{foreach $members as $member}
+				{if !$first}
+					{?$recipients .= ';'}
+				{/if}
+				{?$first = false}
+				{?$recipients .= $member->user->nickname}
+			{/foreach}
+			<a n:href="Message:new $recipients">Poslat všem zprávu<img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a>
+			<div class="clearer"><span></span></div>
+		{/if}
+
 		<h2>Členové</h2>
 		<table>
 			<tr>
@@ -11,12 +27,11 @@
 				<th>Hráč</th>
 				<th>Skóre</th>
 			</tr>
-			{?$members = $alliance->getMembersArray()}
 			{foreach $memberScores as $clanId => $score}
 				{?$member = $members[$clanId]}
 				<tr>
-					<td><a n:href="Clan:show $clanId">{$member->name}</a></td>
-					<td><a n:href="Profile:show $member->user->id">{$member->user->nickname}</a></td>
+					<td><a class="leftFloater" n:href="Clan:show $clanId">{$member->name}</a>{if $alliance->leader->id === $clanId} (vůdce){/if}</td>
+					<td><a class="leftFloater" n:href="Profile:show $member->user->id">{$member->user->nickname}</a><a href="{link Message:new $member->user->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a></td>
 					<td>{$score}</td>
 				</tr>
 			{/foreach}

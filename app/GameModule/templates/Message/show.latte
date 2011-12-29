@@ -17,8 +17,8 @@
 	</table>
 
 	<table id="message">
-		<tr><th>Odesílatel:</th><td><a n:href="Profile:show $message->sender->id">{$message->sender->nickname}</a></td></tr>
-		<tr><th>Příjemce:</th><td><a n:href="Profile:show $message->recipient->id">{$message->recipient->nickname}</a></td></tr>
+		<tr><th>Odesílatel:</th><td><a class="leftFloater" n:href="Profile:show $message->sender->id">{$message->sender->nickname}</a><a href="{link Message:new $message->sender->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a></td></tr>
+		<tr><th>Příjemce:</th><td><a class="leftFloater" n:href="Profile:show $message->recipient->id">{$message->recipient->nickname}</a><a href="{link Message:new $message->recipient->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a></td></tr>
 		<tr><th>Datum a čas:</th><td>{$message->sentTime|date:$dateFormat}</td></tr>
 		<tr><th>Předmět:</th><td>{$message->subject}</td></tr>
 		<tr><th>Zpráva:</th><td>{$message->body}</td></tr>

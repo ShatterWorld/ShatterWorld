@@ -161,3 +161,10 @@ a:hover {
 	font-weight: bold;
 }
 
+.leftFloater {
+	float: left;
+}
+
+.rightFloater {
+	float: right;
+}

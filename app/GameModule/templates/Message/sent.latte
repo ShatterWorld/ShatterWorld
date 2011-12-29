@@ -26,7 +26,7 @@
 		{?$i = 1}
 		{foreach $messages as $message}
 			<tr class="row{($i++ % 2) + 1}">
-				<td><a n:href="Profile:show $message->recipient->id">{$message->recipient->nickname}</a></td>
+				<td><a class="leftFloater" n:href="Profile:show $message->recipient->id">{$message->recipient->nickname}</a><a href="{link Message:new $message->recipient->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a></td>
 				<td><a href="{link Message:show $message->id}">{$message->subject}</a></td>
 				<td class="time">{$message->sentTime|date:$dateFormat}</td>
 				<td class="delete"><a n:href="deleteBySender! $message->id">X</a></td>
