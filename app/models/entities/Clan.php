@@ -136,7 +136,6 @@ class Clan extends BaseEntity {
 	public function setHeadquarters (Field $headquarters)
 	{
 		$headquarters->setOwner($this);
-		$headquarters->facility = 'headquarters';
 		$this->headquarters = $headquarters;
 	}
 

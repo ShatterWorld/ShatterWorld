@@ -107,15 +107,15 @@ class Construction extends Event
 	{
 		$clan = $field->owner;
 		$stats = $this->context->stats->construction;
-		$price = $stats->getDemolitionCost($clan, $field->facility, $field->level, $level);
+		$price = $stats->getDemolitionCost($clan, $field->facility->type, $field->level, $level);
 		if ($this->context->model->getResourceRepository()->checkResources($field->owner, $price)) {
 			$this->create(array(
 				'target' => $field,
 				'owner' => $field->owner,
 				'type' => 'facilityDemolition',
-				'construction' => $field->facility,
+				'construction' => $field->facility->type,
 				'level' => $level,
-				'timeout' => $stats->getDemolitionTime($clan, $field->facility, $field->level, $level)
+				'timeout' => $stats->getDemolitionTime($clan, $field->facility->type, $field->level, $level)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($field->owner, $price, NULL, FALSE);
 			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);

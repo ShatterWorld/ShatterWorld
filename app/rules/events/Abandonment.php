@@ -14,18 +14,16 @@ class Abandonment extends AbstractRule implements IConstruction
 	public function process (Entities\Event $event, $processor)
 	{
 
-		if ($event->target->facility !== null){
+		if ($facility = $event->target->facility) {
 			$value = 0;
-			$i = $event->target->level;
 			$rule = $this->getContext()->rules->get('facility', $event->target->facility);
-			while ($i > 0){
+			for ($i = $facility->level; $i > 0; $i--) {
 				$value += $rule->getValue($i);
-				$i--;
 			}
 			$this->getContext()->model->getScoreService()->decreaseClanScore($event->owner, 'facility', $value);
 		}
 		$this->getContext()->model->getFieldService()->setFieldOwner($event->target, NULL);
-		$event->target->setFacility(NULL);
+		$facility->damaged = TRUE;
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
 		return array();
 	}

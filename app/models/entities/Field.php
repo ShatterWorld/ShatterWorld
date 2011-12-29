@@ -35,16 +35,11 @@ class Field extends BaseEntity {
 	private $type;
 
 	/**
-	 * @Column(type = "string", nullable = TRUE)
+	 * @OneToOne(targetEntity = "Entities\Facility", inversedBy = "location")
+	 * @JoinColumn(onDelete = "SET NULL")
 	 * @var string
 	 */
 	private $facility;
-
-	/**
-	 * @Column(type = "integer")
-	 * @var int
-	 */
-	private $level;
 	
 	/**
 	 * @OneToMany(targetEntity = "Entities\Unit", mappedBy = "location")
@@ -57,7 +52,6 @@ class Field extends BaseEntity {
 	 */
 	public function __construct ()
 	{
-		$this->level = 0;
 		$this->units = new Doctrine\Common\Collections\ArrayCollection;
 	}
 
@@ -149,7 +143,7 @@ class Field extends BaseEntity {
 
 	/**
 	 * Facility getter
-	 * @return string
+	 * @return Entities\Facility
 	 */
 	public function getFacility ()
 	{
@@ -158,32 +152,12 @@ class Field extends BaseEntity {
 
 	/**
 	 * Facility setter
-	 * @param string
+	 * @param Entities\Facility
 	 * @return void
 	 */
-	public function setFacility ($facility)
+	public function setFacility (Facility $facility = NULL)
 	{
 		$this->facility = $facility;
-		$this->setLevel(0);
-	}
-
-	/**
-	 * Level getter
-	 * @return int
-	 */
-	public function getLevel ()
-	{
-		return $this->level;
-	}
-
-	/**
-	 * Level setter
-	 * @param int
-	 * @return void
-	 */
-	public function setLevel ($level)
-	{
-		$this->level = $level;
 	}
 	
 	/**

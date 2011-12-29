@@ -22,16 +22,16 @@ class Occupation extends Attack
 				$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, $event->term, FALSE);
 				$this->getContext()->model->getResourceService()->increase($event->owner, $loot, $event->term, FALSE);
 			}
-			if ($event->target->facility !== null){
+			if ($facility = $event->target->facility){
 				$value = 0;
-				$i = $event->target->level;
-				$rule = $this->getContext()->rules->get('facility', $event->target->facility);
-				while ($i > 0){
+				$rule = $this->getContext()->rules->get('facility', $facility->level);
+				for ($i = $facility->level; $i > 0; $i--) {
 					$value += $rule->getValue($i);
-					$i--;
 				}
-				$this->getContext()->model->getScoreService()->decreaseClanScore($event->target->owner, 'facility', $value);
-				$this->getContext()->model->getScoreService()->increaseClanScore($event->owner, 'facility', $value);
+				$this->getContext()->model->resourceService->recalculateProduction($event->owner);
+				$this->getContext()->model->resourceService->recalculateProduction($event->target->owner);
+				$this->getContext()->model->scoreService->decreaseClanScore($event->target->owner, 'facility', $value);
+				$this->getContext()->model->scoreService->increaseClanScore($event->owner, 'facility', $value);
 			}
 
 

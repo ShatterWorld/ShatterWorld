@@ -4,28 +4,28 @@ use Rules;
 use Entities;
 use Nette\Diagnostics\Debugger;
 /**
- *	Units stat
- *	@author Petr Bělohlávek
+ * Units stat
+ * @author Petr Bělohlávek
  */
 class Units extends AbstractStat
 {
 	/**
-	 *	Get clan slots
-	 * 	@param Entities\Clan
-	 *	@return array of int
+	 * Get clan slots
+	 * @param Entities\Clan
+	 * @return array of int
 	 */
 	public function getSlots (Entities\Clan $clan)
 	{
 		$result = array();
 		foreach ($this->getContext()->model->fieldRepository->findByOwner($clan->id) as $clanField) {
 			$facility = $clanField->facility;
-			if ($facility !== NULL) {
+			if ($facility && !$facility->disabled) {
 				$rule = $this->getContext()->rules->get('facility', $facility);
 				if ($rule instanceof Rules\Facilities\IConstructionFacility) {
 					if (array_key_exists($facility, $result)) {
-						$result[$facility] = $result[$facility] + $rule->getCapacity($clanField->level);
+						$result[$facility] = $result[$facility] + $rule->getCapacity($facility->level);
 					} else {
-						$result[$facility] = $rule->getCapacity($clanField->level);
+						$result[$facility] = $rule->getCapacity($facility->level);
 					}
 				}
 			}
@@ -34,10 +34,10 @@ class Units extends AbstractStat
 	}
 
 	/**
-	 *	Get level of the unit
-	 * 	@param Entities\Clan
-	 * 	@param string
-	 *	@return int
+	 * Get level of the unit
+	 * @param Entities\Clan
+	 * @param string
+	 * @return int
 	 */
 	public function getUnitLevel (Entities\Clan $clan, $unitName)
 	{
@@ -45,10 +45,10 @@ class Units extends AbstractStat
 	}
 
 	/**
-	 *	Get attack of the unit
-	 * 	@param Entities\Clan
-	 * 	@param string
-	 *	@return int
+	 * Get attack of the unit
+	 * @param Entities\Clan
+	 * @param string
+	 * @return int
 	 */
 	public function getUnitAttack (Entities\Clan $clan, $unitName)
 	{
@@ -58,9 +58,9 @@ class Units extends AbstractStat
 	}
 
 	/**
-	 *	Get total attack force of the clan
-	 * 	@param Entities\Clan
-	 *	@return int
+	 * Get total attack force of the clan
+	 * @param Entities\Clan
+	 * @return int
 	 */
 	public function getClanAttackForce (Entities\Clan $clan)
 	{
@@ -74,10 +74,10 @@ class Units extends AbstractStat
 	}
 
 	/**
-	 *	Get defence of the unit
-	 * 	@param Entities\Clan
-	 * 	@param string
-	 *	@return int
+	 * Get defence of the unit
+	 * @param Entities\Clan
+	 * @param string
+	 * @return int
 	 */
 	public function getUnitDefence (Entities\Clan $clan, $unitName)
 	{
@@ -87,11 +87,11 @@ class Units extends AbstractStat
 	}
 
 	/**
-	 *	Get defence of the unit
-	 * 	@deprecated
-	 * 	@param Entities\Clan
-	 * 	@param string
-	 *	@return int
+	 * Get defence of the unit
+	 * @deprecated
+	 * @param Entities\Clan
+	 * @param string
+	 * @return int
 	 */
 	public function getUnitDefense (Entities\Clan $clan, $unitName)
 	{
@@ -99,9 +99,9 @@ class Units extends AbstractStat
 	}
 
 	/**
-	 *	Get total defence force of the clan
-	 * 	@param Entities\Clan
-	 *	@return int
+	 * Get total defence force of the clan
+	 * @param Entities\Clan
+	 * @return int
 	 */
 	public function getClanDefenceForce (Entities\Clan $clan)
 	{
@@ -114,9 +114,9 @@ class Units extends AbstractStat
 	}
 
 	/**
-	 *	Get total spy force of the clan
-	 * 	@param Entities\Clan
-	 *	@return int
+	 * Get total spy force of the clan
+	 * @param Entities\Clan
+	 * @return int
 	 */
 	public function getSpyForce (Entities\Clan $clan)
 	{

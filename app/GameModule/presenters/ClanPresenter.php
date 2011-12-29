@@ -82,7 +82,7 @@ class ClanPresenter extends BasePresenter {
 	 */
 	public function submitNewClanForm (Form $form)
 	{
-		if (count($this->getPlayerClan()->user->clans) < $this->context->params['game']['stats']['clanQuota']) {
+		if (!$this->getPlayerClan() || count($this->getPlayerClan()->user->clans) < $this->context->params['game']['stats']['clanQuota']) {
 			$data = $form->getValues();
 			$data['user'] = $this->getUserRepository()->find($this->getUser()->getId());
 			$this->getService('clanService')->create($data);

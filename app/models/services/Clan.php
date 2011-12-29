@@ -85,6 +85,10 @@ class Clan extends BaseService
 			}
 		}
 		$values['headquarters'] = $headq;
+		$headq->setFacility($this->context->model->facilityService->create(array(
+			'type' => 'headquarters',
+			'location' => $headq
+		), FALSE));
 		$clan = parent::create($values, $flush);
 
 		$this->context->model->getOrdersService()->create(array('owner' => $clan), FALSE);
