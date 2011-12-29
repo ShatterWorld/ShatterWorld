@@ -25,11 +25,8 @@
 			<tr>
 				<th>Hráč</th>
 				<td>
-					{ifset $profile}
-						<a n:href="Profile:show $profile->id">{$clan->user->nickname}</a>
-					{else}
-						{$clan->user->nickname}
-					{/ifset}
+					<a class="leftFloater" n:href="Profile:show $clan->user->id">{$clan->user->nickname}</a>
+					<a href="{link Message:new $clan->user->nickname}"><img class="leftFloater messageIcon"src="{$basePath}/images/icons/message.png" /></a>
 				</td>
 			</tr>
 		</table>

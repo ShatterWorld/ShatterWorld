@@ -68,6 +68,20 @@ common:
 				- dominance
 				- remoteExploration
 
+		setting:
+			pageLength:
+				report: 10
+				market: 10
+				scoreboard: 20
+
+			dateFormat:
+				report: Y-m-d H:i:s
+				message:
+					sent: d.m.Y H:i
+					show: d.m.Y H:i
+					received: d.m.Y H:i
+
+
 	doctrine:
 		proxyDir: %tempDir%/proxies
 		proxyNamespace: Proxies

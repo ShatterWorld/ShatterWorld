@@ -14,6 +14,13 @@ use RuleViolationException;
  */
 class MessagePresenter extends BasePresenter {
 
+	protected $recipients;
+
+	public function renderNew ($recipients = null)
+	{
+		$this->recipients = $recipients;
+	}
+
 	/**
 	 * Creates the new message form
 	 * @return Nette\Application\UI\Form
@@ -31,6 +38,11 @@ class MessagePresenter extends BasePresenter {
 		$form->addTextArea('body', 'Zpráva')
 			->setRequired('Vyberte, prosím, zprávu.');
 
+		if ($this->recipients !== null){
+			$form->setDefaults(array(
+				'recipient' => $this->recipients
+			));
+		}
 
 		$form->addSubmit('submit', 'Odeslat');
 		$form->onSuccess[] = callback($this, 'submitNewMessageForm');
@@ -75,6 +87,7 @@ class MessagePresenter extends BasePresenter {
 	public function renderDefault ()
 	{
 		$this->template->messages = $this->getMessageRepository()->getReceivedMessages($this->getPlayerClan()->user->id);
+		$this->template->dateFormat = $this->context->params['game']['setting']['dateFormat']['message']['received'];
 	}
 
 	/**
@@ -84,6 +97,7 @@ class MessagePresenter extends BasePresenter {
 	public function renderSent ()
 	{
 		$this->template->messages = $this->getMessageRepository()->getSentMessages($this->getPlayerClan()->user->id);
+		$this->template->dateFormat = $this->context->params['game']['setting']['dateFormat']['message']['sent'];
 	}
 
 	/**
@@ -119,6 +133,7 @@ class MessagePresenter extends BasePresenter {
 	{
 		$message = $this->getMessageRepository()->find($messageId);
 		$this->template->message = $message;
+		$this->template->dateFormat = $this->context->params['game']['setting']['dateFormat']['message']['show'];
 		$this->getMessageService()->update($message, array('read' => true));
 	}
 

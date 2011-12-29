@@ -110,7 +110,7 @@ class MarketPresenter extends BasePresenter {
 			$profits['cheap'][$key] = $offerRepository->getTotalMediatorProfit(Graph::CHEAP, $clan, $offer);
 		}
 
-		$pageLength = 10;
+		$pageLength = $this->context->params['game']['setting']['pageLength']['market'];
 		$this['pager']->setup(count($offers), $pageLength, $page);
 
 		$this->template->offers = array_slice($offers, $pageLength*($page-1), $pageLength);

@@ -15,9 +15,6 @@ class ProfilePresenter extends BasePresenter {
 	*/
 	public function actionDefault ()
 	{
-		if (!$this->getPlayerProfile()) {
-			$this->redirect('Profile:new');
-		}
 		$this->redirect('Profile:show', $this->getPlayerClan()->user->id);
 	}
 
@@ -46,16 +43,7 @@ class ProfilePresenter extends BasePresenter {
 		}
 	}
 
-	/**
-	* Action for new profile
-	* @return void
-	*/
-	public function actionNew ()
-	{
-		if ($this->getPlayerProfile()) {
-			$this->redirect('Profile:');
-		}
-	}
+
 
 	/**
 	* Action for editation of the profile
@@ -64,33 +52,6 @@ class ProfilePresenter extends BasePresenter {
 	public function renderEdit ()
 	{
 		$this['editProfileForm']->setValues($this->getPlayerProfile()->toArray());
-	}
-
-	/**
-	* Creates the New form
-	* @return Nette\Application\UI\Form
-	*/
-	protected function createComponentNewProfileForm ()
-	{
-		$form = new Form();
-		$form->addSubmit('submit', 'Založit profil');
-		$form->onSuccess[] = callback($this, 'submitNewProfileForm');
-		return $form;
-	}
-
-	/**
-	* New profile slot
-	* @param Nette\Application\UI\Form
-	* @return void
-	*/
-	public function submitNewProfileForm (Form $form)
-	{
-		if (!$this->getPlayerProfile()) {
-			$this->getProfileService()->create(array('user' => $this->getUserRepository()->find($this->getUser()->getId())));
-			$this->flashMessage('Profil byl založen.');
-		}
-		$this->redirect('Profile:edit');
-
 	}
 
 	/**
@@ -140,32 +101,6 @@ class ProfilePresenter extends BasePresenter {
 
 	}
 
-	/**
-	* Creates the Delete form
-	* @return Nette\Application\UI\Form
-	*/
-	protected function createComponentDeleteProfileForm ()
-	{
-		$form = new Form();
-		$form->addSubmit('submit', 'Smazat profil');
-		$form->onSuccess[] = callback($this, 'submitDeleteProfileForm');
-		return $form;
-	}
-
-	/**
-	* Delete profile slot
-	* @param Nette\Application\UI\Form
-	* @return void
-	*/
-	public function submitDeleteProfileForm (Form $form)
-	{
-		if ($this->getPlayerProfile()) {
-			$this->getProfileService()->delete($this->getPlayerProfile());
-			$this->flashMessage('Profil byl smazán.');
-		}
-		$this->redirect('Profile:new');
-
-	}
 
 
 

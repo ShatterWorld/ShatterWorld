@@ -9,7 +9,7 @@
 		<div n:foreach="$reports as $report" class="report {$report->read ? 'read' : 'unread'}">
 			{?$rule = $rules->get('event', $report->event->type)}
 			<h2>{$rule->getDescription()}</h2>
-			<span class="date">{$report->event->term|date:"Y-m-d H:i:s"}</span>
+			<span class="date">{$report->event->term|date:$dateFormat}</span>
 			<div>
 				{foreach $rule->formatReport($report) as $item}
 					{if $item->type === 'text'}

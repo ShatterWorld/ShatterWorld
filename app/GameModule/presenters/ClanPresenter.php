@@ -35,7 +35,7 @@ class ClanPresenter extends BasePresenter {
 			$this->redirect('Clan:new');
 		}
 	}
-	
+
 	/**
 	 * Show render
 	 * @param int
@@ -53,9 +53,6 @@ class ClanPresenter extends BasePresenter {
 
 			$this->template->clan = $clan;
 			$this->template->totalClanScore = $this->context->model->getScoreRepository()->getTotalClanScore($this->getPlayerClan());
-			if ($profile = $this->context->model->getProfileRepository()->findOneByUser($clan->user->id)) {
-				$this->template->profile = $profile;
-			}
 			$this->template->playerClan = $playerClan;
 			$this->template->clanQuota = $this->context->params['game']['stats']['clanQuota'];
 		}
@@ -82,7 +79,7 @@ class ClanPresenter extends BasePresenter {
 	 */
 	public function submitNewClanForm (Form $form)
 	{
-		if (!$this->getPlayerClan() || count($this->getPlayerClan()->user->clans) < $this->context->params['game']['stats']['clanQuota']) {
+		if ($this->getPlayerClan() === null || count($this->getPlayerClan()->user->clans) < $this->context->params['game']['stats']['clanQuota']) {
 			$data = $form->getValues();
 			$data['user'] = $this->getUserRepository()->find($this->getUser()->getId());
 			$this->getService('clanService')->create($data);

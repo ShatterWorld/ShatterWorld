@@ -60,6 +60,7 @@ a:hover {
 	margin-bottom: 15px;
 	width: 170px;
 	border: 1px solid #000;
+	color: white;
 }
 
 .submenu ul {
@@ -161,3 +162,10 @@ a:hover {
 	font-weight: bold;
 }
 
+.leftFloater {
+	float: left;
+}
+
+.rightFloater {
+	float: right;
+}

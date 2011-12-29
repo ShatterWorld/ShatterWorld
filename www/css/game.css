@@ -109,3 +109,11 @@ table th {
 	vertical-align : middle;
 }
 
+.messageIcon {
+	margin-left:10px;
+}
+
+#reportLink {
+	color: #ccc;
+	text-decoration: none;
+}

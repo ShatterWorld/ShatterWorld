@@ -28,18 +28,12 @@ class Profile extends BaseService {
 		$avatar->resize(96, 96);
 		$targetPath = $this->context->params['wwwDir'].'/images/avatars/'.$object->id.'.png';
 		$avatar->save($targetPath, 100, Image::PNG);
-
-
-
 	}
 
 	public function delete ($object, $flush = TRUE)
 	{
-
 		unlink($this->context->params['wwwDir'].'/images/avatars/'.$object->id.'.png');
-
 		parent::delete($object, $flush);
-
 	}
 
 
