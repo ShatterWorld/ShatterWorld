@@ -14,28 +14,30 @@ class Occupation extends Attack
 	{
 		$result = parent::process($event, $processor);
 		$model = $this->getContext()->model;
-		if ($result['totalVictory']) {
-			foreach ($model->getConstructionRepository()->findBy(array('target' => $event->target->id)) as $construction) {
-				$construction->failed = TRUE;
-			}
-			if ($loot = $result['attacker']['loot']) {
-				$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, $event->term, FALSE);
-				$this->getContext()->model->getResourceService()->increase($event->owner, $loot, $event->term, FALSE);
-			}
-			if ($facility = $event->target->facility){
-				$value = 0;
-				$rule = $this->getContext()->rules->get('facility', $facility->level);
-				for ($i = $facility->level; $i > 0; $i--) {
-					$value += $rule->getValue($i);
+		if ($result['victory']) {
+			if ($result['totalVictory']) {
+				foreach ($model->getConstructionRepository()->findBy(array('target' => $event->target->id)) as $construction) {
+					$construction->failed = TRUE;
 				}
-				$this->getContext()->model->resourceService->recalculateProduction($event->owner);
-				$this->getContext()->model->resourceService->recalculateProduction($event->target->owner);
-				$this->getContext()->model->scoreService->decreaseClanScore($event->target->owner, 'facility', $value);
-				$this->getContext()->model->scoreService->increaseClanScore($event->owner, 'facility', $value);
+				if ($loot = $result['attacker']['loot']) {
+					$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, $event->term, FALSE);
+					$this->getContext()->model->getResourceService()->increase($event->owner, $loot, $event->term, FALSE);
+				}
+				$this->getContext()->model->getFieldService()->setFieldOwner($event->target, $event->owner);
 			}
-
-
-			$this->getContext()->model->getFieldService()->setFieldOwner($event->target, $event->owner);
+			if ($facility = $event->target->facility) {
+				$this->damageTargetFacility($event, 1, $processor);
+				if ($result['totalVictory']) {$value = 0;
+					$rule = $this->getContext()->rules->get('facility', $facility->level);
+					for ($i = $facility->level; $i > 0; $i--) {
+						$value += $rule->getValue($i);
+					}
+					$this->getContext()->model->resourceService->recalculateProduction($event->owner);
+					$this->getContext()->model->resourceService->recalculateProduction($event->target->owner);
+					$this->getContext()->model->scoreService->decreaseClanScore($event->target->owner, 'facility', $value);
+					$this->getContext()->model->scoreService->increaseClanScore($event->owner, 'facility', $value);
+				}
+			}
 		} else {
 			$this->returnAttackingUnits($event, $processor);
 		}

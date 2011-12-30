@@ -1174,7 +1174,7 @@ Game.map.contextMenu.AttackDialog = Class({
 	getBody: function ()
 	{
 		var body = Game.map.contextMenu.AttackDialog._superClass.getBody.call(this);
-		body.append('Typ útoku: <select id="attackType"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>');
+		body.append('Typ útoku: <select id="attackType"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option><option value="razing">Ničivý</option></select>');
 		return body;
 	},
 

@@ -88,6 +88,14 @@ abstract class Attack extends AbstractRule implements IEvent
 		));
 	}
 
+	protected function damageTargetFacility (Entities\Event $event, $level, $processor)
+	{
+		if ($facility = $event->target->facility) {
+			$facility->setDamaged(TRUE);
+			$facility->setLevel(max(0, ($facility->getLevel() - $level)));
+		}
+	}
+	
 	public function process (Entities\Event $event, $processor)
 	{
 		$model = $this->getContext()->model;
