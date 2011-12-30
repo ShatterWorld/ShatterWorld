@@ -879,7 +879,7 @@ Game.map.contextMenu = {
 				var label = $('<span>');
 				Game.descriptions.translate('facility', target.facility.type, label);
 				dialog.setBody($('<span>').append(label).append(' (' + (target.facility.level + 1) + ')'));
-				dialog.setCost(Game.map.contextMenu.upgrades[target.facility][target.facility.level + 1].cost, Game.map.contextMenu.upgrades[target.facility.type][target.facility.level + 1].time);
+				dialog.setCost(Game.map.contextMenu.upgrades[target.facility.type][target.facility.level + 1].cost, Game.map.contextMenu.upgrades[target.facility.type][target.facility.level + 1].time);
 				dialog.setSubmit({
 					text: 'Zahájit stavbu',
 					click: function () {
