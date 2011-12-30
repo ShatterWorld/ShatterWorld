@@ -879,7 +879,7 @@ Game.map.contextMenu = {
 				var label = $('<span>');
 				Game.descriptions.translate('facility', target.facility.type, label);
 				dialog.setBody($('<span>').append(label).append(' (' + (target.facility.level + 1) + ')'));
-				dialog.setCost(Game.map.contextMenu.upgrades[target.facility][target.facility.level + 1].cost, Game.map.contextMenu.upgrades[target.facility.type][target.facility.level + 1].time);
+				dialog.setCost(Game.map.contextMenu.upgrades[target.facility.type][target.facility.level + 1].cost, Game.map.contextMenu.upgrades[target.facility.type][target.facility.level + 1].time);
 				dialog.setSubmit({
 					text: 'Zahájit stavbu',
 					click: function () {
@@ -1174,7 +1174,7 @@ Game.map.contextMenu.AttackDialog = Class({
 	getBody: function ()
 	{
 		var body = Game.map.contextMenu.AttackDialog._superClass.getBody.call(this);
-		body.append('Typ útoku: <select id="attackType"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option></select>');
+		body.append('Typ útoku: <select id="attackType"><option value="pillaging">Loupeživý</option><option value="occupation">Dobyvačný</option><option value="razing">Ničivý</option></select>');
 		return body;
 	},
 
