@@ -34,7 +34,7 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 	{
 		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
 		return $event->target->owner == $clan && $event->level <= $this->getContext()->params['game']['stats']['facilityLevelCap'] &&
-			(($event->target->facility->type === $event->construction && $event->target->facility->level === ($event->level - 1)) || ($event->target->facility === NULL && $event->level === 1));
+			(($event->target->facility && $event->target->facility->type === $event->construction && $event->target->facility->level === ($event->level - 1)) || ($event->target->facility === NULL && $event->level === 1));
 	}
 
 	public function getExplanation (Entities\Event $event)
