@@ -21,6 +21,7 @@ class Units extends AbstractStat
 			$facility = $clanField->facility;
 			if ($facility && !$facility->damaged) {
 				$rule = $this->getContext()->rules->get('facility', $facility->type);
+				Debugger::barDump($rule);
 				if ($rule instanceof Rules\Facilities\IConstructionFacility) {
 					if (array_key_exists($facility, $result)) {
 						$result[$facility] = $result[$facility] + $rule->getCapacity($facility->level);

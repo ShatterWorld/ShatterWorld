@@ -771,6 +771,11 @@ Game.map.contextMenu = {
 			}
 			if (field['facility'] !== null) {
 				if (field['facility'].type !== 'headquarters') {
+
+					if(field['facility'].type === 'workshop' || field['facility'].type === 'barracks'){
+						actions.push(this.actions.redirectTrainUnits);
+					}
+
 					actions.push(this.actions.upgradeFacility);
 					actions.push(this.actions.destroyFacility);
 					if(field.facility['level'] > 1){
@@ -988,6 +993,12 @@ Game.map.contextMenu = {
 					Game.map.disableField(target);
 					Game.spinner.hide();
 				});
+			}
+		},
+		redirectTrainUnits: {
+			title: 'Trénovat jednotky',
+			click: function (target) {
+				Game.utils.signal('redirect', {'target': 'Unit:train'}, function () {});
 			}
 		}
 	},

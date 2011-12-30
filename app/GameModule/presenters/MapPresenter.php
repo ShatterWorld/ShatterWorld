@@ -246,4 +246,9 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
+
+	public function handleRedirect ($target = 'this')
+	{
+		$this->redirect($target);
+	}
 }
