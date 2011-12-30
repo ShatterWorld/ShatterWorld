@@ -12,20 +12,20 @@ class UnitMovement extends AbstractRule implements IEvent
 
 	public function process (Entities\Event $event, $processor)
 	{
-		$this->context->model->getUnitService()->moveUnits($event->units, $event->owner, $event->target);
+		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->units);
 		return array();
 	}
-	
+
 	public function isValid (Entities\Event $event)
 	{
 		return $event->target->owner == $event->origin->owner;
 	}
-	
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Přesun jednotek');
 	}
-	
+
 	public function formatReport (Entities\Report $report)
 	{
 		return array();

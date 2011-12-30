@@ -18,6 +18,7 @@
 				<th class="level">Úroveň</th>
 				<th class="force">Síla</th>
 				<th class="count">Množství</th>
+				<th class="status">Stav</th>
 				<th class="action">Akce</th>
 			</tr>
 			{foreach $units as $unit}
@@ -26,11 +27,16 @@
 					<td class="level">{$unit->type|getUnitLevel}</td>
 					<td class="force">{$unit->type|getUnitAttack}/{$unit->type|getUnitDefense}</td>
 					<td class="count">{$unit->count}</td>
-					<td class="action">
+					<td class="status">
 						{if !$unit->move}
 							Obrana {$unit->location->getCoords()} (<a n:href="Clan:show $unit->owner->id">{$unit->owner->name}</a>)
 						{else}
 							{$eventRules[$unit->move->type]->getDescription()} {$unit->move->target->getCoords()} (<a n:href="Clan:show $unit->move->target->owner->id">{$unit->move->target->owner->name}</a>)
+						{/if}
+					</td>
+					<td class="action">
+						{if $clan->headquarters->id !== $unit->location->id}
+							<a n:href="moveHome! $unit->id">Přesunout na velitelství</a>
 						{/if}
 					</td>
 				</tr>

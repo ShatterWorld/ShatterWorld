@@ -17,6 +17,7 @@ class UnitPresenter extends BasePresenter
 		$this->template->registerHelper('getUnitLevel', callback($this, 'getUnitLevel'));
 		$this->template->units = $this->getClanUnits();
 		$this->template->eventRules = $this->context->rules->getAll('event');
+		$this->template->clan = $this->getPlayerClan();
 	}
 
 	public function renderTrain ()
@@ -89,6 +90,25 @@ class UnitPresenter extends BasePresenter
 		}
 
 		$this->redirect('Unit:Train');
+	}
+
+	public function handleMoveHome ($unitId)
+	{
+		$clan = $this->getPlayerClan();
+		$unit = $this->context->model->getUnitRepository()->find(array(
+			'id' => $unitId,
+			'owner' => $clan->id,
+			'move' => null
+		));
+
+		if ($unit === null){
+			$this->flashMessage('Tyto jednotky nemůžete přesunout.', 'error');
+			$this->redirect('Unit:');
+		}
+
+		$this->context->model->getMoveService()->startUnitMovement($unit->location, $clan->headquarters, $clan, 'unitMovement', array($unitId => $unitCount));
+		$this->flashMessage('Přesun zahájen.');
+		$this->redirect('Unit:');
 	}
 
 	public function getUnitDescription ($type)
