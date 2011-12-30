@@ -1,3 +1,10 @@
+{block #scripts}
+	{include #parent}
+	<script type="text/javascript" src="{$basePath}/js/units.js"></script>
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/units.css" />
+
+{/block}
+
 {block #header}
 	Přehled jednotek
 {/block}
@@ -7,21 +14,25 @@
 	{if count($units) > 0}
 		<table>
 			<tr>
-				<th>Jednotka</th>
-				<th>Úroveň</th>
-				<th>Útok</th>
-				<th>Obrana</th>
-				<th>Množství</th>
-				<th>Pozice</th>
+				<th class="description">Jednotka</th>
+				<th class="level">Úroveň</th>
+				<th class="force">Síla</th>
+				<th class="count">Množství</th>
+				<th class="action">Akce</th>
 			</tr>
 			{foreach $units as $unit}
 				<tr class="data">
-					<td>{$unit->type|getDescription}</td>
-					<td>{$unit->type|getUnitLevel}</td>
-					<td>{$unit->type|getUnitAttack}</td>
-					<td>{$unit->type|getUnitDefense}</td>
-					<td>{$unit->count}</td>
-					<td>{$unit->location->getCoords()}</td>
+					<td class="description">{$unit->type|getDescription}</td>
+					<td class="level">{$unit->type|getUnitLevel}</td>
+					<td class="force">{$unit->type|getUnitAttack}/{$unit->type|getUnitDefense}</td>
+					<td class="count">{$unit->count}</td>
+					<td class="action">
+						{if !$unit->move}
+							Obrana {$unit->location->getCoords()} (<a n:href="Clan:show $unit->owner->id">{$unit->owner->name}</a>)
+						{else}
+							{$eventRules[$unit->move->type]->getDescription()} {$unit->move->target->getCoords()} (<a n:href="Clan:show $unit->move->target->owner->id">{$unit->move->target->owner->name}</a>)
+						{/if}
+					</td>
 				</tr>
 			{/foreach}
 		</table>

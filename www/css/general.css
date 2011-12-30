@@ -162,6 +162,10 @@ a:hover {
 	font-weight: bold;
 }
 
+#content a {
+	display: inline;
+}
+
 .leftFloater {
 	float: left;
 }
