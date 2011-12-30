@@ -83,7 +83,7 @@ class Field extends BaseRepository
 	 * @param array
 	 * @return array
 	 */
-	protected function getCoordinateValues ($coordinates, $map = array())
+	public function getCoordinateValues ($coordinates, $map = array())
 	{
 		if ($map) {
 			return array_map(function ($coord) use ($map) {
