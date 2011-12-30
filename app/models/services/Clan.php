@@ -73,17 +73,8 @@ class Clan extends BaseService
 		$territory = array($headq);
 		$fieldCount = 1;
 		$circuit = $this->context->map->getCircuit($candidate['x'], $candidate['y'], 1);
-		$candidates = $initialFieldsCount > 2 ? array_rand($circuit, $initialFieldsCount - 1) : array(array_rand($circuit));
-		foreach ($candidates as $key) {
-			$coords = $circuit[$key];
-			$field = $this->context->model->fieldRepository->findByCoords($coords['x'], $coords['y']);
-			if (!$field->owner) {
-				$territory[] = $field;
-			}
-			if (count($territory) >= $initialFieldsCount) {
-				break;
-			}
-		}
+		$candidates = array_map(function ($key) use ($circuit) { return $circuit[$key]; }, ($initialFieldsCount > 2 ? array_rand($circuit, $initialFieldsCount - 1) : array(array_rand($circuit))));
+		$territory = array_merge($territory, $fieldRepository->getCoordinateValues($candidates));
 		$values['headquarters'] = $headq;
 		$headq->setFacility($this->context->model->facilityService->create(array(
 			'type' => 'headquarters',
