@@ -16,6 +16,7 @@ class UnitPresenter extends BasePresenter
 		$this->template->registerHelper('getUnitDefense', callback($this, 'getUnitDefense'));
 		$this->template->registerHelper('getUnitLevel', callback($this, 'getUnitLevel'));
 		$this->template->units = $this->getClanUnits();
+		$this->template->eventRules = $this->context->rules->getAll('event');
 	}
 
 	public function renderTrain ()

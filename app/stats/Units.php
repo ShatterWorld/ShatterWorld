@@ -20,7 +20,7 @@ class Units extends AbstractStat
 		foreach ($this->getContext()->model->fieldRepository->findByOwner($clan->id) as $clanField) {
 			$facility = $clanField->facility;
 			if ($facility && !$facility->damaged) {
-				$rule = $this->getContext()->rules->get('facility', $facility);
+				$rule = $this->getContext()->rules->get('facility', $facility->type);
 				if ($rule instanceof Rules\Facilities\IConstructionFacility) {
 					if (array_key_exists($facility, $result)) {
 						$result[$facility] = $result[$facility] + $rule->getCapacity($facility->level);

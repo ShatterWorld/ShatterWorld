@@ -12,3 +12,13 @@
 	width: 40px;
 	text-align: center;
 }
+
+.force, .level, .count {
+	width: 60px;
+	text-align: center;
+}
+
+.count {
+	width: 80px;
+	text-align: center;
+}
