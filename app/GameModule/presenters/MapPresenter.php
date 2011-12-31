@@ -251,4 +251,30 @@ class MapPresenter extends BasePresenter
 	{
 		$this->redirect($target);
 	}
+
+	public function handleMoveUnits ($originId, $targetId)
+	{
+		$args = $this->request->params;
+		$units = array();
+		foreach ($args as $key => $arg) {
+			if (is_numeric($key)) {
+				$units[$key] = $arg;
+			}
+		}
+		$origin = $this->getFieldRepository()->find($originId);
+		$target = $this->getFieldRepository()->find($targetId);
+		try {
+			$this->getMoveService()->startUnitMovement($origin, $target, $this->getPlayerClan(), 'unitMovement', $units);
+			$this->invalidateControl('orders');
+			$this->invalidateControl('events');
+			$this->flashMessage('Přesun zahájen');
+		} catch (RuleViolationException $e) {
+			$this->flashMessage('Takový přesun není možný', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		}
+
+
+	}
+
 }

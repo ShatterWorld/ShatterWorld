@@ -766,6 +766,7 @@ Game.map.contextMenu = {
 		if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan) {
 			if (field['units'] != null) {
 				actions.push(this.actions.attack);
+				actions.push(this.actions.move);
 				actions.push(this.actions.exploration);
 				actions.push(this.actions.spy);
 			}
@@ -859,6 +860,13 @@ Game.map.contextMenu = {
 			title: 'Průzkum',
 			click: function (origin) {
 				var dialog = new Game.map.contextMenu.ExplorationDialog('explorationDialog', origin);
+				dialog.show();
+			}
+		},
+		move: {
+			title: 'Přesun jednotek',
+			click: function (origin) {
+				var dialog = new Game.map.contextMenu.MoveDialog('moveDialog', origin);
 				dialog.show();
 			}
 		},
@@ -1200,6 +1208,46 @@ Game.map.contextMenu.AttackDialog = Class({
 			};
 			jQuery.extend(params, context.getUnitList());
 			Game.utils.signal('sendAttack', params, function () {
+				Game.events.refresh();
+				Game.spinner.hide();
+				$(context.element).dialog("close");
+			});
+		}
+	}
+});
+
+Game.map.contextMenu.MoveDialog = Class({
+	extends: Game.map.contextMenu.UnitMoveDialog,
+
+	constructor: function (id, origin)
+	{
+		Game.map.contextMenu.AttackDialog._superClass.constructor.call(this, id, origin);
+	},
+
+	validateTarget: function (target)
+	{
+		return (target['owner'] !== null && Game.map.clan !== null && target['owner']['id'] == Game.map.clan)
+			|| (Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance);
+	},
+
+	title: 'Přesun jednotek',
+
+	getBody: function ()
+	{
+		var body = Game.map.contextMenu.MoveDialog._superClass.getBody.call(this);
+		return body;
+	},
+
+	submit: {
+		text: "Přesun",
+		click: function (context) {
+			Game.spinner.show(context.element);
+			var params = {
+				'originId': context.origin['id'],
+				'targetId': context.target['id']
+			};
+			jQuery.extend(params, context.getUnitList());
+			Game.utils.signal('moveUnits', params, function () {
 				Game.events.refresh();
 				Game.spinner.hide();
 				$(context.element).dialog("close");
