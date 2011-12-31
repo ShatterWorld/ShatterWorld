@@ -1,3 +1,8 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/reports.css" />
+{/block}
+
 {block #header}
 	Hlášení
 {/block}
@@ -8,9 +13,13 @@
 		{control pager}
 		<div n:foreach="$reports as $report" class="report {$report->read ? 'read' : 'unread'}">
 			{?$rule = $rules->get('event', $report->event->type)}
-			<h2>{$rule->getDescription()}</h2>
-			<span class="date">{$report->event->term|date:$dateFormat}</span>
-			<div>
+
+			<div class="reportHead">
+				<h2 class="leftFloater">{$rule->getDescription()}</h2>
+				<div class="date rightFloater">{$report->event->term|date:$dateFormat}</div>
+				<div class="clearer"><span></span></div>
+			</div>
+			<div class="reportBody">
 				{foreach $rule->formatReport($report) as $item}
 					{if $item->type === 'text'}
 						<p>

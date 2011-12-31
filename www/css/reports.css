@@ -1,0 +1,25 @@
+.report {
+	margin-bottom: 1em;
+}
+
+.report h2 {
+	font-weight: bold;
+}
+
+.report .date {
+	font-style: italic;
+}
+
+td, th.top {
+	text-align: center;
+}
+
+.reportHead {
+	background: #b8b8b8;
+	padding: 0px 5px;
+}
+
+.reportBody {
+	padding: 5px;
+	border: 1px solid #b8b8b8;
+}
