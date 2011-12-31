@@ -2,6 +2,9 @@
 namespace Rules\Events;
 use Rules\AbstractRule;
 use Entities;
+use Nette\Diagnostics\Debugger;
+use ReportItem;
+use DataRow;
 
 class UnitMovement extends AbstractRule implements IEvent
 {
@@ -12,8 +15,17 @@ class UnitMovement extends AbstractRule implements IEvent
 
 	public function process (Entities\Event $event, $processor)
 	{
+		$result = array(
+			'units' => array(),
+			'targetId' => $event->target->id
+		);
+
+		foreach ($event->getUnits() as $unit) {
+			$result['units'][$unit->type] = $unit->count;
+		}
+
 		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->units);
-		return array();
+		return $result;
 	}
 
 	public function isValid (Entities\Event $event)
@@ -28,6 +40,13 @@ class UnitMovement extends AbstractRule implements IEvent
 
 	public function formatReport (Entities\Report $report)
 	{
-		return array();
+		$data = $report->data;
+		$target = $this->getContext()->model->getFieldRepository()->find($data['targetId']);
+		$message = array(
+			ReportItem::create('unitGrid', array(
+				DataRow::from($data['units'])->setLabel('Jednotky')
+			))->setHeading('na pole ' . $target->getCoords()));
+
+		return $message;
 	}
 }
