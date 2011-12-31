@@ -80,6 +80,8 @@ a:hover {
 	color: white;
 	text-decoration: none;
 	font-weight: bold;
+	display: block;
+	line-height: 20px;
 }
 
 .submenu li {
