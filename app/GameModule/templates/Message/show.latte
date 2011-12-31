@@ -10,15 +10,15 @@
 {block #content}
 	<table id="msgMenu">
 		<tr>
-			<td><a href="{link Message:new}">Napsat</a></td>
-			<td><a href="{link Message:}">Přijaté</a></td>
-			<td><a href="{link Message:sent}">Odeslané</a></td>
+			<td><a href="{link Message:new}"><img src="{$basePath}/images/icons/newMessage.png" />Napsat</a></td>
+			<td><a href="{link Message:}"><img src="{$basePath}/images/icons/receivedMessage.png" />Přijaté</a></td>
+			<td><a href="{link Message:sent}"><img src="{$basePath}/images/icons/sentMessage.png" />Odeslané</a></td>
 		</tr>
 	</table>
 
 	<table id="message">
-		<tr><th>Odesílatel:</th><td><a class="leftFloater" n:href="Profile:show $message->sender->id">{$message->sender->nickname}</a><a href="{link Message:new $message->sender->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a></td></tr>
-		<tr><th>Příjemce:</th><td><a class="leftFloater" n:href="Profile:show $message->recipient->id">{$message->recipient->nickname}</a><a href="{link Message:new $message->recipient->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a></td></tr>
+		<tr><th>Odesílatel:</th><td><a class="leftFloater" n:href="Profile:show $message->sender->id">{$message->sender->nickname}</a><a href="{link Message:new $message->sender->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/newMessage.png" /></a></td></tr>
+		<tr><th>Příjemce:</th><td><a class="leftFloater" n:href="Profile:show $message->recipient->id">{$message->recipient->nickname}</a><a href="{link Message:new $message->recipient->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/newMessage.png" /></a></td></tr>
 		<tr><th>Datum a čas:</th><td>{$message->sentTime|date:$dateFormat}</td></tr>
 		<tr><th>Předmět:</th><td>{$message->subject}</td></tr>
 		<tr><th>Zpráva:</th><td>{$message->body}</td></tr>

@@ -12,7 +12,7 @@ Game.events = {
 	{
 		return $('#countdownBar').data('events');
 	},
-	
+
 	refresh: function ()
 	{
 		Game.utils.signal('fetchEvents', {}, function (data) {
@@ -20,7 +20,7 @@ Game.events = {
 			Game.events.setup();
 		});
 	},
-	
+
 	setup: function ()
 	{
 		$.each(this.getEvents(), function () {
@@ -43,7 +43,7 @@ Game.events = {
 			}
 		});
 	},
-	
+
 	startCountdown: function (element, timeout)
 	{
 		var countdownFunction = function () {
@@ -61,7 +61,7 @@ Game.events = {
 		};
 		var interval = setInterval(countdownFunction, 1000);
 	},
-	
+
 	toggle: function ()
 	{
 		var element = $('#countdownTooltip');

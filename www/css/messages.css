@@ -7,6 +7,7 @@
 	border-bottom: 3px solid black;
 	margin-bottom: 10px;
 }
+
 td {
 	border-left: 1px solid black;
 }
@@ -19,7 +20,6 @@ td {
 .markAs {
 	width: 110px;
 	text-align: center;
-
 }
 
 .delete {
@@ -33,4 +33,9 @@ td {
 
 table a {
 	/*color:white;*/
+}
+
+#content img {
+	vertical-align: middle;
+	margin-right: 5px;
 }

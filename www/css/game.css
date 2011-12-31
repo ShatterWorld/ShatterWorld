@@ -75,18 +75,6 @@
 	text-align: right;
 }
 
-.report {
-	margin-bottom: 1em;
-}
-
-.report h2 {
-	font-weight: bold;
-}
-
-.report .date {
-	font-style: italic;
-}
-
 table {
 	width : 100%;
 	margin-bottom: 30px;

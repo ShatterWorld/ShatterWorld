@@ -116,9 +116,16 @@
 				{/snippet}
 
 				{snippet reports}
-					<div id="reportBar" class="hasTooltip" n:if="$reportCount > 0">
+					<div id="reportBar" class="hasTooltip">
 						<span class="text">
-							<a id="reportLink" n:href="Report:" class="text"><img src="{$basePath}/images/icons/reports.png" />{$reportCount}</a>
+							{?$img = ""}
+							{if $reportCount > 0}
+								{?$img = "unreadReports.png"}
+							{else}
+								{?$img = "reports.png"}
+							{/if}
+
+							<a id="reportLink" n:href="Report:" class="text"><img src="{$basePath}/images/icons/{$img}" />{$reportCount}</a>
 						</span>
 					</div>
 					<div class="tooltip" data-for="reportBar">
