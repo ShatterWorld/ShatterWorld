@@ -18,7 +18,7 @@ class UnitMovement extends AbstractRule implements IEvent
 
 	public function isValid (Entities\Event $event)
 	{
-		return $event->target->owner == $event->origin->owner;
+		return ($event->target->owner === $event->origin->owner) || ($event->target->owner->alliance === $event->origin->owner->alliance);
 	}
 
 	public function getExplanation (Entities\Event $event)
