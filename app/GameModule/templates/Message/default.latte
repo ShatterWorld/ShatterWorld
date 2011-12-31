@@ -10,9 +10,9 @@
 {block #content}
 	<table id="msgMenu">
 		<tr>
-			<td><a href="{link Message:new}">Napsat</a></td>
-			<td><a href="{link Message:}">Přijaté</a></td>
-			<td><a href="{link Message:sent}">Odeslané</a></td>
+			<td><a href="{link Message:new}"><img src="{$basePath}/images/icons/newMessage.png" />Napsat</a></td>
+			<td><a href="{link Message:}"><img src="{$basePath}/images/icons/receivedMessage.png" />Přijaté</a></td>
+			<td><a href="{link Message:sent}"><img src="{$basePath}/images/icons/sentMessage.png" />Odeslané</a></td>
 		</tr>
 	</table>
 
@@ -27,7 +27,7 @@
 		{?$i = 1}
 		{foreach $messages as $message}
 			<tr class="row{($i++ % 2) + 1} {if !$message->read}unread{/if}">
-				<td class="sender"><a class="leftFloater" n:href="Profile:show $message->sender->id">{$message->sender->nickname}</a><a href="{link Message:new $message->sender->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a></td>
+				<td class="sender"><a class="leftFloater" n:href="Profile:show $message->sender->id">{$message->sender->nickname}</a><a href="{link Message:new $message->sender->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/newMessage.png" /></a></td>
 				<td class="subject"><a href="{link Message:show $message->id}">{$message->subject}</a></td>
 				<td class="time">{$message->sentTime|date:$dateFormat}</td>
 				{if !$message->read}

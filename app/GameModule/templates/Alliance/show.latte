@@ -16,7 +16,7 @@
 				{?$first = false}
 				{?$recipients .= $member->user->nickname}
 			{/foreach}
-			<a n:href="Message:new $recipients">Poslat všem zprávu<img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a>
+			<a n:href="Message:new $recipients">Poslat všem zprávu<img class="leftFloater messageIcon" src="{$basePath}/images/icons/newMessage.png" /></a>
 			<div class="clearer"><span></span></div>
 		{/if}
 
@@ -31,7 +31,7 @@
 				{?$member = $members[$clanId]}
 				<tr>
 					<td><a class="leftFloater" n:href="Clan:show $clanId">{$member->name}</a>{if $alliance->leader->id === $clanId} (vůdce){/if}</td>
-					<td><a class="leftFloater" n:href="Profile:show $member->user->id">{$member->user->nickname}</a><a href="{link Message:new $member->user->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/message.png" /></a></td>
+					<td><a class="leftFloater" n:href="Profile:show $member->user->id">{$member->user->nickname}</a><a href="{link Message:new $member->user->nickname}"><img class="leftFloater messageIcon" src="{$basePath}/images/icons/newMessage.png" /></a></td>
 					<td>{$score}</td>
 				</tr>
 			{/foreach}
