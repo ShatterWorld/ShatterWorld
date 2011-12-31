@@ -97,6 +97,34 @@ class Construction extends Event
 	}
 
 	/**
+	 * Start repairing a damaged facility on given field
+	 * @param Entities\Field
+	 * @return void
+	 */
+	public function startFacilityRepair (Entities\Field $field)
+	{
+		$clan = $field->owner;
+		$facility = $field->facility;
+		$stats = $this->context->stats->construction;
+		$price = array_map(function ($val) { return $val / 2; }, $stats->getConstructionCost($clan, $facility->type, $facility->level));
+		$time = $stats->getConstructionTime($clan, $facility->type, $level) / 2;
+
+		if ($this->context->model->getResourceRepository()->checkResources($clan, $price)) {
+			$this->create(array(
+				'target' => $field,
+				'owner' => $field->owner,
+				'type' => 'facilityConstruction',
+				'timeout' => $time
+			), FALSE);
+			$this->context->model->getResourceService()->pay($clan, $price, NULL, FALSE);
+			$this->context->model->getClanService()->issueOrder($clan, FALSE);
+			$this->entityManager->flush();
+		} else {
+			throw new InsufficientResourcesException;
+		}
+	}
+	
+	/**
 	 * Start demolition on given field
 	 * @param Entities\Field
 	 * @param int
