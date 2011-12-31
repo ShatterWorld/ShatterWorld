@@ -81,6 +81,7 @@
 	-ms-filter : "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
 	-moz-opacity : 0.9;
 	opacity : 0.9;
+	z-index: 5;
 }
 
 #content a {

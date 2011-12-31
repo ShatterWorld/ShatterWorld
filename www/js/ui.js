@@ -24,13 +24,13 @@ Game.UI = {
 		table.append(header, values);
 		return table;
 	},
-	
+
 	timeTable: function (time)
 	{
 		var formattedTime = Game.utils.formatTime(time);
 		return $('<table>').append($('<tr>').append($('<th>').html('Čas'), $('<td>').html(formattedTime)));
 	},
-	
+
 	Dialog: Class({
 		constructor: function (id)
 		{
@@ -38,15 +38,15 @@ Game.UI = {
 			this.element = $('<div />');
 			if (Game.utils.isset(id)) this.element.attr('id', id);
 		},
-		
+
 		config: {
 			width: 400,
 			height: 250,
 			position: ['center', 'center']
 		},
-		
+
 		hasButtons: true,
-		
+
 		getConfig: function ()
 		{
 			config = this.config;
@@ -57,7 +57,7 @@ Game.UI = {
 			}
 			return config;
 		},
-		
+
 		setConfig: function (key, value)
 		{
 			if (Game.utils.isset(this.id)) {
@@ -66,40 +66,40 @@ Game.UI = {
 				Game.cookie.set(this.id, JSON.stringify(config), 7);
 			}
 		},
-		
+
 		getBody: function ()
 		{
 			return Game.utils.isset(this.body) ? this.body : null;
 		},
-		
+
 		setBody: function (body)
 		{
 			this.body = body;
 			return this;
 		},
-		
+
 		getTitle: function ()
 		{
 			return Game.utils.isset(this.title) ? this.title : null;
 		},
-		
+
 		setTitle: function (title)
 		{
 			this.title = title;
 			return this;
 		},
-		
+
 		getSubmit: function ()
 		{
 			return Game.utils.isset(this.submit) ? this.submit : null;
 		},
-		
+
 		setSubmit: function (submit)
 		{
 			this.submit = submit;
 			return this;
 		},
-		
+
 		show: function ()
 		{
 			var element = this.element;
@@ -143,9 +143,10 @@ Game.UI = {
 			if (this.hasButtons && submit) {
 				$(element).parent().find('button').first().addClass('submitButton');
 			}
+			$(element).css('z-index', 4);
 			return element;
 		},
-		
+
 		closeHandler: function () {}
 	})
 }

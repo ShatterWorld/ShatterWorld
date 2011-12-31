@@ -79,12 +79,6 @@ Game.map = {
 	scrollY : 0,
 
 	/**
-	 * The largest z-index value
-	 * @var integer
-	 */
-	maxZ : 0,
-
-	/**
 	 * The largest X-position value
 	 * @var integer
 	 */
@@ -212,15 +206,13 @@ Game.map = {
 
 					var posX = Game.map.calculateXPos(field) - Game.map.dX;
 					var posY = Game.map.calculateYPos(field) - Game.map.dY;
-					var z = field['coordX']*field['coordY'];
-					Game.map.maxZ = Math.max(z, Game.map.maxZ);
 					Game.map.maxXPos = Math.max(posX, Game.map.maxXPos);
 					Game.map.maxYPos = Math.max(posY, Game.map.maxYPos);
 
 					var borderType = 'neutral';
 					var background = "url('"+basePath+"/images/fields/hex_"+field['type']+".png')";
 					var div = $('<div class="field" />').attr('id', 'field_'+field['coordX']+'_'+field['coordY']);
-					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: '+z+'; background: '+background+';';
+					var divStyle = 'width: 60px; height: 40px; position: absolute; left: '+posX+'px; top: '+posY+'px; z-index: 1; background: '+background+';';
 					div.attr('style', divStyle);
 					div.attr('data-id', field['id']);
 					div.attr('data-coordx', field['coordX']);
@@ -284,7 +276,7 @@ Game.map = {
 			var canvasWidth = Game.map.maxXPos + Game.map.fieldWidth;
 			var canvasHeight = Game.map.maxYPos + Game.map.fieldHeight;
 			Game.map.overlayDiv = $('<div id="overlay">');
-			Game.map.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight, 'position' : 'absolute', 'left' : 0, 'top' : 0});
+			Game.map.overlayDiv.css({'width' : canvasWidth, 'height' : canvasHeight, 'position' : 'absolute', 'left' : 0, 'top' : 0, 'z-index' : 2});
 			$('#map').append(Game.map.overlayDiv);
 			Game.map.overlay = new Raphael('overlay', canvasWidth, canvasHeight);
 
@@ -362,7 +354,6 @@ Game.map = {
 							path.attr({stroke: color, 'stroke-width': 4});
 						});
 
-						Game.map.overlay.canvas.style.zIndex = Game.map.maxZ + 1;
 					}
 				});
 			});
@@ -663,7 +654,6 @@ Game.map.tooltip = {
 		$("#fieldInfo #alliance").html(alliance);
 		Game.descriptions.translate('facility', facility, "#fieldInfo #facility");
 		$("#fieldInfo #level").html(level);
-		this.element.css('z-index', Game.map.maxZ + 3);
 		this.element.show();
 		this.field = field;
 	},
@@ -745,7 +735,7 @@ Game.map.contextMenu = {
 	show: function(field){
 
 		this.contextMenu.html('');
-		this.contextMenu.css('z-index', Game.map.maxZ + 2);
+		this.contextMenu.css('z-index', 3);
 		this.contextMenu.show();
 
 		$('#fieldInfo').hide();
