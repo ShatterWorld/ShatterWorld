@@ -77,7 +77,9 @@ a:hover {
 }
 
 .submenu h3 a {
-	color:white;
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
 }
 
 .submenu li {
