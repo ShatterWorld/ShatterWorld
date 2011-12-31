@@ -91,8 +91,20 @@ abstract class Attack extends AbstractRule implements IEvent
 	protected function damageTargetFacility (Entities\Event $event, $level, $processor)
 	{
 		if ($facility = $event->target->facility) {
-			$facility->setDamaged(TRUE);
-			$facility->setLevel(max(0, ($facility->getLevel() - $level)));
+			$originalLevel = $facility->level;
+			$newLevel = max(0, $facility->level - $level);
+			if ($facility->damaged || $newLevel <= 0) {
+				$this->getContext()->model->facilityService->delete($facility, FALSE);
+			} else {
+				$facility->setDamaged(TRUE);
+				$facility->setLevel($facility->getLevel() - $level);
+			}
+			$rule = $this->getContext()->rules->get('facility', $facility->type);
+			$value = 0;
+			for ($i = $originalLevel; $i > $newLevel; $i--) {
+				$value += $rule->getValue($i);
+			}
+			$this->getContext()->model->scoreService->decreaseClanScore($event->target->owner, 'facility', $value);
 		}
 	}
 	

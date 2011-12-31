@@ -27,13 +27,14 @@ class Occupation extends Attack
 			}
 			if ($facility = $event->target->facility) {
 				$this->damageTargetFacility($event, 1, $processor);
-				if ($result['totalVictory']) {$value = 0;
+				if ($result['totalVictory']) {
+					$value = 0;
 					$rule = $this->getContext()->rules->get('facility', $facility->level);
 					for ($i = $facility->level; $i > 0; $i--) {
 						$value += $rule->getValue($i);
 					}
-					$this->getContext()->model->resourceService->recalculateProduction($event->owner);
-					$this->getContext()->model->resourceService->recalculateProduction($event->target->owner);
+					$this->getContext()->model->resourceService->recalculateProduction($event->owner, $event->term);
+					$this->getContext()->model->resourceService->recalculateProduction($event->target->owner, $event->term);
 					$this->getContext()->model->scoreService->decreaseClanScore($event->target->owner, 'facility', $value);
 					$this->getContext()->model->scoreService->increaseClanScore($event->owner, 'facility', $value);
 				}

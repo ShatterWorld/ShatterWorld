@@ -22,7 +22,7 @@ class Razing extends AbstractRule implements IEvent
 	
 	public function getExplanation (Entities\Event $event)
 	{
-		return sprintf('Ničivvý útok na %s', $event->target->getCoords());
+		return sprintf('Ničivý útok na %s', $event->target->getCoords());
 	}
 	
 	public function formatReport (Entities\Report $report)
