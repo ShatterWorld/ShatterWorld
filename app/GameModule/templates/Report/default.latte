@@ -1,6 +1,7 @@
 {block #scripts}
 	{include #parent}
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/reports.css" />
+	<script type="text/javascript" src="{$basePath}/js/reports.js"></script>
 {/block}
 
 {block #header}
@@ -11,11 +12,11 @@
 	{if $reports}
 		<a n:href="markRead!">Označit všechna hlášení jako přečtená</a>
 		{control pager}
-		<div n:foreach="$reports as $report" class="report {$report->read ? 'read' : 'unread'}">
+		<div n:foreach="$reports as $report" id="{$report->id}" class="report {$report->read ? 'read' : 'unread'}">
 			{?$rule = $rules->get('event', $report->event->type)}
 
 			<div class="reportHead">
-				<h2 class="leftFloater">{$rule->getDescription()}</h2>
+				<div class="headline leftFloater">{$rule->getDescription()}</div>
 				<div class="date rightFloater">{$report->event->term|date:$dateFormat}</div>
 				<div class="clearer"><span></span></div>
 			</div>

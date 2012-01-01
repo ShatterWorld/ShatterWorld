@@ -3,6 +3,7 @@ namespace GameModule;
 use Grid;
 use Pager;
 use Nette;
+use Nette\Diagnostics\Debugger;
 
 class ReportPresenter extends BasePresenter
 {
@@ -15,10 +16,16 @@ class ReportPresenter extends BasePresenter
 		$this->template->dateFormat = $this->context->params['game']['setting']['dateFormat']['report'];
 	}
 
-	public function handleMarkRead ()
+	public function handleMarkReadAll ()
 	{
 		$this->getReportService()->markReadAll($this->getPlayerClan());
 		$this->redirect('this');
+	}
+
+	public function handleMarkRead ($reportId)
+	{
+		$this->getReportService()->markRead($this->getPlayerClan(), $reportId);
+		Debugger::fireLog($a = 'a');
 	}
 
 	protected function createComponentUnitGrid ()

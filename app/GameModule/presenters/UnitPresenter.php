@@ -106,7 +106,7 @@ class UnitPresenter extends BasePresenter
 			$this->redirect('Unit:');
 		}
 
-		$this->context->model->getMoveService()->startUnitMovement($unit->location, $clan->headquarters, $clan, 'unitMovement', array($unitId => $unitCount));
+		$this->context->model->getMoveService()->startUnitMovement($unit->location, $clan->headquarters, $clan, 'unitMovement', array($unitId => $unit->count));
 		$this->flashMessage('Přesun zahájen.');
 		$this->redirect('Unit:');
 	}
