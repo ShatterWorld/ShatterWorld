@@ -25,7 +25,7 @@ class ReportPresenter extends BasePresenter
 	public function handleMarkRead ($reportId)
 	{
 		$this->getReportService()->markRead($this->getPlayerClan(), $reportId);
-		Debugger::fireLog($a = 'a');
+		$this->invalidateControl('reports');
 	}
 
 	protected function createComponentUnitGrid ()
