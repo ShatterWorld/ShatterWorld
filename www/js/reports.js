@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 	$(".report .reportHead").click(function(){
 		var report = $(this).parent();
-		report.children(".reportBody").toggle("fast");
+		report.children(".reportBody").slideToggle("fast");
 
 		var params = {'reportId': report.attr('id')};
 
