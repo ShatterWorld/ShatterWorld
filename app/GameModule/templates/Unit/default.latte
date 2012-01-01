@@ -34,7 +34,7 @@
 						{/if}
 					</td>
 					<td class="action">
-						{if $clan->headquarters->id !== $unit->location->id}
+						{if $clan->headquarters->id !== $unit->location->id && !$unit->move}
 							<a n:href="moveHome! $unit->id">Přesunout na velitelství</a>
 						{/if}
 					</td>

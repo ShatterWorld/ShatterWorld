@@ -2,7 +2,7 @@
 	margin-bottom: 1em;
 }
 
-.report h2 {
+.unread .headline, .unread .date {
 	font-weight: bold;
 }
 
@@ -17,6 +17,7 @@ td, th.top {
 .reportHead {
 	background: #b8b8b8;
 	padding: 0px 5px;
+	cursor: pointer;
 }
 
 .reportBody {
