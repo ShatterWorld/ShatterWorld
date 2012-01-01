@@ -766,12 +766,18 @@ Game.map.contextMenu = {
 					if(field['facility'].type === 'workshop' || field['facility'].type === 'barracks'){
 						actions.push(this.actions.redirectTrainUnits);
 					}
-
-					actions.push(this.actions.upgradeFacility);
-					actions.push(this.actions.destroyFacility);
-					if(field.facility['level'] > 1){
-						actions.push(this.actions.downgradeFacility);
+					
+					if (field.facility.damaged) {
+						actions.push(this.actions.repairFacility);
+					} else {
+						actions.push(this.actions.upgradeFacility);
+						actions.push(this.actions.destroyFacility);
+						if (field.facility['level'] > 1) {
+							actions.push(this.actions.downgradeFacility);
+						}
 					}
+					
+					
 				}
 			} else {
 				actions.push(this.actions.buildFacility);
@@ -981,6 +987,30 @@ Game.map.contextMenu = {
 				menu.show();
 			}
 		},
+		repairFacility: {
+			title: 'Opravit budovu',
+			click: function (target) {
+				var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
+				dialog.setTitle('Opravit budovu');
+				var label = $('<span>');
+				Game.descriptions.translate('facility', target.facility.type, label);
+				dialog.setBody($('<span>').append(label).append(' (' + target.facility.level + ')'));
+				dialog.setCost(Game.map.contextMenu.repairs[target.facility.type][target.facility.level].cost, Game.map.contextMenu.repairs[target.facility.type][target.facility.level].time);
+				dialog.setSubmit({
+					text: 'Zahájit opravy',
+					click: function () {
+						Game.map.contextMenu.hide();
+						Game.utils.signal('repairFacility', {'targetId': target['id']}, function () {
+							Game.events.refresh();
+							Game.resources.fetchResources();
+							Game.map.marker.unmarkByType('selected');
+							Game.map.disableField(target);
+						});
+					}
+				});
+				dialog.show();
+			}
+		},
 		leaveField: {
 			title: 'Opustit pole',
 			click: function (target) {
@@ -1010,6 +1040,7 @@ Game.map.contextMenu = {
 			Game.map.contextMenu.facilities = data['facilities'];
 			Game.map.contextMenu.upgrades = data['upgrades'];
 			Game.map.contextMenu.downgrades = data['downgrades'];
+			Game.map.contextMenu.repairs = data['repairs'];
 			Game.map.contextMenu.demolitions = data['demolitions'];
 		});
 

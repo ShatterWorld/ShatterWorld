@@ -44,6 +44,11 @@ class Construction extends AbstractStat
 		return $price;
 	}
 
+	public function getRepairCost (Entities\Clan $clan, $facility, $level = 1)
+	{
+		return array_map(function ($value) { return (floor($value / 2)); }, $this->getConstructionCost($clan, $facility, $level));
+	}
+	
 	public function getDemolitionCost (Entities\Clan $clan, $facility, $from, $level = 0)
 	{
 		$rule = $this->getContext()->rules->get('facility', $facility);
@@ -61,6 +66,11 @@ class Construction extends AbstractStat
 		return $time * $this->getCoefficient($clan);
 	}
 
+	public function getRepairTime (Entities\Clan $clan, $facility, $level = 1)
+	{
+		return floor($this->getConstructionTime($clan, $facility, $level) / 2);
+	}
+	
 	public function getDemolitionTime (Entities\Clan $clan, $facility, $from, $level = 0)
 	{
 		$rule = $this->getContext()->rules->get('facility', $facility);

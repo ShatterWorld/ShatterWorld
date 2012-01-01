@@ -32,36 +32,47 @@ class Facility extends BaseRepository
 	{
 		$qb = $this->createQueryBuilder('f')->innerJoin('f.location', 'l');
 		$qb->where($qb->expr()->eq('l.owner', $clan->id));
-		$qb->groupBy('f.type, f.level');
+		$qb->groupBy('f.type, f.level, f.damaged');
 		$result = array(
 			'upgrades' => array(),
 			'downgrades' => array(),
+			'repairs' => array(),
 			'demolitions' => array()
 		);
 		$stats = $this->context->stats->construction;
 		foreach ($qb->getQuery()->getResult() as $facility) {
-			if ($facility->level < $this->context->params['game']['stats']['facilityLevelCap']) {
-				if (!isset($result['upgrades'][$facility->type])) {
-					$result['upgrades'][$facility->type] = array();
+			if ($facility->damaged) {
+				if (!isset($result['repairs'][$facility->type])) {
+					$result['repairs'][$facility->type] = array();
 				}
-				$level = $facility->level + 1;
 				$info = array();
-				$info['cost'] = $stats->getConstructionCost($clan, $facility->type, $level);
-				$info['time'] = $stats->getConstructionTime($clan, $facility->type, $level);
-				$result['upgrades'][$facility->type][$level] = $info;
-			}
-			if ($facility->level > 1) {
-				if (!isset($result['downgrades'][$facility->type])) {
-					$result['downgrades'][$facility->type] = array();
+				$info['cost'] = $stats->getRepairCost($clan, $facility->type, $facility->level);
+				$info['time'] = $stats->getRepairTime($clan, $facility->type, $facility->level);
+				$result['repairs'][$facility->type][$facility->level] = $info;
+			} else {
+				if ($facility->level < $this->context->params['game']['stats']['facilityLevelCap']) {
+					if (!isset($result['upgrades'][$facility->type])) {
+						$result['upgrades'][$facility->type] = array();
+					}
+					$level = $facility->level + 1;
+					$info = array();
+					$info['cost'] = $stats->getConstructionCost($clan, $facility->type, $level);
+					$info['time'] = $stats->getConstructionTime($clan, $facility->type, $level);
+					$result['upgrades'][$facility->type][$level] = $info;
 				}
-				$level = $facility->level - 1;
-				$info = array();
-				$info['cost'] = $stats->getDemolitionCost($clan, $facility->type, $facility->level, $level);
-				$info['time'] = $stats->getDemolitionTime($clan, $facility->type, $facility->level, $level);
-				$result['downgrades'][$facility->type][$level] = $info;
-			}
-			if (!isset($result['demolitions'][$facility->type])) {
-				$result['demolitions'][$facility->type] = array();
+				if ($facility->level > 1) {
+					if (!isset($result['downgrades'][$facility->type])) {
+						$result['downgrades'][$facility->type] = array();
+					}
+					$level = $facility->level - 1;
+					$info = array();
+					$info['cost'] = $stats->getDemolitionCost($clan, $facility->type, $facility->level, $level);
+					$info['time'] = $stats->getDemolitionTime($clan, $facility->type, $facility->level, $level);
+					$result['downgrades'][$facility->type][$level] = $info;
+				}
+				if (!isset($result['demolitions'][$facility->type])) {
+					$result['demolitions'][$facility->type] = array();
+				}
 			}
 			$info = array();
 			$info['cost'] = $stats->getDemolitionCost($clan, $facility->type, $facility->level, 0);

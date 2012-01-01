@@ -106,14 +106,14 @@ class Construction extends Event
 		$clan = $field->owner;
 		$facility = $field->facility;
 		$stats = $this->context->stats->construction;
-		$price = array_map(function ($val) { return $val / 2; }, $stats->getConstructionCost($clan, $facility->type, $facility->level));
-		$time = $stats->getConstructionTime($clan, $facility->type, $level) / 2;
+		$price = $stats->getRepairCost($clan, $facility->type, $facility->level);
+		$time = $stats->getRepairTime($clan, $facility->type, $facility->level);
 
 		if ($this->context->model->getResourceRepository()->checkResources($clan, $price)) {
 			$this->create(array(
 				'target' => $field,
 				'owner' => $field->owner,
-				'type' => 'facilityConstruction',
+				'type' => 'facilityRepair',
 				'timeout' => $time
 			), FALSE);
 			$this->context->model->getResourceService()->pay($clan, $price, NULL, FALSE);

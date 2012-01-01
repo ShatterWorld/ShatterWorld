@@ -42,6 +42,7 @@ class MapPresenter extends BasePresenter
 		$changes = $this->getFacilityRepository()->getAvailableFacilityChanges($clan);
 		$this->payload->upgrades = $changes['upgrades'];
 		$this->payload->downgrades = $changes['downgrades'];
+		$this->payload->repairs = $changes['repairs'];
 		$this->payload->demolitions = $changes['demolitions'];
 		$this->sendPayload();
 	}
@@ -159,6 +160,26 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		} catch (MissingDependencyException $e){
 			$this->flashMessage('Nemáte vyzkoumáno vše potřebné', 'error');
+		}
+	}
+	
+	public function handleRepairFacility ($targetId)
+	{
+		$target = $this->context->model->getFieldRepository()->find($targetId);
+		try {
+			$this->context->model->getConstructionService()->startFacilityRepair($target);
+			$this->invalidateControl('orders');
+			$this->invalidateControl('resources');
+			$this->invalidateControl('events');
+			$this->flashMessage('Stavba zahájena');
+		} catch (MultipleConstructionsException $e) {
+			$this->flashMessage('Na tomto poli už probíhá nějaká stavba', 'error');
+		} catch (InsufficientResourcesException $e) {
+			$this->flashMessage('Nemáte dostatek surovin', 'error');
+		} catch (RuleViolationException $e) {
+			$this->flashMessage('Nelze stavět na cizím, nebo zastaveném poli', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
 	}
 
