@@ -18,8 +18,12 @@
 		<th class="left">
 			{$object instanceof DataRow ? $object->getLabel() : ''}
 		</th>
-		<td n:foreach="$columns as $key => $label">
-			{isset($object[$key]) ? $object[$key] : 0}
+		{foreach $columns as $key => $label}
+		{if isset($object[$key]) && $object[$key] != 0}
+		<td>
+			{$object[$key]}
 		</td>
+		{/if}
+		{/foreach}
 	</tr>
 </table>
