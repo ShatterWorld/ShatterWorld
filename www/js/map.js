@@ -766,7 +766,7 @@ Game.map.contextMenu = {
 					if(field['facility'].type === 'workshop' || field['facility'].type === 'barracks'){
 						actions.push(this.actions.redirectTrainUnits);
 					}
-					
+
 					if (field.facility.damaged) {
 						actions.push(this.actions.repairFacility);
 					} else {
@@ -776,8 +776,8 @@ Game.map.contextMenu = {
 							actions.push(this.actions.downgradeFacility);
 						}
 					}
-					
-					
+
+
 				}
 			} else {
 				actions.push(this.actions.buildFacility);
@@ -1133,7 +1133,7 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		$(element).append(table);
 		$.each(this.origin['units'], function (key, unit) {
 			var tr = $('<tr id="'+unit['id']+'" />');
-			tr.append('<td class="name" style="width:100px">'+key+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
+			tr.append('<td class="name" id="'+key+'" style="width:100px">'+key+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
 			table.append(tr);
 			tr.children('.max').click(function(){
 				tr.children('.count').children('input').val(unit['count']);
@@ -1177,6 +1177,21 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		});
 		return result;
 	},
+
+	subtracktUnits: function (units)
+	{
+		var origin = this.origin;
+		$.each(units, function(id, unit){
+			name = $('#units #' + id + ' .name').attr('id');
+			units = origin['units'];
+			unit = origin['units'][name];
+			count = origin['units'][name]['count'];
+			d = unit['count'];
+			origin['units'][name]['count'] -= parseInt(unit['count']);
+			res = origin['units'][name]['count'];
+		});
+	},
+
 
 	selectTarget: function (e)
 	{
@@ -1227,7 +1242,9 @@ Game.map.contextMenu.AttackDialog = Class({
 				'targetId': context.target['id'],
 				'type': $('#attackType').val()
 			};
-			jQuery.extend(params, context.getUnitList());
+			var units = context.getUnitList();
+			context.subtracktUnits(units);
+			jQuery.extend(params, units);
 			Game.utils.signal('sendAttack', params, function () {
 				Game.events.refresh();
 				Game.spinner.hide();
