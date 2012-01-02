@@ -19,11 +19,9 @@
 			{$object instanceof DataRow ? $object->getLabel() : ''}
 		</th>
 		{foreach $columns as $key => $label}
-		{if isset($object[$key]) && $object[$key] != 0}
 		<td>
-			{$object[$key]}
+			{isset($object[$key]) ? $object[$key] : 0}
 		</td>
-		{/if}
 		{/foreach}
 	</tr>
 </table>
