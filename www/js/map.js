@@ -1183,12 +1183,7 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		var origin = this.origin;
 		$.each(units, function(id, unit){
 			name = $('#units #' + id + ' .name').attr('id');
-			units = origin['units'];
-			unit = origin['units'][name];
-			count = origin['units'][name]['count'];
-			d = unit['count'];
-			origin['units'][name]['count'] -= parseInt(unit['count']);
-			res = origin['units'][name]['count'];
+			origin['units'][name]['count'] = parseInt(origin['units'][name]['count']) - parseInt(unit);
 		});
 	},
 
@@ -1284,7 +1279,9 @@ Game.map.contextMenu.MoveDialog = Class({
 				'originId': context.origin['id'],
 				'targetId': context.target['id']
 			};
-			jQuery.extend(params, context.getUnitList());
+			var units = context.getUnitList();
+			context.subtracktUnits(units);
+			jQuery.extend(params, units);
 			Game.utils.signal('moveUnits', params, function () {
 				Game.events.refresh();
 				Game.spinner.hide();
@@ -1356,6 +1353,9 @@ Game.map.contextMenu.SpyDialog = Class({
 
 			};
 			params[unitId] = $('#spyInput').val();
+			var units = Array();
+			units[unitId] = $('#spyInput').val();
+			context.subtracktUnits(units);
 
 			Game.utils.signal('sendSpy', params, function () {
 				Game.events.refresh();
@@ -1389,7 +1389,9 @@ Game.map.contextMenu.ExplorationDialog = Class({
 				'originId': context.origin['id'],
 				'targetId': context.target['id']
 			};
-			jQuery.extend(params, context.getUnitList());
+			var units = context.getUnitList();
+			context.subtracktUnits(units);
+			jQuery.extend(params, units);
 			Game.utils.signal('sendExploration', params, function () {
 				Game.events.refresh();
 				Game.spinner.hide();
