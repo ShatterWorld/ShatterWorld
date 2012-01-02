@@ -235,7 +235,7 @@ class Field extends BaseRepository
 		}
 		$unitsQb = $this->getEntityManager()->createQueryBuilder();
 		$unitsQb->select('u', 'l')->from('Entities\Unit', 'u')->innerJoin('u.location', 'l');
-		$conds = array();
+		$conds = array($qb->expr()->isNull('u.move'));
 		if ($clan) {
 			$conds[] = $unitsQb->expr()->eq('u.owner', $clan->id);
 		}
