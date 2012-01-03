@@ -3,7 +3,7 @@ namespace Rules\Events;
 use Rules\AbstractRule;
 use Entities;
 
-class Razing extends AbstractRule implements IEvent
+class Razing extends Attack implements IEvent
 {
 	public function getDescription ()
 	{
