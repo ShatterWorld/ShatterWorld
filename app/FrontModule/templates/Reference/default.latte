@@ -1,9 +1,150 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/reference.css" />
+{/block}
+
 {block #header}
 	Návod
 {/block}
 
 {block #content}
-	<p>Na vytvoření komplexního popisu hry stále pracujeme. Zatím můžete využít naší <a href="https://github.com/ShatterWorld/ShatterWorld/wiki" target="_blank">Wiki</a></p>
-	Děkujeme za pochopení
+	<h2>Příběh</h2>
+	<p>
+		Příběh bude brzy doplněn...
+	</p>
+
+	<h2>Klan</h2>
+	<p>
+		Klan je skupina lidí, které velíš. Společně okupují území, pracují, bojují a snaží se přežít.
+	</p>
+	<p>
+		Hráč může vlastnit i více klanů. První klan založíš při prvním přihlášení, další klany můžeš založit v menu Hráč->Klan->Založit další klan
+	</p>
+
+	<h2>Rozkazy <img src="{$basePath}/images/icons/orders.png" /></h2>
+	<p>
+		Jako velitel klanu vydáváš rozkazy (obchod, výzkum, útoky). Rozkazů můžeš ale vydate pouze omezený počet. Každých {$orderTime}s ti přibyde do zásobníku nový rozkaz. Těch můžeš nasbírat maximálne {$orderCap}, potom začnou propadat.
+	</p>
+
+	<h2>Aliance</h2>
+	<p>
+		Aliance je sdružení klanů pod vedením jednoho z nich - vůdce. V menu Hráč->Aliance můžeš založit vlastní alianci, nebo požádat o vstup do nějaké jiné. Pokud jsi vůdcem aliance, můžeš přijímat nové členy, stávající propouštět, nebo se vzdát vůdcovství.
+	</p>
+
+	<h2>Profil</h2>
+	<p>
+		V menu Hráč->Profil najdeš informace o svém účtu. Můžeš zde nastavit nové heslo nebo kontaktní e-mail, stejně tak jako vyplnit veřejné údaje, jako např. avatar nebo své jméno.
+	</p>
+
+	<h2>Mapa</h2>
+	<p>
+		Nejvíce navštěvovaná bude bezpochyby mapa. Mapa je rozdělena na šestiúhelníková políčka. Na začátku tvůj klan vlastní {$initialFieldsCount} políček (ohraničeno tyrkysově). Při najetí na políčko se ti zobrazí co  daném políčku víš. Po kliknutí na vlastní pole můžeš stavět/bourat budovy, spravovat jednotky a další. S tebou přímo sousedící pole je možné kolonizovat, klepnutím na ně. Ostatní pole je možné alespoň prozkoumat, což ti může přinést zajímavou odměnu.
+	</p>
+
+	<h2>Suroviny</h2>
+	<p>
+		Pro ekonomiku a dobrý chod klanu jsou potřeba suroviny.
+	</p>
+	<ul>
+		<li>Jídlo <img src="{$basePath}/images/resources/food.png" /></li>
+		<li>Kov <img src="{$basePath}/images/resources/metal.png" /></li>
+		<li>Kámen <img src="{$basePath}/images/resources/stone.png" /></li>
+		<li>Palivo <img src="{$basePath}/images/resources/fuel.png" /></li>
+	</ul>
+	<p>
+		Suroviny můžeš těžit nebo pěstovat ve specializovaných budovách, lze s nimi obchodovat, nebo je získávat od ostatních hráčů loupeživými útoky.
+	</p>
+
+
+	<h2>Události</h2>
+	<p>
+		Veškeré události (stavba budovy, útok atd.) tvého klanu se odpočítávájí <img src="{$basePath}/images/icons/time.png" /> v reálném čase a můžeš je sledovat po najetí na tuto ikonku v horním menu. Události, které již proběhly se zaznamenávají do hlášení <img src="{$basePath}/images/icons/unreadReports.png" />
+	</p>
+
+	<h2>Zprávy</h2>
+	<p>
+		Hráči si mohou mezi sebou posílat zprávy <img src="{$basePath}/images/icons/message.png" />. Zpráva se odesílá vždy na herní jméno; pokud je příjemců víc, oddělují se středníkem, čárkou, nebo mezerou.
+	</p>
+
+	<h2>Budovy</h2>
+	<p>
+		Na každém políčku může být nejvýše jedna budova. Každá budova je jiná, některá produkuje suroviny, jiná vojáky a některé jsou ryze obranné.
+	</p>
+	<table>
+	{foreach $facilityRules as $facility}
+		<tr>
+			<td>{$facility->getDescription()}</td>
+		</tr>
+	{/foreach}
+	</table>
+
+	<h2>Jednotky</h2>
+	<p>
+		Ozbrojené složky jsou důležitou součástí tvého klanu. Díky nim můžeš bránit, útočit nebo prozkoumávat okolí. Každé jednotka ovšem spotřebovává jídlo a/nebo palivo.
+	</p>
+	<table>
+		<tr>
+			<th>Jednotka</th>
+			<th>Síla</th>
+		</tr>
+	{foreach $unitRules as $unit}
+		<tr>
+			<td>{$unit->getDescription()}</td>
+			<td class="force">{$unit->getAttack()}/{$unit->getDefense()}</td>
+			<td></td>
+		</tr>
+	{/foreach}
+	</table>
+	<p>
+		Sílu jednotek můžeš zvýšit výzkumem.
+	</p>
+	<p>
+		Jendotky trénuješ v menu Jednotky->Trénovat. Počet jednotek, které můžeš vytrénovat na jeden rozkaz závisí na počtu a úrovni kasáren a továren.
+	</p>
+
+	<h2>Tržnice</h2>
+	<p>
+		Tržnice je jediné místo, kde můžeš obchodovat s ostatními hráči. Pokud chceš uskutečnit obchod, můžeš vytvořit novou nabídu, nebo přijmout nabídku jiného hráče.
+	</p>
+	<p>
+		Zboží cestuje velmi reálně: předává se mezi jednotlivými klany, a každý klan si z průchozího zboží vezme procentuální daň. Daň se platí pouze ze zboží, které putuje ke klanu, který přijmul nabídku. Výši své daně můžeš ovlivnit výzkumem Profit z obchodu.
+	</p>
+	<p>
+		Klanu nejsou viditelné všechny nabídky, pouze ty, které nabízí hráči v určitém okruhu od klanu. Tento okruh je definován maximálním počtem prostředníků, přes které smí zboží putovat. Počet prostředníků si můžeš zvýšit výzkumem Obchodní stezky.
+	</p>
+
+	<h2>Výzkum</h2>
+	<p>
+		Výzkum je klíčový herní prvek. Výzkumy kladně ovlivňuje tvé budovy, jednotky, obchod a mnohé další.
+		{foreach $researches as $categoryKey => $category}
+			<h3>{$categoryKey}</h3>
+			<table id = "researches">
+				<tr>
+					<th class="type">Výzkum</th>
+					<th class="max">Max</th>
+					<th class="expl">Popis</th>
+				</tr>
+				{foreach $category as $key => $research}
+				<tr>
+					<td class="type">{$research->getDescription()}</td>
+					<td class="max">{$research->getLevelCap()}</td>
+					<td class="expl">{$research->getExplanation()}</td>
+				</tr>
+				{/foreach}
+			</table>
+		{/foreach}
+	</p>
+
+	<h2>Žebříčky</h2>
+	<p>
+		V menu Žebříčky najdeš seřazené klany a aliance podle celkového skóre. Vítězem hry se stává klan/aliance s nejvyšším skórem. Skóre se počítá s aktuálního počtu jednotek, budov, území, výzkumů, produkce a splněných úkolů. Detaily o tvém skóre najdeš v menu Hráč->Klan.
+	</p>
+
+	<h2>Úkoly</h2>
+	<p>
+		Úkoly jsou cílem hry, je za ně totiž největší množství bodů. Úkoly mohou být různého typu (vleikost území, úspěšné útoky atd.). Úkoly mají úrovně, čim vyšší úroveň úkolu, tím vyšší je i jeho obtížnost, a počet bodů, který za něj získáš.
+	</p>
+
+
 {/block}
 
