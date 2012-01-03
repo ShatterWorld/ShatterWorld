@@ -1133,7 +1133,9 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		$(element).append(table);
 		$.each(this.origin['units'], function (key, unit) {
 			var tr = $('<tr id="'+unit['id']+'" />');
-			tr.append('<td class="name" id="'+key+'" style="width:100px">'+key+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
+			unitName = key;
+			Game.descriptions.translate('unit', key, unitName);
+			tr.append('<td class="name" id="'+key+'" style="width:100px">'+unitName+'</td><td class="count"><input type="text" size="5" name="'+key+'" /></td><td class="max" style="width:50px; text-align:right">('+unit['count']+')</td>');
 			table.append(tr);
 			tr.children('.max').click(function(){
 				tr.children('.count').children('input').val(unit['count']);

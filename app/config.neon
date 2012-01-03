@@ -28,12 +28,12 @@ common:
 			baseAbandonmentTime: 60
 			baseStorage: 1200
 			orderTime: 3600
-			orderCap: 30
+			orderCap: 100
 			facilityLevelCap: 10
 			baseTradingRadius: 7
 			baseMerchantSpeed: 1
 			baseTradeProfit: 0.01
-			clanQuota: 15
+			clanQuota: 3
 			allianceMemberQuota: 10
 
 		ruleAliases:
