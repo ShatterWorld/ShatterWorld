@@ -1,0 +1,16 @@
+table {
+	width: 100%;
+}
+
+td.type {
+	width: 150px;
+}
+
+th {
+	font-weight: bold;
+}
+
+h2 {
+	margin-top: 10px;
+	border-top: black solid 1px;
+}
