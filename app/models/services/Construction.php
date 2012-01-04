@@ -5,6 +5,7 @@ use Entities;
 use Rules\Facilities\IConstructionFacility;
 use InsufficientResourcesException;
 use InsufficientCapacityException;
+use InsufficientOrdersException;
 use MultipleConstructionsException;
 use MissingDependencyException;
 use ConflictException;

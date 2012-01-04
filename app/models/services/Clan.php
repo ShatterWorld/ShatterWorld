@@ -2,6 +2,7 @@
 namespace Services;
 use Nette\Caching\Cache;
 use Nette\Diagnostics\Debugger;
+use InsufficientOrdersException;
 use Entities;
 use ArraySet;
 
