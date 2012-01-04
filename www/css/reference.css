@@ -10,7 +10,28 @@ th {
 	font-weight: bold;
 }
 
+td, th {
+	text-align: center;
+}
+
 h2 {
 	margin-top: 10px;
 	border-top: black solid 1px;
+}
+
+p {
+	text-indent: 20px;
+	margin-bottom: 10px;
+}
+
+.leftAlign {
+	text-align: left;
+}
+
+#researches .type {
+	width: 150px;
+}
+
+#researches td.explanation {
+	text-align: left;
 }

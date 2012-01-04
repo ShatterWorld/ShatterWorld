@@ -10,6 +10,9 @@ class ReferencePresenter extends BasePresenter {
 		$this->template->initialFieldsCount = $this->context->params['game']['map']['initialFieldsCount'];
 		$this->template->facilityRules = $this->context->rules->getAll('facility');
 		$this->template->unitRules = $this->context->rules->getAll('unit');
+		$this->template->fieldRules = $this->context->rules->getAll('field');
+		$this->template->resourceRules = $this->context->rules->getAll('resource');
+		$this->template->questRules = $this->context->rules->getAll('quest');
 
 		$researches = array();
 		foreach ($this->context->rules->getAll('research') as $key => $research){

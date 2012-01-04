@@ -20,15 +20,24 @@
 	<p>
 		Hráč může vlastnit i více klanů. První klan založíš při prvním přihlášení, další klany můžeš založit v menu Hráč->Klan->Založit další klan
 	</p>
-
-	<h2>Rozkazy <img src="{$basePath}/images/icons/orders.png" /></h2>
 	<p>
-		Jako velitel klanu vydáváš rozkazy (obchod, výzkum, útoky). Rozkazů můžeš ale vydate pouze omezený počet. Každých {$orderTime}s ti přibyde do zásobníku nový rozkaz. Těch můžeš nasbírat maximálne {$orderCap}, potom začnou propadat.
+		Každý klan má nezničitelnou budovu - velitelství. Právě sem se ti po tréninku jednotky přesouvají, je to ústředí celého klanu.
+	</p>
+
+	<h2>Rozkazy</h2>
+	<p>
+		Jako velitel klanu vydáváš rozkazy (obchod, výzkum, útoky) <img src="{$basePath}/images/icons/orders.png" />. Rozkazů můžeš ale vydate pouze omezený počet. Každých {floor($orderTime/60)}min ti přibyde do zásobníku nový rozkaz. Těch můžeš nasbírat maximálne {$orderCap}, potom začnou propadat.
+	</p>
+	<p>
+		Neplýtvej zbytečně rozkazy, na zbytečné přesuny jednotek nebo ukrývání zboží na tržnici, budou se ti hodit při útočení!
 	</p>
 
 	<h2>Aliance</h2>
 	<p>
 		Aliance je sdružení klanů pod vedením jednoho z nich - vůdce. V menu Hráč->Aliance můžeš založit vlastní alianci, nebo požádat o vstup do nějaké jiné. Pokud jsi vůdcem aliance, můžeš přijímat nové členy, stávající propouštět, nebo se vzdát vůdcovství.
+	</p>
+	<p>
+		Komunikace v laianci je klíčová, pouze dobře fungující aliance, které si umí vzájemně (vojensky i ekonomicky) pomoci mají šanci obstát.
 	</p>
 
 	<h2>Profil</h2>
@@ -38,22 +47,57 @@
 
 	<h2>Mapa</h2>
 	<p>
-		Nejvíce navštěvovaná bude bezpochyby mapa. Mapa je rozdělena na šestiúhelníková políčka. Na začátku tvůj klan vlastní {$initialFieldsCount} políček (ohraničeno tyrkysově). Při najetí na políčko se ti zobrazí co  daném políčku víš. Po kliknutí na vlastní pole můžeš stavět/bourat budovy, spravovat jednotky a další. S tebou přímo sousedící pole je možné kolonizovat, klepnutím na ně. Ostatní pole je možné alespoň prozkoumat, což ti může přinést zajímavou odměnu.
+		Interaktivní mapa je základem celé hry. Stejně jako v reálu vidíš jen určitou vzdálenost kolem svého a aliančních klanů. Vzdálenost, kterou vidíš, můžeš zvýšit pokrokem Viditelnost.
+	</p>
+	<p>
+		Selý svět Shatter World je rozdělen na šestiúhelníková pole. Pole jsou různého typu, a v závislosti na nich získáváš bonusy k produkci surovin a k obreně
+	</p>
+	<table>
+		<tr>
+			<th>Typ</th>
+			{foreach $resourceRules as $key => $resource}
+				<th><img src="{$basePath}/images/resources/{$key}.png" /></th>
+			{/foreach}
+			<th>Obranný bonus</th>
+		</tr>
+	{foreach $fieldRules as $field}
+		<tr>
+			<th class="leftAlign">{$field->getDescription()}</th>
+			{?$bonuses = $field->getProductionBonuses()}
+			{foreach $resourceRules as $key => $resource}
+				{if isset($bonuses[$key])}
+					<td>{$bonuses[$key]}%</td>
+				{else}
+					<td>0%</td>
+				{/if}
+			{/foreach}
+			<td>{$field->getDefenceBonus()*100}%</td>
+		</tr>
+	{/foreach}
+	</table>
+	<p>
+		Území tvého klanu je ohraničemo tyrkysově, soupeřovo červeně a aliančních členů fialově.
+	</p>
+	<p>
+		Na začátku tvůj klan vlastní {$initialFieldsCount} políček. Při najetí myší na libovolné políčko se ti zobrazí co daném políčku víš. Kliknutím na něj můžeš zahájit nějakou akci.
+		Po kliknutí na vlastní pole můžeš stavět/bourat budovy, spravovat jednotky a další. S tebou přímo sousedící pole je možné kolonizovat, klepnutím na ně. Ostatní pole je možné alespoň prozkoumat, což ti může přinést zajímavou odměnu v podobě surovin. Počet surovin které si odneseš závisí na úrovni pokorku Průzkum a počtu jednotek které vyšleš.
+	</p>
+	<p>
+		Na svém území můžeš stavět, bourat, vylepšovat a snižovat úroveň budov, své pole můžeš opustit, nebo odtud můžeš vysílat útoky a průzkumy.
+	</p>
+	<p>
+		Přímo sousedící neutrální pole lze kliknutím na ně kolonizovat. Kolonizace stojí suroviny a trvá nějaký čas. Oboje zmíněné se zvyšují s veliksotí tvého stávajícího území a zároveň se vzdáleností od velitelství.
 	</p>
 
 	<h2>Suroviny</h2>
 	<p>
-		Pro ekonomiku a dobrý chod klanu jsou potřeba suroviny.
+		Pro ekonomiku a dobrý chod klanu jsou potřeba suroviny. Suroviny můžeš těžit nebo pěstovat ve specializovaných budovách, lze s nimi obchodovat, nebo je získávat od ostatních hráčů loupeživými útoky.
 	</p>
 	<ul>
-		<li>Jídlo <img src="{$basePath}/images/resources/food.png" /></li>
-		<li>Kov <img src="{$basePath}/images/resources/metal.png" /></li>
-		<li>Kámen <img src="{$basePath}/images/resources/stone.png" /></li>
-		<li>Palivo <img src="{$basePath}/images/resources/fuel.png" /></li>
+		{foreach $resourceRules as $key => $resource}
+			<li><img src="{$basePath}/images/resources/{$key}.png" /> {$resource->getDescription()}</li>
+		{/foreach}
 	</ul>
-	<p>
-		Suroviny můžeš těžit nebo pěstovat ve specializovaných budovách, lze s nimi obchodovat, nebo je získávat od ostatních hráčů loupeživými útoky.
-	</p>
 
 
 	<h2>Události</h2>
@@ -68,12 +112,17 @@
 
 	<h2>Budovy</h2>
 	<p>
-		Na každém políčku může být nejvýše jedna budova. Každá budova je jiná, některá produkuje suroviny, jiná vojáky a některé jsou ryze obranné.
+		Na každém políčku může být nejvýše jedna budova. Každá budova je jiná, některá produkuje suroviny, jiná vojáky a některé jsou ryze obranné. Budova (stejně jako políčko) poskytuje procentuální bonus do obrany.
 	</p>
 	<table>
+		<tr>
+			<th>Budova</th>
+			<th>Obranný bonus</th>
+		</tr>
 	{foreach $facilityRules as $facility}
 		<tr>
-			<td>{$facility->getDescription()}</td>
+			<th class="leftAlign">{$facility->getDescription()}</th>
+			<td>{$facility->getDefenceBonus()*100}%</td>
 		</tr>
 	{/foreach}
 	</table>
@@ -85,11 +134,11 @@
 	<table>
 		<tr>
 			<th>Jednotka</th>
-			<th>Síla</th>
+			<th>Síla [útok/obrana]</th>
 		</tr>
 	{foreach $unitRules as $unit}
 		<tr>
-			<td>{$unit->getDescription()}</td>
+			<th class="leftAlign">{$unit->getDescription()}</th>
 			<td class="force">{$unit->getAttack()}/{$unit->getDefense()}</td>
 			<td></td>
 		</tr>
@@ -99,7 +148,7 @@
 		Sílu jednotek můžeš zvýšit výzkumem.
 	</p>
 	<p>
-		Jendotky trénuješ v menu Jednotky->Trénovat. Počet jednotek, které můžeš vytrénovat na jeden rozkaz závisí na počtu a úrovni kasáren a továren.
+		Jednotky trénuješ v menu Jednotky->Trénovat. Počet jednotek, které můžeš vytrénovat na jeden rozkaz závisí na počtu a úrovni kasáren a továren. Doba výcviku skupiny jednotek na jeden rozkaz je rovna době výcviku nejdéle se trénující jednotky.
 	</p>
 
 	<h2>Tržnice</h2>
@@ -122,13 +171,13 @@
 				<tr>
 					<th class="type">Výzkum</th>
 					<th class="max">Max</th>
-					<th class="expl">Popis</th>
+					<th class="explanation">Popis</th>
 				</tr>
 				{foreach $category as $key => $research}
 				<tr>
-					<td class="type">{$research->getDescription()}</td>
+					<th class="type leftAlign">{$research->getDescription()}</th>
 					<td class="max">{$research->getLevelCap()}</td>
-					<td class="expl">{$research->getExplanation()}</td>
+					<td class="explanation">{$research->getExplanation()}</td>
 				</tr>
 				{/foreach}
 			</table>
@@ -142,8 +191,13 @@
 
 	<h2>Úkoly</h2>
 	<p>
-		Úkoly jsou cílem hry, je za ně totiž největší množství bodů. Úkoly mohou být různého typu (vleikost území, úspěšné útoky atd.). Úkoly mají úrovně, čim vyšší úroveň úkolu, tím vyšší je i jeho obtížnost, a počet bodů, který za něj získáš.
+		Úkoly jsou cílem hry, je za ně také největší množství bodů. Úkoly mají úrovně, čim vyšší úroveň úkolu, tím vyšší je i jeho obtížnost, a počet bodů, který za něj získáš. Celkem můžeš plnit tyto úkoly.
 	</p>
+	<ul>
+		{foreach $questRules as $quest}
+			<li>{$quest->getDescription()}</li>
+		{/foreach}
+	</ul>
 
 
 {/block}
