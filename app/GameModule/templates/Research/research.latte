@@ -8,8 +8,8 @@
 {/block}
 
 {block #content}
-	{if count($all) > 0}
-		{foreach $all as $categoryKey => $category}
+	{if count($allByCategories) > 0}
+		{foreach $allByCategories as $categoryKey => $category}
 			<h3>{$categoryKey}</h3>
 			<table id = "researches">
 				<tr>
@@ -64,8 +64,13 @@
 								{/foreach}
 
 								{?$missingDependency = false}
-								{foreach $research->getDependencies() as $depKey => $dependency}
-									{if (!isset($researched[$depKey]) || $researched[$depKey]->level < $dependency)}{?$missingDependency = true}{/if}
+								{?$dependencies = array()}
+								{foreach $research->getDependencies() as $depKey => $level}
+									{if (!isset($researched[$depKey]) || $researched[$depKey]->level < $level)}
+										{?$dependencies[$depKey]['description'] = $all[$depKey]->getDescription()}
+										{?$dependencies[$depKey]['level'] = $level}
+										{?$missingDependency = true}
+									{/if}
 								{/foreach}
 
 								{?$conflicts = false}
@@ -74,7 +79,17 @@
 								{/foreach}
 
 								{if $missingDependency}
-									<td class="action missDep" rowspan="2">Závislosti</td>
+									<td class="action missDep" rowspan="2">
+										<table>
+										{foreach $dependencies as $dependency}
+											<tr>
+												<td>{$dependency['description']}</td>
+												<td>{$dependency['level']}</td>
+											</tr>
+										{/foreach}
+
+										</table>
+									</td>
 								{elseif $conflicts}
 									<td class="action conflict" rowspan="2">Konflikty</td>
 								{elseif !$enoughRes}

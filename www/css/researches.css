@@ -47,3 +47,7 @@ td {
 table {
 	margin-bottom: 30px;
 }
+
+table table {
+	margin: 0px;
+}

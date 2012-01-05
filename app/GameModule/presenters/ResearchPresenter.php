@@ -49,7 +49,8 @@ class ResearchPresenter extends BasePresenter
 		$clan = $this->getPlayerClan();
 		$this->template->researched = $this->getResearchRepository()->getResearched($clan);
 		$this->template->researchEfficiency = $this->getContext()->stats->research->getEfficiency($clan);
-		$this->template->all = $all;
+		$this->template->allByCategories = $all;
+		$this->template->all = $this->context->rules->getAll('research');
 		$this->template->running = $this->getConstructionRepository()->getRunningResearches($clan);
 
 	}
