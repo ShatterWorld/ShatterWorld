@@ -133,10 +133,19 @@
 	</p>
 	<table>
 		<tr>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th></th>
+			<th colspan="2">Spotřeba /hod</th>
+		</tr>
+		<tr>
 			<th>Jednotka</th>
-			<th>Síla [útok/obrana]</th>
+			<th>Síla [ú/o]</th>
 			<th>Nostnost</th>
 			<th>Rychlost [s/pole]</th>
+			<th><img src="{$basePath}/images/resources/food.png" /></th>
+			<th><img src="{$basePath}/images/resources/fuel.png" /></th>
 		</tr>
 	{foreach $unitRules as $unit}
 		<tr>
@@ -144,6 +153,10 @@
 			<td class="force">{$unit->getAttack()}/{$unit->getDefense()}</td>
 			<td>{$unit->getCapacity()}</td>
 			<td>{$unit->getSpeed()}</td>
+
+			{?$upkeep = $unit->getUpkeep()}
+			<td>{if isset($upkeep['food'])}{$upkeep['food'] * 3600}{else}0{/if}</td>
+			<td>{if isset($upkeep['fuel'])}{$upkeep['fuel'] * 3600}{else}0{/if}</td>
 		</tr>
 	{/foreach}
 	</table>
