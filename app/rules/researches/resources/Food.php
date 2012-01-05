@@ -34,6 +34,7 @@ class Food extends AbstractRule implements IResearch
 	{
 		return array(
 			'researchEfficiency' => 1,
+			'storage' => 1
 		);
 	}
 

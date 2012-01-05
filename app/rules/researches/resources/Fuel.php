@@ -33,7 +33,8 @@ class Fuel extends AbstractRule implements IResearch
 	public function getDependencies ()
 	{
 		return array(
-			'researchEfficiency' => 1
+			'researchEfficiency' => 2,
+			'storage' => 1
 		);
 	}
 

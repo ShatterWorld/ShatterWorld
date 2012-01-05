@@ -36,7 +36,7 @@
 					{/ifset}
 					{?$cap = $research->getLevelCap()}
 
-					{if $lvl < $cap}
+					{if $lvl <= $cap}
 						<tr class="row2">
 							<td class="type">{$research->getDescription()}</td>
 							<td class="level">{$lvl}</td>
