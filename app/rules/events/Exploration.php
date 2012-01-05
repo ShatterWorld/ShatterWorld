@@ -22,33 +22,56 @@ class Exploration extends AbstractRule implements IEvent
 			$capacity = $capacity + $unit->count * $rule->getCapacity();
 			$units[$unit->type] = $unit->count;
 		}
-		Debugger::barDump($capacity);
 		$unitList = $event->getUnitList();
 		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
 
-		$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
-		Debugger::barDump($bonus);
 		$potential = $this->getContext()->rules->get('field', $event->target->type)->getProductionBonuses();
-		Debugger::barDump($potential);
-		$totalPotential = 0;
-		foreach ($potential as $name => $resource){
-			if ($resource > 0){
-				$totalPotential += $resource;
-			}
-		}
-		Debugger::barDump($totalPotential);
-		$totalPotential *= $bonus;
-		Debugger::barDump($totalPotential);
-		$ratio = $capacity / $totalPotential;
-		Debugger::barDump($ratio);
 
+		$sum = 0;
 		foreach ($potential as $name => $resource){
 			if ($resource > 0){
-				$loot = floor($resource * $bonus * $bonus / $ratio);
-				Debugger::barDump($loot);
-				$cargo[$name] = $loot;
+				$sum += $resource;
 			}
 		}
+
+		$k = $capacity / $sum;
+		if($k <= 1){
+			foreach ($potential as $name => $resource){
+				if ($resource > 0){
+					$loot = floor($resource * $k);
+					$cargo[$name] = $loot;
+				}
+			}
+
+		}
+		else{
+			$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
+			$bonusedSum = $sum * $bonus;
+			$l = $capacity / $bonusedSum;
+
+			Debugger::barDump($tmp = "L");
+			Debugger::barDump($l);
+			if($l <= 1){
+				foreach ($potential as $name => $resource){
+					if ($resource > 0){
+						$loot = floor($resource * $l * $bonus);
+						$cargo[$name] = $loot;
+					}
+				}
+			}
+			else{
+				foreach ($potential as $name => $resource){
+					if ($resource > 0){
+						$loot = floor($resource * $bonus);
+						$cargo[$name] = $loot;
+					}
+				}
+
+			}
+
+		}
+
+
 		$processor->queueEvent($this->getContext()->model->getMoveService()->startUnitReturn(
 			$event->target,
 			$event->origin,
