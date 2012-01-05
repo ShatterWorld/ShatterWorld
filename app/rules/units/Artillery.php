@@ -21,7 +21,7 @@ class Artillery extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 240;
+		return 10 * 60;
 	}
 
 	public function getCapacity ()

@@ -21,7 +21,7 @@ class LightVehicle extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 90;
+		return 2.5 * 60;
 	}
 
 	public function getCapacity ()

@@ -143,7 +143,7 @@
 			<th>Jednotka</th>
 			<th>Síla [ú/o]</th>
 			<th>Nostnost</th>
-			<th>Rychlost [s/pole]</th>
+			<th>Rychlost /pole</th>
 			<th><img src="{$basePath}/images/resources/food.png" /></th>
 			<th><img src="{$basePath}/images/resources/fuel.png" /></th>
 		</tr>
@@ -152,7 +152,7 @@
 			<th class="leftAlign">{$unit->getDescription()}</th>
 			<td class="force">{$unit->getAttack()}/{$unit->getDefense()}</td>
 			<td>{$unit->getCapacity()}</td>
-			<td>{$unit->getSpeed()}</td>
+			<td>{$unit->getSpeed()/60} min</td>
 
 			{?$upkeep = $unit->getUpkeep()}
 			<td>{if isset($upkeep['food'])}{$upkeep['food'] * 3600}{else}0{/if}</td>

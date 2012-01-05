@@ -21,7 +21,7 @@ class Militia extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 120;
+		return 5 * 60;
 	}
 
 	public function getCapacity ()

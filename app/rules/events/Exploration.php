@@ -42,15 +42,12 @@ class Exploration extends AbstractRule implements IEvent
 					$cargo[$name] = $loot;
 				}
 			}
-
 		}
 		else{
 			$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
 			$bonusedSum = $sum * $bonus;
 			$l = $capacity / $bonusedSum;
 
-			Debugger::barDump($tmp = "L");
-			Debugger::barDump($l);
 			if($l <= 1){
 				foreach ($potential as $name => $resource){
 					if ($resource > 0){
@@ -66,11 +63,8 @@ class Exploration extends AbstractRule implements IEvent
 						$cargo[$name] = $loot;
 					}
 				}
-
 			}
-
 		}
-
 
 		$processor->queueEvent($this->getContext()->model->getMoveService()->startUnitReturn(
 			$event->target,

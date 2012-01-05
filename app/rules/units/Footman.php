@@ -21,7 +21,7 @@ class Footman extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 100;
+		return 4 * 60;
 	}
 
 	public function getCapacity ()

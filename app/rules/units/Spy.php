@@ -21,7 +21,7 @@ class Spy extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 80;
+		return 3 * 60;
 	}
 
 	public function getCapacity ()
