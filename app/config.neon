@@ -23,8 +23,8 @@ common:
 		stats:
 			baseLOS: 5
 			baseColonisationTime: 30
-			minExplorationCoefficient: 0.2
-			maxExplorationCoefficient: 1.5
+			minExplorationCoefficient: 0
+			maxExplorationCoefficient: 1.2
 			baseAbandonmentTime: 60
 			baseStorage: 1200
 			orderTime: 3600

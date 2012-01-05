@@ -22,14 +22,31 @@ class Exploration extends AbstractRule implements IEvent
 			$capacity = $capacity + $unit->count * $rule->getCapacity();
 			$units[$unit->type] = $unit->count;
 		}
+		Debugger::barDump($capacity);
 		$unitList = $event->getUnitList();
 		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
+
 		$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
-		Debugger::fireLog($bonus);
-		foreach ($this->getContext()->rules->get('field', $event->target->type)->getProductionBonuses() as $name => $resource){
+		Debugger::barDump($bonus);
+		$potential = $this->getContext()->rules->get('field', $event->target->type)->getProductionBonuses();
+		Debugger::barDump($potential);
+		$totalPotential = 0;
+		foreach ($potential as $name => $resource){
 			if ($resource > 0){
-				$loot = floor($resource * $bonus);
-				$cargo[$name] = min($capacity, $loot);
+				$totalPotential += $resource;
+			}
+		}
+		Debugger::barDump($totalPotential);
+		$totalPotential *= $bonus;
+		Debugger::barDump($totalPotential);
+		$ratio = $capacity / $totalPotential;
+		Debugger::barDump($ratio);
+
+		foreach ($potential as $name => $resource){
+			if ($resource > 0){
+				$loot = floor($resource * $bonus * $bonus / $ratio);
+				Debugger::barDump($loot);
+				$cargo[$name] = $loot;
 			}
 		}
 		$processor->queueEvent($this->getContext()->model->getMoveService()->startUnitReturn(
