@@ -26,7 +26,7 @@
 
 	<h2>Rozkazy</h2>
 	<p>
-		Jako velitel klanu vydáváš rozkazy (obchod, výzkum, útoky) <img src="{$basePath}/images/icons/orders.png" />. Rozkazů můžeš ale vydate pouze omezený počet. Každých {floor($orderTime/60)}min ti přibyde do zásobníku nový rozkaz. Těch můžeš nasbírat maximálne {$orderCap}, potom začnou propadat.
+		Jako velitel klanu vydáváš rozkazy (obchod, výzkum, útoky) <img src="{$basePath}/images/icons/orders.png" />. Rozkazů můžeš ale vydate pouze omezený počet. Každých {floor($orderTime/60)} min ti přibyde do zásobníku nový rozkaz. Těch můžeš nasbírat maximálne {$orderCap}, potom začnou propadat.
 	</p>
 	<p>
 		Neplýtvej zbytečně rozkazy, na zbytečné přesuny jednotek nebo ukrývání zboží na tržnici, budou se ti hodit při útočení!
@@ -50,7 +50,7 @@
 		Interaktivní mapa je základem celé hry. Stejně jako v reálu vidíš jen určitou vzdálenost kolem svého a aliančních klanů. Vzdálenost, kterou vidíš, můžeš zvýšit pokrokem Viditelnost.
 	</p>
 	<p>
-		Selý svět Shatter World je rozdělen na šestiúhelníková pole. Pole jsou různého typu, a v závislosti na nich získáváš bonusy k produkci surovin a k obreně
+		Selý svět Shatter World je rozdělen na šestiúhelníková pole. Pole jsou různého typu, a v závislosti na nich získáváš bonusy k produkci surovin a k obraně
 	</p>
 	<table>
 		<tr>
@@ -135,12 +135,15 @@
 		<tr>
 			<th>Jednotka</th>
 			<th>Síla [útok/obrana]</th>
+			<th>Nostnost</th>
+			<th>Rychlost [s/pole]</th>
 		</tr>
 	{foreach $unitRules as $unit}
 		<tr>
 			<th class="leftAlign">{$unit->getDescription()}</th>
 			<td class="force">{$unit->getAttack()}/{$unit->getDefense()}</td>
-			<td></td>
+			<td>{$unit->getCapacity()}</td>
+			<td>{$unit->getSpeed()}</td>
 		</tr>
 	{/foreach}
 	</table>
