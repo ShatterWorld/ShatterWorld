@@ -54,7 +54,7 @@ class Units extends AbstractStat
 	public function getUnitAttack (Entities\Clan $clan, $unitName)
 	{
 		$rule = $this->getContext()->rules->get('unit', $unitName);
-		$level = $this->getUnitLevel($clan, $unitName);
+		$level = max(0, $this->getUnitLevel($clan, $unitName) - 1);
 		return $rule->getAttack() + $level;
 	}
 
@@ -83,8 +83,9 @@ class Units extends AbstractStat
 	public function getUnitDefence (Entities\Clan $clan, $unitName)
 	{
 		$rule = $this->getContext()->rules->get('unit', $unitName);
-		$level = $this->getUnitLevel($clan, $unitName);
+		$level = max(0, $this->getUnitLevel($clan, $unitName) - 1);
 		return $rule->getDefense() + $level;
+
 	}
 
 	/**

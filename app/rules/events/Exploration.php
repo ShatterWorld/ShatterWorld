@@ -3,6 +3,7 @@ namespace Rules\Events;
 use Rules\AbstractRule;
 use ReportItem;
 use Entities;
+use Nette\Diagnostics\Debugger;
 
 class Exploration extends AbstractRule implements IEvent
 {
@@ -23,9 +24,11 @@ class Exploration extends AbstractRule implements IEvent
 		}
 		$unitList = $event->getUnitList();
 		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
+		$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
+		Debugger::fireLog($bonus);
 		foreach ($this->getContext()->rules->get('field', $event->target->type)->getProductionBonuses() as $name => $resource){
 			if ($resource > 0){
-				$loot = floor($resource * rand($this->getContext()->params['game']['stats']['minExplorationCoefficient'], $this->getContext()->params['game']['stats']['minExplorationCoefficient']));
+				$loot = floor($resource * $bonus);
 				$cargo[$name] = min($capacity, $loot);
 			}
 		}
@@ -47,7 +50,7 @@ class Exploration extends AbstractRule implements IEvent
 		}
 		return $event->target->owner === NULL;
 	}
-	
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Průzkum pole %s', $event->target->getCoords());
