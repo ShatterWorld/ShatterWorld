@@ -23,10 +23,10 @@ class Units extends AbstractStat
 				$rule = $this->getContext()->rules->get('facility', $facility->type);
 				Debugger::barDump($rule);
 				if ($rule instanceof Rules\Facilities\IConstructionFacility) {
-					if (array_key_exists($facility, $result)) {
-						$result[$facility] = $result[$facility] + $rule->getCapacity($facility->level);
+					if (array_key_exists($facility->type, $result)) {
+						$result[$facility->type] = $result[$facility->type] + $rule->getCapacity($facility->level);
 					} else {
-						$result[$facility] = $rule->getCapacity($facility->level);
+						$result[$facility->type] = $rule->getCapacity($facility->level);
 					}
 				}
 			}
