@@ -107,7 +107,10 @@ abstract class BasePresenter extends \BasePresenter
 	 */
 	public function getClanOffers ()
 	{
-		return $this->getOfferRepository()->findByOwner($this->getPlayerClan()->getId());
+		return $this->getOfferRepository()->findBy(array(
+			'owner' => $this->getPlayerClan()->getId(),
+			'sold' => false
+		));
 	}
 
 	/**

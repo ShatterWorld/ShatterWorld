@@ -125,7 +125,10 @@ class MarketPresenter extends BasePresenter {
 	 */
 	public function handleDeleteOffer ($offerId)
 	{
-		$this->getOfferService()->delete($this->getOfferRepository()->findOneById($offerId));
+		$this->getOfferService()->delete($this->getOfferRepository()->findOneBy(array(
+			'id' => $offerId,
+			'sold' => false
+		)));
 		$this->flashMessage('Staženo z nabídky');
 		$this->redirect('Market:');
 	}
