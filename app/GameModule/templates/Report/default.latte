@@ -10,7 +10,7 @@
 
 {block #content}
 	{if $reports}
-		<a n:href="markRead!">Označit všechna hlášení jako přečtená</a>
+		<a n:href="markReadAll!">Označit všechna hlášení jako přečtená</a>
 		{control pager}
 		<div n:foreach="$reports as $report" id="{$report->id}" class="report {$report->read ? 'read' : 'unread'}">
 			{?$rule = $rules->get('event', $report->event->type)}
