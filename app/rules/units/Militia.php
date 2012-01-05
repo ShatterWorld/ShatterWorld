@@ -40,7 +40,7 @@ class Militia extends AbstractRule implements IUnit
 	public function getUpkeep ()
 	{
 		return array(
-			'food' => 0.001
+			'food' => 1 / 3600
 		);
 	}
 

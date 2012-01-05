@@ -40,8 +40,8 @@ class HeavyVehicle extends AbstractRule implements IUnit
 	public function getUpkeep ()
 	{
 		return array(
-			'food' => 0.02,
-			'fuel' => 0.03
+			'food' => 15 / 3600,
+			'fuel' => 5 / 3600
 		);
 	}
 

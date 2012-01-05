@@ -39,7 +39,10 @@ class Artillery extends AbstractRule implements IUnit
 
 	public function getUpkeep ()
 	{
-		return array();
+		return array(
+			'food' => 5 / 3600,
+			'fuel' => 3 / 3600
+		);
 	}
 
 	public function getTrainingTime ()

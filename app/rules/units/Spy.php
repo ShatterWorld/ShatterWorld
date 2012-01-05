@@ -40,7 +40,7 @@ class Spy extends AbstractRule implements IUnit
 	public function getUpkeep ()
 	{
 		return array(
-			'food' => 0.01
+			'food' => 2 / 3600
 		);
 	}
 

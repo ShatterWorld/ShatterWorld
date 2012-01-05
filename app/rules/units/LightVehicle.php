@@ -40,8 +40,8 @@ class LightVehicle extends AbstractRule implements IUnit
 	public function getUpkeep ()
 	{
 		return array(
-			'food' => 0.01,
-			'fuel' => 0.01
+			'food' => 10 / 3600,
+			'fuel' => 3 / 3600
 		);
 	}
 
