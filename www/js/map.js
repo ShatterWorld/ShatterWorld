@@ -1323,10 +1323,10 @@ Game.map.contextMenu.SpyDialog = Class({
 			count: 5
 		};
 		var tr = $('<tr id="spy" />');
-		tr.append('<td class="name" style="width:100px">Špion</td><td class="count"><input id="spyInput" type="text" size="5" name="spy" /></td><td class="max" style="width:50px; text-align:right">('+5/*Game.utils.isset(this.origin['units']['spy']['count'])?this.origin['units']['spy']['count']:0*/+')</td>');
+		tr.append('<td class="name" style="width:100px">Špion</td><td class="count"><input id="spyInput" type="text" size="5" name="spy" /></td><td class="max" style="width:50px; text-align:right">(' + (Game.utils.isset(this.origin['units']['spy']) ? this.origin['units']['spy']['count'] : '0') + ')</td>');
 		table.append(tr);
 		tr.children('.max').click(function(){
-			tr.children('.count').children('input').val(unit['count']);
+			tr.children('.count').children('input').val(origin['units']['spy']['count']);
 		})
 		.css({
 			'cursor' : 'pointer'
@@ -1351,9 +1351,9 @@ Game.map.contextMenu.SpyDialog = Class({
 			var params = {
 				'originId': context.origin['id'],
 				'targetId': context.target['id'],
-				'type': 'spy',
-
+				'type': 'spy'
 			};
+
 			params[unitId] = $('#spyInput').val();
 			var units = Array();
 			units[unitId] = $('#spyInput').val();

@@ -67,7 +67,7 @@ class Spy extends AbstractRule implements IEvent
 		if ($result['attacker']['casualties']['spy'] <=  $attackerSpyCount/2){
 			$result['successful'] = TRUE;
 			$result['field'] = $event->target;
-			$researches = $this->getContext()->model->getResearchRepository()->getResearched($event->owner);
+			$researches = $this->getContext()->model->getResearchRepository()->getResearched($event->target->owner);
 			foreach ($researches as $research){
 				$result['researches'][$research->type] = $research->level;
 			}
