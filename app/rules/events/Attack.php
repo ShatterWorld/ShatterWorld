@@ -59,15 +59,32 @@ abstract class Attack extends AbstractRule implements IEvent
 		$result['successful'] = $attackerPower > $defenderDefense;
 		if ($result['successful']) {
 			$resources = $this->getContext()->model->getResourceRepository()->getResourcesArray($event->target->owner);
-			$territorySize = $this->getContext()->model->getFieldRepository()->getTerritorySize($event->target->owner);
+			$territorySize = intval($this->getContext()->model->getFieldRepository()->getTerritorySize($event->target->owner));
 			$unitCapacity = 0;
 			foreach ($result['attacker']['units'] as $type => $count) {
 				$rule = $this->getContext()->rules->get('unit', $type);
-				$resultCount = $count - isset($result['attacker']['casualties'][$type]) ? $result['attacker']['casualties'][$type] : 0;
-				$unitCapacity = $unitCapacity + $rule->getCapacity() * $resultCount;
+				$d = isset($result['attacker']['casualties'][$type]) ? $result['attacker']['casualties'][$type] : 0;
+				$resultCount = $count - $d;
+				$unitCapacity += $rule->getCapacity() * $resultCount;
 			}
+			$sum = 0;
 			foreach ($resources as $resource => $data) {
-				$result['attacker']['loot'][$resource] = intval(floor($data['balance'] / $territorySize));
+				$sum += $data['balance'] / $territorySize;
+			}
+			if ($sum > 0){
+				$k = $unitCapacity / $sum;
+				if($k < 1){
+					foreach ($resources as $resource => $data) {
+						$result['attacker']['loot'][$resource] = intval(floor($data['balance'] / $territorySize * $k));
+					}
+				}
+				else{
+					foreach ($resources as $resource => $data) {
+						$result['attacker']['loot'][$resource] = intval(floor($data['balance'] / $territorySize));
+					}
+				}
+
+
 			}
 		}
 		return $result;
@@ -107,7 +124,7 @@ abstract class Attack extends AbstractRule implements IEvent
 			$this->getContext()->model->scoreService->decreaseClanScore($event->target->owner, 'facility', $value);
 		}
 	}
-	
+
 	public function process (Entities\Event $event, $processor)
 	{
 		$model = $this->getContext()->model;
