@@ -36,6 +36,7 @@ class Unit extends BaseEntity
 	
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Move", inversedBy = "units")
+	 * @JoinColumn(onDelete = "SET NULL")
 	 * @var Entities\Move
 	 */
 	private $move;
