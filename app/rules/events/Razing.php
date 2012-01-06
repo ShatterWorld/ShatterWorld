@@ -15,8 +15,12 @@ class Razing extends Attack implements IEvent
 	public function process (Entities\Event $event, $processor)
 	{
 		$result = parent::process($event, $processor);
-		if (isset($result['victory']) && $result['victory']) {
-			$this->damageTargetBuilding($event, 3, $processor);
+		if ($result['successful']) {
+			$dmg = 1;
+			if ($result['totalVictory']) {
+				$dmg += 2;
+			}
+			$this->damageTargetBuilding($event, $dmg, $processor);
 		}
 		$this->returnAttackingUnits($event, $processor, $result['attacker']['loot']);
 		return $result;

@@ -14,7 +14,7 @@ class Occupation extends Attack
 	{
 		$result = parent::process($event, $processor);
 		$model = $this->getContext()->model;
-		if ($result['victory']) {
+		if ($result['successful']) {
 			if ($result['totalVictory']) {
 				foreach ($model->getConstructionRepository()->findBy(array('target' => $event->target->id)) as $construction) {
 					$construction->failed = TRUE;
@@ -39,7 +39,8 @@ class Occupation extends Attack
 					$this->getContext()->model->scoreService->increaseClanScore($event->owner, 'facility', $value);
 				}
 			}
-		} else {
+		}
+		else {
 			$this->returnAttackingUnits($event, $processor);
 		}
 		return $result;
