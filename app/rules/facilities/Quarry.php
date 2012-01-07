@@ -47,7 +47,8 @@ class Quarry extends AbstractRule implements IFacility
 	public function getProduction ($level = 1)
 	{
 		return array(
-			'stone' => $level / 100
+			'food' => -7*$level / 3600,
+			'stone' => 15*$level / 3600
 		);
 	}
 
