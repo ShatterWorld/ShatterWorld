@@ -15,7 +15,7 @@ class Resources extends AbstractStat
 	}
 
 	/**
-	 * Get given clan's production of resources
+	 * Get given clan's pro duction of resources
 	 * @param Entities\Clan
 	 * @return array of float
 	 */
@@ -30,9 +30,14 @@ class Resources extends AbstractStat
 				$production = $this->getContext()->rules->get('facility', $field->facility->type)->getProduction($field->facility->level);
 				$fieldBonus = $this->getContext()->rules->get('field', $field->type)->getProductionBonuses();
 				foreach ($production as $resource => $value) {
-					$modifier = $this->getCoefficient($clan, $resource);
-					if (array_key_exists($resource, $fieldBonus)) {
-						$modifier = $modifier + $fieldBonus[$resource] / 100;
+					if($value <= 0){
+						$modifier = 1;
+					}
+					else{
+						$modifier = $this->getCoefficient($clan, $resource);
+						if (array_key_exists($resource, $fieldBonus)) {
+							$modifier = $modifier + $fieldBonus[$resource] / 100;
+						}
 					}
 					$result[$resource] = $result[$resource] + $modifier * $value;
 				}

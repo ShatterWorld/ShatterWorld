@@ -44,7 +44,9 @@ class Workshop extends AbstractRule implements IConstructionFacility
 
 	public function getProduction ($level = 1)
 	{
-		return array();
+		return array(
+			'food' => -4*$level / 3600
+		);
 	}
 
 	public function getCapacity ($level = 1)

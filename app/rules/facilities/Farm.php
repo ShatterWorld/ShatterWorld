@@ -47,7 +47,7 @@ class Farm extends AbstractRule implements IFacility
 	public function getProduction ($level = 1)
 	{
 		return array(
-			'food' => $level / 100
+			'food' => 17*$level / 3600
 		);
 	}
 
