@@ -48,7 +48,7 @@ class Construction extends AbstractStat
 	{
 		return array_map(function ($value) { return (floor($value / 2)); }, $this->getConstructionCost($clan, $facility, $level));
 	}
-	
+
 	public function getDemolitionCost (Entities\Clan $clan, $facility, $from, $level = 0)
 	{
 		$rule = $this->getContext()->rules->get('facility', $facility);
@@ -70,7 +70,7 @@ class Construction extends AbstractStat
 	{
 		return floor($this->getConstructionTime($clan, $facility, $level) / 2);
 	}
-	
+
 	public function getDemolitionTime (Entities\Clan $clan, $facility, $from, $level = 0)
 	{
 		$rule = $this->getContext()->rules->get('facility', $facility);
@@ -78,8 +78,8 @@ class Construction extends AbstractStat
 		return $time * $this->getCoefficient($clan);
 	}
 
-	public function getAbandonmentTime ($level)
+	public function getAbandonmentTime ()
 	{
-		return $level * $this->getContext()->params['game']['stats']['baseAbandonmentTime'];
+		return $this->getContext()->params['game']['stats']['baseAbandonmentTime'];
 	}
 }

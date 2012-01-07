@@ -16,14 +16,14 @@ class Abandonment extends AbstractRule implements IConstruction
 
 		if ($facility = $event->target->facility) {
 			$value = 0;
-			$rule = $this->getContext()->rules->get('facility', $event->target->facility);
+			$rule = $this->getContext()->rules->get('facility', $facility->type);
 			for ($i = $facility->level; $i > 0; $i--) {
 				$value += $rule->getValue($i);
 			}
 			$this->getContext()->model->getScoreService()->decreaseClanScore($event->owner, 'facility', $value);
+			$facility->damaged = TRUE;
 		}
 		$this->getContext()->model->getFieldService()->setFieldOwner($event->target, NULL);
-		$facility->damaged = TRUE;
 		$this->getContext()->model->getFieldService()->invalidateVisibleFields($event->owner->id);
 		return array();
 	}

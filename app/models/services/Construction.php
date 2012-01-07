@@ -124,7 +124,7 @@ class Construction extends Event
 			throw new InsufficientResourcesException;
 		}
 	}
-	
+
 	/**
 	 * Start demolition on given field
 	 * @param Entities\Field
@@ -136,7 +136,7 @@ class Construction extends Event
 	{
 		$clan = $field->owner;
 		$stats = $this->context->stats->construction;
-		$price = $stats->getDemolitionCost($clan, $field->facility->type, $field->level, $level);
+		$price = $stats->getDemolitionCost($clan, $field->facility->type, $field->facility->level, $level);
 		if ($this->context->model->getResourceRepository()->checkResources($field->owner, $price)) {
 			$this->create(array(
 				'target' => $field,
@@ -144,7 +144,7 @@ class Construction extends Event
 				'type' => 'facilityDemolition',
 				'construction' => $field->facility->type,
 				'level' => $level,
-				'timeout' => $stats->getDemolitionTime($clan, $field->facility->type, $field->level, $level)
+				'timeout' => $stats->getDemolitionTime($clan, $field->facility->type, $field->facility->level, $level)
 			), FALSE);
 			$this->context->model->getResourceService()->pay($field->owner, $price, NULL, FALSE);
 			$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
@@ -166,7 +166,7 @@ class Construction extends Event
 			'target' => $field,
 			'owner' => $field->owner,
 			'type' => 'abandonment',
-			'timeout' => $this->context->stats->construction->getAbandonmentTime($field->level)
+			'timeout' => $this->context->stats->construction->getAbandonmentTime()
 		), FALSE);
 		$this->context->model->getClanService()->issueOrder($field->owner, FALSE);
 		$this->entityManager->flush();
