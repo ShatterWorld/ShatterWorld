@@ -66,7 +66,7 @@
 			{?$bonuses = $field->getProductionBonuses()}
 			{foreach $resourceRules as $key => $resource}
 				{if isset($bonuses[$key])}
-					<td>{$bonuses[$key]}%</td>
+					<td>{$bonuses[$key]*100}%</td>
 				{else}
 					<td>0%</td>
 				{/if}

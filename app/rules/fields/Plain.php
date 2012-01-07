@@ -23,10 +23,10 @@ class Plain extends AbstractField implements IField
 	public function getProductionBonuses ()
 	{
 		return array(
-			'food' => 20,
-			'fuel' => -10,
-			'metal' => -20,
-			'stone' => -10
+			'food' => 0.2,
+			'fuel' => -0.1,
+			'metal' => -0.2,
+			'stone' => -0.1
 		);
 	}
 

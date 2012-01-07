@@ -23,10 +23,10 @@ class Forest extends AbstractField implements IField
 	public function getProductionBonuses ()
 	{
 		return array(
-			'food' => 20,
-			'fuel' => 10,
-			'metal' => -30,
-			'stone' => -20
+			'food' => 0.2,
+			'fuel' => 0.1,
+			'metal' => -0.3,
+			'stone' => -0.2
 		);
 	}
 

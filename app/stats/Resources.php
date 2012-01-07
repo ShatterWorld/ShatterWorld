@@ -36,7 +36,7 @@ class Resources extends AbstractStat
 					else{
 						$modifier = $this->getCoefficient($clan, $resource);
 						if (array_key_exists($resource, $fieldBonus)) {
-							$modifier = $modifier + $fieldBonus[$resource] / 100;
+							$modifier = $modifier + $fieldBonus[$resource];
 						}
 					}
 					$result[$resource] = $result[$resource] + $modifier * $value;

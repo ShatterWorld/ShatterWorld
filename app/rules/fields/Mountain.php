@@ -23,9 +23,9 @@ class Mountain extends AbstractField implements IField
 	public function getProductionBonuses ()
 	{
 		return array(
-			'food' => -20,
-			'metal' => 40,
-			'stone' => 60
+			'food' => -0.2,
+			'metal' => 0.4,
+			'stone' => 0.6
 		);
 	}
 

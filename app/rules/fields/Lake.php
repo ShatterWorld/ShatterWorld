@@ -23,10 +23,10 @@ class Lake extends AbstractField implements IField
 	public function getProductionBonuses ()
 	{
 		return array(
-			'food' => 40,
-			'fuel' => -90,
-			'stone' => -90,
-			'metal' => -90
+			'food' => 0.4,
+			'fuel' => -0.9,
+			'stone' => -0.9,
+			'metal' => -0.9
 		);
 	}
 
