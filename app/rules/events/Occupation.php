@@ -68,7 +68,7 @@ class Occupation extends Attack
 			}
 		}
 
-		$message = array(ReportItem::create('text', $resultMsg);
+		$message = array(ReportItem::create('text', $resultMsg));
 		$message = array_merge($message, parent::formatReport($report));
 		if ($data['totalVictory'] && $data['attacker']['loot']) {
 			$message[] = ReportItem::create('resourceGrid', array($data['attacker']['loot']))->setHeading('Kořist');
