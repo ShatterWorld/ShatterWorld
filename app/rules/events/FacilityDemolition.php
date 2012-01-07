@@ -36,8 +36,7 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 
 	public function isValid (Entities\Event $event)
 	{
-		$clan = $this->getContext()->model->getClanRepository()->getPlayerClan();
-		return $event->target->owner == $clan && ($event->level === 0 || ($event->target->facility->level - 1 === $event->level));
+		return $event->target->owner === $event->owner && ($event->level === 0 || ($event->target->level - 1 === $event->level));
 	}
 
 	public function getExplanation (Entities\Event $event)

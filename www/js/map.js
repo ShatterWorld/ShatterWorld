@@ -754,10 +754,12 @@ Game.map.contextMenu = {
 		var actions = new Array();
 		//my
 		if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan) {
-			if (field['units'] != null) {
+			if (field['units']) {
 				actions.push(this.actions.attack);
 				actions.push(this.actions.move);
 				actions.push(this.actions.exploration);
+			}
+			if (Game.utils.getValue(field, ['units', 'spy'])) {
 				actions.push(this.actions.spy);
 			}
 			if (field['facility'] !== null) {
@@ -1180,12 +1182,20 @@ Game.map.contextMenu.UnitMoveDialog = Class({
 		return result;
 	},
 
-	subtracktUnits: function (units)
+	subtractUnits: function (units)
 	{
 		var origin = this.origin;
-		$.each(units, function(id, unit){
-			name = $('#units #' + id + ' .name').attr('id');
-			origin['units'][name]['count'] = parseInt(origin['units'][name]['count']) - parseInt(unit);
+		$.each(units, function(id, count) {
+			var name;
+			$.each(origin.units, function (type, unit) {
+				if (unit.id == id) {
+					name = type;
+					return false;
+				}
+			});
+			if (name) {
+				origin['units'][name]['count'] = parseInt(origin['units'][name]['count']) - parseInt(count);
+			}
 		});
 	},
 
@@ -1240,7 +1250,7 @@ Game.map.contextMenu.AttackDialog = Class({
 				'type': $('#attackType').val()
 			};
 			var units = context.getUnitList();
-			context.subtracktUnits(units);
+			context.subtractUnits(units);
 			jQuery.extend(params, units);
 			Game.utils.signal('sendAttack', params, function () {
 				Game.events.refresh();
@@ -1282,7 +1292,7 @@ Game.map.contextMenu.MoveDialog = Class({
 				'targetId': context.target['id']
 			};
 			var units = context.getUnitList();
-			context.subtracktUnits(units);
+			context.subtractUnits(units);
 			jQuery.extend(params, units);
 			Game.utils.signal('moveUnits', params, function () {
 				Game.events.refresh();
@@ -1304,7 +1314,7 @@ Game.map.contextMenu.SpyDialog = Class({
 
 	validateTarget: function (target)
 	{
-		return !(target['owner'] !== null && Game.map.clan !== null && target['owner']['id'] == Game.map.clan)
+		return !(target['owner'] === null || Game.map.clan === null || target['owner']['id'] == Game.map.clan)
 			&& !(target['owner'] !== null && target['owner']['alliance'] !== null
 			&& Game.map.alliance !== null && target['owner']['alliance']['id'] == Game.map.alliance);
 	},
@@ -1319,18 +1329,16 @@ Game.map.contextMenu.SpyDialog = Class({
 		var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
 		table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
 		$(element).append(table);
-		var unit = {
-			count: 5
-		};
 		var tr = $('<tr id="spy" />');
 		tr.append('<td class="name" style="width:100px">Špion</td><td class="count"><input id="spyInput" type="text" size="5" name="spy" /></td><td class="max" style="width:50px; text-align:right">(' + (Game.utils.isset(this.origin['units']['spy']) ? this.origin['units']['spy']['count'] : '0') + ')</td>');
 		table.append(tr);
 		tr.children('.max').click(function(){
-			tr.children('.count').children('input').val(origin['units']['spy']['count']);
+			tr.children('.count').children('input').val(Game.utils.getValue(origin, ['units', 'spy', 'count']));
 		})
 		.css({
 			'cursor' : 'pointer'
 		});
+		element.append('Typ akce: <select id="spyType"><option value="investigation">Špionáž</option><option value="sabotage">Sabotáž</option><option value="burglary">Loupež</option></select>');
 		return element;
 	},
 
@@ -1351,13 +1359,13 @@ Game.map.contextMenu.SpyDialog = Class({
 			var params = {
 				'originId': context.origin['id'],
 				'targetId': context.target['id'],
-				'type': 'spy'
+				'type': $('#spyType').val()
 			};
 
 			params[unitId] = $('#spyInput').val();
 			var units = Array();
 			units[unitId] = $('#spyInput').val();
-			context.subtracktUnits(units);
+			context.subtractUnits(units);
 
 			Game.utils.signal('sendSpy', params, function () {
 				Game.events.refresh();
@@ -1392,7 +1400,7 @@ Game.map.contextMenu.ExplorationDialog = Class({
 				'targetId': context.target['id']
 			};
 			var units = context.getUnitList();
-			context.subtracktUnits(units);
+			context.subtractUnits(units);
 			jQuery.extend(params, units);
 			Game.utils.signal('sendExploration', params, function () {
 				Game.events.refresh();
