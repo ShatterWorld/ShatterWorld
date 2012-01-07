@@ -86,6 +86,18 @@ Game.utils = {
 		return (typeof(variable) !== 'undefined' && variable !== null && variable != null);
 	},
 
+	getValue: function (object, keys)
+	{
+		var cursor = object;
+		$.each(keys, function () {
+			cursor = cursor[this];
+			if (!Game.utils.isset(cursor)) {
+				return false;
+			}
+		});
+		return cursor;
+	},
+	
 	/**
 	 * Returns the clone of the array/obejct given
 	 * @param object/array

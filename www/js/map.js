@@ -1319,9 +1319,6 @@ Game.map.contextMenu.SpyDialog = Class({
 		var table = $('<table id="units" style="border:1px solid white; padding:10px"/>');
 		table.append('<tr style="width:100px; text-align:left"><th>Jméno</th><th>Počet</th><th style="width:50px; text-align:right">Max</th></tr>');
 		$(element).append(table);
-		var unit = {
-			count: 5
-		};
 		var tr = $('<tr id="spy" />');
 		tr.append('<td class="name" style="width:100px">Špion</td><td class="count"><input id="spyInput" type="text" size="5" name="spy" /></td><td class="max" style="width:50px; text-align:right">(' + (Game.utils.isset(this.origin['units']['spy']) ? this.origin['units']['spy']['count'] : '0') + ')</td>');
 		table.append(tr);
