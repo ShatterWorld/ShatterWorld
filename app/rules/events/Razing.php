@@ -20,7 +20,7 @@ class Razing extends Attack implements IEvent
 			if ($result['totalVictory']) {
 				$dmg += 2;
 			}
-			$this->damageTargetBuilding($event, $dmg, $processor);
+			$this->damageTargetFacility($event, $dmg, $processor);
 		}
 		$this->returnAttackingUnits($event, $processor, $result['attacker']['loot']);
 		return $result;
