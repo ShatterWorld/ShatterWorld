@@ -22,7 +22,7 @@ class Report extends BaseEntity
 	 * @var Entities\Clan
 	 */
 	private $owner;
-	
+
 	/**
 	 * @Column(type = "string")
 	 * @var string
@@ -43,7 +43,6 @@ class Report extends BaseEntity
 	public function __construct (Event $event, $data = array())
 	{
 		$this->event = $event;
-		$this->owner = $event->owner;
 		$this->data = Json::encode($data);
 		$this->read = FALSE;
 	}
@@ -58,6 +57,16 @@ class Report extends BaseEntity
 	}
 
 	/**
+	 * Owner setter
+	 * @param Entities\Clan
+	 * @return void
+	 */
+	public function setOwner (Clan $owner)
+	{
+		return $this->owner = $owner;
+	}
+
+	/**
 	 * Owner getter
 	 * @return Entities\Clan
 	 */
@@ -65,7 +74,7 @@ class Report extends BaseEntity
 	{
 		return $this->owner;
 	}
-	
+
 	/**
 	 * Data getter
 	 * @return object

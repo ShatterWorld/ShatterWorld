@@ -50,9 +50,17 @@ class Event extends BaseService
 				if ($eventRule->isValid($event)) {
 					$report = $eventRule->process($event, $this);
 					$this->context->model->getReportService()->create(array(
+						'owner' => $event->owner,
 						'event' => $event,
 						'data' => $report
 					), FALSE);
+					if ($event->target && $event->target->owner && $event->target->owner->id !== $event->owner->id){
+						$this->context->model->getReportService()->create(array(
+							'owner' => $event->target->owner,
+							'event' => $event,
+							'data' => $report
+						), FALSE);
+					}
 				} else {
 					$this->update($event, array('failed' => TRUE), FALSE);
 				}
