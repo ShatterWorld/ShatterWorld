@@ -16,7 +16,7 @@
 			{?$rule = $rules->get('event', $report->event->type)}
 
 			<div class="reportHead">
-				<div class="headline leftFloater">{$rule->getDescription()}</div>
+				<div class="headline leftFloater">{$rule->getExplanation($report->event)}</div>
 				<div class="date rightFloater">{$report->event->term|date:$dateFormat}</div>
 				<div class="clearer"><span></span></div>
 			</div>

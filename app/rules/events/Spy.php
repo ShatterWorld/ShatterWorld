@@ -15,9 +15,9 @@ class Spy extends AbstractRule implements IEvent
 		return 'Špionáž';
 	}
 
-	public function getExplanation (Entities\Event $event = null)
+	public function getExplanation (Entities\Event $event)
 	{
-		return 'Špionáž';
+		return sprintf('Špionáž na %s', $event->target->getCoords());
 	}
 
 	protected function evaluateSpy (Entities\Event $event)

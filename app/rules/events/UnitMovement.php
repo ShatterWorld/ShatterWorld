@@ -35,7 +35,7 @@ class UnitMovement extends AbstractRule implements IEvent
 
 	public function getExplanation (Entities\Event $event)
 	{
-		return sprintf('Přesun jednotek');
+		return sprintf('Přesun jednotek z %s na %s', $event->origin->getCoords(), $event->target->getCoords());
 	}
 
 	public function formatReport (Entities\Report $report)
@@ -44,8 +44,8 @@ class UnitMovement extends AbstractRule implements IEvent
 		$target = $this->getContext()->model->getFieldRepository()->find($data['targetId']);
 		$message = array(
 			ReportItem::create('unitGrid', array(
-				DataRow::from($data['units'])->setLabel('Jednotky')
-			))->setHeading('na pole ' . $target->getCoords()));
+				DataRow::from($data['units'])->setLabel('Množství')
+			))->setHeading('Jednotky'));
 
 		return $message;
 	}
