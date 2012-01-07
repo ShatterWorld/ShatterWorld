@@ -17,14 +17,15 @@ class Grid extends Nette\Application\UI\Control
 
 	public function render ($data, $heading = NULL)
 	{
-		$columns = array();
+		$columns = $this->columns;
+		/*$columns = array();
 		foreach ($this->columns as $key => $label) {
 			foreach ($data as $object) {
 				if (isset($object[$key]) && $object[$key] != 0) {
 					$columns[$key] = $label;
 				}
 			}
-		}
+		}*/
 		$template = $this->getTemplate();
 		$template->setFile(__DIR__ . '/' . $this->templateFile);
 		$template->heading = $heading;
