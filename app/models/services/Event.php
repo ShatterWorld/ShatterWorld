@@ -51,12 +51,14 @@ class Event extends BaseService
 					$report = $eventRule->process($event, $this);
 					$this->context->model->getReportService()->create(array(
 						'owner' => $event->owner,
+						'type' => 'owner',
 						'event' => $event,
 						'data' => $report
 					), FALSE);
 					if ($event->target && $event->target->owner && $event->target->owner->id !== $event->owner->id){
 						$this->context->model->getReportService()->create(array(
 							'owner' => $event->target->owner,
+							'type' => 'target',
 							'event' => $event,
 							'data' => $report
 						), FALSE);

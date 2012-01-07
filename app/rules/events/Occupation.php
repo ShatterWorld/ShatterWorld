@@ -49,7 +49,26 @@ class Occupation extends Attack
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
-		$message = array(ReportItem::create('text', $data['totalVictory'] ? 'Vítězství' : 'Útok odražen'));
+
+		$resultMsg = '';
+		if ($report->type === 'owner'){
+			if ($data['successful'] && $data['totalVictory']){
+				$resultMsg = 'Úplné vítězství! Dobyvačný útok se zdařil a obránce byl drtivě poražen! Nepřítelovo území bylo násilně připojeno!';
+			}
+			else{
+				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a dobyvačný útok se nezdařil';
+			}
+		}
+		else{
+			if ($data['successful'] && $data['totalVictory']){
+				$resultMsg = 'Úplná porážka! Dobyvačný útok na tvoje území se zdařil a tvoje území bylo násilně připojeno k útočníkovi!';
+			}
+			else{
+				$resultMsg = 'Vítězství! Odvrátil jsi dobyvačný útok na tvoje území a rozloha klanu zůstala nezměněna!';
+			}
+		}
+
+		$message = array(ReportItem::create('text', $resultMsg);
 		$message = array_merge($message, parent::formatReport($report));
 		if ($data['totalVictory'] && $data['attacker']['loot']) {
 			$message[] = ReportItem::create('resourceGrid', array($data['attacker']['loot']))->setHeading('Kořist');

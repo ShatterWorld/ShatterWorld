@@ -27,13 +27,19 @@ class Report extends BaseEntity
 	 * @Column(type = "string")
 	 * @var string
 	 */
-	private $data;
+	private $type;
 
 	/**
 	 * @Column(type = "boolean", name = "isRead")
 	 * @var bool
 	 */
 	private $read;
+
+	/**
+	 * @Column(type = "string")
+	 * @var string
+	 */
+	private $data;
 
 	/**
 	 * Constructor
@@ -63,7 +69,7 @@ class Report extends BaseEntity
 	 */
 	public function setOwner (Clan $owner)
 	{
-		return $this->owner = $owner;
+		$this->owner = $owner;
 	}
 
 	/**
@@ -82,6 +88,25 @@ class Report extends BaseEntity
 	public function getData ()
 	{
 		return Json::decode($this->data, Json::FORCE_ARRAY);
+	}
+
+	/**
+	 * Type getter
+	 * @return string
+	 */
+	public function getType ()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * Type setter
+	 * @param string
+	 * @return void
+	 */
+	public function setType ($type)
+	{
+		$this->type = $type;
 	}
 
 	/**
