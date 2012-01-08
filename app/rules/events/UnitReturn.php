@@ -16,13 +16,17 @@ class UnitReturn extends AbstractRule implements IEvent
 	public function process (Entities\Event $event, $processor)
 	{
 		$result = array();
-		//Debugger::fireLog($event->getUnits());
-		//foreach($event->getUnits())
+		$units = array();
+		foreach ($event->getUnits() as $unit) {
+			$rule = $this->getContext()->rules->get('unit', $unit->type);
+			$capacity = $capacity + $unit->count * $rule->getCapacity();
+			$units[$unit->type] = $unit->count;
+		}
 		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
 		if ($event->cargo) {
 			$this->getContext()->model->getResourceService()->increase($event->owner, $event->cargo, $event->term);
 		}
-		return array();
+		return array('units' => $units);
 	}
 
 	public function isValid (Entities\Event $event)
@@ -37,13 +41,12 @@ class UnitReturn extends AbstractRule implements IEvent
 
 	public function formatReport (Entities\Report $report)
 	{
-		/*$data = $report->data;
+		$data = $report->data;
 		$message = array(
 			ReportItem::create('unitGrid', array(
 				DataRow::from($data['units'])->setLabel('Množství')
 			))->setHeading('Jednotky'));
 
-		return $message;*/
-		return array();
+		return $message;
 	}
 }
