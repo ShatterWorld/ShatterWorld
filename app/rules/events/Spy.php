@@ -6,19 +6,9 @@ use DataRow;
 use Entities;
 use Nette\Diagnostics\Debugger;
 
-class Spy extends AbstractRule implements IEvent
+abstract class Spy extends AbstractRule implements IEvent
 {
 	protected $attackingUnits;
-
-	public function getDescription ()
-	{
-		return 'Špionáž';
-	}
-
-	public function getExplanation (Entities\Event $event)
-	{
-		return sprintf('Špionáž na %s', $event->target->getCoords());
-	}
 
 	protected function evaluateSpy (Entities\Event $event)
 	{
@@ -112,22 +102,4 @@ class Spy extends AbstractRule implements IEvent
 			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance);
 	}
 
-	public function formatReport (Entities\Report $report)
-	{
-		$data = $report->data;
-		$message = array(
-			ReportItem::create('unitGrid', array(
-				DataRow::from($data['attacker']['units'])->setLabel('Jednotky'),
-				DataRow::from($data['attacker']['casualties'])->setLabel('Ztráty')
-			))->setHeading('Útočník'),
-			ReportItem::create('unitGrid', array(
-				DataRow::from($data['defender']['units'])->setLabel('Jednotky'),
-				DataRow::from($data['defender']['casualties'])->setLabel('Ztráty'),
-			))->setHeading('Obránce'),
-			ReportItem::create('researchGrid', array(
-				DataRow::from($data['researches'])->setLabel('Výzkumy')
-			))->setHeading('Výzkumy')
-		);
-		return $message;
-	}
 }

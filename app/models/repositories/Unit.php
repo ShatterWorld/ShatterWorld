@@ -59,6 +59,5 @@ class Unit extends BaseRepository
 		));
 
 		return $clanUnits === null ? 0 : $clanUnits->count;
-
 	}
 }
