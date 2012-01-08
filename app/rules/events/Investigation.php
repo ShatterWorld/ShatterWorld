@@ -28,7 +28,6 @@ class Investigation extends Spy implements IEvent
 				'level' => 0
 			),
 			'quests' => array(),
-			'units' => array(),
 			'attacker' => array(
 				'units' => array(),
 				'casualties' => array()
@@ -75,11 +74,6 @@ class Investigation extends Spy implements IEvent
 			foreach ($researches as $research){
 				$result['researches'][$research->type] = $research->level;
 			}
-
-			foreach ($this->getContext()->rules->getAll('unit') as $name => $unitRule){
-				$result['units'][$name] = $this->getContext()->model->getUnitRepository()->getStaticClanUnits($event->target->owner, $name);
-			}
-
 		}
 
 		return $result;
@@ -90,8 +84,8 @@ class Investigation extends Spy implements IEvent
 		$data = $report->data;
 
 		$message = '';
-		if ($report->type === 'owner'){
-			if ($data['successful']){
+		if ($report->type === 'owner') {
+			if ($data['successful']) {
 				$message = array(ReportItem::create('text', 'Akce naší rozvědky se zdařila!'));
 				$message[] = ReportItem::create('unitGrid', array(
 						DataRow::from($data['attacker']['units'])->setLabel('Jednotky'),
@@ -103,28 +97,19 @@ class Investigation extends Spy implements IEvent
 						DataRow::from($data['defender']['casualties'])->setLabel('Ztráty'),
 					))->setHeading('Obránce');
 
-				$message[] = ReportItem::create('text', 'Budova ' . $data['facility']['type'] . '('. $data['facility']['level'] .')');
-				$message[] = ReportItem::create('unitGrid', array(
-						DataRow::from($data['units'])->setLabel('Jednotky'),
-					))->setHeading('Celkem');
-
 				$message[] = ReportItem::create('researchGrid', array(
 						DataRow::from($data['researches'])->setLabel('Výzkumy')
 					))->setHeading('Výzkumy');
-			}
-			else{
+			} else {
 				$message = array(ReportItem::create('text', 'Akce naší rozvědky se nezdařila! Měl bys posílit řady špionů!'));
 			}
-		}
-		else{
-			if ($data['successful']){
+		} else {
+			if ($data['successful']) {
 				$message = array(ReportItem::create('text', 'Nepřítel infiltroval tvůj klan! Měl bys posílit řady špionů!'));
-			}
-			else{
+			} else {
 				$message = array(ReportItem::create('text', 'Nepříteli se nepodařilo infiltrovat tvůj klan!'));
 			}
 		}
-
 		return $message;
 	}
 }
