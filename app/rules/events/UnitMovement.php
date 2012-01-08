@@ -16,8 +16,7 @@ class UnitMovement extends AbstractRule implements IEvent
 	public function process (Entities\Event $event, $processor)
 	{
 		$result = array(
-			'units' => array(),
-			'targetId' => $event->target->id
+			'units' => array()
 		);
 
 		foreach ($event->getUnits() as $unit) {

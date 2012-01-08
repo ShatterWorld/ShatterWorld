@@ -17,9 +17,10 @@ class UnitReturn extends AbstractRule implements IEvent
 	{
 		$result = array();
 		$units = array();
+		$capacity = 0;
 		foreach ($event->getUnits() as $unit) {
 			$rule = $this->getContext()->rules->get('unit', $unit->type);
-			$capacity = $capacity + $unit->count * $rule->getCapacity();
+			$capacity += $unit->count * $rule->getCapacity();
 			$units[$unit->type] = $unit->count;
 		}
 		$this->getContext()->model->getUnitService()->moveUnits($event->target, $event->owner, $event->getUnits());
