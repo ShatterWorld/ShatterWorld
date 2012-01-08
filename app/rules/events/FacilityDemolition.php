@@ -15,6 +15,7 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 	public function process (Entities\Event $event, $processor)
 	{
 		$changes = array('level' => $event->level);
+		$i = $event->target->facility->level;
 		if ($event->level === 0) {
 			$this->getContext()->model->facilityService->delete($event->target->facility);
 		} else {
@@ -22,7 +23,6 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 		}
 
 		$value = 0;
-		/*$i = $event->target->facility->level;
 		$rule = $this->getContext()->rules->get('facility', $event->construction);
 		while ($i > $event->level){
 			$value += $rule->getValue($i);
@@ -30,13 +30,12 @@ class FacilityDemolition extends AbstractRule implements IConstruction
 		}
 		$this->getContext()->model->getScoreService()->decreaseClanScore($event->owner, 'facility', $value);
 		$this->getContext()->model->getResourceService()->recalculateProduction($event->owner, $event->term);
-		* */
 		return array();
 	}
 
 	public function isValid (Entities\Event $event)
 	{
-		return $event->target->owner === $event->owner && ($event->level === 0 || ($event->target->level - 1 === $event->level));
+		return $event->target->owner === $event->owner && ($event->level === 0 || ($event->target->facility->level - 1 === $event->level));
 	}
 
 	public function getExplanation (Entities\Event $event)

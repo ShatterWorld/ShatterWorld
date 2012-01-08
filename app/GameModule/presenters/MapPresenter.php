@@ -229,7 +229,7 @@ class MapPresenter extends BasePresenter
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);
 		try {
-			$this->context->model->getConstructionService()->startFacilityDemolition($target, $target->level - 1);
+			$this->context->model->getConstructionService()->startFacilityDemolition($target, $target->facility->level - 1);
 			$this->invalidateControl('orders');
 			$this->invalidateControl('resources');
 			$this->invalidateControl('events');
