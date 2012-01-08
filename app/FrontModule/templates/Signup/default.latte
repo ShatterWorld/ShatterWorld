@@ -1,8 +1,19 @@
+{block #scripts}
+	{include #parent}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/signup.css" />
+{/block}
+
 {block #header}
 	Registrace
 {/block}
 
 {block #content}
+	<p>
+		Všeobecné a licenční podmíny, Všeobecná herní pravidla a Prohlášení o ochraně osobních údajů najdete v <a n:href="Licence:">Licenci</a>
+	</p>
 	{control signupForm}
+	<p>
+		Všeobecné a licenční podmíny, Všeobecná herní pravidla a Prohlášení o ochraně osobních údajů najdete v <a n:href="Licence:">Licenci</a>
+	</p>
 {/block}
 
