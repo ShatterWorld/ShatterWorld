@@ -49,19 +49,17 @@ class Event extends BaseService
 				$eventRule = $this->context->rules->get('event', $event->type);
 				if ($eventRule->isValid($event)) {
 					$report = $eventRule->process($event, $this);
-					$this->context->model->getReportService()->create(array(
-						'owner' => $event->owner,
-						'type' => 'owner',
-						'event' => $event,
-						'data' => $report
-					), FALSE);
-					if ($event->target && $event->target->owner && $event->target->owner->id !== $event->owner->id){
-						$this->context->model->getReportService()->create(array(
-							'owner' => $event->target->owner,
-							'type' => 'target',
-							'event' => $event,
-							'data' => $report
-						), FALSE);
+					$recipients = array();
+					foreach ($event->getObservers() as $role => $clan) {
+						if (!in_array($clan, $recipients)) {
+							$this->context->model->getReportService()->create(array(
+								'owner' => $clan,
+								'type' => $role,
+								'event' => $event,
+								'data' => $report
+							), FALSE);
+							$recipients[] = $clan;
+						}
 					}
 				} else {
 					$this->update($event, array('failed' => TRUE), FALSE);

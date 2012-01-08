@@ -57,7 +57,10 @@ class Move extends Event
 	 */
 	public function getObservers ()
 	{
-		return array($this->owner, $this->target->owner);
+		return array(
+			'owner' => $this->owner, 
+			'target' => $this->target->owner
+		);
 	}
 	
 	/**

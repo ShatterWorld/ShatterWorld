@@ -42,6 +42,18 @@ class Shipment extends Event
 		$this->target = $target;
 		$this->cargo = Json::encode($cargo);
 	}
+	
+	/**
+	 * Get clans that are relevant to this event
+	 * @return array of Entities\Clan
+	 */
+	public function getObservers ()
+	{
+		return array(
+			'owner' => $this->owner, 
+			'target' => $this->target->owner
+		);
+	}
 
 	/**
 	 * Origin getter

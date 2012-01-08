@@ -74,7 +74,7 @@ abstract class Event extends BaseEntity {
 	 */
 	public function getObservers ()
 	{
-		return array($this->owner);
+		return array('owner' => $this->owner);
 	}
 	
 	/**
