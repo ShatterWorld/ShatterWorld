@@ -36,7 +36,7 @@ class Report extends BaseEntity
 	private $read;
 
 	/**
-	 * @Column(type = "string")
+	 * @Column(type = "text")
 	 * @var string
 	 */
 	private $data;
