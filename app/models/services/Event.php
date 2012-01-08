@@ -51,7 +51,7 @@ class Event extends BaseService
 					$report = $eventRule->process($event, $this);
 					$recipients = array();
 					foreach ($event->getObservers() as $role => $clan) {
-						if (!in_array($clan, $recipients)) {
+						if ($clan && !in_array($clan, $recipients)) {
 							$this->context->model->getReportService()->create(array(
 								'owner' => $clan,
 								'type' => $role,
