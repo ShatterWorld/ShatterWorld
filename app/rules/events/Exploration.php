@@ -33,34 +33,35 @@ class Exploration extends AbstractRule implements IEvent
 				$sum += $resource;
 			}
 		}
-
-		$k = $capacity / $sum;
-		if($k <= 1){
-			foreach ($potential as $name => $resource){
-				if ($resource > 0){
-					$loot = floor($resource * $k);
-					$cargo[$name] = $loot;
-				}
-			}
-		}
-		else{
-			$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
-			$bonusedSum = $sum * $bonus;
-			$l = $capacity / $bonusedSum;
-
-			if($l <= 1){
+		if ($sum > 0){
+			$k = $capacity / $sum;
+			if($k <= 1){
 				foreach ($potential as $name => $resource){
 					if ($resource > 0){
-						$loot = floor($resource * $l * $bonus);
+						$loot = floor($resource * $k);
 						$cargo[$name] = $loot;
 					}
 				}
 			}
 			else{
-				foreach ($potential as $name => $resource){
-					if ($resource > 0){
-						$loot = floor($resource * $bonus);
-						$cargo[$name] = $loot;
+				$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
+				$bonusedSum = $sum * $bonus;
+				$l = $capacity / $bonusedSum;
+
+				if($l <= 1){
+					foreach ($potential as $name => $resource){
+						if ($resource > 0){
+							$loot = floor($resource * $l * $bonus);
+							$cargo[$name] = $loot;
+						}
+					}
+				}
+				else{
+					foreach ($potential as $name => $resource){
+						if ($resource > 0){
+							$loot = floor($resource * $bonus);
+							$cargo[$name] = $loot;
+						}
 					}
 				}
 			}

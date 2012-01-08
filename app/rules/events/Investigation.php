@@ -49,7 +49,7 @@ class Investigation extends Spy implements IEvent
 		}
 
 		$defenderSpyCount = 0;
-		$militiaDefence = $this->getContext()->model->getResearchRepository()->getResearchLevel($event->target->owner, 'militia') >= 5 ;
+		$militiaDefence = $this->getContext()->model->getResearchRepository()->getResearchLevel($event->target->owner, 'militia') >= 3 ;
 		foreach ($event->target->getUnits() as $unit) {
 			if($unit->type === 'spy' || ($unit->type === 'militia' && $militiaDefence)){
 				$defenderSpyCount += $unit->count;
@@ -69,8 +69,8 @@ class Investigation extends Spy implements IEvent
 		if ($attackerPower > $defenderPower){
 			$result['successful'] = TRUE;
 			$result['field']['type'] = $event->target->type;
-			$result['field']['facility']['type'] = $event->target->facility ? $event->target->facility->type : '';
-			$result['field']['facility']['level'] = $event->target->facility ? $event->target->facility->level : '';
+			$result['field']['facility']['type'] = $event->target->facility ? $event->target->facility->type : 'žádná';
+			$result['field']['facility']['level'] = $event->target->facility ? $event->target->facility->level : '0';
 			$researches = $this->getContext()->model->getResearchRepository()->getResearched($event->target->owner);
 			foreach ($researches as $research){
 				$result['researches'][$research->type] = $research->level;

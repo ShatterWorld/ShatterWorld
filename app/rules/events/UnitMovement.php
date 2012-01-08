@@ -41,7 +41,6 @@ class UnitMovement extends AbstractRule implements IEvent
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
-		$target = $this->getContext()->model->getFieldRepository()->find($data['targetId']);
 		$message = array(
 			ReportItem::create('unitGrid', array(
 				DataRow::from($data['units'])->setLabel('Množství')

@@ -43,7 +43,7 @@ class HeavyVehicle extends AbstractRule implements IResearch
 	public function afterResearch (Entities\Construction $construction){}
 
 	public function getLevelCap (){
-		return 10;
+		return 3;
 	}
 
 	public function getCategory ()
