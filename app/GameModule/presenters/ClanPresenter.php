@@ -4,6 +4,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Diagnostics\Debugger;
 use Exception;
+use NotEnoughSpaceException;
 
 /**
  * Clan Presenter
@@ -85,11 +86,10 @@ class ClanPresenter extends BasePresenter {
 				$data['user'] = $this->getUserRepository()->find($this->getUser()->getId());
 				$this->getService('clanService')->create($data);
 				$this->flashMessage(sprintf('Klan %s byl založen.', $data['name']));
-			} catch (Exception $e) {
-				$this->flashMessage('Klan se nepovedlo vytvořit, pravděpodobně je mapa již plná', 'error');
+			} catch (NotEnoughSpaceException $e) {
+				$this->flashMessage('Klan se nepovedlo vytvořit, mapa je už plná', 'error');
 				$this->redirect('Clan:');
 			}
-
 		}
 		$this->redirect('Clan:');
 	}

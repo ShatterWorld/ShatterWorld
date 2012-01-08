@@ -97,7 +97,7 @@ class Map extends Nette\Object
 		if ($maxRank > 0) {
 			return $result;
 		} else {
-			throw new Exception;
+			throw new NotEnoughSpaceException;
 		}
 	}
 	
