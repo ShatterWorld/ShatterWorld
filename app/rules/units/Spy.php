@@ -26,7 +26,7 @@ class Spy extends AbstractRule implements IUnit
 
 	public function getCapacity ()
 	{
-		return 0;
+		return 25;
 	}
 
 	public function getCost ()
