@@ -2,6 +2,11 @@ h3 {
 	margin-top: 10px;
 }
 
-ul {
+ul.licence {
 	list-style: square inside;
+	margin-bottom: 10px;
+}
+
+h2 {
+	border-top: black 1px solid;
 }
