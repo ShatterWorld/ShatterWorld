@@ -41,6 +41,7 @@ class Message extends BaseRepository
 			$qb->expr()->eq('m.sender', $userId),
 			$qb->expr()->eq('m.deletedBySender', '?1')
 		));
+		$qb->orderBy('m.sentTime', 'DESC');
 		$qb->setParameter(1, false);
 
 		$messages = $qb->getQuery()->getResult();
