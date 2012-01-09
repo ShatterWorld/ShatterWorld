@@ -12,7 +12,7 @@ class ExplorationEfficiency extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Vyšší zisky a rychlejší průzkum';
+		return 'Zvýší šanci získat náhodný bonus k surovinám.';
 	}
 
 	public function getCost ($level = 1)
