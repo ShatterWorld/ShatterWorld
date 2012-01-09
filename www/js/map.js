@@ -1338,7 +1338,8 @@ Game.map.contextMenu.SpyDialog = Class({
 		.css({
 			'cursor' : 'pointer'
 		});
-		element.append('Typ akce: <select id="spyType"><option value="investigation">Špionáž</option><option value="sabotage">Sabotáž</option><option value="burglary">Loupež</option></select>');
+		//element.append('Typ akce: <select id="spyType"><option value="investigation">Špionáž</option><option value="sabotage">Sabotáž</option><option value="burglary">Loupež</option></select>');
+		element.append('Typ akce: <select id="spyType"><option value="investigation">Špionáž</option></select>');
 		return element;
 	},
 
