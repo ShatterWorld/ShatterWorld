@@ -25,7 +25,7 @@ class Trading extends AbstractStat
 	{
 		$baseMerchantSpeed = $this->getContext()->params['game']['stats']['baseMerchantSpeed'];
 		$level = $this->getContext()->model->getResearchRepository()->getResearchLevel($clan, 'tradeRoutes');
-		return $baseMerchantSpeed * ($level + 1);
+		return $baseMerchantSpeed * (10 - $level) / 10;
 	}
 
 	/**

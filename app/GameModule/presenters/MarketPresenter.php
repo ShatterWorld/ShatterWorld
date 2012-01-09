@@ -185,7 +185,7 @@ class MarketPresenter extends BasePresenter {
 	{
 		$clan = $this->getPlayerClan();
 		$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $this->getOfferRepository()->getMediators(Graph::SHORT, $clan, $offer));
-		$t = floor($d / $this->context->stats->trading->getMerchantSpeed($offer->owner));
+		$t = floor($d * $this->context->stats->trading->getMerchantSpeed($offer->owner));
 		return $t;
 	}
 
@@ -198,7 +198,7 @@ class MarketPresenter extends BasePresenter {
 	{
 		$clan = $this->getPlayerClan();
 		$d = $this->getClanRepository()->calculateTotalDistance($clan, $offer->owner, $this->getOfferRepository()->getMediators(Graph::CHEAP, $clan, $offer));
-		$t = floor($d / $this->context->stats->trading->getMerchantSpeed($offer->owner));
+		$t = floor($d * $this->context->stats->trading->getMerchantSpeed($offer->owner));
 		return $t;
 	}
 
