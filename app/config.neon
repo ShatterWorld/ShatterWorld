@@ -51,7 +51,7 @@ common:
 				food: 500
 				fuel: 100
 				stone: 400
-				metal: 200
+				metal: 500
 
 			units:
 				militia: 10

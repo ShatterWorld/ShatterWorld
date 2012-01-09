@@ -24,8 +24,7 @@ class Moor extends AbstractField implements IField
 	{
 		return array(
 			'fuel' => 0.2,
-			'stone' => -0.4,
-			'metal' => -0.4
+			'stone' => -0.4
 		);
 	}
 
