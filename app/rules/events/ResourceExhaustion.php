@@ -14,8 +14,9 @@ class ResourceExhaustion extends AbstractRule implements IEvent
 	public function process (Entities\Event $event, $processor)
 	{
 		$resourceRule = $this->getContext()->rules->get('resource', $event->construction);
-		$resourceRule->processExhaustion($event);
-		return array('resource' => $event->construction);
+		$report = $resourceRule->processExhaustion($event);
+		$report['resource'] = $event->construction;
+		return $report;
 	}
 
 	public function isValid (Entities\Event $event)
