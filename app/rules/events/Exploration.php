@@ -30,7 +30,7 @@ class Exploration extends AbstractRule implements IEvent
 		$sum = 0;
 		foreach ($potential as $name => $resource){
 			if ($resource > 0){
-				$sum += $resource;
+				$sum += $resource * 100;
 			}
 		}
 		if ($sum > 0){
@@ -38,7 +38,7 @@ class Exploration extends AbstractRule implements IEvent
 			if($k <= 1){
 				foreach ($potential as $name => $resource){
 					if ($resource > 0){
-						$loot = floor($resource * $k);
+						$loot = floor($resource * 100 * $k);
 						$cargo[$name] = $loot;
 					}
 				}
@@ -51,7 +51,7 @@ class Exploration extends AbstractRule implements IEvent
 				if($l <= 1){
 					foreach ($potential as $name => $resource){
 						if ($resource > 0){
-							$loot = floor($resource * $l * $bonus);
+							$loot = floor($resource * 100 * $l * $bonus);
 							$cargo[$name] = $loot;
 						}
 					}
@@ -59,7 +59,7 @@ class Exploration extends AbstractRule implements IEvent
 				else{
 					foreach ($potential as $name => $resource){
 						if ($resource > 0){
-							$loot = floor($resource * $bonus);
+							$loot = floor($resource * 100 * $bonus);
 							$cargo[$name] = $loot;
 						}
 					}

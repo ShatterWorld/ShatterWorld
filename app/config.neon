@@ -31,7 +31,7 @@ common:
 			orderCap: 100
 			facilityLevelCap: 10
 			baseTradingRadius: 7
-			baseMerchantSpeed: 1
+			baseMerchantSpeed: 120
 			baseTradeProfit: 0.01
 			clanQuota: 3
 			allianceMemberQuota: 10
