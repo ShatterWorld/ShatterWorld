@@ -26,7 +26,7 @@ class Barracks extends AbstractRule implements IConstructionFacility
 
 	public function getConstructionTime ($level = 1)
 	{
-		return 5*60 + pow($level, 2) * 90;
+		return 20 * 60 + pow($level, 3) * 10 * 60;
 	}
 
 	public function getDemolitionCost ($from, $level = 0)
@@ -56,7 +56,7 @@ class Barracks extends AbstractRule implements IConstructionFacility
 
 	public function getDefenceBonus ($level = 1)
 	{
-		return 0;
+		return 0.2;
 	}
 
 	public function getValue ($level = 1)

@@ -25,13 +25,12 @@ class Forest extends AbstractField implements IField
 		return array(
 			'food' => 0.2,
 			'fuel' => 0.1,
-			'metal' => -0.3,
 			'stone' => -0.2
 		);
 	}
 
 	public function getDefenceBonus ()
 	{
-		return 0;
+		return 0.25;
 	}
 }

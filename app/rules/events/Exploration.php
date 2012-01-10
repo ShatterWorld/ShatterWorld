@@ -20,7 +20,7 @@ class Exploration extends AbstractRule implements IEvent
 		foreach ($event->getUnits() as $unit) {
 			$rule = $this->getContext()->rules->get('unit', $unit->type);
 			$capacity += $unit->count * $rule->getCapacity();
-			//Debugger::fireLog($rule->getCapacity());
+			Debugger::fireLog($rule->getCapacity());
 			$units[$unit->type] = $unit->count;
 		}
 		$unitList = $event->getUnitList();

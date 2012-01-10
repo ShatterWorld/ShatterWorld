@@ -32,8 +32,8 @@ class Artillery extends AbstractRule implements IUnit
 	public function getCost ()
 	{
 		return array(
-			'food' => 50,
-			'metal' => 50
+			'food' => 70,
+			'metal' => 60
 		);
 	}
 
@@ -47,7 +47,7 @@ class Artillery extends AbstractRule implements IUnit
 
 	public function getTrainingTime ()
 	{
-		return 90*60;
+		return 90 * 60;
 	}
 
 	public function getDifficulty ()

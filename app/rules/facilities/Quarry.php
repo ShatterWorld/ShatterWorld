@@ -26,7 +26,7 @@ class Quarry extends AbstractRule implements IFacility
 
 	public function getConstructionTime ($level = 1)
 	{
-		return 3*60 + pow($level, 2) * 90;
+		return 6 * 60 + pow($level, 3) * 2 * 60;
 	}
 
 	public function getDemolitionCost ($from, $level = 0)

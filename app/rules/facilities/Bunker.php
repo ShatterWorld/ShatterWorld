@@ -27,7 +27,7 @@ class Bunker extends AbstractRule implements IFacility
 
 	public function getConstructionTime ($level = 1)
 	{
-		return pow($level, 2) * 200;
+		return 120 * 60 + pow($level, 3) * 7 * 60;
 	}
 
 	public function getDemolitionCost ($from, $level = 0)

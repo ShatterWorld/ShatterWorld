@@ -50,7 +50,7 @@ class Food extends AbstractRule implements IResearch
 
 	public function getLevelCap ()
 	{
-		return 10;
+		return 5;
 	}
 
 	public function getCategory ()

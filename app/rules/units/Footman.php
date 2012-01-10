@@ -21,7 +21,7 @@ class Footman extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 4 * 60;
+		return 5 * 60;
 	}
 
 	public function getCapacity ()
@@ -33,7 +33,7 @@ class Footman extends AbstractRule implements IUnit
 	{
 		return array(
 			'food' => 60,
-			'metal' => 30
+			'metal' => 45
 		);
 	}
 
@@ -46,7 +46,7 @@ class Footman extends AbstractRule implements IUnit
 
 	public function getTrainingTime ()
 	{
-		return 45*60;
+		return 60 * 60;
 	}
 
 	public function getDifficulty ()

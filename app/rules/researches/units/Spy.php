@@ -12,7 +12,7 @@ class Spy extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Síla špionů a rozvětky';
+		return 'Síla špionů a rozvědky';
 	}
 
 	public function getCost ($level = 1)
@@ -42,7 +42,7 @@ class Spy extends AbstractRule implements IResearch
 	public function afterResearch (Entities\Construction $construction){}
 
 	public function getLevelCap (){
-		return 3;
+		return 5;
 	}
 
 	public function getCategory ()

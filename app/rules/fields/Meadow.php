@@ -23,10 +23,10 @@ class Meadow extends AbstractField implements IField
 	public function getProductionBonuses ()
 	{
 		return array(
-			'food' => 0.3,
+			'food' => 0.2,
 			'fuel' => -0.9,
-			'metal' => -0.4,
-			'stone' => -0.4
+			'metal' => -0.3,
+			'stone' => -0.3
 		);
 	}
 

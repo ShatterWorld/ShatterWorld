@@ -23,15 +23,15 @@ class Barren extends AbstractField implements IField
 	public function getProductionBonuses ()
 	{
 		return array(
-			'food' => -0.3,
+			'food' => -0.5,
 			'fuel' => -0.4,
-			'metal' => -0.4
+			'metal' => 0.1
 		);
 	}
 
 	public function getDefenceBonus ()
 	{
-		return 0.2;
+		return 0.05;
 	}
 
 }

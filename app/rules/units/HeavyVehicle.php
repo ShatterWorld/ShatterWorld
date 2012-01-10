@@ -21,7 +21,7 @@ class HeavyVehicle extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 4 * 60;
+		return 5 * 60;
 	}
 
 	public function getCapacity ()
@@ -47,7 +47,7 @@ class HeavyVehicle extends AbstractRule implements IUnit
 
 	public function getTrainingTime ()
 	{
-		return 120*60;
+		return 120 * 60;
 	}
 
 	public function getDifficulty ()

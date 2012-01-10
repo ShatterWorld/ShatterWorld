@@ -26,7 +26,7 @@ class Refinery extends AbstractRule implements IFacility
 
 	public function getConstructionTime ($level = 1)
 	{
-		return 10*60 + pow($level, 2) * 90;
+		return 12 * 60 + pow($level, 3) * 2 * 60;
 	}
 
 	public function getDemolitionCost ($from, $level = 0)
@@ -54,7 +54,7 @@ class Refinery extends AbstractRule implements IFacility
 
 	public function getDefenceBonus ($level = 1)
 	{
-		return -0.2;
+		return -0.3;
 	}
 
 	public function getValue ($level = 1)

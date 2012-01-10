@@ -11,7 +11,7 @@ class Militia extends AbstractRule implements IUnit
 
 	public function getAttack ()
 	{
-		return 1;
+		return 0;
 	}
 
 	public function getDefense ()
@@ -21,7 +21,7 @@ class Militia extends AbstractRule implements IUnit
 
 	public function getSpeed ()
 	{
-		return 5 * 60;
+		return 6 * 60;
 	}
 
 	public function getCapacity ()
@@ -32,8 +32,8 @@ class Militia extends AbstractRule implements IUnit
 	public function getCost ()
 	{
 		return array(
-			'food' => 30,
-			'metal' => 5
+			'food' => 40,
+			'metal' => 30
 		);
 	}
 
@@ -46,7 +46,7 @@ class Militia extends AbstractRule implements IUnit
 
 	public function getTrainingTime ()
 	{
-		return 1200;
+		return 40 * 60;
 	}
 
 	public function getDifficulty ()

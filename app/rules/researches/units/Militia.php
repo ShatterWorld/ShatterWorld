@@ -12,7 +12,7 @@ class Militia extends AbstractRule implements IResearch
 
 	public function getExplanation ()
 	{
-		return 'Síla domobrany';
+		return 'Umožní domobraně útočit a zvyšuje její sílu';
 	}
 
 	public function getCost ($level = 1)
