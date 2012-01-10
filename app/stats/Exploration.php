@@ -14,8 +14,8 @@ class Exploration extends AbstractStat
 	public function getBonus (Entities\Clan $clan)
 	{
 		$param = $this->getContext()->params['game']['stats'];
-		$randomBonus = rand($param['minExplorationCoefficient'] * 100, $param['maxExplorationCoefficient'] * 100) / 100;
 		$level = $this->getContext()->model->getResearchRepository()->getResearchLevel($clan, 'explorationEfficiency');
-		return 1 + ($level/3) * $randomBonus;
+		$bonus = rand($param['minExplorationCoefficient'] * 100, ($param['maxExplorationCoefficient'] + $level/2) * 100) / 100;
+		return $bonus;
 	}
 }

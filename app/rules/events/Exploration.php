@@ -19,7 +19,8 @@ class Exploration extends AbstractRule implements IEvent
 		$units = array();
 		foreach ($event->getUnits() as $unit) {
 			$rule = $this->getContext()->rules->get('unit', $unit->type);
-			$capacity = $capacity + $unit->count * $rule->getCapacity();
+			$capacity += $unit->count * $rule->getCapacity();
+			//Debugger::fireLog($rule->getCapacity());
 			$units[$unit->type] = $unit->count;
 		}
 		$unitList = $event->getUnitList();
@@ -28,41 +29,20 @@ class Exploration extends AbstractRule implements IEvent
 		$potential = $this->getContext()->rules->get('field', $event->target->type)->getProductionBonuses();
 
 		$sum = 0;
+		$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
+		Debugger::fireLog($bonus);
 		foreach ($potential as $name => $resource){
 			if ($resource > 0){
-				$sum += $resource * 100;
+				$potential[$name] = $resource * 100 * $bonus;
+				$sum += $resource * 100 * $bonus;
 			}
 		}
+
 		if ($sum > 0){
 			$k = $capacity / $sum;
-			if($k <= 1){
-				foreach ($potential as $name => $resource){
-					if ($resource > 0){
-						$loot = floor($resource * 100 * $k);
-						$cargo[$name] = $loot;
-					}
-				}
-			}
-			else{
-				$bonus = $this->getContext()->stats->exploration->getBonus($event->owner);
-				$bonusedSum = $sum * $bonus;
-				$l = $capacity / $bonusedSum;
-
-				if($l <= 1){
-					foreach ($potential as $name => $resource){
-						if ($resource > 0){
-							$loot = floor($resource * 100 * $l * $bonus);
-							$cargo[$name] = $loot;
-						}
-					}
-				}
-				else{
-					foreach ($potential as $name => $resource){
-						if ($resource > 0){
-							$loot = floor($resource * 100 * $bonus);
-							$cargo[$name] = $loot;
-						}
-					}
+			foreach ($potential as $name => $resource){
+				if ($resource > 0){
+					$cargo[$name] = floor(min($resource * $k, $resource));
 				}
 			}
 		}
