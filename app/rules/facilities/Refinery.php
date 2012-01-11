@@ -47,7 +47,7 @@ class Refinery extends AbstractRule implements IFacility
 	public function getProduction ($level = 1)
 	{
 		return array(
-			'food' => -1 -log($level, 2) / 3600,
+			'food' => (-1 -log($level, 2)) / 3600,
 			'fuel' => 15*$level / 3600
 		);
 	}
