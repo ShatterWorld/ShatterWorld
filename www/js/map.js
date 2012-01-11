@@ -243,7 +243,11 @@ Game.map = {
 
 					if ((Game.map.clan !== null && field['owner'] !== null && field['owner']['id'] == Game.map.clan) || (Game.map.alliance !== null && field['owner'] !== null && field['owner']['alliance'] !== null && field['owner']['alliance']['id'] == Game.map.alliance)){
 						if (field['facility'] !== null){
-							var img = $('<img src="' + basePath + '/images/facilities/' + field['facility']['type'] + '.png"/>');
+							var status = 'active';
+							if (field['facility']['damaged']){
+								status = 'damaged';
+							}
+							var img = $('<img src="' + basePath + '/images/facilities/' + status + '/' + field['facility']['type'] + '.png"/>');
 							div.append(img);
 						}
 					}
