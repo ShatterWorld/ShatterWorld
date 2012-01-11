@@ -19,9 +19,9 @@ class TradeProfit extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 500,
-			'fuel' => $level > 3 ? pow($level, 2) * 350 : 500,
-			'metal' => $level * 250
+			'food' => 250 + max(0, $level - 1) * 150,
+			'metal' => $level * 100,
+			'stone' => $level * 30
 		);
 	}
 

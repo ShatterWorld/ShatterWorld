@@ -18,9 +18,10 @@ class ColonisationEfficiency extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 300,
-			'stone' => pow($level, 2) * 300,
-			'metal' => pow($level, 2) * 300
+			'stone' => $level * 170,
+			'metal' => $level * 250,
+			'fuel' => $level * 80,
+			'food' => $level * 150
 		);
 	}
 

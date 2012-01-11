@@ -18,8 +18,9 @@ class Bunker extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'stone' => pow($level, 2) * 500,
-			'food' => pow($level, 2) * 500
+			'stone' => $level * 500,
+			'metal' => $level * 300,
+			'food' => $level * 200
 		);
 	}
 

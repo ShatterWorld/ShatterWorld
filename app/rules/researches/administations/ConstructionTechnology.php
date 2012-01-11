@@ -18,9 +18,9 @@ class ConstructionTechnology extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 100,
-			'stone' => pow($level, 2) * 200,
-			'metal' => pow($level, 2) * 150
+			'stone' => $level * 100,
+			'metal' => $level * 200,
+			'food' => $level * 150
 		);
 	}
 

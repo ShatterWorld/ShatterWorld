@@ -18,9 +18,10 @@ class ResearchEfficiency extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'stone' => pow($level, 2) * 500,
-			'metal' => pow($level, 2) * 500,
-			'fuel' => pow($level, 2) * 100
+			'stone' => $level * 200,
+			'metal' => $level * 200,
+			'fuel' => $level * 40,
+			'food' => $level * 150
 		);
 	}
 

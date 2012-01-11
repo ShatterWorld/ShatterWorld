@@ -18,9 +18,9 @@ class Artillery extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 400,
-			'stone' => pow($level, 2) * 400,
-			'metal' => pow($level, 2) * 400
+			'food' => $level * 200,
+			'stone' => $level * 200,
+			'metal' => $level * 250,
 		);
 	}
 

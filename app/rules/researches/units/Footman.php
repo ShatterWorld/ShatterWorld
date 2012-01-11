@@ -18,9 +18,9 @@ class Footman extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 300,
-			'stone' => pow($level, 2) * 300,
-			'metal' => pow($level, 2) * 300
+			'food' => $level * 100,
+			'metal' => $level * 90,
+			'stone' => $level * 120,
 		);
 	}
 

@@ -19,9 +19,10 @@ class Reconnaissance extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'fuel' => pow($level, 2) * 300,
-			'stone' => pow($level, 2) * 200,
-			'metal' => pow($level, 2) * 100
+			'stone' => $level * 70,
+			'metal' => $level * 200,
+			'fuel' => $level * 35,
+			'food' => $level * 120
 		);
 	}
 

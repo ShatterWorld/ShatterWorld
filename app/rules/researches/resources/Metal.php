@@ -18,10 +18,10 @@ class Metal extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 400,
-			'stone' => pow($level, 2) * 400,
-			'metal' => pow($level, 2) * 600,
-			'fuel' => pow($level, 2) * 400
+			'food' => 250 + max(0, $level - 1) * 300,
+			'stone' => 250 + max(0, $level - 1) * 300,
+			'metal' => 200 + max(0, $level - 1) * 300,
+			'fuel' => 250 + max(0, $level - 1) * 300
 		);
 	}
 

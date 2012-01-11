@@ -32,8 +32,8 @@ class Footman extends AbstractRule implements IUnit
 	public function getCost ()
 	{
 		return array(
-			'food' => 60,
-			'metal' => 45
+			'food' => 40,
+			'metal' => 30
 		);
 	}
 

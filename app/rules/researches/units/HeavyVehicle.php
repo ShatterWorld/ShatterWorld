@@ -18,10 +18,9 @@ class HeavyVehicle extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 500,
-			'stone' => pow($level, 2) * 500,
-			'metal' => pow($level, 2) * 500,
-			'fuel' => pow($level, 2) * 500
+			'food' => $level * 150,
+			'fuel' => $level * 120,
+			'metal' => $level * 300,
 		);
 	}
 

@@ -18,10 +18,9 @@ class LightVehicle extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 300,
-			'stone' => pow($level, 2) * 300,
-			'metal' => pow($level, 2) * 300,
-			'fuel' => pow($level, 2) * 300
+			'food' => $level * 120,
+			'fuel' => $level * 100,
+			'metal' => $level * 230,
 		);
 	}
 

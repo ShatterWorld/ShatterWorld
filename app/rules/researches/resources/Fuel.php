@@ -18,10 +18,10 @@ class Fuel extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 600,
-			'stone' => pow($level, 2) * 600,
-			'metal' => pow($level, 2) * 600,
-			'fuel' => pow($level, 2) * 800
+			'food' => 350 + max(0, $level - 1) * 300,
+			'stone' => 350 + max(0, $level - 1) * 300,
+			'metal' => 350 + max(0, $level - 1) * 300,
+			'fuel' => 300 + max(0, $level - 1) * 300
 		);
 	}
 

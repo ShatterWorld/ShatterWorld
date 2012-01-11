@@ -32,8 +32,8 @@ class HeavyVehicle extends AbstractRule implements IUnit
 	public function getCost ()
 	{
 		return array(
-			'food' => 150,
-			'metal' => 200
+			'food' => 120,
+			'metal' => 150
 		);
 	}
 

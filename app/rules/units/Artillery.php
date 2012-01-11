@@ -32,8 +32,8 @@ class Artillery extends AbstractRule implements IUnit
 	public function getCost ()
 	{
 		return array(
-			'food' => 70,
-			'metal' => 60
+			'food' => 60,
+			'metal' => 50
 		);
 	}
 

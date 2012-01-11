@@ -18,9 +18,10 @@ class Storage extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 350,
-			'stone' => pow($level, 2) * 350,
-			'metal' => pow($level, 2) * 350
+			'food' => 150 + max(0, $level - 1) * 100,
+			'fuel' => $level * 25,
+			'metal' => $level * 75,
+			'stone' => $level * 100
 		);
 	}
 

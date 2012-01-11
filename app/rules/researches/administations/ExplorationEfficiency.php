@@ -18,9 +18,9 @@ class ExplorationEfficiency extends AbstractRule implements IResearch
 	public function getCost ($level = 1)
 	{
 		return array(
-			'food' => pow($level, 2) * 300,
-			'stone' => pow($level, 2) * 300,
-			'metal' => pow($level, 2) * 300
+			'metal' => $level * 120,
+			'fuel' => $level * 20,
+			'food' => $level * 120
 		);
 	}
 

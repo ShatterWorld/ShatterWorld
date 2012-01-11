@@ -32,8 +32,8 @@ class Militia extends AbstractRule implements IUnit
 	public function getCost ()
 	{
 		return array(
-			'food' => 40,
-			'metal' => 30
+			'food' => 30,
+			'metal' => 20
 		);
 	}
 
