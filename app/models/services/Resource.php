@@ -55,7 +55,7 @@ class Resource extends BaseService
 				$production[$account->type] = 0;
 			}
 			if ($account->production != $production[$account->type]) {
-				$this->context->model->scoreService->increaseClanScore($clan, 'production', $production[$account->type] - $account->production);
+				$this->context->model->scoreService->increaseClanScore($clan, 'production', ($production[$account->type] - $account->production)*3600);
 				$account->setProduction($production[$account->type], $term ?: new \DateTime());
 			}
 		}
