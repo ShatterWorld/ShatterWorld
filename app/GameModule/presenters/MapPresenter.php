@@ -162,7 +162,7 @@ class MapPresenter extends BasePresenter
 			$this->flashMessage('Nemáte vyzkoumáno vše potřebné', 'error');
 		}
 	}
-	
+
 	public function handleRepairFacility ($targetId)
 	{
 		$target = $this->context->model->getFieldRepository()->find($targetId);

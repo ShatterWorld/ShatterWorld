@@ -210,7 +210,7 @@ class Field extends BaseRepository
 		}
 		return $ids;
 	}
-	
+
 	/**
 	 * Finds visible fields and returns them as the 2d array of integers (their coords)
 	 * @param Entities\Clan
@@ -225,7 +225,7 @@ class Field extends BaseRepository
 	{
 		return $this->fetchFieldsData();
 	}
-	
+
 	protected function fetchFieldsData (Entities\Clan $clan = NULL, $ids = array())
 	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
@@ -259,7 +259,9 @@ class Field extends BaseRepository
 			if (!isset($result[$x])) {
 				$result[$x] = array();
 			}
-			if ($clan && ($row['owner'] != null && $row['owner']['id'] != $clan->id)) {
+			$isOwner = $clan && $row['owner'] != null && $row['owner']['id'] == $clan->id;
+			$isAlli = $clan && $clan->alliance !== null && $row['owner'] !== null && $row['owner']['alliance'] !== null && $row['owner']['alliance']['id'] == $clan->alliance->id;
+			if (!$isOwner && !$isAlli) {
 				$row['facility'] = null;
 				$row['level'] = null;
 			}

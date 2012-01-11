@@ -52,7 +52,7 @@ Game.events = {
 					Game.map.render();
 				}
 				Game.events.refresh();
-				//Game.resources.fetchResources();
+				Game.resources.fetchResources();
 				clearInterval(interval);
 				return;
 			}

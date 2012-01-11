@@ -232,17 +232,16 @@ Game.map = {
 						//'line-height' : Game.map.fieldHeight+'px'
 					});
 
-					if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
-						if (field['facility'] !== null){
-							text.append(fieldLabel);
-							Game.descriptions.translate('facility', field['facility']['type'], fieldLabel);
-							if(field['facility'].type !== 'headquarters'){
-								text.append(' ('+field['level']+')');
-							}
+					var gameAli = Game.map.alliance;
+					if (field['owner'] !== null){
+						var owner = field['owner']['id'];
+						if (field['owner']['alliance'] !== null){
+							var alliance = field['owner']['alliance']['id'];
+
 						}
 					}
 
-					if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan){
+					if ((Game.map.clan !== null && field['owner'] !== null && field['owner']['id'] == Game.map.clan) || (Game.map.alliance !== null && field['owner'] !== null && field['owner']['alliance'] !== null && field['owner']['alliance']['id'] == Game.map.alliance)){
 						if (field['facility'] !== null){
 							var img = $('<img src="' + basePath + '/images/facilities/' + field['facility']['type'] + '.png"/>');
 							div.append(img);
