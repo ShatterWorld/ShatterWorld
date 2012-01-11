@@ -47,7 +47,7 @@ class Mine extends AbstractRule implements IFacility
 	public function getProduction ($level = 1)
 	{
 		return array(
-			'food' => -7*$level / 3600,
+			'food' => -log($level, 2) / 3600,
 			'metal' => 15*$level / 3600
 		);
 	}

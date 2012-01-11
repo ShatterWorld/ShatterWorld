@@ -43,7 +43,7 @@ class Bunker extends AbstractRule implements IFacility
 	public function getProduction ($level = 1)
 	{
 		return array(
-			'food' => -10*$level / 3600
+			'food' => -4 -log($level, 2) / 3600,
 		);
 	}
 
