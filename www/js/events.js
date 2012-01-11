@@ -53,10 +53,6 @@ Game.events = {
 					Game.map.render();
 				}
 				Game.events.refresh();
-<<<<<<< HEAD
-				Game.resources.fetchResources();
-=======
->>>>>>> eb21b8a6d1e15c034d6e337ba8bd36d348792d9e
 				clearInterval(interval);
 				return;
 			}
