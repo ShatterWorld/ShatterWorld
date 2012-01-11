@@ -52,9 +52,10 @@
 						<th><img src="{$basePath}/images/resources/{$name}.png"/></th>
 					{/foreach}
 				</tr>
-			{foreach $facilities as $name => $facility}
+			{foreach $facilities as $facility}
+			{dump $facilities}
 				<tr>
-					<td>{$facilityRules[$name]->getDescription()}</td>
+					<td>{$facilityRules[$facility['name']]->getDescription()}</td>
 					<td>{$facility['level']}</td>
 					{?$production = $facility['production']}
 					{foreach $resourceRules as $name => $resource}

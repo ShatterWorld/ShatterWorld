@@ -52,14 +52,17 @@ class ClanPresenter extends BasePresenter {
 				$this->template->resourceRules = $this->context->rules->getAll('resource');
 				$this->template->facilityRules = $this->context->rules->getAll('facility');
 				$facilities = $this->context->model->getFacilityRepository()->getClanFacilities($clan);
+				$facilitiesData = array();
 				foreach ($facilities as $name => $level){
 					$production = $this->context->rules->get('facility', $name)->getProduction();
-					$facilities[$name] = array();
-					$facilities[$name]['level'] = $level;
-					$facilities[$name]['production'] = $production;
+					$facility = array();
+					$facility['name'] = $name;
+					$facility['level'] = $level;
+					$facility['production'] = $production;
+					$facilitiesData[] = $facility;
 				}
 
-				$this->template->facilities = $facilities;
+				$this->template->facilities = $facilitiesData;
 				$this->template->clanScores = $this->context->model->getScoreRepository()->getClanScoreArray($clan);
 			}
 
