@@ -11,7 +11,7 @@ common:
 		# zlib.output_compression: yes
 
 	game:
-		start: 2011-01-09 19:15:00
+		start: 2011-01-11 17:15:00
 
 		map:
 			size: 50
@@ -33,7 +33,7 @@ common:
 			baseTradingRadius: 7
 			baseMerchantSpeed: 120
 			baseTradeProfit: 0.01
-			clanQuota: 3
+			clanQuota: 1
 			allianceMemberQuota: 10
 
 		ruleAliases:
