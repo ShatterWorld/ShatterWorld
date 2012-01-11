@@ -18,6 +18,7 @@ Game.events = {
 		Game.utils.signal('fetchEvents', {}, function (data) {
 			Game.events.data = Game.events.getEvents();
 			Game.events.setup();
+			Game.resources.fetchResources();
 		});
 	},
 
@@ -52,7 +53,6 @@ Game.events = {
 					Game.map.render();
 				}
 				Game.events.refresh();
-				//Game.resources.fetchResources();
 				clearInterval(interval);
 				return;
 			}
