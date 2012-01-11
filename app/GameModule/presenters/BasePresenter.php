@@ -150,6 +150,7 @@ abstract class BasePresenter extends \BasePresenter
 	{
 		$this->invalidateControl('events');
 		$this->invalidateControl('reports');
+		$this->invalidateControl('resources');
 	}
 
 	/**

@@ -17,6 +17,7 @@ class MapPresenter extends BasePresenter
 	public function submitGenerateMapForm (Form $form)
 	{
 		$this->getClanService()->deleteAll(FALSE);
+		$this->getFacilityService()->deleteAll(FALSE);
 		$this->getFieldService()->deleteAll(TRUE);
 
 		$this->getFieldRepository()->getVisibleFieldsCache()->clean(array(Cache::ALL => TRUE));
