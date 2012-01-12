@@ -19,6 +19,12 @@ abstract class Event extends BaseEntity {
 	private $type;
 	
 	/**
+	 * @Column(type = "datetime", nullable = true)
+	 * @var DateTime
+	 */
+	private $activation;
+	
+	/**
 	 * @Column(type = "datetime")
 	 * @var DateTime
 	 */
@@ -115,6 +121,16 @@ abstract class Event extends BaseEntity {
 	}
 	
 	/**
+	 * Activation setter
+	 * @param DateTime
+	 * @return void
+	 */
+	public function setActivation ($activation)
+	{
+		$this->activation = $activation;
+	}
+	
+	/**
 	 * Timeout setter
 	 * @param int
 	 * @param DateTime
@@ -122,7 +138,7 @@ abstract class Event extends BaseEntity {
 	 */
 	public function setTimeout ($timeout, $time = NULL)
 	{
-		$this->term = $time ? new \DateTime('@' . (intval($time->format('U')) + $timeout)) : new \DateTime('@' . (date('U') + $timeout));
+		$this->setTerm($time ? new \DateTime('@' . (intval($time->format('U')) + $timeout)) : new \DateTime('@' . (date('U') + $timeout)));
 	}
 	
 	/**
