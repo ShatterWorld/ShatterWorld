@@ -1,12 +1,14 @@
 <?php
 namespace Services;
 use Entities;
+use Rules;
 use Nette\Diagnostics\Debugger;
 
 class Move extends Event
 {
 	protected function startMovement (Entities\Field $origin, Entities\Field $target, Entities\Clan $owner, $type, $units, $cargo = array(), $now = NULL)
 	{
+		$rule = $this->context->rules->get('event', $type);
 		$time = 0;
 		$move = $this->create(array(
 			'type' => $type,
@@ -38,6 +40,16 @@ class Move extends Event
 			}
 		}
 		$move->setTimeout($time, $now);
+		if ($rule instanceof Rules\Events\Attack) {
+			$notificationTimeout = $time - min($time, floor(($time * $this->context->stats->visibility->getRadius($move->target->owner) / $distance)));
+			$notification = $this->context->model->notificationService->create(array(
+				'type' => 'attackNotification',
+				'owner' => $move->target->owner,
+				'term' => $move->term,
+				'subject' => $move
+			), FALSE);
+			$notification->setActivationTimeout($notificationTimeout, $now);
+		}
 		return $move;
 	}
 

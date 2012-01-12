@@ -7,7 +7,7 @@ namespace Entities;
  * @Table(indexes = {@Index(name = "idx_lock", columns = {"term", "processed", "lockUserId", "lockTimeout"})})
  * @InheritanceType("SINGLE_TABLE")
  * @DicriminatorColumn(name = "class", type = "string")
- * @DiscriminatorMap({"Move" = "Move", "Construction" = "Construction", "Shipment" = "Shipment"})
+ * @DiscriminatorMap({"Move" = "Move", "Construction" = "Construction", "Shipment" = "Shipment", "Notification" = "Notification"})
  * @author Jan "Teyras" Buchar
  */
 abstract class Event extends BaseEntity {
@@ -121,6 +121,17 @@ abstract class Event extends BaseEntity {
 	}
 	
 	/**
+	 * Timeout setter
+	 * @param int
+	 * @param DateTime
+	 * @return void
+	 */
+	public function setTimeout ($timeout, $time = NULL)
+	{
+		$this->setTerm($time ? new \DateTime('@' . (intval($time->format('U')) + $timeout)) : new \DateTime('@' . (date('U') + $timeout)));
+	}
+	
+	/**
 	 * Activation setter
 	 * @param DateTime
 	 * @return void
@@ -131,14 +142,13 @@ abstract class Event extends BaseEntity {
 	}
 	
 	/**
-	 * Timeout setter
-	 * @param int
+	 * Activation timeout setter
 	 * @param DateTime
 	 * @return void
 	 */
-	public function setTimeout ($timeout, $time = NULL)
+	public function setActivationTimeout ($timeout, $time)
 	{
-		$this->setTerm($time ? new \DateTime('@' . (intval($time->format('U')) + $timeout)) : new \DateTime('@' . (date('U') + $timeout)));
+		$this->setActivation($time ? new \DateTime('@' . (intval($time->format('U')) + $timeout)) : new \DateTime('@' . (date('U') + $timeout)));
 	}
 	
 	/**
