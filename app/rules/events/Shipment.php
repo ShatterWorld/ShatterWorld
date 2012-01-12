@@ -23,6 +23,11 @@ class Shipment extends AbstractRule implements IEvent
 		return true;
 	}
 
+	public function isRemote ()
+	{
+		return TRUE;
+	}
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Zásilka surovin do %s', $event->target->getCoords());

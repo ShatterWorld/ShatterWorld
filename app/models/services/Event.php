@@ -32,6 +32,10 @@ class Event extends BaseService
 				$qb->expr()->andX(
 					$qb->expr()->lte('e.term', '?3'),
 					$qb->expr()->orX(
+						$qb->expr()->gte('e.activation', '?3'),
+						$qb->expr()->isNull('e.activation')
+					),
+					$qb->expr()->orX(
 						$qb->expr()->lt('e.lockTimeout', '?4'),
 						$qb->expr()->isNull('e.lockUserId')
 					),
@@ -50,15 +54,17 @@ class Event extends BaseService
 				if ($eventRule->isValid($event)) {
 					$report = $eventRule->process($event, $this);
 					$recipients = array();
-					foreach ($event->getObservers() as $role => $clan) {
-						if ($clan && !in_array($clan, $recipients)) {
-							$this->context->model->getReportService()->create(array(
-								'owner' => $clan,
-								'type' => $role,
-								'event' => $event,
-								'data' => $report
-							), FALSE);
-							$recipients[] = $clan;
+					if ($report !== NULL) {
+						foreach ($event->getObservers() as $role => $clan) {
+							if ($clan && !in_array($clan, $recipients)) {
+								$this->context->model->getReportService()->create(array(
+									'owner' => $clan,
+									'type' => $role,
+									'event' => $event,
+									'data' => $report
+								), FALSE);
+								$recipients[] = $clan;
+							}
 						}
 					}
 				} else {
@@ -96,7 +102,8 @@ class Event extends BaseService
 	{
 		$event = parent::create($values, FALSE);
 		$this->entityManager->detach($event);
-		if ($this->context->rules->get('event', $event->type)->isValid($event)) {
+		$rule = $this->context->rules->get('event', $event->type);
+		if ($rule->isValid($event) && (!isset($event->target) || $rule->isRemote() || $this->context->model->fieldRepository->isVisible($event->owner, $event->target))) {
 			$this->entityManager->persist($event);
 			if ($flush) {
 				$this->entityManager->flush();

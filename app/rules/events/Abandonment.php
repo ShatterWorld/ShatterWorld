@@ -45,6 +45,11 @@ class Abandonment extends AbstractRule implements IConstruction
 		);
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+	
 	public function isExclusive ()
 	{
 		return TRUE;

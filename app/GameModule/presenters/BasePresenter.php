@@ -41,7 +41,7 @@ abstract class BasePresenter extends \BasePresenter
 		$this->template->events = $clan ? $this->getEventRepository()->findUpcomingEvents($clan) : array();
 		$this->template->eventData = $clan ? array_map(function ($event) {
 			$result = $event->toArray();
-			$result['target'] = $event->target->toArray();
+			$result['target'] = isset($event->target) ? $event->target->toArray() : NULL;
 			return $result;
 		}, $this->template->events) : array();
 		$this->template->eventRules = $this->context->rules->getAll('event');

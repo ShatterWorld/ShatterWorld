@@ -36,6 +36,11 @@ class FacilityConstruction extends AbstractRule implements IConstruction
 			(($event->target->facility && $event->target->facility->type === $event->construction && $event->target->facility->level === ($event->level - 1)) || ($event->target->facility === NULL && $event->level === 1));
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 	public function getExplanation (Entities\Event $event)
 	{
 		if ($event->level) {

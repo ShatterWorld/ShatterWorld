@@ -34,6 +34,11 @@ class Colonisation extends AbstractRule implements IConstruction
 		return FALSE;
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 	public function formatReport (Entities\Report $report)
 	{
 		return array(

@@ -22,6 +22,11 @@ class UnitTraining extends AbstractRule implements IConstruction
 	{
 		return TRUE;
 	}
+
+	public function isRemote ()
+	{
+		return FALSE;
+	}
 	
 	public function formatReport (Entities\Report $report)
 	{

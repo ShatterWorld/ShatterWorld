@@ -45,8 +45,9 @@ class MapPresenter extends BasePresenter
 	{
 		$form = new Form;
 		$form->addSelect('overlay', 'Pohled', array(
-			'default' => 'Výchozí',
-			'rank' => 'Rozmísťování klanů'
+			'default' => 'Politická',
+			'rank' => 'Rozmísťování klanů',
+			'geography' => 'Geografická'
 		));
 		return $form;
 	}

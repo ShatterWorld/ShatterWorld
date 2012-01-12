@@ -24,6 +24,11 @@ class FacilityRepair extends AbstractRule implements IEvent
 	{
 		return $event->target->owner === $event->owner && $event->target->facility && $event->target->facility->damaged;
 	}
+
+	public function isRemote ()
+	{
+		return FALSE;
+	}
 	
 	public function getExplanation (Entities\Event $event)
 	{

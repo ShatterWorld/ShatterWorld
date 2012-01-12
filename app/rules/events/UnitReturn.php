@@ -35,6 +35,11 @@ class UnitReturn extends AbstractRule implements IEvent
 		return TRUE;
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Návrat jednotek z %s do %s', $event->origin->getCoords(), $event->target->getCoords());

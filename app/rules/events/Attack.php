@@ -148,6 +148,11 @@ abstract class Attack extends AbstractRule implements IEvent
 			($this->getContext()->model->getFieldRepository()->isNeighbourOf($event->target, NULL) || $this->getContext()->model->getFieldRepository()->isNeighbourOf($event->target, $event->owner));
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
