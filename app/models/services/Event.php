@@ -102,7 +102,8 @@ class Event extends BaseService
 	{
 		$event = parent::create($values, FALSE);
 		$this->entityManager->detach($event);
-		if ($this->context->rules->get('event', $event->type)->isValid($event)) {
+		$rule = $this->context->rules->get('event', $event->type);
+		if ($rule->isValid($event) && (!isset($event->target) || $rule->isRemote() || $this->context->model->fieldRepository->isVisible($event->owner, $event->target))) {
 			$this->entityManager->persist($event);
 			if ($flush) {
 				$this->entityManager->flush();

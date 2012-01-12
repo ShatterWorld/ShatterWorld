@@ -34,6 +34,11 @@ class ResourceExhaustion extends AbstractRule implements IEvent
 		return $this->getContext()->rules->get('resource', $report->data['resource'])->formatExhaustionReport($report);
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 	public function isExclusive ()
 	{
 		return false;

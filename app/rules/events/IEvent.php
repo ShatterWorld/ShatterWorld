@@ -36,4 +36,10 @@ interface IEvent extends \Rules\IRule {
 	 * @return string
 	 */
 	public function getExplanation (Entities\Event $event);
+	
+	/**
+	 * Can this event be initiated with a field that is not in its owner's LOS as a target?
+	 * @return bool
+	 */
+	public function isRemote ();
 }

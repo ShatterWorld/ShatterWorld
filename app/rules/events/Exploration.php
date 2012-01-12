@@ -66,6 +66,11 @@ class Exploration extends AbstractRule implements IEvent
 		return $event->target->owner === NULL;
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Průzkum pole %s', $event->target->getCoords());

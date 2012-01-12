@@ -221,6 +221,17 @@ class Field extends BaseRepository
 		return $this->fetchFieldsData($clan, $this->getVisibleFieldsIds($clan));
 	}
 
+	/**
+	 * Is given field visible to given clan?
+	 * @param Entities\Clan
+	 * @param Entities\Field
+	 * @return bool
+	 */
+	public function isVisible (Entities\Clan $clan, Entities\Field $field)
+	{
+		return in_array($field->id, $this->getVisibleFieldsIds($clan));
+	}
+	
 	public function getMapArray ()
 	{
 		return $this->fetchFieldsData();

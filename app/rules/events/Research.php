@@ -52,6 +52,11 @@ class Research extends AbstractRule implements IEvent
 		);
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 	public function isExclusive ()
 	{
 		return false;

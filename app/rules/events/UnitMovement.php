@@ -32,6 +32,11 @@ class UnitMovement extends AbstractRule implements IEvent
 		return ($event->target->owner === $event->origin->owner) || ($event->target->owner->alliance === $event->origin->owner->alliance);
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 	public function getExplanation (Entities\Event $event)
 	{
 		return sprintf('Přesun jednotek z %s na %s', $event->origin->getCoords(), $event->target->getCoords());

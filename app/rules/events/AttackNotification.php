@@ -24,6 +24,11 @@ class AttackNotification extends AbstractRule implements IEvent
 	{
 		return array();
 	}
+
+	public function isRemote ()
+	{
+		return FALSE;
+	}
 	
 	public function getExplanation (Entities\Event $event)
 	{

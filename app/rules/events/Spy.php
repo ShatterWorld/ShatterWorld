@@ -102,4 +102,9 @@ abstract class Spy extends AbstractRule implements IEvent
 			($event->owner->alliance === NULL || $event->target->owner->alliance !== $event->owner->alliance);
 	}
 
+	public function isRemote ()
+	{
+		return FALSE;
+	}
+
 }
