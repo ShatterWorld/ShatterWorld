@@ -44,25 +44,32 @@
 		{/if}
 
 		{if isset($facilities)}
+			<h2>Budovy</h2>
+			<i>Produkce je bez bonusů</i>
 			<table>
 				<tr>
 					<th>Budova</th>
 					<th>Úroveň</th>
+					<th>Pozice</th>
+					<th>Typ</th>
 					{foreach $resourceRules as $name => $resource}
 						<th><img src="{$basePath}/images/resources/{$name}.png"/></th>
 					{/foreach}
 				</tr>
-			{foreach $facilities as $facility}
 			{dump $facilities}
+			{foreach $facilities as $facility}
 				<tr>
-					<td>{$facilityRules[$facility['name']]->getDescription()}</td>
-					<td>{$facility['level']}</td>
-					{?$production = $facility['production']}
-					{foreach $resourceRules as $name => $resource}
-						<td>{if isset($production[$name])}{floor($production[$name]*3600)}{else}0{/if}</td>
+					<td>{$facilityRules[$facility->type]->getDescription()}</td>
+					<td>{$facility->level}</td>
+					<td>{$facility->location->getCoords()}</td>
+					<td>{$fieldRules[$facility->location->type]->getDescription()}</td>
+					{?$production = $facilityRules[$facility->type]->getProduction($facility->level)}
+					{foreach $resourceRules as $resName => $resource}
+						<td>{if !$facility->damaged && isset($production[$resName])}{floor($production[$resName]*3600)}{else}0{/if}</td>
 					{/foreach}
 				</tr>
 			{/foreach}
+
 			</table>
 		{/if}
 

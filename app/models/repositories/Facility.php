@@ -11,16 +11,9 @@ class Facility extends BaseRepository
 	 */
 	public function getClanFacilities (Entities\Clan $clan)
 	{
-		$qb = $this->getEntityManager()->createQueryBuilder();
-		$qb->select('max(f.level) level', 'f.type')
-			->from($this->getEntityName(), 'f')->innerJoin('f.location', 'l')
-			->where($qb->expr()->eq('l.owner', $clan->id))
-			->groupBy('f.type');
-		$result = array();
-		foreach ($qb->getQuery()->getArrayResult() as $row) {
-			$result[$row['type']] = $row['level'];
-		}
-		return $result;
+		$qb = $this->createQueryBuilder('f')->innerJoin('f.location', 'l');
+		$qb->where($qb->expr()->eq('l.owner', $clan->id));
+		return $qb->getQuery()->getResult();
 	}
 
 	/**
