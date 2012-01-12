@@ -49,6 +49,20 @@ class ClanPresenter extends BasePresenter {
 
 			if (($clan->id === $playerClan->id || $clan->alliance && $playerClan->alliance && $clan->alliance->id === $playerClan->alliance->id)) {
 				$this->template->scoreRules = $this->context->rules->getAll('score');
+				$this->template->resourceRules = $this->context->rules->getAll('resource');
+				$this->template->facilityRules = $this->context->rules->getAll('facility');
+				$facilities = $this->context->model->getFacilityRepository()->getClanFacilities($clan);
+				$facilitiesData = array();
+				foreach ($facilities as $name => $level){
+					$production = $this->context->rules->get('facility', $name)->getProduction();
+					$facility = array();
+					$facility['name'] = $name;
+					$facility['level'] = $level;
+					$facility['production'] = $production;
+					$facilitiesData[] = $facility;
+				}
+
+				$this->template->facilities = $facilitiesData;
 				$this->template->clanScores = $this->context->model->getScoreRepository()->getClanScoreArray($clan);
 			}
 

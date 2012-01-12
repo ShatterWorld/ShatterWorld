@@ -42,13 +42,36 @@
 				{/foreach}
 			</table>
 		{/if}
+
+		{if isset($facilities)}
+			<table>
+				<tr>
+					<th>Budova</th>
+					<th>Úroveň</th>
+					{foreach $resourceRules as $name => $resource}
+						<th><img src="{$basePath}/images/resources/{$name}.png"/></th>
+					{/foreach}
+				</tr>
+			{foreach $facilities as $facility}
+			{dump $facilities}
+				<tr>
+					<td>{$facilityRules[$facility['name']]->getDescription()}</td>
+					<td>{$facility['level']}</td>
+					{?$production = $facility['production']}
+					{foreach $resourceRules as $name => $resource}
+						<td>{if isset($production[$name])}{floor($production[$name]*3600)}{else}0{/if}</td>
+					{/foreach}
+				</tr>
+			{/foreach}
+			</table>
+		{/if}
+
 		{if count($playerClan->user->clans) < $clanQuota}
 			<a href="{link Clan:new}">Založit další klan</a>
 		{/if}
 		{if $playerClan->id === $clan->id}
 			<a href="{link Clan:delete}">Smazat klan</a>
 		{/if}
-
 
 	{else}
 		Klan nenalezen
