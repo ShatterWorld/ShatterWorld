@@ -21,6 +21,8 @@ class Razing extends Attack implements IEvent
 				$dmg += 2;
 			}
 			$this->damageTargetFacility($event, $dmg, $processor);
+			$result['facilityDamage'] = $dmg;
+			$result['facilityType'] = $event->target->type;
 		}
 		$this->returnAttackingUnits($event, $processor, $result['attacker']['loot']);
 		return $result;
@@ -39,27 +41,27 @@ class Razing extends Attack implements IEvent
 		if ($report->type === 'owner'){
 			if ($data['successful']){
 				if ($data['totalVictory']){
-					$resultMsg = 'Úplné vítězství! Ničivý útok se nebývale zdařil a obránce byl drtivě poražen!';
+					$resultMsg = 'Úplné vítězství! Ničivý útok na klan '. $data['defender']['name'] .' se nebývale zdařil! Úroveň budovy snížena o '. $data['facilityDamage'].'!';
 				}
 				else{
-					$resultMsg = 'Vítězství! Ničivý útok se zdařil!';
+					$resultMsg = 'Vítězství! Ničivý útok na klan '. $data['defender']['name'] .' se zdařil! Úroveň budovy snížena o'. $data['facilityDamage'].'!';
 				}
 			}
 			else{
-				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a ničivý útok se nezdařil';
+				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a ničivý útok na klan '. $data['defender']['name'] .'se nezdařil';
 			}
 		}
 		else{
 			if ($data['successful']){
 				if ($data['totalVictory']){
-					$resultMsg = 'Úplná porážka! Tvůj klan se stal obětí ničivého útoku a ani v nejmenším se neubránil!';
+					$resultMsg = 'Úplná porážka! Tvůj klan se stal obětí ničivého útoku klanu '. $data['attacker']['name'] .' a úroveň budovy bylasnížena o '. $data['facilityDamage'].'!';
 				}
 				else{
-					$resultMsg = 'Porážka! Tvůj klan se stal obětí ničivého útoku a neubránil se!';
+					$resultMsg = 'Porážka! Tvůj klan se stal obětí ničivého útoku klanu '. $data['attacker']['name'] .' a úroveň budovy byla snížena o '. $data['facilityDamage'].'!';
 				}
 			}
 			else{
-				$resultMsg = 'Vítězství! Tvůj klan se stal obětí ničivého útoku ale snadno odvrátil nepřítelovy síly!';
+				$resultMsg = 'Vítězství! Tvůj klan se stal obětí ničivého útoku klanu '. $data['attacker']['name'] .' ale snadno odvrátil nepřítelovy síly!';
 			}
 		}
 

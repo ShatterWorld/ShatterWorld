@@ -16,11 +16,15 @@ abstract class Attack extends AbstractRule implements IEvent
 			'successful' => FALSE,
 			'totalVictory' => TRUE,
 			'attacker' => array(
+				'id' => $event->owner->id,
+				'name' => $event->owner->name,
 				'units' => array(),
 				'casualties' => array(),
 				'loot' => array()
 			),
 			'defender' => array(
+				'id' => $event->target->owner->id,
+				'name' => $event->target->owner->name,
 				'units' => array(),
 				'casualties' => array()
 			)

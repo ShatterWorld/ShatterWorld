@@ -3,6 +3,7 @@ namespace Rules\Events;
 use ReportItem;
 use DataRow;
 use Entities;
+use Nette\Diagnostics\Debugger;
 
 class Pillaging extends Attack
 {
@@ -26,32 +27,32 @@ class Pillaging extends Attack
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
-
+		Debugger::barDump($data);
 		$resultMsg = '';
 		if ($report->type === 'owner'){
 			if ($data['successful']){
 				if ($data['totalVictory']){
-					$resultMsg = 'Úplné vítězství! Loupeživý útok se nebývale zdařil a obránce byl drtivě poražen!';
+					$resultMsg = 'Úplné vítězství! Loupeživý útok na klan '. $data['defender']['name'] .' se nebývale zdařil a obránce byl drtivě poražen!';
 				}
 				else{
-					$resultMsg = 'Vítězství! Loupeživý útok se zdařil!';
+					$resultMsg = 'Vítězství! Loupeživý útok na klan '. $data['defender']['name'] .' se zdařil!';
 				}
 			}
 			else{
-				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a loupeživý útok se nezdařil';
+				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a loupeživý útok na klan '. $data['defender']['name'] .' se nezdařil';
 			}
 		}
 		else{
 			if ($data['successful']){
 				if ($data['totalVictory']){
-					$resultMsg = 'Úplná porážka! Tvůj klan se stal obětí loupeživého útoku a ani v nejmenším se neubránil!';
+					$resultMsg = 'Úplná porážka! Tvůj klan se stal obětí loupeživého útoku klanu '. $data['attacker']['name'] .' a ani v nejmenším se neubránil!';
 				}
 				else{
-					$resultMsg = 'Porážka! Tvůj klan se stal obětí loupeživého útoku a neubránil se!';
+					$resultMsg = 'Porážka! Tvůj klan se stal obětí loupeživého útoku klanu '. $data['attacker']['name'] .' a neubránil se!';
 				}
 			}
 			else{
-				$resultMsg = 'Vítězství! Tvůj klan se stal obětí loupeživého útoku ale snadno odvrátil nepřítelovy síly!';
+				$resultMsg = 'Vítězství! Tvůj klan se stal obětí loupeživého útoku klanu '. $data['attacker']['name'] .', ale snadno odvrátil nepřítelovy síly!';
 			}
 		}
 

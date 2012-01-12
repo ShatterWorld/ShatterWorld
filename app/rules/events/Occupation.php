@@ -53,18 +53,18 @@ class Occupation extends Attack
 		$resultMsg = '';
 		if ($report->type === 'owner'){
 			if ($data['successful'] && $data['totalVictory']){
-				$resultMsg = 'Úplné vítězství! Dobyvačný útok se zdařil a obránce byl drtivě poražen! Nepřítelovo území bylo násilně připojeno!';
+				$resultMsg = 'Úplné vítězství! Dobyvačný útok se zdařil a obránce '. $data['defender']['name'] .' byl drtivě poražen! Nepřítelovo území bylo násilně připojeno!';
 			}
 			else{
-				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a dobyvačný útok se nezdařil';
+				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a dobyvačný útok na klan '. $data['defender']['name'] .' se nezdařil';
 			}
 		}
 		else{
 			if ($data['successful'] && $data['totalVictory']){
-				$resultMsg = 'Úplná porážka! Dobyvačný útok na tvoje území se zdařil a tvoje území bylo násilně připojeno k útočníkovi!';
+				$resultMsg = 'Úplná porážka! Klan '. $data['attacker']['name'] .' podnikl dobyvačný útok na tvoje území násilně připojil tvoje území ke svému!';
 			}
 			else{
-				$resultMsg = 'Vítězství! Odvrátil jsi dobyvačný útok na tvoje území a rozloha klanu zůstala nezměněna!';
+				$resultMsg = 'Vítězství! Odvrátil jsi dobyvačný útok klanu '. $data['attacker']['name'] .' na tvoje území a rozloha klanu zůstala nezměněna!';
 			}
 		}
 
