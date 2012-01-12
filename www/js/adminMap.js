@@ -46,6 +46,21 @@ Game.adminMap = {
 				} else {
 					return '#ffffff';
 				}
+			case 'geography':
+				switch (field.type) {
+					case 'forest':
+						return '#588757';
+					case 'meadow':
+						return '#90CD83';
+					case 'plain':
+						return '#FEFF93';
+					case 'barren':
+						return '#D1B191';
+					case 'mountain':
+						return '#5E523C';
+					case 'lake':
+						return '#5F88B7';
+				}
 			default:
 				if (field.owner) {
 					return '#0000ff';
