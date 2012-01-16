@@ -73,7 +73,7 @@ class Alliance extends BaseService
 			$this->entityManager->flush();
 		}
 	}
-	
+
 	public function fireMember (Entities\Alliance $alliance, Entities\Clan $clan)
 	{
 		if ($alliance !== $clan->alliance){

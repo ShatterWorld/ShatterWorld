@@ -100,5 +100,6 @@ class Offer extends BaseService {
 		}
 
 	}
+
 }
 

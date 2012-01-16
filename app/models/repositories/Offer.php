@@ -28,9 +28,14 @@ class Offer extends BaseRepository
 		$qb->where($qb->expr()->andX(
 			$qb->expr()->neq('o.owner', $clan->id),
 			$qb->expr()->eq('o.sold', '?1'),
-			$qb->expr()->in('o.owner', $this->context->model->getClanRepository()->getDealersGraph($clan, $depth)->getVerticesIds())
+			$qb->expr()->in('o.owner', $this->context->model->getClanRepository()->getDealersGraph($clan, $depth)->getVerticesIds()),
+			$qb->expr()->orX(
+				$qb->expr()->isNull('o.alliance'),
+				$qb->expr()->eq('o.alliance', '?2')
+			)
 		));
 		$qb->setParameter(1, false);
+		$qb->setParameter(2, $clan->alliance ? $clan->alliance->id : 1);
 		$offers = $qb->getQuery()->getResult();
 
 		$map = $this->context->map;

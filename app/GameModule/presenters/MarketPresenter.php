@@ -41,6 +41,10 @@ class MarketPresenter extends BasePresenter {
 				->setRequired('Vyplňte, prosím, množství')
 				->addRule(Form::INTEGER, 'Musí být číslo!');
 
+			if($this->getPlayerClan()->alliance){
+				$form->addCheckbox('allianceOnly', 'Pouze alianční');
+			}
+
 
 
 		$form->addSubmit('submit', 'Nabídnout');
@@ -59,11 +63,18 @@ class MarketPresenter extends BasePresenter {
 		try{
 			$data = $form->getValues();
 			$data['owner'] = $this->getPlayerClan();
+			if($this->getPlayerClan()->alliance && $data['allianceOnly']){
+				$data['alliance'] = $this->getPlayerClan()->alliance;
+			}
+			else{
+				$data['alliance'] = null;
+			}
+
 			$this->getOfferService()->create($data);
 			$this->flashMessage('Nabídnuto');
 		}
 		catch(InsufficientResourcesException $e){
-			$this->flashMessage('Nedostatek surovin');
+			$this->flashMessage('Nedostatek surovin', 'error');
 		} catch (InsufficientOrdersException $e){
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
