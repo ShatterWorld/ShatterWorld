@@ -6,7 +6,7 @@ namespace Entities;
  * @Entity(repositoryClass = "Repositories\Offer")
  * @author Petr Bělohlávek
  */
-class Offer extends BaseEntity 
+class Offer extends BaseEntity
 {
 	/**
 	 * @ManyToOne(targetEntity = "Entities\Clan")
@@ -14,6 +14,13 @@ class Offer extends BaseEntity
 	 * @var Entities\Clan
 	 */
 	private $owner;
+
+	/**
+	 * @ManyToOne(targetEntity = "Entities\Alliance")
+	 * @JoinColumn(onDelete = "SET NULL")
+	 * @var Entities\Alliance
+	 */
+	private $alliance;
 
 	/**
 	 * @Column(type = "boolean")
@@ -59,6 +66,25 @@ class Offer extends BaseEntity
 	public function getOwner ()
 	{
 		return $this->owner;
+	}
+
+	/**
+	 * Alliance getter
+	 * @return Entities\Alliance
+	 */
+	public function getAlliance ()
+	{
+		return $this->alliance;
+	}
+
+	/**
+	 * Alliance setter
+	 * @param Entities\Alliance
+	 * @return void
+	 */
+	public function setAlliance (Alliance $alliance = null)
+	{
+		return $this->alliance = $alliance;
 	}
 
 	/**
