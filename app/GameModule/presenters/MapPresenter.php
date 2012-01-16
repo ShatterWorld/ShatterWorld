@@ -23,6 +23,7 @@ class MapPresenter extends BasePresenter
 		$clan = $this->getPlayerClan();
 		$this->payload->fields = $this->getFieldRepository()->getVisibleFieldsArray($clan);
 		$this->payload->clanId = $this->getPlayerClan()->id;
+		$this->payload->rallyPointId = $this->getPlayerClan()->rallyPoint->id;
 		$this->payload->allianceId = ($this->getPlayerClan()->alliance != null) ? $this->getPlayerClan()->alliance->id : null;
 		$this->sendPayload();
 	}
@@ -294,8 +295,19 @@ class MapPresenter extends BasePresenter
 		} catch (InsufficientOrdersException $e){
 			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
 		}
-
-
 	}
-
+	
+	public function handleSetRallyPoint ($fieldId)
+	{
+		$field = $this->context->model->fieldRepository->find($fieldId);
+		try {
+			$this->context->model->clanService->setRallyPoint($this->getPlayerClan(), $field);
+			$this->invalidateControl('orders');
+			$this->flashMessage('Shromáždiště přemístěno');
+		} catch (RuleViolationException $e) {
+			$this->flashMessage('Na tomto místě nemůžete mít shromaždiště', 'error');
+		} catch (InsufficientOrdersException $e){
+			$this->flashMessage('Nemáte dostatek rozkazů', 'error');
+		}
+	}
 }

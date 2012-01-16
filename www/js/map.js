@@ -154,6 +154,7 @@ Game.map = {
 			Game.map.map = data['fields'];
 			Game.map.clan = data['clanId'];
 			Game.map.alliance = data['allianceId'];
+			Game.map.rallyPoint = data.rallyPointId;
 
 			/**
 			 * finds the center and calculate dX and dY
@@ -757,6 +758,9 @@ Game.map.contextMenu = {
 		var actions = new Array();
 		//my
 		if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan) {
+			if (field.id != Game.map.rallyPoint) {
+				actions.push(this.actions.setRallyPoint);
+			}
 			if (field['units']) {
 				actions.push(this.actions.attack);
 				actions.push(this.actions.move);
@@ -790,17 +794,7 @@ Game.map.contextMenu = {
 			if ((field['facility'] === null) || (field['facility'] !== null && field['facility'].type !== 'headquarters')){
 				actions.push(this.actions.leaveField);
 			}
-		}
-		/*//alliance
-		else if(field['owner'] !== null && field['owner']['alliance'] !== null && Game.map.alliance !== null && field['owner']['alliance']['id'] == Game.map.alliance){
-			alert('aliance');
-		}
-		//enemy
-		else if(field['owner'] !== null){
-			alert('enemy');
- 		}*/
-		//neutral neighbour
-		else if (this.isNeighbour(field, Game.map.clan)) {
+		} else if (this.isNeighbour(field, Game.map.clan)) {
 			actions.push(this.actions.colonisation)
 		}
 
@@ -1025,6 +1019,14 @@ Game.map.contextMenu = {
 					Game.map.marker.unmarkByType('selected');
 					Game.map.disableField(target);
 					Game.spinner.hide();
+				});
+			}
+		},
+		setRallyPoint: {
+			title: 'Umístit shromáždiště',
+			click: function (target) {
+				Game.utils.signal('setRallyPoint', {fieldId: target.id}, function () {
+					Game.map.render();
 				});
 			}
 		},
