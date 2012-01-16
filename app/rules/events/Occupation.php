@@ -13,12 +13,8 @@ class Occupation extends Attack
 	public function process (Entities\Event $event, $processor)
 	{
 		$result = parent::process($event, $processor);
-		$model = $this->getContext()->model;
 		if ($result['successful']) {
 			if ($result['totalVictory']) {
-				foreach ($model->getConstructionRepository()->findBy(array('target' => $event->target->id)) as $construction) {
-					$construction->failed = TRUE;
-				}
 				if ($loot = $result['attacker']['loot']) {
 					$this->getContext()->model->getResourceService()->pay($event->target->owner, $loot, $event->term, FALSE);
 					$this->getContext()->model->getResourceService()->increase($event->owner, $loot, $event->term, FALSE);
@@ -39,8 +35,7 @@ class Occupation extends Attack
 					$this->getContext()->model->scoreService->increaseClanScore($event->owner, 'facility', $value);
 				}
 			}
-		}
-		else {
+		} else {
 			$this->returnAttackingUnits($event, $processor);
 		}
 		return $result;

@@ -86,13 +86,18 @@ class Field extends BaseService {
 	public function setFieldOwner ($field, $newOwner)
 	{
 		$oldOwner = $field->owner;
-		$value = $this->context->rules->get('field', $field->type)->getValue();
-		if ($newOwner !== null){
-			$this->context->model->getScoreService()->increaseClanScore($newOwner, 'territory', $value);
+		if ($oldOwner !== $newOwner) {
+			$value = $this->context->rules->get('field', $field->type)->getValue();
+			if ($newOwner !== null){
+				$this->context->model->getScoreService()->increaseClanScore($newOwner, 'territory', $value);
+			}
+			if ($oldOwner !== null){
+				$this->context->model->getScoreService()->decreaseClanScore($oldOwner, 'territory', $value);
+			}
+			foreach ($this->context->model->getConstructionRepository()->findBy(array('target' => $event->target->id)) as $construction) {
+				$construction->failed = TRUE;
+			}
+			$this->update($field, array('owner' => $newOwner));
 		}
-		if ($oldOwner !== null){
-			$this->context->model->getScoreService()->decreaseClanScore($oldOwner, 'territory', $value);
-		}
-		$this->update($field, array('owner' => $newOwner));
 	}
 }
