@@ -44,22 +44,17 @@ class Occupation extends Attack
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
-
-		$resultMsg = '';
-		if ($report->type === 'owner'){
-			if ($data['successful'] && $data['totalVictory']){
-				$resultMsg = 'Úplné vítězství! Dobyvačný útok se zdařil a obránce '. $data['defender']['name'] .' byl drtivě poražen! Nepřítelovo území bylo násilně připojeno!';
+		if ($report->type === 'owner') {
+			if ($data['successful'] && $data['totalVictory']) {
+				$resultMsg = sprintf('Úplné vítězství! Dobyvačný útok se zdařil a obránce %s byl drtivě poražen! Nepřítelovo území bylo násilně připojeno!', $data['defender']['name']);
+			} else {
+				$resultMsg = sprintf('Porážka! Přecenil jsi síly svého vojska a dobyvačný útok na klan %s se nezdařil', $data['defender']['name']);
 			}
-			else{
-				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a dobyvačný útok na klan '. $data['defender']['name'] .' se nezdařil';
-			}
-		}
-		else{
-			if ($data['successful'] && $data['totalVictory']){
-				$resultMsg = 'Úplná porážka! Klan '. $data['attacker']['name'] .' podnikl dobyvačný útok na tvoje území násilně připojil tvoje území ke svému!';
-			}
-			else{
-				$resultMsg = 'Vítězství! Odvrátil jsi dobyvačný útok klanu '. $data['attacker']['name'] .' na tvoje území a rozloha klanu zůstala nezměněna!';
+		} else {
+			if ($data['successful'] && $data['totalVictory']) {
+				$resultMsg = sprintf('Úplná porážka! Klan %s podnikl dobyvačný útok na tvoje území násilně připojil tvoje území ke svému!', $data['defender']['name']);
+			} else {
+				$resultMsg = sprintf('Vítězství! Odvrátil jsi dobyvačný útok klanu %s na tvoje území a rozloha klanu zůstala nezměněna!', $data['defender']['name']);
 			}
 		}
 

@@ -27,35 +27,27 @@ class Pillaging extends Attack
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
-		Debugger::barDump($data);
-		$resultMsg = '';
-		if ($report->type === 'owner'){
+		if ($report->type === 'owner') {
 			if ($data['successful']){
-				if ($data['totalVictory']){
-					$resultMsg = 'Úplné vítězství! Loupeživý útok na klan '. $data['defender']['name'] .' se nebývale zdařil a obránce byl drtivě poražen!';
+				if ($data['totalVictory']) {
+					$resultMsg = sprintf('Úplné vítězství! Loupeživý útok na klan %s se nebývale zdařil a obránce byl drtivě poražen!', $data['defender']['name']);
+				} else {
+					$resultMsg = sprintf('Vítězství! Loupeživý útok na klan %s se zdařil!', $data['defender']['name']);
 				}
-				else{
-					$resultMsg = 'Vítězství! Loupeživý útok na klan '. $data['defender']['name'] .' se zdařil!';
-				}
+			} else {
+				$resultMsg = sprintf('Porážka! Přecenil jsi síly svého vojska a loupeživý útok na klan %s se nezdařil', $data['defender']['name']);
 			}
-			else{
-				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a loupeživý útok na klan '. $data['defender']['name'] .' se nezdařil';
+		} else {
+			if ($data['successful']) {
+				if ($data['totalVictory']) {
+					$resultMsg = sprintf('Úplná porážka! Tvůj klan se stal obětí loupeživého útoku klanu %s a ani v nejmenším se neubránil!', $data['attacker']['name']);
+				} else {
+					$resultMsg = sprintf('Porážka! Tvůj klan se stal obětí loupeživého útoku klanu %s a neubránil se!', $data['attacker']['name']);
+				}
+			} else {
+				$resultMsg = sprintf('Vítězství! Tvůj klan se stal obětí loupeživého útoku klanu %s, ale snadno odvrátil nepřítelovy síly!', $data['attacker']['name']);
 			}
 		}
-		else{
-			if ($data['successful']){
-				if ($data['totalVictory']){
-					$resultMsg = 'Úplná porážka! Tvůj klan se stal obětí loupeživého útoku klanu '. $data['attacker']['name'] .' a ani v nejmenším se neubránil!';
-				}
-				else{
-					$resultMsg = 'Porážka! Tvůj klan se stal obětí loupeživého útoku klanu '. $data['attacker']['name'] .' a neubránil se!';
-				}
-			}
-			else{
-				$resultMsg = 'Vítězství! Tvůj klan se stal obětí loupeživého útoku klanu '. $data['attacker']['name'] .', ale snadno odvrátil nepřítelovy síly!';
-			}
-		}
-
 		$message = array(ReportItem::create('text', $resultMsg));
 		$message = array_merge($message, parent::formatReport($report));
 		if ($data['successful'] && $data['attacker']['loot']) {

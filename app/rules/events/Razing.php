@@ -36,32 +36,25 @@ class Razing extends Attack implements IEvent
 	public function formatReport (Entities\Report $report)
 	{
 		$data = $report->data;
-
-		$resultMsg = '';
-		if ($report->type === 'owner'){
-			if ($data['successful']){
-				if ($data['totalVictory']){
-					$resultMsg = 'Úplné vítězství! Ničivý útok na klan '. $data['defender']['name'] .' se nebývale zdařil! Úroveň budovy snížena o '. $data['facilityDamage'].'!';
+		if ($report->type === 'owner') {
+			if ($data['successful']) {
+				if ($data['totalVictory']) {
+					$resultMsg = sprintf('Úplné vítězství! Ničivý útok na klan %s se nebývale zdařil! Úroveň budovy snížena o %d!', $data['defender']['name'], $data['facilityDamage']);
+				} else{
+					$resultMsg = sprintf('Vítězství! Ničivý útok na klan %s se zdařil! Úroveň budovy snížena o %d!', $data['defender']['name'], $data['facilityDamage']);
 				}
-				else{
-					$resultMsg = 'Vítězství! Ničivý útok na klan '. $data['defender']['name'] .' se zdařil! Úroveň budovy snížena o'. $data['facilityDamage'].'!';
-				}
+			} else{
+				$resultMsg = sprintf('Porážka! Přecenil jsi síly svého vojska a ničivý útok na klan %s se nezdařil', $data['defender']['name']);
 			}
-			else{
-				$resultMsg = 'Porážka! Přecenil jsi síly svého vojska a ničivý útok na klan '. $data['defender']['name'] .'se nezdařil';
-			}
-		}
-		else{
-			if ($data['successful']){
-				if ($data['totalVictory']){
-					$resultMsg = 'Úplná porážka! Tvůj klan se stal obětí ničivého útoku klanu '. $data['attacker']['name'] .' a úroveň budovy bylasnížena o '. $data['facilityDamage'].'!';
+		} else {
+			if ($data['successful']) {
+				if ($data['totalVictory']) {
+					$resultMsg = sprintf('Úplná porážka! Tvůj klan se stal obětí ničivého útoku klanu %s a úroveň budovy byla snížena o %d!', $data['defender']['name'], $data['facilityDamage']);
+				} else {
+					$resultMsg = sprintf('Porážka! Tvůj klan se stal obětí ničivého útoku klanu %s a úroveň budovy byla snížena o %d!', $data['defender']['name'], $data['facilityDamage']);
 				}
-				else{
-					$resultMsg = 'Porážka! Tvůj klan se stal obětí ničivého útoku klanu '. $data['attacker']['name'] .' a úroveň budovy byla snížena o '. $data['facilityDamage'].'!';
-				}
-			}
-			else{
-				$resultMsg = 'Vítězství! Tvůj klan se stal obětí ničivého útoku klanu '. $data['attacker']['name'] .' ale snadno odvrátil nepřítelovy síly!';
+			} else {
+				$resultMsg = sprintf('Vítězství! Tvůj klan se stal obětí ničivého útoku klanu %s ale snadno odvrátil nepřítelovy síly!', $data['defender']['name']);
 			}
 		}
 
