@@ -14,7 +14,7 @@ class UnitTraining extends AbstractRule implements IConstruction
 
 	public function process (Entities\Event $event, $processor)
 	{
-		$this->getContext()->model->getUnitService()->addUnits($event->target, $event->owner, Json::decode($event->construction, Json::FORCE_ARRAY));
+		$this->getContext()->model->getUnitService()->addUnits($event->owner->rallyPoint, $event->owner, Json::decode($event->construction, Json::FORCE_ARRAY));
 		return array();
 	}
 	

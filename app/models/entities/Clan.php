@@ -35,6 +35,12 @@ class Clan extends BaseEntity {
 	private $headquarters;
 
 	/**
+	 * @OneToOne(targetEntity = "Entities\Field")
+	 * @var Entities\Field
+	 */
+	private $rallyPoint;
+	
+	/**
 	 * @ManyToOne(targetEntity = "Entities\Alliance", inversedBy = "members")
 	 * @JoinColumn(onDelete = "SET NULL")
 	 * @var Entities\Alliance
@@ -137,6 +143,25 @@ class Clan extends BaseEntity {
 	{
 		$headquarters->setOwner($this);
 		$this->headquarters = $headquarters;
+	}
+	
+	/**
+	 * Rally point getter
+	 * @return Entities\Field
+	 */
+	public function getRallyPoint ()
+	{
+		return $this->rallyPoint ?: $this->headquarters;
+	}
+
+	/**
+	 * Rally point setter
+	 * @param Entities\Field
+	 * @return void
+	 */
+	public function setRallyPoint (Field $rallyPoint)
+	{
+		$this->rallyPoint = $rallyPoint;
 	}
 
 	/**

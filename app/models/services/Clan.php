@@ -3,6 +3,7 @@ namespace Services;
 use Nette\Caching\Cache;
 use Nette\Diagnostics\Debugger;
 use InsufficientOrdersException;
+use RuleViolationException;
 use Entities;
 use ArraySet;
 
@@ -56,6 +57,16 @@ class Clan extends BaseService
 		}
 	}
 
+	public function setRallyPoint (Entities\Clan $clan, Entities\Field $field, $flush = TRUE)
+	{
+		if ($field->owner === $clan) {
+			$clan->rallyPoint = $field;
+			$this->issueOrder($clan, $flush);
+		} else {
+			throw new RuleViolationException;
+		}
+	}
+	
 	/**
 	 * Creates an object as the parent does
 	 * In addition, it assigns N fields to the clan
