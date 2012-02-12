@@ -105,10 +105,10 @@ Game.utils = {
 	 */
 	clone: function (variable)
 	{
-		if (variable instanceof Array) {
+		if ($.isArray(variable)) {
 			return variable.slice();
 		} else if (variable instanceof Object) {
-			return jQuery.extend({}, variable);
+			return $.extend({}, variable);
 		} else {
 			return variable;
 		}

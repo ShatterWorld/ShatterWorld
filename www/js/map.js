@@ -724,72 +724,88 @@ Game.map.contextMenu = {
 	demolitions : null,
 
 	/**
-	 * Representing the context menu
-	 * @var String/Object
-	 */
-	contextMenu : $('<div class="toolbox" />')
-		.html('<h3>Akce:</h3>'),
-
-	/**
 	 * Displays context menu
 	 * @param object - clicked div
 	 * @param event - fired event
 	 * @return void
 	 */
-	show: function(field){
-
-		this.contextMenu.html('');
-		this.contextMenu.css('z-index', 3);
-		this.contextMenu.show();
+	show: function (field) {
 
 		$('#fieldInfo').hide();
 
 		var x = parseInt(field.element.css('left'));
 		var y = parseInt(field.element.css('top'));
 
-		var coords = Game.utils.localToGlobal($('#map'), x, y);
-		coords = Game.utils.globalToLocal($('#mapContainer'), coords.x, coords.y);
-
-		this.contextMenu.css("left", coords.x + 50);
-		this.contextMenu.css("top", coords.y + 30);
+		var globalCoords = Game.utils.localToGlobal($('#map'), x, y);
+		coords = Game.utils.globalToLocal($('#mapContainer'), globalCoords.x, globalCoords.y);
 
 		this.shown = true;
-		$('#mapContainer').append(this.contextMenu);
+// 		$('#mapContainer').append(this.contextMenu);
 		var actions = new Array();
-		//my
 		if (field['owner'] !== null && Game.map.clan !== null && field['owner']['id'] == Game.map.clan) {
 			if (field.id != Game.map.rallyPoint) {
 				actions.push(this.actions.setRallyPoint);
 			}
-			if (field['units']) {
-				actions.push(this.actions.attack);
-				actions.push(this.actions.move);
-				actions.push(this.actions.exploration);
+			var unitContainer = {container: true, title: "Jednotky", items: []};
+			if (field.facility && (field.facility.type === 'workshop' || field.facility.type === 'barracks')) {
+				unitContainer.items.push(this.actions.redirectTrainUnits);
 			}
-			if (Game.utils.getValue(field, ['units', 'spy'])) {
-				actions.push(this.actions.spy);
+			if (field.units) {
+				unitContainer.items.push(this.actions.attack);
+				unitContainer.items.push(this.actions.move);
+				unitContainer.items.push(this.actions.exploration);
+				if (Game.utils.getValue(field, ['units', 'spy'])) {
+					unitContainer.items.push(this.actions.spy);
+				}
+				actions.push(unitContainer);
 			}
-			if (field['facility'] !== null) {
-				if (field['facility'].type !== 'headquarters') {
-
-					if(field['facility'].type === 'workshop' || field['facility'].type === 'barracks'){
-						actions.push(this.actions.redirectTrainUnits);
-					}
-
+			var facilityContainer = {container: true, title: "Budovy", items: []};
+			if (field.facility) {
+				if (field.facility.type !== 'headquarters') {
 					if (field.facility.damaged) {
-						actions.push(this.actions.repairFacility);
+						facilityContainer.items.push(this.actions.repairFacility);
 					} else {
-						actions.push(this.actions.upgradeFacility);
-						actions.push(this.actions.destroyFacility);
-						if (field.facility['level'] > 1) {
-							actions.push(this.actions.downgradeFacility);
+						facilityContainer.items.push(this.actions.upgradeFacility);
+						facilityContainer.items.push(this.actions.destroyFacility);
+						if (field.facility.level > 1) {
+							facilityContainer.items.push(this.actions.downgradeFacility);
 						}
 					}
-
-
 				}
 			} else {
-				actions.push(this.actions.buildFacility);
+				var buildContainer = {container: true, title: "Nová", items: []};
+				$.each(Game.map.contextMenu.facilities, function (name, facility) {
+					var label = $('<span>');
+					Game.descriptions.translate('facility', name, label);
+					var element = $('<a href="#">').html(label).click();
+					buildContainer.items.push({
+						title: name,
+						translate: true,
+						catalog: 'facility',
+						click: function (target) {
+							var dialog = new Game.map.contextMenu.ConstructionDialog('facilityDialog');
+							dialog.setTitle('Postavit budovu');
+							dialog.setBody(label.clone());
+							dialog.setCost(Game.map.contextMenu.facilities[name].cost, Game.map.contextMenu.facilities[name].time);
+							dialog.setSubmit({
+								text: 'Zahájit stavbu',
+								click: function () {
+									Game.utils.signal('buildFacility', {'targetId': target['id'], 'facility': name}, function (data) {
+									Game.events.refresh();
+									Game.resources.fetchResources();
+									Game.map.marker.unmarkByType('selected');
+									Game.map.disableField(target);
+								});
+								}
+							});
+							dialog.show();
+						}
+					});
+				});
+				facilityContainer.items.push(buildContainer);
+			}
+			if (facilityContainer.items) {
+				actions.push(facilityContainer);
 			}
 			if ((field['facility'] === null) || (field['facility'] !== null && field['facility'].type !== 'headquarters')){
 				actions.push(this.actions.leaveField);
@@ -798,20 +814,16 @@ Game.map.contextMenu = {
 			actions.push(this.actions.colonisation)
 		}
 
-		actions.push({title: 'Zrušit', click: function () {
+		this.menu = new Game.UI.Toolbox(null, actions);
+		this.menu.setHandler('click', function (action) {
+			action.click(field);
+			Game.map.contextMenu.menu.hide();
+		});
+		this.menu.close = function () {
 			Game.map.marker.unmarkByType('selected');
-			Game.map.contextMenu.hide();
-		}});
-
-		$.each(actions, function () {
-			var element = $('<a href="#">').html(this.title).click({action: this}, function (e) {
-				e.preventDefault();
-				Game.map.contextMenu.hide();
-				e.data.action.click(field);
-			});
-			Game.map.contextMenu.contextMenu.append(element);
-		})
-
+			this.shown = false;
+		};
+		this.menu.show(globalCoords.x + 50, globalCoords.y + 30);
 	},
 
 	/**
@@ -820,7 +832,7 @@ Game.map.contextMenu = {
 	 */
 	hide: function ()
 	{
-		this.contextMenu.hide();
+		this.menu.hide();
 		this.shown = false;
 	},
 
@@ -848,7 +860,6 @@ Game.map.contextMenu = {
 					dialog.show();
 					Game.spinner.hide();
 				});
-
 			}
 		},
 		exploration: {

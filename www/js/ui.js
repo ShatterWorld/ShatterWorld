@@ -31,6 +31,109 @@ Game.UI = {
 		return $('<table>').append($('<tr>').append($('<th>').html('Čas'), $('<td>').html(formattedTime)));
 	},
 
+	Toolbox: Class({
+		constructor: function (id, items, parent)
+		{
+			this.element = $('<div class="toolbox">').attr({'class': 'toolbox'});
+			this.children = new Array();
+			if (id) {
+				this.element.attr({id: id});
+			}
+			this.items = items || [];
+			if (parent) {
+				this.parent = parent;
+				parent.children.push(this);
+			} else {
+				this.parent = null;
+			}
+			
+			var element = this.element;
+			var toolbox = this;
+			$.each(this.items, function () {
+				if (this.container) {
+					var submenu = new Game.UI.Toolbox(null, this.items, toolbox);
+					submenu.click = toolbox.click;
+					var link = $('<a href="#">').html(this.title);
+					link.click(function (e) {
+						e.preventDefault();
+					});
+					link.hover(function (e) {
+						var coords = link.offset();
+						$(this).addClass('active');
+						submenu.show(coords.left + parseInt(link.css('width')) - 5, coords.top);
+						submenu.element.mouseenter(function (e) {
+							submenu.focus = true;
+						});
+						submenu.element.mouseleave(function (e) {
+							submenu.focus = false;
+							if (!$(this).find('.active')) {
+								submenu.hide();
+							}
+						});
+					});
+					link.mouseleave(function (e) {
+						var timer = setTimeout(function () {
+							if (!submenu.focus) {
+								submenu.hide();
+								$(this).removeClass('active');
+							}
+						}, 50);
+					});
+					
+					element.append(link);
+				} else {
+					var link = $('<a href="#">')
+					if (this.translate) {
+						Game.descriptions.translate(this.catalog, this.title, link);
+					} else {
+						link.html(this.title);
+					}
+					element.append(link.click({action: this}, function (e) {
+						e.preventDefault();
+						toolbox.hide();
+						if (toolbox.click) {
+							toolbox.click.call(toolbox, e.data.action);
+						} else {
+							e.data.action.click();
+						}
+					}));
+				}
+			});
+		},
+		
+		setHandler: function (event, callback) 
+		{
+			this[event] = callback;
+			$.each(this.children, function () {
+				if (!Game.utils.isset(this[event])) {
+					this.setHandler(event, callback);
+				}	
+			});
+		},
+		
+		show: function (left, top)
+		{
+			$(this.element).css({position: 'absolute', left: left, top: top, 'z-index': 3});
+			$('body').append(this.element);
+		},
+		
+		hide: function ()
+		{
+			if (this.close) {
+				this.close();
+			}
+			if (this.parent) {
+				$(this.parent.element).find('.active').removeClass('active');
+			}
+			if (this.children) {
+				$.each(this.children, function () {
+					this.hide();
+				});
+			}
+			$(this.element).remove();
+		}
+	}),
+	
 	Dialog: Class({
 		constructor: function (id)
 		{

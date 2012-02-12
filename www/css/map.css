@@ -42,7 +42,7 @@
 	padding: 3px;
 }
 
-.toolbox a:hover {
+.toolbox a:hover, .toolbox a.active {
 	background: #ABB99C;
 	color: #000;
 	text-decoration: none;
