@@ -113,9 +113,9 @@ Game.resources = {
 
 	getBalance: function (resource)
 	{
-		return this.data[resource].balance
+		return Math.max(0, Math.floor(this.data[resource].balance));
 	},
-	
+
 	/**
 	 * Checks if player has enough resources
 	 * @param array
@@ -124,7 +124,7 @@ Game.resources = {
 	hasSufficientResources : function (price) {
 		var valid = true;
 		$.each(price, function (resource, cost) {
-			if (cost > Game.resources.data[resource].balance) {
+			if (cost > Game.resources.getBalance(resource)) {
 				valid = false;
 				return false;
 			}

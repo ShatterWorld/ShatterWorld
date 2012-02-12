@@ -39,7 +39,7 @@ Game.units = {
 			var difficulty = $(td).parent().data()['difficulty'];
 			var slots = Game.units.availableSlots;
 			var amount = null;
-			
+
 			$.each(difficulty, function (slot, count) {
 				var available = 0;
 				if (Game.utils.isset(slots[slot])) {
@@ -48,11 +48,14 @@ Game.units = {
 				amount = Game.utils.isset(amount) ? Math.min(amount, available) : available;
 			});
 			$.each(cost, function (resource, count) {
+				var myBalance = Game.resources.getBalance(resource);
 				var available = 0;
 				if (Game.utils.isset(Game.resources.getBalance(resource))) {
-					available = Math.floor(Game.resources.getBalance(resource) / count);
+					if(count > 0){
+						available = Math.max(0, Math.floor(Game.resources.getBalance(resource) / count));
+						amount = Game.utils.isset(amount) ? Math.min(amount, available) : available;
+					}
 				}
-				amount = Game.utils.isset(amount) ? Math.min(amount, available) : available;
 			});
 			$(td).html('(' + (Game.utils.isset(amount) ? amount : 0) + ')');
 			$(td).click(function(){
